@@ -42,6 +42,11 @@ client.on("ready", () => {
         .setDefaultPrefix("!")
         .setBotOwner("772368021821718549")
         .setColor(0xff0000)
+        .setCategorySettings([
+            { name: "general", emoji: "👀" },
+            { name: "handcricket", emoji: "🏏" }
+        ]);
+        
 });
 
 client.login(process.env.TOKEN);
