@@ -24,7 +24,7 @@ module.exports = async function(bowler, batsman, target) {
   const batCollector = batsman.dmChannel.createMessageCollector(
     m => m.author.id === batsman.id
     );
-  const ballCollector = batsman.dmChannel.createMessageCollector(
+  const ballCollector = bowler.dmChannel.createMessageCollector(
     m => m.author.id === bowler.id
     );
     
