@@ -103,20 +103,33 @@ module.exports = async function(bowler, batsman, target) {
     //Wicket
     else if(parseInt(c) === bowled) {
       end(batCollector, ballCollector);
-      const data = await db.findOne({ _id:bowler.id });
-      const multi = 6969 * data.goldMulti;
+      
+      const data = await db.findOne({ _id:batsman.id });
+      
+      let multi = 6969 * data.goldMulti;
+      if(multi === 0) multi = 696;
+      
       const coins = Math.floor(Math.random() * multi );
+      
       bowler.send(`Wicket! Piro! and also a grand amount of ${coins} coins`);
       batsman.send('Wicket! Noob!');
+      return;
     }
     
+    //Target
     else if( parseInt(oldScore + parseInt(c)) >= target) {
       end(batCollector, ballCollector);
+      
       const data = await db.findOne({ _id:batsman.id });
-      const multi = 6969 * data.goldMulti;
+      
+      let multi = 6969 * data.goldMulti;
+      if(multi === 0) multi = 69;
+      
       const coins = Math.floor(Math.random() * multi );
+      
       bowler.send('You lost..');
       batsman.send(`You won! and also a grand amount of ${coins} coins`)
+      return;
     }
     
     else {
@@ -126,7 +139,7 @@ module.exports = async function(bowler, batsman, target) {
       
       const embed = new Discord.MessageEmbed()
         .setTitle('Cricket Match - Second Innings')
-        .addField(batsman.username + ' - Batsman', oldScore + parseInt(c) )
+        .addField(batsman.username + ' - Batsman', newScore )
         .addField(bowler.username + ' - Bowler', target)
         .setColor('RANDOM')
       
@@ -136,7 +149,7 @@ module.exports = async function(bowler, batsman, target) {
   });
 };
 
-function end(a,b) {
+function end(a, b) {
   a.stop()
   b.stop()
 }
