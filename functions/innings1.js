@@ -51,18 +51,19 @@ module.exports = async function(batsman, bowler) {
       return;
     }
 
-    //Push it in array
-    ballArray.push(parseInt(c));
-
-    //Send confirm messages
-    await bowler.send("You bowled " + c);
-    await batsman.send("Ball is coming, hit it by typing a number.");
+    else {
+        //Push it in array
+        ballArray.push(parseInt(c));
+        //Send confirm messages
+        await bowler.send("You bowled " + c);
+        await batsman.send("Ball is coming, hit it by typing a number.");
   });
 
   //Batsman Collection
   batsmanCollector.on("collect", async m => {
     const c = m.content;
     const bowled = await ballArray[ballArray.length - 1];
+    console.log(bowled);
 
     //End
     if (c.toLowerCase() === "end") {
@@ -74,7 +75,7 @@ module.exports = async function(batsman, bowler) {
 
     //Communication
     else if (isNaN(c)) {
-      bowler.send(`\`${batsman.username}\`: ${c}`);
+      bowler.send(`\`${batsman.username}\`:  ${c}`);
       return;
     }
 
@@ -101,18 +102,19 @@ module.exports = async function(batsman, bowler) {
 
     const newScore = (await batArray[batArray.length - 1]) + parseInt(c);
 
-    //Push in the array
-    batArray.push(newScore);
-
-    //Confirm Embeds
-    const embed = new Discord.MessageEmbed()
-      .setTitle("Cricket Match - First Innings")
-      .addField(batsman.username + " - Batsman", newScore)
-      .addField(bowler.username + " - Bowler", 0)
-      .setColor("RANDOM");
-
-    await batsman.send(embed);
-    await bowler.send(embed);
+    if(parseInt(c) < 9) {
+        //Push in the array
+        batArray.push(newScore);
+        //Confirm Embeds
+        const embed = new Discord.MessageEmbed()
+          .setTitle("Cricket Match - First Innings")
+          .addField(batsman.username + " - Batsman", newScore)
+          .addField(bowler.username + " - Bowler", 0)
+          .setColor("RANDOM");
+          
+        await batsman.send(embed);
+        await bowler.send(embed);
+    }
   });
 };
 
