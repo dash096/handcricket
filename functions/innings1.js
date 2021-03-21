@@ -28,8 +28,8 @@ module.exports = async function(batsman, bowler) {
     //End
     if (c === "end") {
       end(batsmanCollector, bowlerCollector);
-      batsman.send(`**${batsman.username}** forfeited`);
-      bowler.send(`**${batsman.username}** forfeited`);
+      batsman.send(`**${bowler.username}** forfeited`);
+      bowler.send(`You forfeited`);
       return;
     }
 
