@@ -1,0 +1,31 @@
+{
+  "name": "handcricket",
+  "version": "1.0.0",
+  "description": "Discord Bot",
+  "main": "index.js",
+  "dependencies": {
+    "discord.js": "^12.5.1",
+    "git": "^0.1.5",
+    "dotenv": "^8.2.0",
+    "mongoose": "^5.12.1",
+    "wokcommands": "^1.2.8"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "ping"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deadfool09/handcricket.git"
+  },
+  "keywords": [
+    "discord",
+    "heroku"
+  ],
+  "author": "dash",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/deadfool09/handcricket/issues"
+  },
+  "homepage": "https://github.com/deadfool09/handcricket#readme"
+}
