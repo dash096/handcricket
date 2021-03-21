@@ -120,7 +120,9 @@ module.exports = async function(bowler, batsman, target) {
     }
     
     else {
-      batArray.push( parseInt( oldScore + parseInt(c) ) )
+        
+      const newScore =  parseInt( oldScore + parseInt(c) ) 
+      batArray.push(newScore)
       
       const embed = new Discord.MessageEmbed()
         .setTitle('Cricket Match - Second Innings')
