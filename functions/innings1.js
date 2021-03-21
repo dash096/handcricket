@@ -63,8 +63,6 @@ module.exports = async function(batsman, bowler) {
   //Batsman Collection
   batsmanCollector.on("collect", async m => {
     const c = m.content;
-    const bowled = await ballArray[ballArray.length - 1];
-    console.log(bowled);
 
     //End
     if (c.toLowerCase() === "end") {
@@ -92,16 +90,18 @@ module.exports = async function(batsman, bowler) {
       return;
     }
 
+    const bowled = await ballArray[ballArray.length - 1];
+    console.log(bowled);
+    const newScore = (await batArray[batArray.length - 1]) + parseInt(c);
+
     //Wicket
-    else if (bowled === c) {
+    if (bowled == parseInt(c)) {
       end(batsmanCollector, bowlerCollector);
       start2(batsman, bowler, batArray[batArray.length - 1] + 1);
       batsman.send("Wicket! You are out nab");
       bowler.send("Wicket! Pro!");
       return;
     }
-
-    const newScore = (await batArray[batArray.length - 1]) + parseInt(c);
 
     if(parseInt(c) < 9) {
         //Push in the array
