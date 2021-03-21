@@ -91,8 +91,6 @@ module.exports = async function(batsman, bowler) {
 
     const bowled = await ballArray[ballArray.length - 1];
     
-    console.log(c === bowled);
-    
     //Wicket
     if (parseInt(bowled) === parseInt(c)) {
       end(batsmanCollector, bowlerCollector);

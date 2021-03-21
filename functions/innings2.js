@@ -17,8 +17,9 @@ module.exports = async function(bowler, batsman, target) {
   const ballEmbed = await bowler.send(embed);
   
   //Arrays
-  const batArray = []
-  const ballArray = []
+  const batArray = [];
+  const ballArray = [];
+  
   //Collectors
   const batCollector = batsman.dmChannel.createMessageCollector(
     m => m.author.id === batsman.id
@@ -26,6 +27,7 @@ module.exports = async function(bowler, batsman, target) {
   const ballCollector = batsman.dmChannel.createMessageCollector(
     m => m.author.id === bowler.id
     );
+    
     
   //Bowler Collection
   ballCollector.on('collect', async m => {
@@ -52,7 +54,7 @@ module.exports = async function(bowler, batsman, target) {
     }
     
     //Turn based
-    else if(batArray.length != ballArray.length) {
+    else if(batArray.length < ballArray.length) {
       m.reply('Wait for the batsman to hit your previous ball!');
       return;
     }
@@ -69,10 +71,11 @@ module.exports = async function(bowler, batsman, target) {
   //Batsman Collection
   batCollector.on('collect', async m => {
     const c = m.content;
-    const bowled = await ballArray[ballArray.length - 1];
-    const oldScore = await batArray[batArray.length - 1]
+    const bowled = await parseInt(ballArray[ballArray.length - 1]);
+    const oldScore = await parseInt(batArray[batArray.length - 1]);
+    
     //End
-    if(c === "end") {
+    if(c.toLowerCase().trim() === "end") {
       end(batCollector, ballCollector);
       batsman.send('You forfeited');
       bowler.send(`**${batsman.username}** forfeited`);
@@ -107,7 +110,7 @@ module.exports = async function(bowler, batsman, target) {
       batsman.send('Wicket! Noob!');
     }
     
-    else if(parseInt(oldScore + c) >= target) {
+    else if( parseInt(oldScore + parseInt(c)) >= target) {
       end(batCollector, ballCollector);
       const data = await db.findOne({ _id:batsman.id });
       const multi = 6969 * data.goldMulti;
@@ -117,19 +120,16 @@ module.exports = async function(bowler, batsman, target) {
     }
     
     else {
-      
-      const newScore = await batArray[batArray.length - 1];
-      
-      batArray.push(parseInt(oldScore + c))
+      batArray.push( parseInt( oldScore + parseInt(c) ) )
       
       const embed = new Discord.MessageEmbed()
         .setTitle('Cricket Match - Second Innings')
         .addField(batsman.username + ' - Batsman', newScore )
         .addField(bowler.username + ' - Bowler', target)
         .setColor('RANDOM')
-        
-      batsman.send(embed);
-      bowler.send(embed);
+      
+      batsman.send(`You hit ${c} and you were bowled ${bowled}`, {embed} );
+      bowler.send(`${batsman.username} hit ${c} }`, {embed} );
     }
   });
 };
