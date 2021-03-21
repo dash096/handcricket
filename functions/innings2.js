@@ -124,7 +124,7 @@ module.exports = async function(bowler, batsman, target) {
       
       const embed = new Discord.MessageEmbed()
         .setTitle('Cricket Match - Second Innings')
-        .addField(batsman.username + ' - Batsman', newScore )
+        .addField(batsman.username + ' - Batsman', oldScore + parseInt(c) )
         .addField(bowler.username + ' - Bowler', target)
         .setColor('RANDOM')
       
