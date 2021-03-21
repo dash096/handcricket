@@ -63,7 +63,6 @@ module.exports = async function(batsman, bowler) {
   //Batsman Collection
   batsmanCollector.on("collect", async m => {
     const c = m.content;
-
     //End
     if (c.toLowerCase() === "end") {
       end(batsmanCollector, bowlerCollector);
@@ -91,6 +90,8 @@ module.exports = async function(batsman, bowler) {
     }
 
     const bowled = await ballArray[ballArray.length - 1];
+    
+    console.log(c === bowled);
     
     //Wicket
     if (parseInt(bowled) === parseInt(c)) {
