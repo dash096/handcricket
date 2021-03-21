@@ -91,17 +91,17 @@ module.exports = async function(batsman, bowler) {
     }
 
     const bowled = await ballArray[ballArray.length - 1];
-    console.log(bowled);
-    const newScore = (await batArray[batArray.length - 1]) + parseInt(c);
-
+    
     //Wicket
-    if (bowled == parseInt(c)) {
+    if (parseInt(bowled) === parseInt(c)) {
       end(batsmanCollector, bowlerCollector);
       start2(batsman, bowler, batArray[batArray.length - 1] + 1);
       batsman.send("Wicket! You are out nab");
       bowler.send("Wicket! Pro!");
       return;
     }
+
+    const newScore = await batArray[batArray.length - 1] + parseInt(c);
 
     if(parseInt(c) < 9) {
         //Push in the array

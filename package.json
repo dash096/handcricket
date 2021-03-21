@@ -5,8 +5,8 @@
   "main": "index.js",
   "dependencies": {
     "discord.js": "^12.5.1",
-    "git": "^0.1.5",
     "dotenv": "^8.2.0",
+    "git": "^0.1.5",
     "mongoose": "^5.12.1",
     "wokcommands": "^1.2.8"
   },
