@@ -17,6 +17,6 @@ module.exports = {
       _id: target.id
     });
 
-    message.channel.send(`**${target.username}** has ${data.coins} coins.`);
+    message.channel.send(`**${target.username}** has ${data.cc} coins.`);
   }
 }
