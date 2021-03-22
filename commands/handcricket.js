@@ -3,10 +3,13 @@ const Discord = require("discord.js");
 
 module.exports = {
   name: "handcricket",
-  aliases: ["hc", "cricket"],
+  aliases: ["hc",
+    "cricket"],
   description: "Play handcricket with a user",
   category: "handcricket",
-  run: async ({ message }) => {
+  run: async ({
+    message
+  }) => {
     //Players
     const user = message.author;
     const target = message.mentions.users.first();
@@ -18,8 +21,12 @@ module.exports = {
     }
 
     //Database
-    const userdata = await db.findOne({ _id: user.id });
-    const targetdata = await db.findOne({ _id: target.id });
+    const userdata = await db.findOne({
+      _id: user.id
+    });
+    const targetdata = await db.findOne({
+      _id: target.id
+    });
 
     //Validate Database
     if (!userdata) {
@@ -46,6 +53,7 @@ module.exports = {
 
     //User High Toss
     if (user.tossMulti > target.tossMulti) {
+
       //Roll supports User
       if (roll < user.tossMulti) {
         message.channel.send(
@@ -55,22 +63,25 @@ module.exports = {
         //userCollector
         const userCollector = message.channel.createMessageCollector(
           m => m.author.id === user.id,
-          { time: 20000 }
+          {
+            time: 20000
+          }
         );
 
         //userCollection
         userCollector.on("collect", async m => {
-          if (m.content === "batting") {
+          if (m.content.toLowerCase().trim() === "batting") {
             batsman = user;
             bowler = target;
             end(userCollector);
           }
-          if (m.content === "bowling") {
+          if (m.content.toLowerCase().trim() === "bowling") {
             batsman = target;
             bowler = user;
             end(userCollector);
           } else {
             m.reply("Type either `batting` or `bowling`");
+            return;
           }
           await message.channel.send(
             `Batsman is ${batsman}, Bowler is ${bowler}`
@@ -84,26 +95,29 @@ module.exports = {
         //targetCollector
         const targetCollector = message.channel.createMessageCollector(
           m => m.author.id === target.id,
-          { time: 20000 }
+          {
+            time: 20000
+          }
         );
 
         message.channel.send(
-          `${target} won the toss, type either \`bat\` or \`bowl\` `
+          `${target} won the toss, type either \`batting\` or \`bowling\` `
         );
 
         //targetCollection
         targetCollector.on("collect", async m => {
-          if (m.content === "batting") {
+          if (m.content.toLowerCase().trim() === "batting") {
             batsman = target;
             bowler = user;
             end(targetCollector);
           }
-          if (m.content === "bowling") {
+          if (m.content.toLowerCase().trim() === "bowling") {
             batsman = user;
             bowler = target;
             end(targetCollector);
           } else {
             m.reply("Type either `batting` or `bowling`");
+            return;
           }
           await message.channel.send(
             `Batsman is ${batsman}, Bowler is ${bowler}`
@@ -118,28 +132,31 @@ module.exports = {
       //Roll supports User
       if (roll < target.tossMulti) {
         message.channel.send(
-          `${target} won the toss, type either \`bat\` or \`bowl\` `
+          `${target} won the toss, type either \`batting\` or \`bowling\` `
         );
 
         //targetCollector
         const targetCollector = message.channel.createMessageCollector(
           m => m.author.id === target.id,
-          { time: 20000 }
+          {
+            time: 20000
+          }
         );
 
         //userCollection
         targetCollector.on("collect", async m => {
-          if (m.content === "batting") {
+          if (m.content.toLowerCase().trim() === "batting") {
             batsman = target;
             bowler = user;
             end(targetCollector);
           }
-          if (m.content === "bowling") {
+          if (m.content.toLowerCase().trim() === "bowling") {
             batsman = user;
             bowler = target;
             end(targetCollector);
           } else {
             m.reply("Type either `batting` or `bowling`");
+            return;
           }
           await message.channel.send(
             `Batsman is ${batsman}, Bowler is ${bowler}`
@@ -153,26 +170,29 @@ module.exports = {
         //userCollector
         const userCollector = message.channel.createMessageCollector(
           m => m.author.id === user.id,
-          { time: 20000 }
+          {
+            time: 20000
+          }
         );
 
         message.channel.send(
-          `${user} won the toss, type either \`bat\` or \`bowl\` `
+          `${user} won the toss, type either \`batting\` or \`bowling\` `
         );
 
         //targetCollection
         userCollector.on("collect", async m => {
-          if (m.content === "batting") {
+          if (m.content.toLowerCase().trim() === "batting") {
             batsman = user;
             bowler = target;
             end(userCollector);
           }
-          if (m.content === "bowling") {
+          if (m.content.toLowerCase().trim() === "bowling") {
             batsman = target;
             bowler = user;
             end(userCollector);
           } else {
             m.reply("Type either `batting` or `bowling`");
+            return;
           }
           await message.channel.send(
             `Batsman is ${batsman}, Bowler is ${bowler}`
@@ -202,8 +222,7 @@ module.exports = {
             batsman = user;
             bowler = target;
             end(userCollector);
-          }
-          else if (m.content.trim().toLowerCase() === "bowling") {
+          } else if (m.content.trim().toLowerCase() === "bowling") {
             batsman = target;
             bowler = user;
             end(userCollector);
@@ -223,11 +242,13 @@ module.exports = {
         //Collector
         const targetCollector = message.channel.createMessageCollector(
           m => m.author.id === target.id,
-          { time: 20000 }
+          {
+            time: 20000
+          }
         );
 
         message.channel.send(
-          `${target} won the toss, type either \`bat\` or \`bowl\` `
+          `${target} won the toss, type either \`batting\` or \`bowling\` `
         );
 
         //Collection
@@ -236,13 +257,13 @@ module.exports = {
             batsman = target;
             bowler = user;
             end(targetCollector);
-          }
-          else if (m.content.trim().toLowerCase() === "bowling") {
+          } else if (m.content.trim().toLowerCase() === "bowling") {
             batsman = user;
             bowler = target;
             end(targetCollector);
           } else {
             m.reply("Type either `batting` or `bowling`");
+            return;
           }
           await message.reply(`Batsman is ${batsman}, Bowler is ${bowler}`);
           start(message, batsman, bowler);
@@ -263,14 +284,33 @@ async function start(message, batsman, bowler) {
 
   const firstInnings = require("../functions/innings1.js");
   await db.findOneAndUpdate(
-    { _id: batsman.id },
-    { $set: { status: true } },
-    { new: true, upsert: true }
+    {
+      _id: batsman.id
+    },
+    {
+      $set: {
+        status: true
+      }
+    },
+    {
+      new: true,
+      upsert: true
+    }
   );
   await db.findOneAndUpdate(
-    { _id: bowler.id },
-    { $set: { status: true } },
-    { new: true, upsert: true }
+    {
+      _id: bowler.id
+    },
+    {
+      $set: {
+        status: true
+      }
+    },
+    {
+      new: true,
+      upsert: true
+    }
   );
-  firstInnings(batsman, bowler);
+  firstInnings(batsman,
+    bowler);
 }
