@@ -111,8 +111,8 @@ module.exports = async function(bowler, batsman, target) {
         let goldMulti = data.goldMulti;
         if (goldMulti === 0) goldMulti = 0.2;
 
-        const random = Math.floor(Math.random() * goldMulti * 696);
-        const coins = random.toFixed(0);
+        const coins = Math.floor(Math.random() * (goldMulti * 696));
+        console.log(coins);
 
         bowler.send(`Wicket! Piro! You won a grand amount of ${coins} coins`);
         batsman.send('Wicket! Noob!');
@@ -122,7 +122,7 @@ module.exports = async function(bowler, batsman, target) {
       }
 
       const newScore = await batArray[batArray.length - 1] + parseInt(c);
-      
+
       //Target
       if (parseInt(newScore) >= target) {
         end(batCollector, ballCollector);
@@ -142,8 +142,8 @@ module.exports = async function(bowler, batsman, target) {
 
         rewards(batsman, bowler, coins);
         return;
-      } 
-      
+      }
+
       //Push
       else {
         batArray.push(parseInt(newScore))
