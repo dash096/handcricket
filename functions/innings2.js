@@ -72,8 +72,8 @@ module.exports = async function(bowler, batsman, target) {
   batCollector.on('collect',
     async m => {
       const c = m.content;
-      const bowled = await parseInt(ballArray[ballArray.length - 1]);
-      const oldScore = await parseInt(batArray[batArray.length - 1]);
+      const bowled = await ballArray[ballArray.length - 1];
+      const oldScore = await batArray[batArray.length - 1];
 
       //End
       if (c.toLowerCase().trim() === "end") {
@@ -102,7 +102,7 @@ module.exports = async function(bowler, batsman, target) {
       }
 
       //Wicket
-      else if (parseInt(c) === bowled) {
+      else if (parseInt(c) === parseInt(bowled)) {
         end(batCollector, ballCollector);
 
         const data = await db.findOne({
@@ -115,10 +115,11 @@ module.exports = async function(bowler, batsman, target) {
         if (goldMulti === 0) goldMulti = 0.2;
 
         const coins = Math.floor(Math.random() * goldMulti * 696);
-        rewards(bowler, batsman, coins);
 
         bowler.send(`Wicket! Piro! You won a grand amount of ${coins} coins`);
         batsman.send('Wicket! Noob!');
+
+        rewards(bowler, batsman, coins);
         return;
       }
 
@@ -136,14 +137,15 @@ module.exports = async function(bowler, batsman, target) {
         if (goldMulti === 0) goldMulti = 0.2;
 
         const coins = Math.floor(Math.random() * goldMulti * 696);
-        rewards(batsman, bowler, coins);
 
         bowler.send('You lost..');
         batsman.send(`You won the match! and also a grand amount of ${coins} coins`)
+
+        rewards(bowler, batsman, coins);
         return;
       } else {
 
-        const newScore = parseInt(oldScore + parseInt(c))
+        const newScore = parseInt(oldScore) + parseInt(c);
         batArray.push(newScore)
 
         const embed = new Discord.MessageEmbed()
