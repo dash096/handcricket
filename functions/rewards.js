@@ -15,6 +15,7 @@ module.exports = async function(winner, loser, coins) {
   const winnerOldGoldMulti = winnerData.goldMulti;
   const winnerOldTossMulti = winnerData.tossMulti;
   const winnerOldWins = winnerData.wins;
+  const winnerOldCoins = winnerData.cc;
 
   //Loser Old Data
   const loserOldTossMulti = loserData.tossMulti;
@@ -23,6 +24,7 @@ module.exports = async function(winner, loser, coins) {
   //Set new Data
   const winnerSet = {
     $set: {
+      cc: winnerOldCoins + coins,
       goldMulti: winnerOldGoldMulti + random,
       tossMulti: winnerOldTossMulti - 0.069,
       wins: winnerOldWins + 1,
