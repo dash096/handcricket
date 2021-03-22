@@ -1,4 +1,4 @@
-const db = require('../schemas/player,js');
+const db = require('../schemas/player.js');
 
 module.exports = {
   name: 'balance',
