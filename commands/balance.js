@@ -1,4 +1,5 @@
 const db = require('../schemas/player.js');
+const emoji = require('../index.js');
 
 module.exports = {
   name: 'balance',
@@ -20,7 +21,7 @@ module.exports = {
         message.reply(`${target.username} isnt a player. Do \`!start\` to start.`);
         return;
       }
-      message.channel.send(`**${target.username}** has ${data.cc} coins.`);
+      message.channel.send(`**${target.username}** has ${emoji} ${data.cc} coins.`);
     });
 
   }

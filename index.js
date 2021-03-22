@@ -7,6 +7,9 @@ const client = new Discord.Client({
   partials: ['MESSAGE', 'REACTION']
 });
 
+const emoji = client.emojis.cache.get('823608412360146964');
+module.exports = emoji;
+
 client.on("ready", () => {
   console.log("Logged in!");
   client.user.setActivity("HandCricket");
