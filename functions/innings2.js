@@ -122,7 +122,8 @@ module.exports = async function(bowler, batsman, target) {
         return;
       }
 
-      const newScore = await batArray[batArray.length - 1] + parseInt(c);
+      const newScore = await parseInt(batArray[batArray.length - 1]) + parseInt(c);
+      console.log(newScore);
       
       //Target
       if (parseInt(newScore) >= target) {
@@ -152,7 +153,7 @@ module.exports = async function(bowler, batsman, target) {
 
         const embed = new Discord.MessageEmbed()
         .setTitle('Cricket Match - Second Innings')
-        .addField(batsman.username + ' - Batsman', newScore)
+        .addField(batsman.username + ' - Batsman', parseInt(newScore))
         .addField(bowler.username + ' - Bowler', target)
         .setColor('RANDOM')
 
