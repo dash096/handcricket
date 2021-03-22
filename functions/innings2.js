@@ -122,7 +122,7 @@ module.exports = async function(bowler, batsman, target) {
         return;
       }
 
-      const newScore = await parseInt(batArray[batArray.length - 1]) + parseInt(c);
+      const newScore = await batArray[batArray.length - 1] + parseInt(c);
       console.log(newScore);
       
       //Target
