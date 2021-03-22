@@ -11,12 +11,17 @@ module.exports = {
   run: async ({
     message
   }) => {
-    const target = message.mentions.members.first() || message.author;
+    const target = message.mentions.users.first() || message.author;
 
     const data = await db.findOne({
       _id: target.id
+    }).catch((e) => {
+      if (e) {
+        message.reply(`${target.username} isnt a player. Do \`!start\` to start.`);
+        return;
+      }
+      message.channel.send(`**${target.username}** has ${data.cc} coins.`);
     });
 
-    message.channel.send(`**${target.username}** has ${data.cc} coins.`);
   }
 }
