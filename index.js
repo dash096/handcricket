@@ -11,7 +11,7 @@ const emoji = client.emojis.cache.get('823608412360146964');
 module.exports = emoji;
 
 client.on("ready", () => {
-  console.log("Logged in!");
+  console.log("Logged in!" + emoji);
   client.user.setActivity("HandCricket");
 
   const dbOptions = {
