@@ -73,7 +73,6 @@ module.exports = async function(bowler, batsman, target) {
     async m => {
       const c = m.content;
       const bowled = await ballArray[ballArray.length - 1];
-      const oldScore = await batArray[batArray.length - 1];
 
       //End
       if (c.toLowerCase().trim() === "end") {
@@ -123,8 +122,10 @@ module.exports = async function(bowler, batsman, target) {
         return;
       }
 
+      const newScore = await batArray[batArray.length - 1] + parseInt(c);
+      
       //Target
-      else if (parseInt(oldScore + parseInt(c)) >= target) {
+      if (parseInt(newScore) >= target) {
         end(batCollector, ballCollector);
 
         const data = await db.findOne({
@@ -138,15 +139,16 @@ module.exports = async function(bowler, batsman, target) {
 
         const coins = Math.floor(Math.random() * goldMulti * 696);
 
-        bowler.send('You lost..');
+        bowler.send('You lost.., The Batsman\'s score is ' + newScore);
         batsman.send(`You won the match! and also a grand amount of ${coins} coins`)
 
-        rewards(bowler, batsman, coins);
+        rewards(batsman, bowler, coins);
         return;
-      } else {
-
-        const newScore = parseInt(oldScore) + parseInt(c);
-        batArray.push(newScore)
+      } 
+      
+      //Push
+      else {
+        batArray.push(parseInt(newScore))
 
         const embed = new Discord.MessageEmbed()
         .setTitle('Cricket Match - Second Innings')
