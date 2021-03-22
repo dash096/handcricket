@@ -111,8 +111,9 @@ module.exports = async function(bowler, batsman, target) {
         let goldMulti = data.goldMulti;
         if (goldMulti === 0) goldMulti = 0.2;
 
-        const coins = Math.floor(Math.random() * (goldMulti * 696));
-        console.log(coins);
+        const multi = goldMulti * 696
+
+        const coins = Math.random().toFixed(0) * multi.toFixed(0);
 
         bowler.send(`Wicket! Piro! You won a grand amount of ${coins} coins`);
         batsman.send('Wicket! Noob!');
