@@ -8,10 +8,11 @@ module.exports = {
     'wallet'],
   description: 'Shows balance of a user.',
   category: 'handcricket',
-  cooldown: '15s',
+  cooldown: '10s',
   run: async ({
     message
   }) => {
+    console.log(emoji);
     const target = message.mentions.users.first() || message.author;
 
     const data = await db.findOne({
