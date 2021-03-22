@@ -17,8 +17,8 @@ module.exports = async function(bowler, batsman, target) {
   const ballEmbed = await bowler.send(embed);
 
   //Arrays
-  const batArray = [];
-  const ballArray = [];
+  const batArray = [0];
+  const ballArray = [0];
 
   //Collectors
   const batCollector = batsman.dmChannel.createMessageCollector(
