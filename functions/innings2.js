@@ -10,7 +10,7 @@ module.exports = async function(bowler, batsman, target) {
   .setTitle('Cricket Match - Second Innings')
   .addField(batsman.username + ' - Batsman', 0)
   .addField(bowler.username + ' - Bowler', target)
-  .setColor('RANDOM');
+  .setColor('#2d61b5');
 
   //Embeds
   const batEmbed = await batsman.send(embed);
@@ -154,7 +154,7 @@ module.exports = async function(bowler, batsman, target) {
         .setTitle('Cricket Match - Second Innings')
         .addField(batsman.username + ' - Batsman', parseInt(newScore))
         .addField(bowler.username + ' - Bowler', target)
-        .setColor('RANDOM')
+        .setColor('#2d61b5')
 
         batsman.send(`You hit ${c} and you were bowled ${bowled}`, {
           embed

@@ -27,6 +27,7 @@ module.exports = {
     .addField("Toss Multi", data.tossMulti)
     .addField("Coins Multi", data.goldMulti)
     .setFooter(data.startedOn)
+    .setColor('#2d61b5')
 
     message.reply(embed);
   }

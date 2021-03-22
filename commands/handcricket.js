@@ -37,7 +37,7 @@ module.exports = {
       message.reply(target.username + " is not a player. Do `!start`");
       return;
     }
-    
+
     //Status Validation
     if (userdata.status === true) {
       message.reply(user.username + " is already in a match");
