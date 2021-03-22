@@ -101,7 +101,7 @@ module.exports = async function(batsman, bowler) {
 
       const newScore = await batArray[batArray.length - 1] + parseInt(c);
 
-      if (parseInt(c) < 9) {
+      if (parseInt(c) < 10) {
         //Push in the array
         batArray.push(newScore);
         //Confirm Embeds
