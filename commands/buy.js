@@ -35,12 +35,31 @@ module.exports = {
     
     console.log(player.bag);
     
-    const bagObject = player.bag;
+    //Inventory and Balance
+    const inventory = player.bag;
+    const cost = item._id * amount;
+    const balance = player.cc
     
-    bagObject[item.name] = amount;
+    //Update Inventory
+    inventory[item.name] = amount;
     
-    await console.log(bagObject);
-    //await db.findOneAndUpdate({_id: mesage.author.id}, { $set: {bag} }, {upsert: true})
+    if(balance < cost) {
+      message.reply('You arent rich enough to buy that much');
+      return;
+    }
     
+    //Change Inventory DB
+    await playerDB.findOneAndUpdate(
+      {_id: message.author.id}, 
+      { $set: {bag: inventory, cc: balance - cost} }, 
+      {upsert: true}).catch((e) => 
+      {
+        if(e) {
+          console.log(e);
+          return;
+        }
+    });
+    
+    message.channel.send(`You bought **${amount} ${item.name}** for ${cost}`);
   }
 };
