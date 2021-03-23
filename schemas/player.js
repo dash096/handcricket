@@ -7,12 +7,14 @@ const player = new mongoose.Schema({
   loses: { type: Number, default: 0 },
   goldMulti: { type: Number, default: 0 },
   tossMulti: { type: Number, default: 0.5 },
-  bag: [],
+  bag: {},
+  goldBoost: Date,
+  tossBoost: Date,
   level: { type: String, default: 'Starter' },
-  startedOn: { type: Date, required: true},
+  startedOn: { type: Date, required: true },
   status: { type: Boolean, default: false },
 });
 
-const model = mongoose.model("player", player);
+  const model = mongoose.model("player", player);
 
-module.exports = model
+  module.exports = model
