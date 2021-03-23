@@ -1,17 +1,20 @@
 const Discord = require("discord.js");
-const WOKCommands = require("wokcommands");
-const mongoose = require("mongoose");
-require("dotenv").config();
 
 const client = new Discord.Client({
   partials: ['MESSAGE', 'REACTION']
 });
 
-const emoji = client.emojis.cache.get('823608412360146964');
+const WOKCommands = require("wokcommands");
+const mongoose = require("mongoose");
+require("dotenv").config();
+
+const emojiGuild = client.guilds.cache.get('823608260166025217');
+const emoji = emojiGuild.emojis.cache.find(emoji => emoji.name === 'cc');
+console.log(emoji);
 module.exports = emoji;
 
 client.on("ready", () => {
-  console.log("Logged in!" + emoji);
+  console.log("Logged in!");
   client.user.setActivity("HandCricket");
 
   const dbOptions = {
