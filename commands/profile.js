@@ -25,7 +25,7 @@ module.exports = {
     }
     
     const items = data.bag;
-    console.log(items);
+    console.log(items.count);
     
     const embed = new Discord.MessageEmbed()
     .setTitle(`Profile of **${message.author.username}**`)
