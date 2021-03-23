@@ -12,7 +12,6 @@ module.exports = {
   run: async ({
     message
   }) => {
-    console.log(emoji);
     const target = message.mentions.users.first() || message.author;
 
     const data = await db.findOne({
@@ -22,7 +21,7 @@ module.exports = {
         message.reply(`${target.username} isnt a player. Do \`!start\` to start.`);
         return;
       }
-      message.channel.send(`**${target.username}** has ${emoji.id} ${data.cc} coins.`);
+      message.channel.send(`**${target.username}** has ${data.cc} coins.`);
     });
 
   }
