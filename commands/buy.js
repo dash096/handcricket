@@ -56,6 +56,7 @@ module.exports = {
     //Update Inventory
     inventory[item.name] = amount;
     
+    console.log(oldAmount, number, amount)
     if(balance < cost) {
       message.reply('You arent rich enough to buy that much');
       return;
