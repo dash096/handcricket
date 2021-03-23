@@ -29,6 +29,9 @@ module.exports = {
     for(const item of items) {
       console.log(item);
     }
+    
+    console.log(items);
+    
     const embed = new Discord.MessageEmbed()
     .setTitle(`Profile of **${message.author.username}**`)
     .addField("Balance", ` ${emoji} ${data.cc}`, true)
