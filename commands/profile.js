@@ -26,8 +26,12 @@ module.exports = {
     
     const items = data.bag;
     
-    const arr = Object.keys(items).map((key) => [key, items[key]]);
-    console.log(arr[0]);
+    const texts = Object.keys(items).map((key) => [key, items[key]]);
+    
+    for(const text of texts) {
+      const a = text.join(' ');
+      console.log(a);
+    }
     
     const embed = new Discord.MessageEmbed()
     .setTitle(`Profile of **${message.author.username}**`)
