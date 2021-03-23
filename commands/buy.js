@@ -39,6 +39,8 @@ module.exports = {
     const cost = item._id * amount;
     const balance = player.cc
     
+    console.log(inventory, cost);
+    
     //Update Inventory
     inventory[item.name] = amount;
     
@@ -49,14 +51,14 @@ module.exports = {
     
     //Change Inventory DB
     await playerDB.findOneAndUpdate(
-      {_id: message.author.id}, 
+      { _id: message.author.id }, 
       { $set: {bag: inventory, cc: balance - cost} }, 
-      {upsert: true}).catch((e) => 
-      {
-        if(e) {
-          console.log(e);
-          return;
-        }
+      { upsert: true }
+    ).catch((e) => {
+      if(e) {
+        console.log(e);
+        return;
+      }
     });
     
     const check = await playerDB.findOne({_id: message.author.id});
