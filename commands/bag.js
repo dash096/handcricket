@@ -26,8 +26,8 @@ module.exports = {
     const items = Object.keys(bagItems).map((key) => [key, bagItems[key]]);
     
     for(const item of items) {
-      const text = item.join(' ');
-      embed.addField(text.toUpperCase[0], text[1], true);
+      const text = item;
+      embed.addField(text[0].toUpperCase, text[1], true);
     }
     
     await message.reply(embed);
