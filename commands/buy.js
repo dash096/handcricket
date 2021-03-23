@@ -51,12 +51,10 @@ module.exports = {
     //Price/Cost
     const amount = parseInt(oldAmount) + parseInt(number);
     const balance = player.cc;
-    const cost = item._id * amount;
+    const cost = item._id * number;
     
     //Update Inventory
     inventory[item.name] = amount;
-    
-    console.log(oldAmount, number, amount);
     
     if(balance < cost) {
       message.reply('You arent rich enough to buy that much');
