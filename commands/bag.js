@@ -10,6 +10,12 @@ module.exports = {
   category: 'handcricket',
   run: async ({message}) => {
     
+    const data = await db.findOne({_id: message.author.id}).catch((e) => {
+        console.log(e);
+    });
+    
+    if(!data) return message.reply('You arent a player, Do "!start"');
+    
     const embed = new Discord.MessageEmbed()
       .setTitle(`${message.author.tag}'s bag`)
       .setDescription('Pretty Large Backpack')
