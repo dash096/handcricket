@@ -15,22 +15,24 @@ module.exports = {
     });
     
     if(!data) return message.reply('You arent a player, Do "!start"');
-    
-    const embed = new Discord.MessageEmbed()
-      .setTitle(`${message.author.tag}'s bag`)
-      .setDescription('Pretty Large Backpack')
-      .setFooter('Show this to your frnds!')
-      .setColor('#2d61b5')
       
     const bagItems = data.bag;
     const items = Object.keys(bagItems).map((key) => [key, bagItems[key]]);
     
+    let fieldText = '';
+    
     for(const item of items) {
       const text = item;
-      embed.addField(text[0].toUpperCase(), text[1], true);
+      fieldText += text[0].charAt(0).toUpperCase() + text[0].slice(1) + '\n';
     }
     
-    await message.reply(embed);
+    const embed = await new Discord.MessageEmbed()
+      .setTitle(`${message.author.tag}'s bag`)
+      .setDescription('Pretty Large Backpack' + fieldText)
+      .setFooter('Show this to your frnds!')
+      .setColor('#2d61b5')
+    
+    message.reply(embed);
     
   }
 }
