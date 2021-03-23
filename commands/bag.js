@@ -19,16 +19,16 @@ module.exports = {
     const bagItems = data.bag;
     const items = Object.keys(bagItems).map((key) => [key, bagItems[key]]);
     
-    let fieldText = '\n';
+    let fieldText = '';
     
     for(const item of items) {
       const text = item;
-      fieldText += `**${text[0].charAt(0).toUpperCase() + text[0].slice(1)}** ${text[1]} \n`;
+      fieldText += `**${text[0].charAt(0).toUpperCase() + text[0].slice(1)}** (${text[1]}) \n`;
     }
     
     const embed = await new Discord.MessageEmbed()
       .setTitle(`${message.author.tag}'s bag`)
-      .setDescription('Pretty Large Backpack' + fieldText)
+      .setDescription('Pretty nice Inventory' + fieldText)
       .setFooter('Show this to your frnds!')
       .setColor('#2d61b5')
     

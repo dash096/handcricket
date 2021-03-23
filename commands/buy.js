@@ -13,7 +13,7 @@ module.exports = {
     //Content in the message (perfect)
     const args = message.content.trim().split(' ').slice(1);
     const name = args[0];
-    const amount = parseInt(args[1]) || 1;
+    const number = parseInt(args[1]) || 1;
     
     const item = await itemDB.findOne( {name: name} ).catch((e) => {
       console.log(e);
@@ -32,12 +32,13 @@ module.exports = {
       return;
     }
     
-    //Inventory and Balance
+    //Inventory
     const inventory = player.bag || {};
-    const cost = item._id * amount;
-    const balance = player.cc
     
-    console.log(inventory, cost);
+    //Prize
+    const amount = inventory[item.amount] + number;
+    const balance = player.cc;
+    const cost = item._id * amount;
     
     //Update Inventory
     inventory[item.name] = amount;
