@@ -23,7 +23,7 @@ module.exports = {
       }
     });
 
-    message.channel.send(`**${target.username}** has ${emoji.getEmoji()} ${data.cc} coins.`);
+    message.channel.send(`**${target.username}** has ${await emoji} ${data.cc} coins.`);
 
   }
 }
