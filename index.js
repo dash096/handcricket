@@ -8,7 +8,7 @@ const WOKCommands = require("wokcommands");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-const emojiGuild = client.guilds.cache.fetch('823608260166025217');
+const emojiGuild = client.guilds.fetch('823608260166025217');
 const emoji = emojiGuild.emojis.cache.find(emoji => emoji.name === 'cc');
 console.log(emoji);
 module.exports = emoji;
