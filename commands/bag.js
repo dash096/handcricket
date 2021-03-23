@@ -8,7 +8,7 @@ module.exports = {
   description: 'Shows your backpack',
   aliases: ['inventory', 'inv'],
   category: 'handcricket',
-  run: ({message}) => {
+  run: async ({message}) => {
     
     const embed = new Discord.MessageEmbed()
       .setTitle(`${message.author.tag}'s bag`)
