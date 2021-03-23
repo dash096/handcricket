@@ -1,4 +1,4 @@
-const Discord = require('dizcord.js');
+const Discord = require('discord.js');
 const db = require('../schemas/player.js');
 
 const getEmoji = require('../index.js');
