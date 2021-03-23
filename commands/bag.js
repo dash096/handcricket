@@ -19,11 +19,11 @@ module.exports = {
     const bagItems = data.bag;
     const items = Object.keys(bagItems).map((key) => [key, bagItems[key]]);
     
-    let fieldText = '';
+    let fieldText = '\n';
     
     for(const item of items) {
       const text = item;
-      fieldText += text[0].charAt(0).toUpperCase() + text[0].slice(1) + '\n';
+      fieldText += `**${text[0].charAt(0).toUpperCase() + text[0].slice(1)}** ${text[1]} \n`;
     }
     
     const embed = await new Discord.MessageEmbed()
