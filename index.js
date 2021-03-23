@@ -70,7 +70,7 @@ client.on('message', async m => {
   
   const args = m.content.toLowerCase().trim().split(' ').slice(1);
   
-  if(m.content.startWith('i+')) {
+  if(m.content.startsWith('i+')) {
     
     const newitem = new db({
       id: args[0],
