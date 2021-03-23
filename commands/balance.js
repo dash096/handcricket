@@ -1,5 +1,5 @@
 const db = require('../schemas/player.js');
-const emoji = require('../index.js');
+const getEmoji = require('../index.js');
 
 module.exports = {
   name: 'balance',
@@ -12,6 +12,7 @@ module.exports = {
   run: async ({
     message
   }) => {
+    const emoji = await getEmoji;
     const target = message.mentions.users.first() || message.author;
 
     const data = await db.findOne({
@@ -23,7 +24,7 @@ module.exports = {
       }
     });
 
-    message.channel.send(`**${target.username}** has ${await emoji} ${data.cc} coins.`);
+    message.channel.send(`**${target.username}** has ${emoji} ${data.cc} coins.`);
 
   }
 }

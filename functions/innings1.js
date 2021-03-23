@@ -4,8 +4,8 @@ const Discord = require("discord.js");
 module.exports = async function(batsman, bowler) {
   const embed = new Discord.MessageEmbed()
   .setTitle("Cricket Match - First Innings")
-  .addField(batsman.username + " - Batsman", 0)
-  .addField(bowler.username + " - Bowler", 0)
+  .addField(batsman.username + " - Batsman", 0, true)
+  .addField(bowler.username + " - Bowler", 0, true)
   .setColor("#2d61b5");
 
   const batEmbed = await batsman.send(embed);
@@ -107,8 +107,8 @@ module.exports = async function(batsman, bowler) {
         //Confirm Embeds
         const embed = new Discord.MessageEmbed()
         .setTitle("Cricket Match - First Innings")
-        .addField(batsman.username + " - Batsman", newScore)
-        .addField(bowler.username + " - Bowler", 0)
+        .addField(batsman.username + " - Batsman", newScore, true)
+        .addField(bowler.username + " - Bowler", 0, true)
         .setColor("#2d61b5");
 
         await batsman.send(`You hit ${c} and you were bowled ${bowled}, **Scoreboard**`, {

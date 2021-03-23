@@ -1,15 +1,18 @@
 const db = require("../schemas/player.js");
 const Discord = require("discord.js");
+const getEmoji = require('../index.js');
 
 //shuffled
 module.exports = async function(bowler, batsman, target) {
+  const emoji = await getEmoji;
+
   bowler.send("2nd Innings starts");
   batsman.send("2nd Innings starts");
 
   const embed = new Discord.MessageEmbed()
   .setTitle('Cricket Match - Second Innings')
-  .addField(batsman.username + ' - Batsman', 0)
-  .addField(bowler.username + ' - Bowler', target)
+  .addField(batsman.username + ' - Batsman', 0, true)
+  .addField(bowler.username + ' - Bowler', target, true)
   .setColor('#2d61b5');
 
   //Embeds
@@ -115,7 +118,7 @@ module.exports = async function(bowler, batsman, target) {
 
         const coins = Math.random().toFixed(2) * multi.toFixed(0);
 
-        bowler.send(`Wicket! Piro! You won a grand amount of ${coins} coins`);
+        bowler.send(`Wicket! Piro! You won a grand amount of ${emoji} ${coins} coins`);
         batsman.send('Wicket! Noob!');
 
         rewards(bowler, batsman, coins);
@@ -140,7 +143,7 @@ module.exports = async function(bowler, batsman, target) {
         const coins = Math.random().toFixed(2) * multi.toFixed(0);
 
         bowler.send('You lost.., The Batsman\'s score is ' + newScore);
-        batsman.send(`You won the match! and also a grand amount of ${coins} coins`)
+        batsman.send(`You won the match! and also a grand amount of ${emoji} ${coins} coins`)
 
         rewards(batsman, bowler, coins);
         return;
@@ -152,8 +155,8 @@ module.exports = async function(bowler, batsman, target) {
 
         const embed = new Discord.MessageEmbed()
         .setTitle('Cricket Match - Second Innings')
-        .addField(batsman.username + ' - Batsman', parseInt(newScore))
-        .addField(bowler.username + ' - Bowler', target)
+        .addField(batsman.username + ' - Batsman', parseInt(newScore), true)
+        .addField(bowler.username + ' - Bowler', target, true)
         .setColor('#2d61b5')
 
         batsman.send(`You hit ${c} and you were bowled ${bowled}`, {

@@ -1,5 +1,6 @@
 const db = require("../schemas/player.js");
 const Discord = require("discord.js");
+const getEmoji = require('../index.js');
 
 module.exports = {
   name: 'profile',
@@ -10,6 +11,7 @@ module.exports = {
   run: async ({
     message
   }) => {
+    const emoji = await getEmoji;
 
     const data = await db.findOne({
       _id: message.author.id
@@ -21,11 +23,11 @@ module.exports = {
     }
 
     const embed = new Discord.MessageEmbed()
-    .setTitle(message.author.username)
-    .addField("Balance", data.cc)
-    .addField("Wins", data.wins)
-    .addField("Toss Multi", data.tossMulti)
-    .addField("Coins Multi", data.goldMulti)
+    .setTitle(`Profile of **${message.author.username}**`)
+    .addField("Balance", ` ${emoji} + ${data.cc}`, true)
+    .addField("Wins", data.wins, true)
+    .addField("Toss Multi", data.tossMulti, true)
+    .addField("Coins Multi", data.goldMulti, true)
     .setFooter(data.startedOn)
     .setColor('#2d61b5')
 
