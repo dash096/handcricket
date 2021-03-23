@@ -24,20 +24,10 @@ module.exports = {
       return;
     }
     
-    const items = data.bag;
-    
-    const texts = Object.keys(items).map((key) => [key, items[key]]);
-    
-    for(const text of texts) {
-      const a = text.join(' ');
-      console.log(a);
-    }
-    
     const embed = new Discord.MessageEmbed()
     .setTitle(`Profile of **${message.author.username}**`)
     .addField("Balance", ` ${emoji} ${data.cc}`, true)
     .addField("Wins", data.wins, true)
-    .addField('Inventory', 'nil')
     .addField("Toss Multi", data.tossMulti, true)
     .addField("Coins Multi", data.goldMulti, true)
     .setFooter(data.startedOn)

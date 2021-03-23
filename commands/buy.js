@@ -1,5 +1,3 @@
-
-
 const playerDB = require("../schemas/player.js");
 const itemDB = require("../schemas/items.js");
 const Discord = require("discord.js");
