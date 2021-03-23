@@ -36,9 +36,8 @@ module.exports = {
     console.log(player.bag);
     
     const bagObject = player.bag;
-    const itemName = item.name;
     
-    bagObject.itemName.bal = amount;
+    bagObject[item.name] = amount;
     
     await console.log(bagObject);
     //await db.findOneAndUpdate({_id: mesage.author.id}, { $set: {bag} }, {upsert: true})
