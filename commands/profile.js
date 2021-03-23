@@ -25,11 +25,6 @@ module.exports = {
     }
     
     const items = data.bag;
-    
-    for(const item of items) {
-      console.log(item);
-    }
-    
     console.log(items);
     
     const embed = new Discord.MessageEmbed()

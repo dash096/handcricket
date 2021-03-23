@@ -61,9 +61,6 @@ module.exports = {
       }
     });
     
-    const check = await playerDB.findOne({_id: message.author.id});
-    console.log(check.bag);
-    
     message.channel.send(`You bought **${amount} ${item.name}** for ${emoji} ${cost} coins`);
   }
 };
