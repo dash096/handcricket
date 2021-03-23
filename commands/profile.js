@@ -23,7 +23,12 @@ module.exports = {
       message.reply(message.author.tag + " is not a player. Do `!start`");
       return;
     }
-
+    
+    const items = data.bag;
+    
+    for(const item of items) {
+      console.log(item);
+    }
     const embed = new Discord.MessageEmbed()
     .setTitle(`Profile of **${message.author.username}**`)
     .addField("Balance", ` ${emoji} ${data.cc}`, true)

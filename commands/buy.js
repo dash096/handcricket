@@ -11,6 +11,7 @@ module.exports = {
   category: 'handcricket',
   run: async ({message}) => {
     
+    const emoji = await getEmoji
     //Content in the message (perfect)
     const args = message.content.trim().split(' ').slice(1);
     const name = args[0];
@@ -32,8 +33,6 @@ module.exports = {
       message.reply("Not a valid item!");
       return;
     }
-    
-    console.log(player.bag);
     
     //Inventory and Balance
     const inventory = player.bag;
@@ -60,6 +59,6 @@ module.exports = {
         }
     });
     
-    message.channel.send(`You bought **${amount} ${item.name}** for ${cost}`);
+    message.channel.send(`You bought **${amount} ${item.name}** for ${emoji} ${cost} coins`);
   }
 };
