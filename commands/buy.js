@@ -35,7 +35,7 @@ module.exports = {
     }
     
     //Inventory and Balance
-    const inventory = player.bag;
+    const inventory = player.bag || {};
     const cost = item._id * amount;
     const balance = player.cc
     
