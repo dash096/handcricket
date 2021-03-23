@@ -49,7 +49,7 @@ module.exports = {
     if(!item.amount) oldAmount = 0;
     
     //Price/Cost
-    const amount = oldAmount + number;
+    const amount = parseInt(oldAmount) + parseInt(number);
     const balance = player.cc;
     const cost = item._id * amount;
     
