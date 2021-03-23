@@ -26,7 +26,7 @@ module.exports = {
     
     const items = data.bag;
     
-    const arr = Object.keys(items).map((key) => [key, items[key]]);
+    const arr = Object.keys(items).map((key) => key, items[key]);
     console.log(arr);
     
     const embed = new Discord.MessageEmbed()
