@@ -10,9 +10,8 @@ require("dotenv").config();
 
 getEmoji()
 
-async
-function getEmoji() {
-    const emojiGuild = client.guilds.fetch('823608260166025217');
+async function getEmoji() {
+    const emojiGuild = await client.guilds.fetch('823608260166025217');
     const emoji = emojiGuild.emojis.cache.find(emoji => emoji.name === 'cc');
     console.log(emoji);
     module.exports = emoji;
