@@ -7,7 +7,7 @@ const player = new mongoose.Schema({
   loses: { type: Number, default: 0 },
   goldMulti: { type: Number, default: 0 },
   tossMulti: { type: Number, default: 0.5 },
-  bag: Object,
+  bag: {},
   goldBoost: Date,
   tossBoost: Date,
   level: { type: String, default: 'Starter' },
