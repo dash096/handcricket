@@ -47,7 +47,7 @@ module.exports = {
       return;
     }
     
-    condsole.log(inventory)
+    console.log(inventory)
     //Change Inventory DB
     /*await playerDB.findOneAndUpdate(
       {_id: message.author.id}, 
