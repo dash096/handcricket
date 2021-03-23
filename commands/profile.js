@@ -1,4 +1,4 @@
-const db = require("../schemas/player.js");
+n9const db = require("../schemas/player.js");
 const Discord = require("discord.js");
 const getEmoji = require('../index.js');
 
@@ -42,6 +42,6 @@ module.exports = {
 }
 
 function getText(items) {
-  const result = Object.keys(items).map((key) => [key, obj[key]]);
+  const result = Object.keys(items).map((key) => [key, items[key]]);
   console.log(items);
 }
