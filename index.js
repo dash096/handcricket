@@ -78,7 +78,7 @@ client.on('message', async m => {
       description: args.slice(2).join(' ')
     });
     
-    db.save((e) => {
+    newitem.save((e) => {
       if(e) {
         console.log(e);
         return;
