@@ -25,7 +25,10 @@ module.exports = {
     }
     
     const items = data.bag;
-    console.log(items.keys());
+    const names = Object.keys(items);
+    const amounts = Object.values(items);
+    
+    console.log(names, amounts);
     
     const embed = new Discord.MessageEmbed()
     .setTitle(`Profile of **${message.author.username}**`)
