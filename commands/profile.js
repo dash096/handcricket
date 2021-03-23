@@ -25,7 +25,9 @@ module.exports = {
     }
     
     const items = data.bag;
-    getText(items);
+    
+    const arr = Object.keys(items).map((key) => [key, items[key]]);
+    console.log(arr);
     
     const embed = new Discord.MessageEmbed()
     .setTitle(`Profile of **${message.author.username}**`)
@@ -39,9 +41,4 @@ module.exports = {
 
     message.reply(embed);
   }
-}
-
-function getText(items) {
-  const result = Object.keys(items).map((key) => [key, items[key]]);
-  console.log(items);
 }
