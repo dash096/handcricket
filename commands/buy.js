@@ -9,9 +9,11 @@ module.exports = {
   category: 'handcricket',
   run: async ({message}) => {
     
-    const emoji = await getEmoji
-    //Content in the message (perfect)
+    const emoji = await getEmoji;
+    
     const args = message.content.trim().split(' ').slice(1);
+    
+    //Content in the message
     const name = args[0];
     const number = parseInt(args[1]) || 1;
     
@@ -23,6 +25,11 @@ module.exports = {
       console.log(e);
     });
     
+    //Validation
+    if(!name || !number || isNaN(number)) {
+      message.reply('Invalid Syntax, use "!buy name amount"');
+      return;
+    }
     if (!player) {
       message.reply(message.author.tag + " is not a player. Do `!start`");
       return;
@@ -32,11 +39,17 @@ module.exports = {
       return;
     }
     
+    //Name and Number, Db (above)
+    
     //Inventory
     const inventory = player.bag || {};
     
-    //Prize
-    const amount = inventory[item.amount] + number;
+    //OldAmount
+    let oldAmount = inventory[item.amount];
+    if(!item.amount) oldAmount = 0;
+    
+    //Price/Cost
+    const amount = oldAmount + number;
     const balance = player.cc;
     const cost = item._id * amount;
     
