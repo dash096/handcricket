@@ -23,12 +23,23 @@ module.exports = {
     //Database
     const userdata = await db.findOne({
       _id: user.id
+    }).catch((e) => {
+      if(e) {
+        console.log(e);
+        message.reply('Do !start before you can play.');
+      }
     });
+    
     const targetdata = await db.findOne({
       _id: target.id
+    }).catch((e) => {
+      if(e) {
+        console.log(e);
+        message.reply('Do !start before you can play.');
+      }
     });
 
-    //Validate Database
+    /*//Validate Database
     if (!userdata) {
       message.reply(user.username + " is not a player. Do `!start`");
       return;
@@ -36,7 +47,7 @@ module.exports = {
     if (!targetdata) {
       message.reply(target.username + " is not a player. Do `!start`");
       return;
-    }
+    }*/
 
     //Status Validation
     if (userdata.status === true) {

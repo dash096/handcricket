@@ -15,12 +15,13 @@ module.exports = {
 
     const data = await db.findOne({
       _id: message.author.id
+    }).catch((e) => {
+      if(e) {
+        console.log(e);
+        message.reply("Do !start before you can play.");
+        return;
+      }
     });
-
-    if (!data) {
-      message.reply("Do !start before you can play.");
-      return;
-    }
 
     const embed = new Discord.MessageEmbed()
     .setTitle(`Profile of **${message.author.username}**`)

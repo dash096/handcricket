@@ -10,10 +10,28 @@ module.exports = {
   description: 'Buy an item from the shop',
   category: 'handcricket',
   run: async ({message}) => {
-    const args = message.content.trim().split(' ').slice(1);
-    const name = args[0]
-    const amount = parseInt(args[1]) || 1
     
-    console.log(name, amount);
+    //Content in the message (perfect)
+    const args = message.content.trim().split(' ').slice(1);
+    const name = args[0];
+    const amount = parseInt(args[1]) || 1;
+    
+    const item = await itemDB.findOne( {name: name} ).catch((e) => {
+      if(e) {
+        console.log(e);
+        message.channel.send('Not a valid item!');
+      }
+    });
+    
+    const player = await playerDB.findOne( {_id: message.author.id} ).catch(e => {
+      if(e) { 
+        console.log(e);
+        messags.channel.send('You are not a player! Do `!start` before you can play.');
+        return;
+      }
+    });
+    
+    console.log(player.bag);
+    
   }
-}
+};
