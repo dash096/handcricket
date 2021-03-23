@@ -47,8 +47,9 @@ module.exports = {
       return;
     }
     
+    condsole.log(inventory)
     //Change Inventory DB
-    await playerDB.findOneAndUpdate(
+    /*await playerDB.findOneAndUpdate(
       {_id: message.author.id}, 
       { $set: {bag: inventory, cc: balance - cost} }, 
       {upsert: true}).catch((e) => 
@@ -57,7 +58,7 @@ module.exports = {
           console.log(e);
           return;
         }
-    });
+    });*/
     
     message.channel.send(`You bought **${amount} ${item.name}** for ${emoji} ${cost} coins`);
   }
