@@ -17,19 +17,21 @@ module.exports = {
     const amount = parseInt(args[1]) || 1;
     
     const item = await itemDB.findOne( {name: name} ).catch((e) => {
-      if(e) {
-        console.log(e);
-        message.channel.send('Not a valid item!');
-      }
+      console.log(e);
     });
     
     const player = await playerDB.findOne( {_id: message.author.id} ).catch(e => {
-      if(e) { 
-        console.log(e);
-        messags.channel.send('You are not a player! Do `!start` before you can play.');
-        return;
-      }
+      console.log(e);
     });
+    
+    if (!player) {
+      message.reply(message.author.tag + " is not a player. Do `!start`");
+      return;
+    }
+    if (!item) {
+      message.reply("Not a valid item!");
+      return;
+    }
     
     console.log(player.bag);
     

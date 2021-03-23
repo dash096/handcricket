@@ -15,12 +15,13 @@ module.exports = {
     const data = await db.findOne( {
       _id: message.author.id
     }).catch((e) => {
-      if(e) {
-        console.log(e);
-        message.reply("Do !start before you can play.");
-        return;
-      }
+      console.log(e);
     })
+    
+    if (!data) {
+      message.reply(message.author.tag + "You are not a player. Do `!start`");
+      return;
+    }
 
     const embed = new Discord.MessageEmbed()
     .setTitle(`Shop Items`)

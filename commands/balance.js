@@ -18,12 +18,13 @@ module.exports = {
     const data = await db.findOne({
       _id: target.id
     }).catch((e) => {
-      if (e) {
-        message.reply(`${target.username} isnt a player. Do \`!start\` to start.`);
-        return;
-      }
+      console.log(e)
     });
-
+    
+    if (!data) {
+      message.reply(target.tag + " is not a player. Do `!start`");
+      return;
+    }
     message.channel.send(`**${target.username}** has ${emoji} ${data.cc} coins.`);
 
   }
