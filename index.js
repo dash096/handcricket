@@ -73,7 +73,7 @@ client.on('message', async m => {
   if(m.content.startsWith('i+')) {
     
     const newitem = new db({
-      id: args[0],
+      _id: args[0],
       name: args[1],
       description: args.slice(2).join(' ')
     });
