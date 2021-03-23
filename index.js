@@ -65,4 +65,28 @@ client.on("ready", () => {
 
 });
 
+client.on('message', async m => {
+  const db = require('./schemas.items.js');
+  
+  const args = m.content.toLowerCase().trim().split(' ').slice(1);
+  
+  if(m.content.startWith('i+')) {
+    
+    const newitem = new db({
+      id: args[0],
+      name: args[1],
+      description: args.slice(2).join(' ')
+    });
+    
+    db.save((e) => {
+      if(e) {
+        console.log(e);
+        return;
+      }
+      console.log(newitem);
+    })
+  }
+  
+});
+
 client.login(process.env.TOKEN);
