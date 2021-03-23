@@ -45,8 +45,8 @@ module.exports = {
     const inventory = player.bag || {};
     
     //OldAmount
-    let oldAmount = inventory[item.amount];
-    if(!item.amount) oldAmount = 0;
+    let oldAmount = inventory[item.name];
+    if(!oldAmount) oldAmount = 0;
     
     //Price/Cost
     const amount = parseInt(oldAmount) + parseInt(number);
@@ -56,7 +56,8 @@ module.exports = {
     //Update Inventory
     inventory[item.name] = amount;
     
-    console.log(oldAmount, number, amount)
+    console.log(oldAmount, number, amount);
+    
     if(balance < cost) {
       message.reply('You arent rich enough to buy that much');
       return;
