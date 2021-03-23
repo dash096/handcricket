@@ -75,6 +75,6 @@ module.exports = {
       }
     });
     
-    message.channel.send(`You bought **${amount} ${item.name}** for ${emoji} ${cost} coins`);
+    message.channel.send(`You bought **${number} ${item.name}** for ${emoji} ${cost} coins`);
   }
 };
