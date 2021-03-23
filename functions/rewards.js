@@ -12,30 +12,30 @@ module.exports = async function(winner, loser, coins) {
   const random = Math.floor(Math.random());
 
   //Winner Old Data
-  const winnerOldGoldMulti = winnerData.goldMulti;
-  const winnerOldTossMulti = winnerData.tossMulti;
-  const winnerOldWins = winnerData.wins;
-  const winnerOldCoins = winnerData.cc;
+  const winnerGoldMulti = winnerData.goldMulti;
+  const winnerTossMulti = winnerData.tossMulti;
+  const winnerWins = winnerData.wins;
+  const winnerCoins = winnerData.cc;
 
   //Loser Old Data
-  const loserOldTossMulti = loserData.tossMulti;
-  const loserOldLoses = loserData.loses;
+  const loserTossMulti = loserData.tossMulti;
+  const loserLoses = loserData.loses;
 
   //Set new Data
   const winnerSet = {
     $set: {
-      cc: winnerOldCoins + coins,
-      goldMulti: winnerOldGoldMulti + random,
-      tossMulti: winnerOldTossMulti - 0.069,
-      wins: winnerOldWins + 1,
+      cc: winnerCoins + coins,
+      goldMulti: winnerGoldMulti + random,
+      tossMulti: winnerTossMulti - 0.069,
+      wins: winnerWins + 1,
       status: false
     }
   }
 
   const loserSet = {
     $set: {
-      tossMulti: loserOldTossMulti + 0.069,
-      loses: loserOldLoses + 1,
+      tossMulti: loserTossMulti + 0.069,
+      loses: loserLoses + 1,
       status: false
     }
   }
