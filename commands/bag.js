@@ -27,7 +27,7 @@ module.exports = {
     
     for(const item of items) {
       const text = item;
-      embed.addField(text[0].toUpperCase, text[1], true);
+      embed.addField(text[0].toUpperCase(), text[1], true);
     }
     
     await message.reply(embed);
