@@ -66,7 +66,7 @@ client.on("ready", () => {
 });
 
 client.on('message', async m => {
-  const db = require('./schemas.items.js');
+  const db = require('./schemas/items.js');
   
   const args = m.content.toLowerCase().trim().split(' ').slice(1);
   
