@@ -5,10 +5,13 @@ module.exports = async function (message) {
   
   const args = message.content.toLowerCase().trim().split(' ').slice(1);
   
-  let itemAmount = args.slice(-1);
+  //Amount
+  let itemAmountArray = args.slice(-1);
+  let itemAmount = itemAmountArray[0];
   console.log(itemAmount);
   
-  let itemName = args.pop().join(' ');
+  //Name
+  let itemName = args.pop();
   console.log(itemName);
   
   if(!itemAmount || isNaN(itemAmount)) {
