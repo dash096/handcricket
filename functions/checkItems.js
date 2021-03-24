@@ -12,7 +12,7 @@ module.exports = async function (message) {
   //Name
   let itemNameArray = args.pop();
   if(isNaN(itemAmount)) { itemNameArray = args; }
-  
+  console.log(itemNameArray);
   let itemName = itemNameArray.join(' ');
   
   if(!itemAmount || isNaN(itemAmount)) {
