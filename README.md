@@ -1,6 +1,5 @@
-#todo
-- Create Schema for items
-- Add to Bag on buying
+##todo
 - Loot Box Usage
 - Initialize Boosters
 - Use Powerups in Match
+- Vote Command
