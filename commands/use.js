@@ -1,7 +1,7 @@
 const db = require('../schemas/player.js');
-const itemDB = require('../schemas/items.js');
+const itemDb = require('../schemas/items.js');
 const Discord = require('discord.js');
-const checkItems = require('../functions/checkItupdateBag');
+const checkItems = require('../functions/checkItems.js');
 
 module.exports = {
   name: 'use',
@@ -51,7 +51,7 @@ module.exports = {
 
 const updateBag = async (name, amount, data, msg) => {
   const oldBag = data.bag;
-  const oldAmount = oldBnewAmount;
+  const oldAmount = oldBag[name];
   const newAmount = oldAmount - parseInt(amount);
 
   if (!oldAmount || oldAmount < amount) {

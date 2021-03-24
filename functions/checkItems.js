@@ -6,14 +6,15 @@ module.exports = async function (message) {
   const args = message.content.toLowerCase().trim().split(' ').slice(1);
   
   //Amount (last word)
-  let itemAmountArray = args.slice(-1); //returns last word in array
-  let itemAmount = parseInt(itemAmountArray[0]); //integer
+  let itemAmountArray = args[args.length - 1]; //returns last word in array
+  let itemAmount = parseInt(itemAmountArray); //integer
   
   //Name
   let itemNameArray = args; //Message in []
-  let killTheNumber = itemNameArray.pop();
+  if(parseInt(itemAmount)) {
+    itemNameArray.pop(); //Kill the last element
+  }
   let itemName = itemNameArray.join(' ');
-  console.log(itemName, killTheNumber);
   
   if(!itemAmount || isNaN(itemAmount)) { //Validates Item
     itemAmount = 1;
@@ -47,7 +48,6 @@ module.exports = async function (message) {
     return;
   }
   
-  await console.log(itemName, itemAmount);
-  
+  console.log(itemName + ' - ' + itemAmount);
   return [itemName, itemAmount];
 };
