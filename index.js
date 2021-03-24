@@ -5,6 +5,7 @@ const client = new Discord.Client({
 });
 const WOKCommands = require("wokcommands");
 const mongoose = require("mongoose");
+const db = require('./schemas/player.js');
 
 //Get Coins Emoji
 async function getEmoji() {
@@ -16,7 +17,7 @@ module.exports = getEmoji();
 
 
 //Ready Event
-client.on("ready", () => {
+client.on("ready", async () => {
   console.log("Logged in!");
   client.user.setActivity("HandCricket");
 
@@ -63,7 +64,9 @@ client.on("ready", () => {
       name: "handcricket",
       emoji: "🏏"
     }]);
-
+    
+    const brokenBoosts = require('./functions/brokenBoosts.js');
+    brokenBoosts();
 });
 
 client.login(process.env.TOKEN);
