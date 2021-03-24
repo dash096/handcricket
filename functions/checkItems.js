@@ -11,11 +11,11 @@ module.exports = async function (message) {
   
   //Name
   let itemNameArray = args; //Message in []
-  let itemName = itemNameArray.join(' '); //Mesaage in ""
+  let itemName = itemNameArray.splice(-1, 1).join(' ');
   
   if(!itemAmount || isNaN(itemAmount)) { //Validates Item
     itemAmount = 1;
-    itemName = args.slice(3).join(' '); //Need to remove
+    itemName = args.join(' '); //Need to remove
   }
   
   /*redbull, nuts, dot, magikball, coinboost, tossboost, lootbox */
