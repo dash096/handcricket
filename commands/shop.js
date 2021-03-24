@@ -7,6 +7,7 @@ module.exports = {
   name: "shop",
   aliases: ["market"],
   category: "handcricket",
+  description: 'Displays the items that are for sell in the shop',
   run: async ({
     message
   }) => {

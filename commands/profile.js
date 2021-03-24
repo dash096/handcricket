@@ -29,7 +29,7 @@ module.exports = {
     .addField("Balance", ` ${emoji} ${data.cc}`, true)
     .addField("Wins", data.wins, true)
     .addField("Toss Multi", data.tossMulti, true)
-    .addField("Coins Multi", data.goldMulti, true)
+    .addField("Coins Multi", data.coinMulti, true)
     .setFooter(data.startedOn)
     .setColor('#2d61b5')
 

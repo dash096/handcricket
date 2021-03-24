@@ -21,10 +21,13 @@ module.exports = async function (name, data, msg) {
     
     //Check if a boost exists
     const oldBoost = data.coinBoost;
-    const oldBoostTime = oldBoost.getTime();
-    if(Date.now() < oldBoostTime) {
-      return msg.reply('There\'s a boost active already!');
-    }
+     if(oldBoost) {
+        const oldBoostTime = oldBoost.getTime();
+        if(Date.now() < oldBoostTime) {
+          msg.reply('There\'s a boost active already!');
+          return;
+        }
+      }
 
     //Const Expiry Date of Boost
     const expireDate = Date.now() + 60 * 1000;
@@ -60,10 +63,13 @@ module.exports = async function (name, data, msg) {
     
     //Check if already its boosted
     const oldBoost = data.tossBoost;
-    const oldBoostTime = oldBoost.getTime();
-    if(Date.now() < oldBoostTime) {
-      return msg.reply('There\'s a boost active already!');
-    }
+      if(oldBoost) {
+        const oldBoostTime = oldBoost.getTime();
+        if(Date.now() < oldBoostTime) {
+          msg.reply('There\'s a boost active already!');
+          return;
+        }
+      }
     
     //Const Expiry Date of Boost 
     const expireDate = Date.now() + 60 * 1000;
