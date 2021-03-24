@@ -6,15 +6,16 @@ module.exports = async function (message) {
   const args = message.content.toLowerCase().trim().split(' ').slice(1);
   
   //Amount (last word)
-  let itemAmountArray = args.slice(-1); //Last word
-  let itemAmount = itemAmountArray[0]; //Last word
+  let itemAmountArray = args.slice(-1); //returns last word in array
+  let itemAmount = parseInt(itemAmountArray[0]); //integer
   
   //Name
-  let itemNameArray = args;
-  let itemName = itemNameArray.join(' ');
+  let itemNameArray = args; //Message in []
+  let itemName = itemNameArray.join(' '); //Mesaage in ""
   
-  if(!itemAmount || isNaN(itemAmount)) {
+  if(!itemAmount || isNaN(itemAmount)) { //Validates Item
     itemAmount = 1;
+    itemName = args.slice(3).join(' '); //Need to remove
   }
   
   /*redbull, nuts, dot, magikball, coinboost, tossboost, lootbox */
