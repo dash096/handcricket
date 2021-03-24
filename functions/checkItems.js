@@ -6,7 +6,10 @@ module.exports = async function (message) {
   const args = message.content.toLowerCase().trim().split(' ').slice(1);
   
   let itemAmount = args.slice(-1);
+  console.log(itemAmount);
+  
   let itemName = args.pop().join(' ');
+  console.log(itemName);
   
   if(!itemAmount || isNaN(itemAmount)) {
     itemAmount = 1;
