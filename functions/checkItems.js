@@ -12,7 +12,7 @@ module.exports = async function (message) {
   //Name
   let itemNameArray = args; //Message in []
   let killTheNumber = itemNameArray.pop();
-  let itemName = itemArray.join(' ');
+  let itemName = itemNameArray.join(' ');
   
   if(!itemAmount || isNaN(itemAmount)) { //Validates Item
     itemAmount = 1;
