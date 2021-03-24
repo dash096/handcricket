@@ -3,7 +3,7 @@ const Discord = require("discord.js");
 
 module.exports = async function (message) {
   
-  const args = message.content.toLowerCase().trim().slice(1);
+  const args = message.content.toLowerCase().trim().split(' ').slice(1);
   
   let itemAmount = args.slice(-1);
   let itemName = args.pop().join(' ');
