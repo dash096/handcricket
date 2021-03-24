@@ -10,7 +10,10 @@ module.exports = async function (message) {
   let itemAmount = itemAmountArray[0];
   
   //Name
-  let itemName = args.pop();
+  let itemNameArray = args.pop();
+  if(isNaN(itemAmount)) { itemNameArray = args; }
+  
+  let itemName = itemNameArray.join(' ');
   
   if(!itemAmount || isNaN(itemAmount)) {
     itemAmount = 1;
@@ -43,7 +46,7 @@ module.exports = async function (message) {
     return;
   }
   
-  await console.log(args, itemName, itemAmount, itemData);
+  await console.log(itemName, itemAmount, itemData);
   
   return [itemName, itemAmount];
 };

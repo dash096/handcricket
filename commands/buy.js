@@ -20,6 +20,10 @@ module.exports = {
     const player = await playerDB.findOne( {_id: message.author.id} ).catch(e => {
       console.log(e);
     });
+    const item = await itemDB.findOne( {_id: name} ).catch(e => {
+      console.log(e);
+    });
+    
     if (!player) { //Validation
       message.reply(message.author.tag + " is not a player. Do `!start`");
       return;
