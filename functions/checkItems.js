@@ -38,7 +38,7 @@ module.exports = async function (message) {
   
   const itemData = db.findOne({name: itemName}).catch((e) => console.log(e));
   
-  if(!data) {
+  if(!itemData) {
     message.reply("Invalid Item");
     return;
   }
