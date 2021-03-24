@@ -7,11 +7,16 @@ module.exports = async function (name, data, msg) {
   if (name === 'coinboost') {
     const oldBag = data.bag || {};
     const oldAmount = oldBag[name];
-    const oldCoinMulti = data.coinMulti;
+    let oldCoinMulti = data.coinMulti;
 
     //Check No. of Items is bigger than usage
     if (!oldAmount || oldAmount === 0) {
       return msg.reply('You dont have a ' + name + ' in your bag. Buy one!');
+    }
+    
+    //Check if boost is 0, and change to 0.1
+    if (oldCoinMulti === 0) {
+      oldCoinMulti = 0.1;
     }
     
     //Check if a boost exists
@@ -23,7 +28,6 @@ module.exports = async function (name, data, msg) {
 
     //Const Expiry Date of Boost
     const expireDate = Date.now() + 60 * 1000;
-    console.log(Date.now(), expireDate);
 
     //Update Database
     await db.findOneAndUpdate({ _id: data._id }, {
@@ -43,11 +47,15 @@ module.exports = async function (name, data, msg) {
   if (name === 'tossboost') {
     const oldBag = data.bag || {};
     const oldAmount = oldBag[name];
-    const oldTossMulti = data.tossMulti;
+    let oldTossMulti = data.tossMulti;
 
     //Check if usage is smaller than balance
     if (!oldAmount || oldAmount === 0) {
       return msg.reply('You dont have a ' + name + ' in your bag. Buy one!');
+    }
+    //Check if tossmulti is 0 and change to 0.1
+    if(oldTossMulti === 0) {
+      oldTossMulti = 0.1;
     }
     
     //Check if already its boosted
@@ -59,8 +67,7 @@ module.exports = async function (name, data, msg) {
     
     //Const Expiry Date of Boost 
     const expireDate = Date.now() + 60 * 1000;
-    console.log(Date.now(), expireDate);
-
+    
     //Update Database
     await db.findOneAndUpdate({ _id: data._id }, {
         $set: {
