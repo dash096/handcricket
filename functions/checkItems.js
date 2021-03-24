@@ -13,6 +13,7 @@ module.exports = async function (message) {
   let itemNameArray = args; //Message in []
   let killTheNumber = itemNameArray.pop();
   let itemName = itemNameArray.join(' ');
+  console.log(itemName, killTheNumber);
   
   if(!itemAmount || isNaN(itemAmount)) { //Validates Item
     itemAmount = 1;

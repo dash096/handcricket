@@ -7,20 +7,21 @@ const checkItems = require("../functions/checkItems.js")
 module.exports = {
   name: 'buy',
   description: 'Buy an item from the shop',
-  category: 'handcricket',
+  category: 'handcricet',
   run: async ({message}) => {
     
     const emoji = await getEmoji;
     
     //Content in the message
-    const itemsArray = checkItems(message);
+    const itemsArray = await checkItems(message);
+    
     const name = itemsArray[0];
-    const number = parseInt(itemsArray[1]);
+    const number = itemsArray[1];
     
     const player = await playerDB.findOne( {_id: message.author.id} ).catch(e => {
       console.log(e);
     });
-    const item = await itemDB.findOne( {_id: name} ).catch(e => {
+    const item = await itemDB.findOne( {name: name} ).catch(e => {
       console.log(e);
     });
     
@@ -42,7 +43,7 @@ module.exports = {
     const cost = item._id * number;
     
     //Update Inventory
-    inventory[item.name] = amount;
+    bag[item.name] = amount;
     
     if(balance < cost) {
       message.reply('You arent rich enough to buy that much');
@@ -52,7 +53,7 @@ module.exports = {
     //Change Inventory DB
     await playerDB.findOneAndUpdate(
       { _id: message.author.id }, 
-      { $set: {bag: inventory, cc: balance - cost} }, 
+      { $set: {bag: bag, cc: balance - cost} }, 
       { upsert: true }
     ).catch((e) => {
       if(e) {
