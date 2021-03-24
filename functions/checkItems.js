@@ -8,11 +8,9 @@ module.exports = async function (message) {
   //Amount
   let itemAmountArray = args.slice(-1);
   let itemAmount = itemAmountArray[0];
-  console.log(itemAmount);
   
   //Name
   let itemName = args.pop();
-  console.log(itemName);
   
   if(!itemAmount || isNaN(itemAmount)) {
     itemAmount = 1;
@@ -38,7 +36,7 @@ module.exports = async function (message) {
     itemName = "tossboost";
   }
   
-  const itemData = db.findOne({name: name}).catch((e) => console.log(e));
+  const itemData = db.findOne({name: itemName}).catch((e) => console.log(e));
   
   if(!data) {
     message.reply("Invalid Item");
