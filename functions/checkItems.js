@@ -11,7 +11,8 @@ module.exports = async function (message) {
   
   //Name
   let itemNameArray = args; //Message in []
-  let itemName = itemNameArray.splice(-1, 1).join(' ');
+  let killTheNumber = itemNameArray.pop();
+  let itemName = itemArray.join(' ');
   
   if(!itemAmount || isNaN(itemAmount)) { //Validates Item
     itemAmount = 1;
@@ -38,14 +39,14 @@ module.exports = async function (message) {
     itemName = "tossboost";
   }
   
-  const itemData = db.findOne({name: itemName}).catch((e) => console.log(e));
+  const itemData = await db.findOne({name: itemName}).catch((e) => console.log(e));
   
   if(!itemData) {
     message.reply("Invalid Item");
     return;
   }
   
-  await console.log(itemName, itemAmount, itemData);
+  await console.log(itemName, itemAmount);
   
   return [itemName, itemAmount];
 };
