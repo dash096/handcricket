@@ -42,21 +42,21 @@ module.exports = {
       message.reply('You drank a redbull!');
       updateBag(itemName, itemAmount, playerData, message);
       return;
-    } 
-    
-    if (itemName === 'coinmulti') {
+    }
+
+    if (itemName === 'coinboost') {
       updateMulti(itemName, playerData, message);
       updateBag(itemName, itemAmount, playerData, message);
       message.reply('Your Coin multiplier is now boosted twice!');
+      return;
     }
-    
-    if (itemName === 'tossmulti') {
+
+    if (itemName === 'tossboost') {
       updateMulti(itemName, playerData, message);
       updateBag(itemName, itemAmount, playerData, message);
       message.reply('Your Toss multiplier is now boosted twice!');
-    }
-    
-    else {
+      return;
+    } else {
       //Loot boxes, Magikeye
       message.reply('Usage of those items is still under development.');
       return;
