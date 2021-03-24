@@ -1,13 +1,11 @@
 const Discord = require("discord.js");
-
 const client = new Discord.Client({
   partials: ['USER', 'CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 'REACTION']
 });
-
 const WOKCommands = require("wokcommands");
 const mongoose = require("mongoose");
-require("dotenv").config();
 
+//Get Coins Emoji
 async function getEmoji() {
   const emojiGuild = await client.guilds.fetch('823608260166025217');
   const emoji = emojiGuild.emojis.cache.find(emoji => emoji.name === 'cc');
@@ -15,6 +13,8 @@ async function getEmoji() {
 }
 module.exports = getEmoji();
 
+
+//Ready Event
 client.on("ready", () => {
   console.log("Logged in!");
   client.user.setActivity("HandCricket");
@@ -63,30 +63,6 @@ client.on("ready", () => {
       emoji: "🏏"
     }]);
 
-});
-
-client.on('message', async m => {
-  const db = require('./schemas/items.js');
-  
-  const args = m.content.toLowerCase().trim().split(' ').slice(1);
-  
-  if(m.content.startsWith('i+')) {
-    
-    const newitem = new db({
-      _id: args[0],
-      name: args[1],
-      description: args.slice(2).join(' ')
-    });
-    
-    newitem.save((e) => {
-      if(e) {
-        console.log(e);
-        return;
-      }
-      console.log(newitem);
-    })
-  }
-  
 });
 
 client.login(process.env.TOKEN);

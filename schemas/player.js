@@ -8,7 +8,7 @@ const player = new mongoose.Schema({
   goldMulti: { type: Number, default: 0 },
   tossMulti: { type: Number, default: 0.5 },
   bag: {},
-  goldBoost: Date,
+  coinBoost: Date,
   tossBoost: Date,
   level: { type: String, default: 'Starter' },
   startedOn: { type: Date, required: true },

@@ -2,6 +2,8 @@ const db = require('../schemas/player.js');
 const itemDb = require('../schemas/items.js');
 const Discord = require('discord.js');
 const checkItems = require('../functions/checkItems.js');
+const updateBag = require('../functions/updateBag.js');
+const updateMulti = require('../functions/updateMulti.js');
 
 module.exports = {
   name: 'use',
@@ -40,34 +42,25 @@ module.exports = {
       message.reply('You drank a redbull!');
       updateBag(itemName, itemAmount, playerData, message);
       return;
-    } else {
-      //Code Boosts, Loot boxes, Magikeye
+    } 
+    
+    if (itemName === 'coinmulti') {
+      updateMulti(itemName, playerData, message);
+      updateBag(itemName, itemAmount, playerData, message);
+      message.reply('Your Coin multiplier is now boosted twice!');
+    }
+    
+    if (itemName === 'tossmulti') {
+      updateMulti(itemName, playerData, message);
+      updateBag(itemName, itemAmount, playerData, message);
+      message.reply('Your Toss multiplier is now boosted twice!');
+    }
+    
+    else {
+      //Loot boxes, Magikeye
       message.reply('Usage of those items is still under development.');
       return;
     }
 
   }
-};
-
-const updateBag = async (name, amount, data, msg) => {
-  const oldBag = data.bag;
-  const oldAmount = oldBag[name];
-  const newAmount = oldAmount - parseInt(amount);
-
-  if (!oldAmount || oldAmount < amount) {
-    return msg.reply('You dont have that many' + name);
-  } else if (newAmount === 0) {
-    delete oldBag[name];
-  } else {
-    oldBag[name] = newAmount;
-  }
-
-  await db.findOneAndUpdate({
-    _id: data._id
-  }, {
-    $set: {
-      bag: oldBag
-    }
-  });
-
 };
