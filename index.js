@@ -64,6 +64,4 @@ client.on("ready", async () => {
     await brokenBoosts();
 });
 
-
-
 client.login(process.env.TOKEN);
