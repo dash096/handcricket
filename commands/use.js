@@ -56,8 +56,10 @@ module.exports = {
       const e2 = await updateBag(itemName, itemAmount, playerData, message);
       if(e1 != 'err' && e2 != 'err') message.reply('Your Toss multiplier is now boosted twice!');
       return;
-    } else {
-      //Loot boxes, Magikeye
+    } 
+    
+    //Under Construction.
+    if (itemName === 'lootbox' || itemName === 'magikball'){
       message.reply('Usage of those items is still under development.');
       return;
     }
