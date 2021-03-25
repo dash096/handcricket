@@ -33,28 +33,28 @@ module.exports = {
     }
 
     if (itemName === 'nuts') {
-      message.reply('You ate some nuts!');
-      updateBag(itemName, itemAmount, playerData, message);
+      const e = await updateBag(itemName, itemAmount, playerData, message);
+      if(e != 'err') message.reply('You ate some nuts!');
       return;
     }
 
     if (itemName === 'redbull') {
-      message.reply('You drank a redbull!');
-      updateBag(itemName, itemAmount, playerData, message);
+      const e = await updateBag(itemName, itemAmount, playerData, message);
+      if(e != 'err') message.reply('You drank a redbull!');
       return;
     }
 
     if (itemName === 'coinboost') {
-      updateMulti(itemName, playerData, message);
-      updateBag(itemName, itemAmount, playerData, message);
-      message.reply('Your Coin multiplier is now boosted twice!');
+      const e1 = await updateMulti(itemName, playerData, message);
+      const e2 = await updateBag(itemName, itemAmount, playerData, message);
+      if (e1 != 'err' && e2 != 'err') message.reply('Your Coin multiplier is now boosted twice!');
       return;
     }
 
     if (itemName === 'tossboost') {
-      updateMulti(itemName, playerData, message);
-      updateBag(itemName, itemAmount, playerData, message);
-      message.reply('Your Toss multiplier is now boosted twice!');
+      const e1 = await updateMulti(itemName, playerData, message);
+      const e2 = await updateBag(itemName, itemAmount, playerData, message);
+      if(e1 != 'err' && e2 != 'err') message.reply('Your Toss multiplier is now boosted twice!');
       return;
     } else {
       //Loot boxes, Magikeye

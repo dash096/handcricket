@@ -11,7 +11,8 @@ module.exports = async function (name, data, msg) {
 
     //Check No. of Items is bigger than usage
     if (!oldAmount || oldAmount === 0) {
-      return msg.reply('You dont have a ' + name + ' in your bag. Buy one!');
+      msg.reply('You dont have a ' + name + ' in your bag. Buy one!');
+      return 'err';
     }
     
     //Check if boost is 0, and change to 0.1
@@ -25,7 +26,7 @@ module.exports = async function (name, data, msg) {
         const oldBoostTime = oldBoost.getTime();
         if(Date.now() < oldBoostTime) {
           msg.reply('There\'s a boost active already!');
-          return;
+          return 'err';
         }
       }
 
@@ -54,7 +55,8 @@ module.exports = async function (name, data, msg) {
 
     //Check if usage is smaller than balance
     if (!oldAmount || oldAmount === 0) {
-      return msg.reply('You dont have a ' + name + ' in your bag. Buy one!');
+      msg.reply('You dont have a ' + name + ' in your bag. Buy one!');
+      return 'err';
     }
     //Check if tossmulti is 0 and change to 0.1
     if(oldTossMulti === 0) {
@@ -67,7 +69,7 @@ module.exports = async function (name, data, msg) {
         const oldBoostTime = oldBoost.getTime();
         if(Date.now() < oldBoostTime) {
           msg.reply('There\'s a boost active already!');
-          return;
+          return 'err';
         }
       }
     

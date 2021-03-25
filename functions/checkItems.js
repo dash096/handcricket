@@ -45,7 +45,7 @@ module.exports = async function (message) {
   
   if(!itemData) {
     message.reply("Invalid Item");
-    return;
+    return 'err';
   }
   
   console.log(itemName + ' - ' + itemAmount);

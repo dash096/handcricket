@@ -28,7 +28,7 @@ module.exports = {
     
     const embed = await new Discord.MessageEmbed()
       .setTitle(`${message.author.tag}'s bag`)
-      .setDescription('Pretty nice Inventory' + fieldText)
+      .setDescription('Pretty nice Inventory\n' + fieldText)
       .setFooter('Show this to your frnds!')
       .setColor('#2d61b5')
     

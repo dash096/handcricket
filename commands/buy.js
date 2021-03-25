@@ -13,8 +13,12 @@ module.exports = {
     const emoji = await getEmoji;
     
     //Content in the message
-    const itemsArray = await checkItems(message);
+    const arr = await checkItems(message);
+    if(arr === 'err') {
+      return;
+    }
     
+    const itemsArray = arr;
     const name = itemsArray[0];
     const number = itemsArray[1];
     
@@ -46,11 +50,11 @@ module.exports = {
     bag[item.name] = amount;
     
     if(balance < cost) {
-      message.reply('You arent rich enough to buy that much');
+      message.reply('You arent rich enough to buy that much.');
       return;
     }
     
-    //Change Inventory DB
+    //Change Bag DB
     await playerDB.findOneAndUpdate(
       { _id: message.author.id }, 
       { $set: {bag: bag, cc: balance - cost} }, 
