@@ -34,7 +34,7 @@ client.on("ready", async () => {
       return;
     }
   });
-  console.log("Mongo Connected");
+  console.log("Mongo Connected", process.env.PRFX);
 
   const messagesPath = "";
   const disabledDefaultCommands = [];
