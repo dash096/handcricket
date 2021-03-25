@@ -27,26 +27,21 @@ client.on("ready", async () => {
     useFindAndModify: false
   }
 
-  mongoose.connect(process.env.MONGO, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false
-  }).
+  await mongoose.connect(process.env.MONGO, dbOptions).
   catch (e => {
     if (e) {
       console.log(e);
+      return;
     }
-    console.log("Mongo Connected");
   });
+  console.log("Mongo Connected");
 
   const messagesPath = "";
-
   const disabledDefaultCommands = [];
 
   new WOKCommands(client,
     {
       commandsDir: "commands",
-      featureDir: "features",
       messagesPath,
       showWarns: true,
       dbOptions,
@@ -66,7 +61,7 @@ client.on("ready", async () => {
     }]);
     
     const brokenBoosts = require('./functions/brokenBoosts.js');
-    brokenBoosts();
+    await brokenBoosts();
 });
 
 client.login(process.env.TOKEN);

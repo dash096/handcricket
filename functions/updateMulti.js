@@ -30,7 +30,7 @@ module.exports = async function (name, data, msg) {
         }
       }
 
-    //Const Expiry Date of Boost
+    //Expiry Date of Boost
     const expireDate = Date.now() + 60 * 1000;
 
     //Update Database
@@ -43,8 +43,28 @@ module.exports = async function (name, data, msg) {
     ).catch((e) => {
         console.log(e);
     });
+    
+    //Set timeout
+    setTimeout( async function () {
+      oldCoinMulti = data.coinMulti;
+      let newCoinMulti;
+      if(oldCoinMulti === 0.2) {
+        newCoinMulti = 0;
+      } else {
+        newCoinMulti = oldCoinMulti/2;
+      }
+      await db.findOneAndUpdate( {_id: data._id},
+        { $set: { 
+              coinMulti: newCoinMulti,
+              coinBoost: undefined,
+          }
+        }
+      );
+    }, 60 * 1000);
 
   }
+
+
 
 
 //Change Toss Boost
@@ -86,6 +106,25 @@ module.exports = async function (name, data, msg) {
     ).catch((e) => {
           console.log(e);
     });
+    
+    //Set timeout
+    setTimeout( async function () {
+      oldTossMulti = data.oldTossMulti;
+      let newTossMulti;
+      if(oldTossMulti === 0.2) {
+        newTossMulti = 0;
+      } else {
+        newTossMulti = oldTossMulti/2;
+      }
+      await db.findOneAndUpdate( {_id: data._id},
+        { $set: { 
+            tossMulti: newTossMulti,
+            tossBoost: undefined,
+          }
+        }
+      );
+    } ,  60 * 1000);
+    
   }
 
 };
