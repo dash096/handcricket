@@ -1,4 +1,4 @@
-module.exports => {
+module.exports = {
   name: 'shutdown',
   category: 'general',
   hidden: true,
