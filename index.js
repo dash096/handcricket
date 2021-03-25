@@ -48,7 +48,7 @@ client.on("ready", async () => {
       disabledDefaultCommands
     })
   .setMongoPath(process.env.MONGO)
-  .setDefaultPrefix(process.env.PREFIX)
+  .setDefaultPrefix(process.env.PRFX)
   .setBotOwner("772368021821718549")
   .setColor('#2d61b5')
   .setCategorySettings([{
