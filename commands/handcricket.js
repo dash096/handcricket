@@ -145,7 +145,7 @@ async function userWon(message, user, target) {
 }
 
 async function targetWon(message, user, target) {
-  const targetCollector = message.channel.createMessageCollector(
+  const targetCollector = message.channel.awaitMessages(
     m => m.author.id === target.id, { max: 1, time: 20000, errors: ['time'] }
   ).then( async msgs => {
     const m = msgs.first();
