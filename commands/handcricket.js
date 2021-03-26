@@ -158,7 +158,7 @@ async function userWon(message, user, target) {
       batsman = user;
       bowler = target;
     }
-    if (m.content.toLowerCase().trim() === "bowling") {
+    else if (m.content.toLowerCase().trim() === "bowling") {
       batsman = target;
       bowler = user;
     } else {
@@ -169,7 +169,7 @@ async function userWon(message, user, target) {
     start(message, batsman, bowler);
   } catch (e) { 
     if (e) message.channel.send('Time\'s up!');
-  };
+  }
   
 }
 
@@ -177,7 +177,7 @@ async function targetWon(message, user, target) {
   try {
     const msgs = await message.channel.awaitMessages(
       m => m.author.id === target.id, { max: 1, time: 20000, errors: ['time'] }
-    )
+    );
     const m = msgs.first();
     if (m.content.toLowerCase().trim() === "batting") {
       batsman = target;
@@ -194,5 +194,5 @@ async function targetWon(message, user, target) {
     start(message, batsman, bowler);
   } catch (e) { 
     if (e) message.channel.send('Time\'s up!');
-  };
+  }
 }
