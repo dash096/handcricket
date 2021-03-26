@@ -183,7 +183,7 @@ async function targetWon(message, user, target) {
       batsman = target;
       bowler = user;
     }
-    if (m.content.toLowerCase().trim() === "bowling") {
+    else if (m.content.toLowerCase().trim() === "bowling") {
       batsman = user;
      bowler = target;
     } else {

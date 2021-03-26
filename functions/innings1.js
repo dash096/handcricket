@@ -27,7 +27,7 @@ module.exports = async function(batsman, bowler) {
       const c = m.content;
 
       //End
-      if (c === "end") {
+      if (c == "end") {
         batsman.send(`**${bowler.username}** forfeited`);
         bowler.send(`You forfeited`);
         return;
@@ -40,7 +40,7 @@ module.exports = async function(batsman, bowler) {
       //Number Validation
       else if (c > 6) {
         m.react("❌");
-        bowler.send('Max is 6');
+        bowler.send('Max number that can be bowled is 6');
         return loopBallCollection();
       }
       //Turn based
@@ -89,6 +89,7 @@ module.exports = async function(batsman, bowler) {
       //Number validation
       else if (c > 6) {
         m.react("❌");
+        batsman.send('Max number that can be hit is 6');
         return loopBatCollection();
       }
 
