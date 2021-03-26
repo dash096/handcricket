@@ -152,12 +152,10 @@ async function targetWon(message, user, target) {
     if (m.content.toLowerCase().trim() === "batting") {
       batsman = target;
       bowler = user;
-      end(targetCollector);
     }
     if (m.content.toLowerCase().trim() === "bowling") {
       batsman = user;
       bowler = target;
-      end(targetCollector);
     } else {
       m.reply("Type either `batting` or `bowling`");
       return targetWon(message, user, target);
