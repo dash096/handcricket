@@ -111,10 +111,10 @@ module.exports = async function(bowler, batsman, target) {
           _id: batsman.id
         });
 
-        let goldMulti = data.goldMulti;
-        if (goldMulti === 0) goldMulti = 0.2;
+        let coinMulti = data.coinMulti;
+        if (coinMulti === 0) coinMulti = 0.2;
 
-        const multi = goldMulti * 696
+        const multi = coinMulti * 696;
 
         const coins = Math.random().toFixed(2) * multi.toFixed(0);
 
@@ -135,10 +135,10 @@ module.exports = async function(bowler, batsman, target) {
           _id: batsman.id
         });
 
-        let goldMulti = data.goldMulti;
-        if (goldMulti === 0) goldMulti = 0.2;
+        let coinMulti = data.coinMulti;
+        if (coinMulti === 0) coinMulti = 0.2;
 
-        const multi = goldMulti * 696
+        const multi = coinMulti * 696
 
         const coins = Math.random().toFixed(2) * multi.toFixed(0);
 

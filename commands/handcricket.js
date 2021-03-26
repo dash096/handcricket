@@ -49,7 +49,7 @@ module.exports = {
       return;
     }
     if (targetdata.status === true) {
-      message.reoly(target.username + " is already in a match");
+      message.reply(target.username + " is already in a match");
       return;
     }
 

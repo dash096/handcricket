@@ -56,6 +56,7 @@ module.exports = async function(batsman, bowler) {
       await bowler.send("You bowled " + c);
       await batsman.send("Ball is coming, hit it by typing a number.");
     }
+    
   });
 
   //Batsman Collection
@@ -118,6 +119,7 @@ module.exports = async function(batsman, bowler) {
           embed
         });
       }
+    
     });
 };
 
