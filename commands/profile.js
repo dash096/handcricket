@@ -4,9 +4,9 @@ const getEmoji = require('../index.js');
 
 module.exports = {
   name: 'profile',
-  aliases: ['pf',
-    'info'],
+  aliases: ['pf', 'info'],
   category: 'handcricket',
+  cooldown: '10s',
   description: 'Shows the profile of a user.',
   run: async ({
     message

@@ -18,7 +18,6 @@ module.exports = async function (message) {
   
   if(!itemAmount || isNaN(itemAmount)) { //Validates Item
     itemAmount = 1;
-    itemName = args.join(' '); //Need to remove
   }
   
   /*redbull, nuts, dot, magikball, coinboost, tossboost, lootbox */

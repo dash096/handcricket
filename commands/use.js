@@ -9,6 +9,7 @@ module.exports = {
   name: 'use',
   description: 'Use an item in your bag',
   category: 'handcricket',
+  cooldown: '15s',
   run: async ({
     message
   }) => {

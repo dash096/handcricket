@@ -8,15 +8,18 @@ module.exports = {
   name: 'buy',
   description: 'Buy an item from the shop',
   category: 'handcricet',
+  cooldown: '10s',
   run: async ({message}) => {
     
     const emoji = await getEmoji;
     
     //Content in the message
     const arr = await checkItems(message);
-    if(arr === 'err') {
+    if(arr == 'err') {
       return;
     }
+    
+    console.log(arr + 'hello');
     
     const itemsArray = arr;
     const name = itemsArray[0];
