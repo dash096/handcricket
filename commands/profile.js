@@ -24,12 +24,20 @@ module.exports = {
       return;
     }
     
+    let cb = '';
+    if(data.coinBoost) {
+      cb = boosted;
+    }
+    let tb = '';
+    if(data.tossBoost) {
+      tb = boosted;
+    }
     const embed = new Discord.MessageEmbed()
     .setTitle(`Profile of **${message.author.username}**`)
     .addField("Balance", ` ${emoji} ${data.cc}`, true)
     .addField("Wins", data.wins, true)
-    .addField("Toss Multi", data.tossMulti, true)
-    .addField("Coins Multi", data.coinMulti, true)
+    .addField("Toss Multi", data.tossMulti + tb, true)
+    .addField("Coins Multi", data.coinMulti + cb, true)
     .setFooter(data.startedOn)
     .setColor('#2d61b5')
 
