@@ -17,8 +17,8 @@ module.exports = async function(batsman, bowler) {
   loopBallCollection();
   loopBatCollection();
 
-  function loopBallCollection() {
-    bowler.dmChannel.awaitMessages(
+  async function loopBallCollection() {
+    await bowler.dmChannel.awaitMessages(
       m => m.author.id === bowler.id,
       { max: 1, time: 30000, errors: ['time'] }
     ).then( async msgs => 
@@ -65,7 +65,7 @@ module.exports = async function(batsman, bowler) {
   
   
   async function loopBatCollection() {
-    batsman.dmChannel.awaitMessages( m => m.author.id === batsman.id, 
+    await batsman.dmChannel.awaitMessages( m => m.author.id === batsman.id, 
       { max: 1, time: 30000, errors: ['time'] }
     ).then(async msgs => {
       const m = msgs.first();
@@ -102,7 +102,7 @@ module.exports = async function(batsman, bowler) {
       }
 
       const newScore = await batArray[batArray.length - 1] + parseInt(c);
-      
+      //Push
       if (parseInt(c) < 6) {
         batArray.push(newScore);
         
