@@ -3,6 +3,6 @@ module.exports = {
     description: 'Pong!',
     category: 'general',
     run: ({message}) => {
-        message.reply(`Pong! || ${Date.now() - message.createdTimestamp} ||`);
+        message.reply(`Pong! ${Date.now() - message.createdTimestamp}ms.`);
     }
 };
