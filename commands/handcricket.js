@@ -57,49 +57,75 @@ module.exports = {
     const roll = Math.floor(Math.random());
     let batsman;
     let bowler;
-
-    //User High Toss
-    if (user.tossMulti > target.tossMulti) {
-      //Users with roll.
-      if (roll < user.tossMulti) {
-        message.channel.send(`${user} won the toss, type either \`batting\` or \`bowling\``);
-        userWon(message, user, target);
+    
+    await message.reply(`${target} so do you wanna play with ${user.username}? Type \`y\`/\`n\` in 30s`);
+    
+    async function checkWill() {
+       const msgs = await message.channel.awaitMessages(m => m.author.id === target.id, {
+        max: 1,
+        time: 30000,
+        errors: ['time']
+      })
+      const c = msgs.first().content;
+      if(c.trim().toLowerCase() == 'y' || c.trim().toLowerCase() == 'yes') {
+        return true;
       }
-
-      //Target wins with roll.
-      if (roll >= user.tossMulti) {
-        message.channel.send(`${target} won the toss, type either \`batting\` or \`bowling\``);
-        targetWon(message, user, target);
-      }
-    }
-
-    //Target High Toss
-    if (user.tossMulti < target.tossMulti) {
-      //Target wins with roll
-      if (roll < target.tossMulti) {
-        message.channel.send(`${target} won the toss, type either \`batting\` or \`bowling\``);
-        targetWon(message, user, target);
-      }
-
-      //User wins with roll
-      if (roll >= target.tossMulti) {
-        message.channel.send(`${user} won the toss, type either \`batting\` or \`bowling\``);
-        userWon(message, user, target);
+      else {
+        message.channel.send(`Match cancelled due to rain`);
+        return;
       }
     }
+    
+    const will = await checkWill();
+    
+    if(will === true) {
+      rollToss();
+    }
+    
+    async function rollToss() {
+      //User High Toss
+      if (user.tossMulti > target.tossMulti) {
+        //Users with roll.
+        if (roll < user.tossMulti) {
+          message.channel.send(`${user} won the toss, type either \`batting\` or \`bowling\``);
+          userWon(message, user, target);
+        }
 
-    //Equal Multi Toss
-    if (target.tossMulti === user.tossMulti) {
-      const roll2 = Math.floor(Math.random() * 3);
-
-      if (roll2 === 1) { //User wins
-        message.channel.send(`${user} won the toss, type either \`batting\` or \`bowling\``);
-        userWon(message, user, target);
+        //Target wins with roll.
+        if (roll >= user.tossMulti) {
+          message.channel.send(`${target} won the toss, type either \`batting\` or \`bowling\``);
+          targetWon(message, user, target);
+        }
       }
 
-      if (roll2 === 2) { //Target wins
-        message.channel.send(`${target} won the toss, type either \`batting\` or \`bowling\``);
-        targetWon(message, user, target);
+      //Target High Toss
+      if (user.tossMulti < target.tossMulti) {
+        //Target wins with roll
+        if (roll < target.tossMulti) {
+          message.channel.send(`${target} won the toss, type either \`batting\` or \`bowling\``);
+          targetWon(message, user, target);
+        }
+
+        //User wins with roll
+        if (roll >= target.tossMulti) {
+          message.channel.send(`${user} won the toss, type either \`batting\` or \`bowling\``);
+          userWon(message, user, target);
+        }
+      }
+
+      //Equal Multi Toss
+      if (target.tossMulti === user.tossMulti) {
+        const roll2 = Math.floor(Math.random() * 3);
+
+        if (roll2 === 1) { //User wins
+          message.channel.send(`${user} won the toss, type either \`batting\` or \`bowling\``);
+          userWon(message, user, target);
+        }
+
+        if (roll2 === 2) { //Target wins
+          message.channel.send(`${target} won the toss, type either \`batting\` or \`bowling\``);
+          targetWon(message, user, target);
+        }
       }
     }
   }
@@ -122,9 +148,11 @@ async function start(message, batsman, bowler) {
 }
 
 async function userWon(message, user, target) {
-  const userCollector = message.channel.awaitMessages(
-    m => m.author.id === user.id, { max: 1, time: 20000, errors: ['time'] }
-  ).then( async msgs => {
+  try {
+    const msgs = await message.channel.awaitMessages(
+      m => m.author.id === user.id, { max: 1, time: 20000, errors: ['time'] }
+    )
+  
     const m = msgs.first();
     if (m.content.toLowerCase().trim() === "batting") {
       batsman = user;
@@ -139,15 +167,17 @@ async function userWon(message, user, target) {
     }
     await message.channel.send(`Batsman is ${batsman}, Bowler is ${bowler}`);
     start(message, batsman, bowler);
-  }).catch(e => { 
+  } catch (e) { 
     if (e) message.channel.send('Time\'s up!');
-  });
+  };
+  
 }
 
 async function targetWon(message, user, target) {
-  const targetCollector = message.channel.awaitMessages(
-    m => m.author.id === target.id, { max: 1, time: 20000, errors: ['time'] }
-  ).then( async msgs => {
+  try {
+    const msgs = await message.channel.awaitMessages(
+      m => m.author.id === target.id, { max: 1, time: 20000, errors: ['time'] }
+    )
     const m = msgs.first();
     if (m.content.toLowerCase().trim() === "batting") {
       batsman = target;
@@ -155,14 +185,14 @@ async function targetWon(message, user, target) {
     }
     if (m.content.toLowerCase().trim() === "bowling") {
       batsman = user;
-      bowler = target;
+     bowler = target;
     } else {
       m.reply("Type either `batting` or `bowling`");
       return targetWon(message, user, target);
     }
     await message.channel.send(`Batsman is ${batsman}, Bowler is ${bowler}`);
     start(message, batsman, bowler);
-  }).catch(e => { //Timeout
+  } catch (e) { 
     if (e) message.channel.send('Time\'s up!');
-   });
+  };
 }
