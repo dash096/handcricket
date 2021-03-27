@@ -3,7 +3,7 @@ const db = require('../schemas/player.js');
 module.exports = async function (what, boost) {
 
   if(what === 'toss') {
-    let oldTossMulti = boost.TossMulti;
+    let oldTossMulti = boost.tossMulti;
     if(oldTossMulti === 0.2) {
       oldTossMulti = 0;
     }
