@@ -1,5 +1,5 @@
 module.exports = {
-  name: 'restart',
+  name: 'links',
   category: 'general',
   hidden: true,
   description: 'Owner Only',
