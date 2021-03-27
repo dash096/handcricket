@@ -1,7 +1,6 @@
 const db = require("../schemas/player.js");
 const Discord = require("discord.js");
 const getEmoji = require('../index.js');
-const getPrefix = require('wokcommands');
 module.exports = {
     
   name: 'bag',
@@ -11,7 +10,6 @@ module.exports = {
   cooldown: '10s',
   run: async ({message}) => {
     
-    const prefix = getPrefix();
     const data = await db.findOne({_id: message.author.id}).catch((e) => {
         console.log(e);
     });
