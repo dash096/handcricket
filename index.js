@@ -6,14 +6,10 @@ const client = new Discord.Client({
 const WOKCommands = require("wokcommands");
 const mongoose = require("mongoose");
 const db = require('./schemas/player.js');
+
 //Top.gg
 const topgg = require('@top-gg/sdk');
-const api = new topgg.Api(process.env.DBL);
-postStats();
-async function postStats() {
-  const o = await api.getBot('804346878027235398');
-  console.log(o);
-}
+const voteAPI = new topgg.Api(process.env.TOP);
 
 //Get Coins Emoji
 async function getEmoji() {
