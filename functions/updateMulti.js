@@ -32,12 +32,18 @@ module.exports = async function (name, data, msg) {
 
     //Expiry Date of Boost
     const expireDate = Date.now() + 60 * 1000;
+    
+    //Validate 1+ Boost
+    let newCoinMulti;
+    if(oldCoinMulti * 2 > 0.9) {
+      newCoinMulti = 0.9;
+    }
 
     //Update Database
     await db.findOneAndUpdate({ _id: data._id }, {
       $set: {
         coinBoost: expireDate,
-        coinMulti: oldCoinMulti * 2
+        coinMulti: newCoinMulti
       }
     }, { upsert: true }
     ).catch((e) => {

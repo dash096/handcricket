@@ -17,7 +17,7 @@ module.exports = async function (what, boost) {
     setTimeout( async function clearBoost() {
       await db.findOneAndUpdate( {_id: boost._id},
         { $set: { 
-            tossMulti: oldTossMulti/2,
+            tossMulti: oldTossMulti/1.4,
             tossBoost: undefined,
           }
         }
