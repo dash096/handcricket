@@ -11,9 +11,8 @@ const topgg = require('@top-gg/sdk');
 const api = new topgg.Api(process.env.DBL);
 postStats();
 async function postStats() {
-  await api.postStats({
-    serverCount: client.guilds.cache.size
-  });
+  const o = await api.getBot('804346878027235398');
+  console.log(o);
 }
 
 //Get Coins Emoji
