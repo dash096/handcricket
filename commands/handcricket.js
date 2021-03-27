@@ -61,18 +61,22 @@ module.exports = {
     await message.reply(`${target} so do you wanna play with ${user.username}? Type \`y\`/\`n\` in 30s`);
     
     async function checkWill() {
-       const msgs = await message.channel.awaitMessages(m => m.author.id === target.id, {
-        max: 1,
-        time: 30000,
-        errors: ['time']
-      });
-      const c = msgs.first().content;
-      if(c.trim().toLowerCase() == 'y' || c.trim().toLowerCase() == 'yes') {
-        return true;
-      }
-      else {
-        message.channel.send(`Match cancelled due to rain`);
-        return;
+      try {
+        const msgs = await message.channel.awaitMessages(m => m.author.id === target.id, {
+          max: 1,
+          time: 30000,
+          errors: ['time']
+        });
+        const c = msgs.first().content;
+        if(c.trim().toLowerCase() == 'y' || c.trim().toLowerCase() == 'yes') {
+          return true;
+        }
+        else {
+          message.channel.send(`Match cancelled due to rain`);
+          return;
+        }
+      } catch {
+        message.channel.send('Times up');
       }
     }
     
