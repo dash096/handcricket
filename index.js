@@ -9,7 +9,7 @@ const db = require('./schemas/player.js');
 //Top.gg
 const topgg = require('@top-gg/sdk');
 const api = new topgg.Api(process.env.DBL);
-postStatts();
+postStats();
 async function postStats() {
   await api.postStats({
     serverCount: client.guilds.cache.size
