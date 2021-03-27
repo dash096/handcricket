@@ -44,14 +44,14 @@ module.exports = {
     }
 
     //Status Validation
-    /*if (userdata.status === true) {
+    if (userdata.status === true) {
       message.reply(user.username + " is already in a match");
       return;
     }
     if (targetdata.status === true) {
       message.reply(target.username + " is already in a match");
       return;
-    }*/
+    }
 
     //Toss
     const roll = Math.floor(Math.random());
@@ -65,7 +65,7 @@ module.exports = {
         max: 1,
         time: 30000,
         errors: ['time']
-      })
+      });
       const c = msgs.first().content;
       if(c.trim().toLowerCase() == 'y' || c.trim().toLowerCase() == 'yes') {
         return true;
@@ -151,7 +151,7 @@ async function userWon(message, user, target) {
   try {
     const msgs = await message.channel.awaitMessages(
       m => m.author.id === user.id, { max: 1, time: 20000, errors: ['time'] }
-    )
+    );
   
     const m = msgs.first();
     if (m.content.toLowerCase().trim() === "batting") {

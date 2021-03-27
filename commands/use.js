@@ -47,6 +47,7 @@ module.exports = {
 
     if (itemName === 'coinboost') {
       const e1 = await updateMulti(itemName, playerData, message);
+      if(e1 == 'err') return;
       const e2 = await updateBag(itemName, itemAmount, playerData, message);
       if (e1 != 'err' && e2 != 'err') message.reply('Your Coin multiplier is now boosted twice!');
       return;
@@ -54,6 +55,7 @@ module.exports = {
 
     if (itemName === 'tossboost') {
       const e1 = await updateMulti(itemName, playerData, message);
+      if(e1 == 'err') return;
       const e2 = await updateBag(itemName, itemAmount, playerData, message);
       if(e1 != 'err' && e2 != 'err') message.reply('Your Toss multiplier is now boosted twice!');
       return;
