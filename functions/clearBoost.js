@@ -12,7 +12,6 @@ module.exports = async function (what, boost) {
       time = boost.tossBoost.getTime() - Date.now();
     }
     if(time < 0) time = 10;
-    console.log(time);
       
     setTimeout( async function clearBoost() {
       await db.findOneAndUpdate( {_id: boost._id},

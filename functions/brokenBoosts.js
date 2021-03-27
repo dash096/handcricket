@@ -15,7 +15,7 @@ module.exports = async function() {
     for(const boost of brokeCoinBoosts) {
       const clearBoost = require('./clearBoost.js');
       clearBoost('coin', boost);
-      console.log(boost._id + 'Broken Coin Boost found!')
+      console.log(boost._id + ' - broken Coin Boost found!')
     }
   }
   
@@ -33,7 +33,7 @@ module.exports = async function() {
     for(const boost of brokeTossBoosts) {
       const clearBoost = require('./clearBoost.js');
       clearBoost('toss', boost);
-      console.log(boost._id + 'Broken toss boost found!')
+      console.log(boost._id + ' - broken toss boost found!')
     }
   }
   
