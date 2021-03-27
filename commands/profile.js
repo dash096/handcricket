@@ -26,11 +26,11 @@ module.exports = {
     
     let cb = '';
     if(data.coinBoost) {
-      cb = boosted;
+      cb = 'boosted';
     }
     let tb = '';
     if(data.tossBoost) {
-      tb = boosted;
+      tb = 'boosted';
     }
     const embed = new Discord.MessageEmbed()
     .setTitle(`Profile of **${message.author.username}**`)
