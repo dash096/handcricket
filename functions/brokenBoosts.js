@@ -23,7 +23,7 @@ module.exports = async function() {
   //Get both Lesser and Greater Boosts.
   const brokeTossBoosts = [];
   //Push Broke Boosts
-  getBrokenTossBoosts();
+  await getBrokenTossBoosts();
   
   //If no boosts return.
   if(brokeTossBoosts.length === 0) {
