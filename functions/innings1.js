@@ -15,7 +15,7 @@ module.exports = async function(batsman, bowler) {
   const ballArray = [0];
   
   await loopBallCollection();
-  await loopBatCollection();
+  loopBatCollection();
 
   async function loopBallCollection() {
     try{
