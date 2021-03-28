@@ -1,8 +1,7 @@
 ## todo
 - Loot Box Usage
-- Initialize Boosters
-- Use Powerups in Match
-- Vote Command
+- Vote Command (applied for approval)
+- 
 `Some extra bug fixes.`
 
 > This project is based on Logic Js.
