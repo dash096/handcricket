@@ -36,6 +36,7 @@ module.exports = async function(bowler, batsman, target) {
 
       //End
       if (c.toLowerCase().trim() === 'end') {
+        changeStatus(batsman,bowler);
         bowler.send('You forfeited');
         batsman.send(`**${bowler.username}** forfeited`);
         return;
@@ -64,6 +65,7 @@ module.exports = async function(bowler, batsman, target) {
       }
     } catch(e) {
       console.log(e);
+      changeStatus(batsman,bowler);
       bowler.send('Match ended as u were unactive for a long time');
       return batsman.send('Match ended as the batsman was inactive.');
     }
@@ -81,6 +83,7 @@ module.exports = async function(bowler, batsman, target) {
 
       //End
       if (c.toLowerCase().trim() === "end") {
+        changeStatus(batsman,bowler);
         batsman.send('You forfeited');
         bowler.send(`**${batsman.username}** forfeited`);
         return;
@@ -102,6 +105,7 @@ module.exports = async function(bowler, batsman, target) {
       }
       //Wicket
       else if (parseInt(c) === parseInt(bowled)) {
+        changeStatus(batsman,bowler);
         const data = await db.findOne({
           _id: batsman.id
         });
@@ -121,6 +125,7 @@ module.exports = async function(bowler, batsman, target) {
       }
       //Target
       else if (parseInt(newScore) >= target) {
+        changeStatus(batsman,bowler);
         const data = await db.findOne({
           _id: batsman.id
         });
@@ -154,6 +159,7 @@ module.exports = async function(bowler, batsman, target) {
       }
     } catch(e) {
       console.log(e);
+      changeStatus(batsman,bowler);
       batsman.send('Match ended as you were inactive');
       return bowler.send('Match ended as the batsmam was inactive');
     }
@@ -164,4 +170,8 @@ module.exports = async function(bowler, batsman, target) {
 function rewards(winner, loser, coins) {
   const rewards = require('./rewards.js');
   rewards(winner, loser, coins);
+}
+async function changeStatus(a,b) {
+  await db,findOneAndUpdate({_id: a.id}, { $set: { status: false } } );
+  await db,findOneAndUpdate({_id: b.id}, { $set: { status: false } } );
 }
