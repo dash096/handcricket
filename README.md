@@ -1,6 +1,11 @@
 ## todo
 - Loot Box Usage
+<<<<<<< HEAD
 - Vote Command (applied for approval)
+=======
+- Use Powerups in Match
+- Vote Command
+>>>>>>> 0b9e961... innings fixed, bag for 0 items fixed
 
 `Some extra bug fixes.`
 
