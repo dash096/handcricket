@@ -1,7 +1,7 @@
 ## todo
 - Loot Box Usage
 - Vote Command (applied for approval)
-- 
+
 `Some extra bug fixes.`
 
 > This project is based on Logic Js.
