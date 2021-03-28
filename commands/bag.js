@@ -22,7 +22,7 @@ module.exports = {
       bagItems = {};
     }
     
-    cost items = Object.keys(bagItems).map((key) => [key, bagItems[key]]);
+    const items = Object.keys(bagItems).map((key) => [key, bagItems[key]]);
       
     let fieldText = '';
     
