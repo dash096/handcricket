@@ -18,10 +18,11 @@ module.exports = {
     if(!data) return message.reply(target.tag + ' isnt a player, Do "' + prefix + 'start"');
       
     let bagItems = data.bag;
+    let item;
     if(!bagItems) {
       bagItems = {};
     } else {
-      const items = Object.keys(bagItems).map((key) => [key, bagItems[key]]);
+      items = Object.keys(bagItems).map((key) => [key, bagItems[key]]);
     }
       
     let fieldText = '';
