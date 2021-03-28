@@ -18,7 +18,7 @@ module.exports = {
     if(!data) return message.reply(target.tag + ' isnt a player, Do "' + prefix + 'start"');
       
     let bagItems = data.bag;
-    let item;
+    let items;
     if(!bagItems) {
       bagItems = {};
     } else {
