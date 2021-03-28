@@ -133,6 +133,6 @@ function start2(batsman, bowler, target) {
 }
 
 async function changeStatus(a,b) {
-  await db,findOneAndUpdate({_id: a.id}, { $set: { status: false } } );
-  await db,findOneAndUpdate({_id: b.id}, { $set: { status: false } } );
+  await db.findOneAndUpdate({_id: a.id}, { $set: { status: false } } );
+  await db.findOneAndUpdate({_id: b.id}, { $set: { status: false } } );
 }
