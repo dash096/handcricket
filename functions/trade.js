@@ -14,8 +14,8 @@ module.exports = async function (what, amount, user, target, msg) {
       return;
     } else {
       //Update Db 
-      await db.findOneAndUpdate({ _id: user.id }, { $set: {cc: oldUserCC - amount} });
-      await db.findOneAndUpdate({ _id: target.id }, { $set: {cc: oldTargetCC + amount} });
+      await db.findOneAndUpdate({ _id: user.id }, { $set: {cc: oldUserCC - parseInt(amount)} });
+      await db.findOneAndUpdate({ _id: target.id }, { $set: {cc: oldTargetCC + parseInt(amount)} });
       msg.reply("Successfully Traded " + `${await getEmoji} ${amount}` + " coins!");
     }
   }
