@@ -58,6 +58,7 @@ module.exports = async function(batsman, bowler) {
       }
     } catch(e) {
       console.log(e);
+      changeStatus(batsman,bowler);
       bowler.send('Match ended as you are inactive');
       return batsman.send('Match ended as the bowler was inactive');
     }
@@ -119,6 +120,7 @@ module.exports = async function(batsman, bowler) {
       }
     } catch(e) {
         console.log(e);
+        changeStatus(batsman,bowler);
         batsman.send('Match ended as you were inactive.');
         return bowler.send('Match ended as the batsman was inactive.');
     }
@@ -128,4 +130,9 @@ module.exports = async function(batsman, bowler) {
 function start2(batsman, bowler, target) {
   const secondInnings = require("./innings2.js");
   secondInnings(batsman, bowler, target);
+}
+
+async function changeStatus(a,b) {
+  await db,findOneAndUpdate({_id: a.id}, { $set: { status: false } } );
+  await db,findOneAndUpdate({_id: b.id}, { $set: { status: false } } );
 }
