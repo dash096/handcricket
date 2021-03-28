@@ -30,7 +30,7 @@ module.exports = async function(winner, loser, coins) {
       wins: winnerWins + 1,
       status: false
     }
-  }
+  };
 
   const loserSet = {
     $set: {
@@ -38,7 +38,7 @@ module.exports = async function(winner, loser, coins) {
       loses: loserLoses + 1,
       status: false
     }
-  }
+  };
 
   //Database Update!
   await db.findOneAndUpdate( {

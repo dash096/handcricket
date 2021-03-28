@@ -115,7 +115,8 @@ module.exports = async function(bowler, batsman, target) {
 
         const multi = coinMulti * 696;
 
-        const coins = Math.random().toFixed(2) * multi.toFixed(0);
+        const rando = Math.random() * multi.toFixed(0);
+        const coins = rando.toFixed(0);
 
         bowler.send(`Wicket! Piro! You won a grand amount of ${emoji} ${coins} coins`);
         batsman.send('Wicket! Noob!');
@@ -135,7 +136,8 @@ module.exports = async function(bowler, batsman, target) {
 
         const multi = coinMulti * 696;
 
-        const coins = Math.random().toFixed(2) * multi.toFixed(0);
+        const rando = Math.random() * multi.toFixed(0);
+        const coins = rando.toFixed(0);
 
         bowler.send('You lost.., The Batsman\'s score is ' + newScore);
         batsman.send(`You won the match! and also a grand amount of ${emoji} ${coins} coins`);
