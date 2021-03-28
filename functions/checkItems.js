@@ -6,12 +6,12 @@ module.exports = async function (message) {
   const args = message.content.toLowerCase().trim().split(' ').slice(1);
   
   //Amount (last word)
-  let itemAmountArray = args[args.length - 1]; //returns last word in array
+  let itemAmountArray = args[args.length - 1]; //returns last word in string
   let itemAmount = parseInt(itemAmountArray); //integer
   
   //Name
   let itemNameArray = args; //Message in []
-  if(parseInt(itemAmount)) {
+  if(itemAmount) {
     itemNameArray.pop(); //Kill the last element
   }
   let itemName = itemNameArray.join(' ');
@@ -43,10 +43,9 @@ module.exports = async function (message) {
   const itemData = await db.findOne({name: itemName}).catch((e) => console.log(e));
   
   if(!itemData) {
-    message.reply("Invalid Item");
+    message.reply("Not a valit item.");
     return 'err';
   }
   
-  console.log(itemName + ' - ' + itemAmount);
   return [itemName, itemAmount];
 };

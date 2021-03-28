@@ -8,19 +8,19 @@ module.exports = {
   category: 'handcricket',
   cooldown: '10s',
   description: 'Shows the profile of a user.',
-  run: async ({
-    message
-  }) => {
+  run: async ({message, args, text, client, prefix}) => {
     const emoji = await getEmoji;
+    
+    const target = message.mentions.users.first() || message.author;
 
     const data = await db.findOne({
-      _id: message.author.id
+      _id: target.id
     }).catch((e) => {
       console.log(e);
     });
     
     if (!data) {
-      message.reply(message.author.tag + " is not a player. Do `!start`");
+      message.reply(message.author.tag + " is not a player. Do `" + prefix + "start`");
       return;
     }
     
@@ -33,14 +33,14 @@ module.exports = {
       tb = ' ⏳';
     }
     const embed = new Discord.MessageEmbed()
-    .setTitle(`Profile of **${message.author.username}**`)
+    .setTitle(`Profile of **${target.tag}**`)
     .addField("Balance", ` ${emoji} ${data.cc}`, true)
     .addField("Wins", data.wins, true)
     .addField("Toss Multi", data.tossMulti + tb, true)
     .addField("Coins Multi", data.coinMulti + cb, true)
     .setFooter(data.startedOn)
-    .setColor('#2d61b5')
+    .setColor('#2d61b5');
 
     message.reply(embed);
   }
-}
+};

@@ -30,7 +30,7 @@ module.exports = {
       console.log(e);
     });
     if (!playerData) {
-      return message.reply("You arent a player. Do !start");
+      return message.reply("You arent a player. Do " + prefix + "start");
     }
 
     if (itemName === 'nuts') {

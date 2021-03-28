@@ -3,20 +3,17 @@ const Discord = require("discord.js");
 
 module.exports = {
   name: "handcricket",
-  aliases: ["hc",
-    "cricket"],
+  aliases: ["hc", "cricket"],
   description: "Play handcricket with a user",
   category: "handcricket",
-  run: async ({
-    message
-  }) => {
+  run: async ({message, args, text, client, prefix}) => {
     //Players
     const user = message.author;
     const target = message.mentions.users.first();
 
     //Target Validation
     if (!target || target.bot || target.id === user.id) {
-      message.reply("Invalid opponent, `!handcricket <@user>`");
+      message.reply("Invalid opponent.");
       return;
     }
 
@@ -35,15 +32,15 @@ module.exports = {
 
     //Validate Database
     if (!userdata) {
-      message.reply(user.tag + " is not a player. Do `!start`");
+      message.reply(user.tag + " is not a player. Do `" + prefix + "start`");
       return;
     }
     if (!targetdata) {
-      message.reply(target.tag + " is not a player. Do `!start`");
+      message.reply(target.tag + " is not a player. Do `" + prefix + "start`");
       return;
     }
 
-    /*//Status Validation
+    //Status Validation
     if (userdata.status === true) {
       message.reply(user.username + " is already in a match");
       return;
@@ -51,7 +48,7 @@ module.exports = {
     if (targetdata.status === true) {
       message.reply(target.username + " is already in a match");
       return;
-    }*/
+    }
 
     //Toss
     const roll = Math.floor(Math.random());
@@ -72,11 +69,11 @@ module.exports = {
           return true;
         }
         else {
-          message.channel.send(`Match cancelled due to rain`);
+          message.channel.send(`Match aborted`);
           return;
         }
       } catch {
-        message.channel.send('Times up');
+        return message.channel.send('Times up');
       }
     }
     
@@ -178,25 +175,25 @@ async function userWon(message, user, target) {
 }
 
 async function targetWon(message, user, target) {
-  try {
-    const msgs = await message.channel.awaitMessages(
-      m => m.author.id === target.id, { max: 1, time: 20000, errors: ['time'] }
-    );
-    const m = msgs.first();
-    if (m.content.toLowerCase().trim() === "batting") {
-      batsman = target;
-      bowler = user;
+    try {
+      const msgs = await message.channel.awaitMessages(
+        m => m.author.id === target.id, { max: 1, time: 20000, errors: ['time'] }
+      );
+      const m = msgs.first();
+      if (m.content.toLowerCase().trim() === "batting") {
+        batsman = target;
+        bowler = user;
+      }
+      else if (m.content.toLowerCase().trim() === "bowling") {
+        batsman = user;
+        bowler = target;
+      } else {
+        m.reply("Type either `batting` or `bowling`");
+        return targetWon(message, user, target);
+      }
+      await message.channel.send(`Batsman is ${batsman}, Bowler is ${bowler}`);
+      start(message, batsman, bowler);
+    } catch (e) { 
+        message.channel.send('Time\'s up!');
     }
-    else if (m.content.toLowerCase().trim() === "bowling") {
-      batsman = user;
-     bowler = target;
-    } else {
-      m.reply("Type either `batting` or `bowling`");
-      return targetWon(message, user, target);
-    }
-    await message.channel.send(`Batsman is ${batsman}, Bowler is ${bowler}`);
-    start(message, batsman, bowler);
-  } catch (e) { 
-    if (e) message.channel.send('Time\'s up!');
   }
-}

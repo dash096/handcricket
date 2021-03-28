@@ -9,20 +9,18 @@ module.exports = {
   description: 'Shows balance of a user.',
   category: 'handcricket',
   cooldown: '10s',
-  run: async ({
-    message
-  }) => {
+  run: async ({message, args, text, client, prefix}) => {
     const emoji = await getEmoji;
     const target = message.mentions.users.first() || message.author;
 
     const data = await db.findOne({
       _id: target.id
     }).catch((e) => {
-      console.log(e)
+      console.log(e);
     });
     
     if (!data) {
-      message.reply(target.tag + " is not a player. Do `!start`");
+      message.reply(target.tag + " is not a player. Do `" + prefix + "start`");
       return;
     }
     message.channel.send(`**${target.username}** has ${emoji} ${data.cc} coins.`);

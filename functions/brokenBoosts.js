@@ -1,4 +1,5 @@
 const db = require('../schemas/player.js');
+const getEmoji = require('../index.js');
 
 module.exports = async function() {
   

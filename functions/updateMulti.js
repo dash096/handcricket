@@ -11,7 +11,7 @@ module.exports = async function (name, data, msg) {
 
     //Check No. of Items is bigger than usage
     if (!oldAmount || oldAmount === 0) {
-      msg.reply('You dont have a ' + name + ' in your bag. Buy one!');
+      msg.reply('You dont have that many ' + name);
       return 'err';
     }
     
@@ -81,7 +81,7 @@ module.exports = async function (name, data, msg) {
 
     //Check if usage is smaller than balance
     if (!oldAmount || oldAmount === 0) {
-      msg.reply('You dont have a ' + name + ' in your bag. Buy one!');
+      msg.reply('You dont have that many ' + name);
       return 'err';
     }
     //Check if tossmulti is 0 and change to 0.1

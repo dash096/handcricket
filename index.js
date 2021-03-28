@@ -19,7 +19,6 @@ async function getEmoji() {
 }
 module.exports = getEmoji();
 
-
 //Ready Event
 client.on("ready", async () => {
   console.log("Logged in!");
@@ -29,7 +28,7 @@ client.on("ready", async () => {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false
-  }
+  };
 
   await mongoose.connect(process.env.MONGO, dbOptions).
   catch (e => {

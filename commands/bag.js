@@ -8,13 +8,14 @@ module.exports = {
   aliases: ['inventory', 'inv'],
   category: 'handcricket',
   cooldown: '10s',
-  run: async ({message}) => {
+  run: async ({message, args, text, client, prefix}) => {
     
-    const data = await db.findOne({_id: message.author.id}).catch((e) => {
+    const target = message.mentions.users.first() || message.author;
+    const data = await db.findOne({_id: target.id}).catch((e) => {
         console.log(e);
     });
     
-    if(!data) return message.reply('You arent a player, Do "!start"');
+    if(!data) return message.reply(target.tag + ' isnt a player, Do "' + prefix + 'start"');
       
     const bagItems = data.bag;
     const items = Object.keys(bagItems).map((key) => [key, bagItems[key]]);
@@ -27,12 +28,12 @@ module.exports = {
     }
     
     const embed = await new Discord.MessageEmbed()
-      .setTitle(`${message.author.tag}'s bag`)
+      .setTitle(`${target.tag}'s bag`)
       .setDescription('Pretty nice Inventory\n' + fieldText)
       .setFooter('Show this to your frnds!')
-      .setColor('#2d61b5')
+      .setColor('#2d61b5');
     
     message.reply(embed);
     
   }
-}
+};

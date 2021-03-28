@@ -2,14 +2,14 @@ const playerDB = require("../schemas/player.js");
 const itemDB = require("../schemas/items.js");
 const Discord = require("discord.js");
 const getEmoji = require('../index.js');
-const checkItems = require("../functions/checkItems.js")
+const checkItems = require("../functions/checkItems.js");
 
 module.exports = {
   name: 'buy',
   description: 'Buy an item from the shop',
   category: 'handcricet',
   cooldown: '10s',
-  run: async ({message}) => {
+  run: async ({message, args, text, client, prefix}) => {
     
     const emoji = await getEmoji;
     
@@ -18,8 +18,6 @@ module.exports = {
     if(arr == 'err') {
       return;
     }
-    
-    console.log(arr + 'hello');
     
     const itemsArray = arr;
     const name = itemsArray[0];
@@ -33,7 +31,7 @@ module.exports = {
     });
     
     if (!player) { //Validation
-      message.reply(message.author.tag + " is not a player. Do `!start`");
+      message.reply(message.author.tag + " is not a player. Do `" + prefix + "start`");
       return;
     }
     

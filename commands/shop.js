@@ -19,10 +19,10 @@ module.exports = {
       _id: message.author.id
     }).catch((e) => {
       console.log(e);
-    })
+    });
     
     if (!data) {
-      message.reply(message.author.tag + "You are not a player. Do `!start`");
+      message.reply(message.author.tag + "You are not a player. Do `" + prefix + "start`");
       return;
     }
     const itemArray = await itemDb.find({});
@@ -38,8 +38,8 @@ module.exports = {
     .addField(`Dots ${emoji} 350`, '`Powerup` Using a stoke during a match, will increase your score by what the bowler has bowled, can only be used 3 times per match')
     .addField(`Loot Box ${emoji} 800`, '`Lucky Box` Good Luck to win a rare item')
     .setFooter(`Requested by ${message.author.username}`)
-    .setColor('#2d61b5')
+    .setColor('#2d61b5');
 
     message.reply(embed);
   }
-}
+};
