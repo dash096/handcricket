@@ -74,6 +74,7 @@ module.exports = async function(bowler, batsman, target) {
       const msgs = await batsman.dmChannel.awaitMessages( m => m.author.id === batsman.id,
           {max: 1, time: 30000, errors: ['time']}
       );
+      const m = msgs.first();
       const c = m.content;
       const bowled = await ballArray[ballArray.length - 1];
       const newScore = await batArray[batArray.length - 1] + parseInt(c);
