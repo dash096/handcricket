@@ -72,6 +72,9 @@ module.exports = async function(batsman, bowler) {
       );
       const m = msgs.first();
       const c = m.content;
+      const newScore = await batArray[batArray.length - 1] + parseInt(c);
+      const bowled = await ballArray[ballArray.length - 1];
+      
       //End
       if (c.toLowerCase() === "end") {
         batsman.send(`**${batsman.username}(You)** forfeited`);
@@ -90,23 +93,19 @@ module.exports = async function(batsman, bowler) {
       }
       //Number validation
       else if (c > 6) {
-        m.react("❌");
+        //m.react("❌");
         batsman.send('Max number that can be hit is 6');
         return loopBatCollection();
       }
-
-      const bowled = await ballArray[ballArray.length - 1];
-        //Wicket
-      if (parseInt(bowled) === parseInt(c)) {
+      //Wicket
+      else if (parseInt(bowled) === parseInt(c)) {
         batsman.send("Wicket! The bowler bowled " + bowled );
         bowler.send("Wicket! Pro!");
-        await start2(batsman, bowler, batArray[batArray.length - 1] + 1);
+        start2(batsman, bowler, batArray[batArray.length - 1] + 1);
         return;
       }
-
-      const newScore = await batArray[batArray.length - 1] + parseInt(c);
       //Push
-      if (parseInt(c) < 6) {
+      else {
         batArray.push(newScore);
         
         const embed = new Discord.MessageEmbed()
