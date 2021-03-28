@@ -18,11 +18,12 @@ module.exports = async function(batsman, bowler) {
   loopBatCollection();
 
   async function loopBallCollection() {
-    await bowler.dmChannel.awaitMessages(
-      m => m.author.id === bowler.id,
-      { max: 1, time: 30000, errors: ['time'] }
-    ).then( async msgs => 
-    {
+    try{
+      const msgs = await bowler.dmChannel.awaitMessages(
+        m => m.author.id === bowler.id,
+        { max: 1, time: 30000, errors: ['time'] }
+      );
+    
       const m = msgs.first();
       const c = m.content;
 
@@ -55,19 +56,20 @@ module.exports = async function(batsman, bowler) {
         await batsman.send("Ball is coming, hit it by typing a number.");
         return loopBallCollection();
       }
-    }).catch(e => {
-      if(e) {
-        bowler.send('Match ended as you are inactive');
-        batsman.send('Match ended as the bowler was inactive');
-      }
-    });
+    } catch(e) {
+      console.log(e);
+      bowler.send('Match ended as you are inactive');
+      batsman.send('Match ended as the bowler was inactive');
+      return;
+    }
   }
   
   
   async function loopBatCollection() {
-    await batsman.dmChannel.awaitMessages( m => m.author.id === batsman.id, 
-      { max: 1, time: 30000, errors: ['time'] }
-    ).then(async msgs => {
+    try {
+      const msgs = await batsman.dmChannel.awaitMessages( m => m.author.id === batsman.id, 
+        { max: 1, time: 30000, errors: ['time'] }
+      );
       const m = msgs.first();
       const c = m.content;
       //End
@@ -94,9 +96,9 @@ module.exports = async function(batsman, bowler) {
       }
 
       const bowled = await ballArray[ballArray.length - 1];
-      //Wicket
+        //Wicket
       if (parseInt(bowled) === parseInt(c)) {
-        batsman.send("Wicket! You are out nab");
+        batsman.send("Wicket! The bowler bowled " + bowled );
         bowler.send("Wicket! Pro!");
         await start2(batsman, bowler, batArray[batArray.length - 1] + 1);
         return;
@@ -108,21 +110,21 @@ module.exports = async function(batsman, bowler) {
         batArray.push(newScore);
         
         const embed = new Discord.MessageEmbed()
-        .setTitle("Cricket Match - First Innings")
-        .addField(batsman.username + " - Batsman", newScore, true)
-        .addField(bowler.username + " - Bowler", 0, true)
-        .setColor("#2d61b5");
+          .setTitle("Cricket Match - First Innings")
+          .addField(batsman.username + " - Batsman", newScore, true)
+          .addField(bowler.username + " - Bowler", 0, true)
+          .setColor("#2d61b5");
 
         await batsman.send(`You hit ${c} and you were bowled ${bowled}, **Scoreboard**`, {embed});
         await bowler.send(`Batsman hit ${c}, **Scoreboard**`, {embed});
         return loopBatCollection();
       }
-    }).catch(e => {
-      if(e) {
+    } catch(e) {
+        console.log(e);
         batsman.send('Match ended as you were inactive.');
         bowler.send('Match ended as the batsman was inactive.');
-      }
-    });
+        return;
+    }
   }
 };
 

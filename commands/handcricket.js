@@ -43,7 +43,7 @@ module.exports = {
       return;
     }
 
-    //Status Validation
+    /*//Status Validation
     if (userdata.status === true) {
       message.reply(user.username + " is already in a match");
       return;
@@ -51,7 +51,7 @@ module.exports = {
     if (targetdata.status === true) {
       message.reply(target.username + " is already in a match");
       return;
-    }
+    }*/
 
     //Toss
     const roll = Math.floor(Math.random());
