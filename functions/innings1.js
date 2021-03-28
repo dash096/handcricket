@@ -59,8 +59,7 @@ module.exports = async function(batsman, bowler) {
     } catch(e) {
       console.log(e);
       bowler.send('Match ended as you are inactive');
-      batsman.send('Match ended as the bowler was inactive');
-      return;
+      return batsman.send('Match ended as the bowler was inactive');
     }
   }
   
@@ -121,8 +120,7 @@ module.exports = async function(batsman, bowler) {
     } catch(e) {
         console.log(e);
         batsman.send('Match ended as you were inactive.');
-        bowler.send('Match ended as the batsman was inactive.');
-        return;
+        return bowler.send('Match ended as the batsman was inactive.');
     }
   }
 };

@@ -27,10 +27,10 @@ module.exports = async function(bowler, batsman, target) {
   loopBatCollect();
 
   async function loopBallCollect() {
-    bowler.dmChannel.createMessageCollector(
-        m => m.author.id === bowler.id,
+    try { 
+      const msgs = await bowler.dmChannel.awaitMessages( m => m.author.id === bowler.id,
         {max: 1, time: 30000, errors: ['time']}
-    ).then( async msgs => {
+      );
       const m = msgs.first();
       const c = m.content;
 
@@ -62,21 +62,21 @@ module.exports = async function(bowler, batsman, target) {
         await batsman.send('Ball is coming...');
         return loopBallCollect();
       }
-    }).catch(e => {
-      if(e) {
-        bowler.send('Match ended as u were unactive for a long time');
-        batsman.send('Match ended as the batsman was inactive.');
-      }
-    });
+    } catch(e) {
+      console.log(e);
+      bowler.send('Match ended as u were unactive for a long time');
+      return batsman.send('Match ended as the batsman was inactive.');
+    }
   }
   
   async function loopBatCollect() {
-    batsman.dmChannel.createMessageCollector(
-        m => m.author.id === batsman.id,
-        {max: 1, time: 30000, errors: ['time']}
-    ).then(async msg => {
+    try {
+      const msgs = await batsman.dmChannel.awaitMessages( m => m.author.id === batsman.id,
+          {max: 1, time: 30000, errors: ['time']}
+      );
       const c = m.content;
       const bowled = await ballArray[ballArray.length - 1];
+      const newScore = await batArray[batArray.length - 1] + parseInt(c);
 
       //End
       if (c.toLowerCase().trim() === "end") {
@@ -89,19 +89,16 @@ module.exports = async function(bowler, batsman, target) {
         bowler.send(`\`${batsman.username}\`: ${c}`);
         return loopBatCollect();
       }
-
       //Number Validation
       else if (parseInt(c) > 6) {
         m.react('❌');
         return loopBatCollect();
       }
-
       //Turn Based
       else if (batArray.length === ballArray.length) {
         m.reply('Wait for the ball dude.');
         return loopBatCollect();
       }
-
       //Wicket
       else if (parseInt(c) === parseInt(bowled)) {
         const data = await db.findOne({
@@ -121,11 +118,8 @@ module.exports = async function(bowler, batsman, target) {
         rewards(bowler, batsman, coins);
         return;
       }
-
-      const newScore = await batArray[batArray.length - 1] + parseInt(c);
-
       //Target
-      if (parseInt(newScore) >= target) {
+      else if (parseInt(newScore) >= target) {
         const data = await db.findOne({
           _id: batsman.id
         });
@@ -157,12 +151,11 @@ module.exports = async function(bowler, batsman, target) {
         bowler.send(`${batsman.username} hit ${c}`, {embed});
         return loopBatCollect();
       }
-    }).catch(e => {
-      if(e) {
-        batsman.send('Match ended as you were inactive');
-        bowler.send('Match ended as the batsmam was inactive');
-      }
-    });
+    } catch(e) {
+      console.log(e);
+      batsman.send('Match ended as you were inactive');
+      return bowler.send('Match ended as the batsmam was inactive');
+    }
   }
   
 };
