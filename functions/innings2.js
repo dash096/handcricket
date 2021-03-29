@@ -7,9 +7,6 @@ const rewards = require('./rewards.js');
 module.exports = async function(bowler, batsman, target) {
   const emoji = await getEmoji;
 
-  bowler.send("2nd Innings starts");
-  batsman.send("2nd Innings starts");
-
   const embed = new Discord.MessageEmbed()
   .setTitle('Cricket Match - Second Innings')
   .addField(batsman.username + ' - Batsman', 0, true)
@@ -20,15 +17,23 @@ module.exports = async function(bowler, batsman, target) {
   const batEmbed = await batsman.send(embed);
   const ballEmbed = await bowler.send(embed);
 
+  await bowler.send("2nd Innings starts");
+  await batsman.send("2nd Innings starts");
+  
   //Arrays
   const batArray = [0];
   const ballArray = [0];
   
   loopBallCollect();
   loopBatCollect();
+  
+  let bruh = true;
 
   async function loopBallCollect() {
-    try { 
+    try {
+      if(bruh === false) {
+        return;
+      }
       const msgs = await bowler.dmChannel.awaitMessages( m => m.author.id === bowler.id,
         {max: 1, time: 30000, errors: ['time']}
       );
@@ -107,6 +112,7 @@ module.exports = async function(bowler, batsman, target) {
       }
       //Wicket
       else if (parseInt(c) === parseInt(bowled)) {
+        bruh = false;
         changeStatus(batsman,bowler);
         const data = await db.findOne({
           _id: batsman.id
@@ -128,6 +134,7 @@ module.exports = async function(bowler, batsman, target) {
       }
       //Target
       else if (parseInt(newScore) >= target) {
+        bruh = false;
         changeStatus(batsman,bowler);
         const data = await db.findOne({
           _id: batsman.id

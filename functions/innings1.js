@@ -17,8 +17,13 @@ module.exports = async function(batsman, bowler) {
   
   loopBallCollect();
   loopBatCollect();
+  
+  let bruh = true;
 
   async function loopBallCollect() {
+    if(bruh === false) {
+      return;
+    }
     try{
       const msgs = await bowler.dmChannel.awaitMessages(
         m => m.author.id === bowler.id,
@@ -101,6 +106,7 @@ module.exports = async function(batsman, bowler) {
       }
       //Wicket
       else if (parseInt(bowled) === parseInt(c)) {
+        bruh = false;
         await batsman.send("Wicket! The bowler bowled " + bowled );
         await bowler.send("Wicket! The batsman hit " + c);
         await secondInnings(batsman, bowler, target);
