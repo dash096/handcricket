@@ -1,5 +1,6 @@
 const db = require("../schemas/player.js");
 const Discord = require("discord.js");
+const secondInnings = require("./innings2.js");
 
 module.exports = async function(batsman, bowler) {
   const embed = new Discord.MessageEmbed()
@@ -14,10 +15,10 @@ module.exports = async function(batsman, bowler) {
   const batArray = [0];
   const ballArray = [0];
   
-  await loopBallCollection();
-  loopBatCollection();
+  loopBallCollect();
+  loopBatCollect();
 
-  async function loopBallCollection() {
+  async function loopBallCollect() {
     try{
       const msgs = await bowler.dmChannel.awaitMessages(
         m => m.author.id === bowler.id,
@@ -36,36 +37,37 @@ module.exports = async function(batsman, bowler) {
       //Communication
       else if (isNaN(c)) {
         batsman.send(`\`${bowler.username}\`: ${c}`);
-        return loopBallCollection();
+        return loopBallCollect();
       }
       //Number Validation
       else if (c > 6) {
         m.react("❌");
         bowler.send('Max number that can be bowled is 6');
-        return loopBallCollection();
+        return loopBallCollect();
       }
       //Turn based
       else if (batArray.length < ballArray.length) {
         bowler.send("Wait for the batsman to hit the previous ball.");
-        return loopBallCollection();
+        return loopBallCollect();
       } else {
         //Push it in array
         ballArray.push(parseInt(c));
         //Send confirm messages
         await bowler.send("You bowled " + c);
         await batsman.send("Ball is coming, hit it by typing a number.");
-        return loopBallCollection();
+        return loopBallCollect();
       }
     } catch(e) {
       console.log(e);
       changeStatus(batsman,bowler);
-      bowler.send('Match ended as you are inactive');
-      return batsman.send('Match ended as the bowler was inactive');
+      bowler.send('Match ended as you were inactive');
+      batsman.send('Match ended as the bowler was inactive');
+      return;
     }
   }
   
   
-  async function loopBatCollection() {
+  async function loopBatCollect() {
     try {
       const msgs = await batsman.dmChannel.awaitMessages( m => m.author.id === batsman.id, 
         { max: 1, time: 30000, errors: ['time'] }
@@ -84,24 +86,24 @@ module.exports = async function(batsman, bowler) {
       //Communication
       else if (isNaN(c)) {
         bowler.send(`\`${batsman.username}\`:  ${c}`);
-        return loopBatCollection();
+        return loopBatCollect();
       }
       //Wait for the ball
       else if (ballArray.length === batArray.length) {
         batsman.send("Wait for the ball dude");
-        return loopBatCollection();
+        return loopBatCollect();
       }
       //Number validation
       else if (c > 6) {
         //m.react("❌");
         batsman.send('Max number that can be hit is 6');
-        return loopBatCollection();
+        return loopBatCollect();
       }
       //Wicket
       else if (parseInt(bowled) === parseInt(c)) {
-        batsman.send("Wicket! The bowler bowled " + bowled );
-        bowler.send("Wicket! Pro!");
-        start2(batsman, bowler, batArray[batArray.length - 1] + 1);
+        await batsman.send("Wicket! The bowler bowled " + bowled );
+        await bowler.send("Wicket! The batsman hit " + c);
+        await secondInnings(batsman, bowler, target);
         return;
       }
       //Push
@@ -116,21 +118,17 @@ module.exports = async function(batsman, bowler) {
 
         await batsman.send(`You hit ${c} and you were bowled ${bowled}, **Scoreboard**`, {embed});
         await bowler.send(`Batsman hit ${c}, **Scoreboard**`, {embed});
-        return loopBatCollection();
+        return loopBatCollect();
       }
     } catch(e) {
         console.log(e);
         changeStatus(batsman,bowler);
         batsman.send('Match ended as you were inactive.');
-        return bowler.send('Match ended as the batsman was inactive.');
+        bowler.send('Match ended as the batsman was inactive.');
+        return;
     }
   }
 };
-
-function start2(batsman, bowler, target) {
-  const secondInnings = require("./innings2.js");
-  secondInnings(batsman, bowler, target);
-}
 
 async function changeStatus(a,b) {
   await db.findOneAndUpdate({_id: a.id}, { $set: { status: false } } );

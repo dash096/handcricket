@@ -1,6 +1,7 @@
 const db = require("../schemas/player.js");
 const Discord = require("discord.js");
 const getEmoji = require('../index.js');
+const rewards = require('./rewards.js');
 
 //shuffled
 module.exports = async function(bowler, batsman, target) {
@@ -23,8 +24,8 @@ module.exports = async function(bowler, batsman, target) {
   const batArray = [0];
   const ballArray = [0];
   
-  await loopBallCollect();
-  await loopBatCollect();
+  loopBallCollect();
+  loopBatCollect();
 
   async function loopBallCollect() {
     try { 
@@ -67,7 +68,8 @@ module.exports = async function(bowler, batsman, target) {
       console.log(e);
       changeStatus(batsman,bowler);
       bowler.send('Match ended as u were unactive for a long time');
-      return batsman.send('Match ended as the batsman was inactive.');
+      batsman.send('Match ended as the batsman was inactive.');
+      return;
     }
   }
   
@@ -118,8 +120,8 @@ module.exports = async function(bowler, batsman, target) {
         const rando = Math.random() * multi.toFixed(0);
         const coins = rando.toFixed(0);
 
-        bowler.send(`Wicket! Piro! You won a grand amount of ${emoji} ${coins} coins`);
-        batsman.send('Wicket! Noob!');
+        bowler.send(`Wicket! The batsman hit ${c}! You won a grand amount of ${emoji} ${coins} coins`);
+        batsman.send('Wicket! The bowler bowled' + bowled + '!');
 
         rewards(bowler, batsman, coins);
         return;
@@ -163,16 +165,13 @@ module.exports = async function(bowler, batsman, target) {
       console.log(e);
       changeStatus(batsman,bowler);
       batsman.send('Match ended as you were inactive');
-      return bowler.send('Match ended as the batsmam was inactive');
+      bowler.send('Match ended as the batsmam was inactive');
+      return;
     }
   }
   
 };
 
-function rewards(winner, loser, coins) {
-  const rewards = require('./rewards.js');
-  rewards(winner, loser, coins);
-}
 async function changeStatus(a,b) {
   await db.findOneAndUpdate({_id: a.id}, { $set: { status: false } } );
   await db.findOneAndUpdate({_id: b.id}, { $set: { status: false } } );
