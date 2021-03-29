@@ -4,6 +4,9 @@ const player = new mongoose.Schema({
   _id: {
     type: String, required: true
   },
+  xp: {
+    type: Number, default: 0, required: true
+  },
   cc: {
     type: Number, default: 500
   },
@@ -22,9 +25,6 @@ const player = new mongoose.Schema({
   bag: {},
   coinBoost: Date,
   tossBoost: Date,
-  level: {
-    type: String, default: 'Starter'
-  },
   startedOn: {
     type: Date, required: true
   },
