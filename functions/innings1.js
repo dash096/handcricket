@@ -15,13 +15,13 @@ module.exports = async function(batsman, bowler) {
   const batArray = [0];
   const ballArray = [0];
   
-  let bruh = true;
+  let timeoutDecider = true;
   
   loopBallCollect();
   loopBatCollect();
 
   async function loopBallCollect() {
-    if(bruh === false) {
+    if(timeoutDecider === false) {
       return;
     }
     try{
@@ -65,8 +65,11 @@ module.exports = async function(batsman, bowler) {
     } catch(e) {
       console.log(e);
       changeStatus(batsman,bowler);
-      bowler.send('Match ended as you were inactive');
-      batsman.send('Match ended as the bowler was inactive');
+      if(timeoutDecider === true) {
+        timeoutDecider = false;
+        bowler.send('Match ended as you were inactive');
+        batsman.send('Match ended as the bowler was inactive');
+      }
       return;
     }
   }
@@ -106,7 +109,7 @@ module.exports = async function(batsman, bowler) {
       }
       //Wicket
       else if (parseInt(bowled) === parseInt(c)) {
-        bruh = false;
+        timeoutDecider = false;
         await batsman.send("Wicket! The bowler bowled " + bowled );
         await bowler.send("Wicket! The batsman hit " + c);
         await secondInnings(batsman, bowler, batArray[batArray.length - 1] + 1);
@@ -129,8 +132,11 @@ module.exports = async function(batsman, bowler) {
     } catch(e) {
         console.log(e);
         changeStatus(batsman,bowler);
-        batsman.send('Match ended as you were inactive.');
-        bowler.send('Match ended as the batsman was inactive.');
+        if(timeoutDecider === true) {
+          timeoutDecider = false;
+          batsman.send('Match ended as you were inactive.');
+          bowler.send('Match ended as the batsman was inactive.');
+        }
         return;
     }
   }

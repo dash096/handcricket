@@ -24,14 +24,14 @@ module.exports = async function(bowler, batsman, target) {
   const batArray = [0];
   const ballArray = [0];
   
-  let bruh = true;
+  let timeoutDecider = true;
   
   loopBallCollect();
   loopBatCollect();
   
   async function loopBallCollect() {
     try {
-      if(bruh === false) {
+      if(timeoutDecider === false) {
         return;
       }
       const msgs = await bowler.dmChannel.awaitMessages( m => m.author.id === bowler.id,
@@ -72,8 +72,11 @@ module.exports = async function(bowler, batsman, target) {
     } catch(e) {
       console.log(e);
       changeStatus(batsman,bowler);
-      bowler.send('Match ended as u were unactive for a long time');
-      batsman.send('Match ended as the batsman was inactive.');
+      if(timeoutDecider === true) {
+        timeoutDecider = false;
+        bowler.send('Match ended as u were unactive for a long time');
+        batsman.send('Match ended as the batsman was inactive.');
+      }
       return;
     }
   }
@@ -112,7 +115,7 @@ module.exports = async function(bowler, batsman, target) {
       }
       //Wicket
       else if (parseInt(c) === parseInt(bowled)) {
-        bruh = false;
+        timeoutDecider = false;
         changeStatus(batsman,bowler);
         const data = await db.findOne({
           _id: batsman.id
@@ -130,11 +133,12 @@ module.exports = async function(bowler, batsman, target) {
         batsman.send('Wicket! The bowler bowled' + bowled + '!');
 
         rewards(bowler, batsman, coins);
+        timeoutDecider = false;
         return;
       }
       //Target
       else if (parseInt(newScore) >= target) {
-        bruh = false;
+        timeoutDecider = false;
         changeStatus(batsman,bowler);
         const data = await db.findOne({
           _id: batsman.id
@@ -152,6 +156,7 @@ module.exports = async function(bowler, batsman, target) {
         batsman.send(`You won the match! and also a grand amount of ${emoji} ${coins} coins`);
 
         rewards(batsman, bowler, coins);
+        timeoutDecider = false;
         return;
       }
       //Push
@@ -171,8 +176,11 @@ module.exports = async function(bowler, batsman, target) {
     } catch(e) {
       console.log(e);
       changeStatus(batsman,bowler);
-      batsman.send('Match ended as you were inactive');
-      bowler.send('Match ended as the batsmam was inactive');
+      if(timeoutDecider === true) {
+        timeoutDecider = false;
+        batsman.send('Match ended as you were inactive');
+        bowler.send('Match ended as the batsmam was inactive');
+      }
       return;
     }
   }

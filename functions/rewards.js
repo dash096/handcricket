@@ -24,8 +24,8 @@ module.exports = async function(winner, loser, coins) {
   //Set new Data
   const winnerSet = {
     $set: {
-      cc: winnerCoins + coins,
-      goldMulti: winnerCoinMulti + random,
+      cc: parseInt(winnerCoins) + parseInt(coins),
+      goldMulti: winnerCoinMulti + random.toFixed(3),
       tossMulti: winnerTossMulti - 0.069,
       wins: winnerWins + 1,
       status: false

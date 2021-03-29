@@ -30,13 +30,13 @@ module.exports = {
     }
     
     const msgObj = {};
+    const amount = args[args.length - 1];
+      
     //send @ping c/coins 1
     if(args[1].toLowerCase() == 'c' || args[1].toLowerCase() == 'coins' || args[1].toLowerCase() == 'coin') {
-      const amount = args[args.length - 1];
-      
       if(!amount || isNaN(amount)) {
         return message.reply('Syntax error: "' + prefix + 'send @ping <c/coins,itemName> <amount>"');
-      } else { 
+      } else if (args.length === 3) { 
         //send @ping item_name 1
         await trade('coins', amount, user, target, message);
       }
@@ -45,8 +45,9 @@ module.exports = {
       const itemName = await checkItems(msgObj);
       
       if(itemName != 'err') {
-        console.log('Trading ' + itemName);
         trade(itemName, amount, user, target, message);
+      } else {
+        return message.reply('Invalid item');
       }
     }
     
