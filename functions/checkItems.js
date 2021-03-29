@@ -39,11 +39,14 @@ module.exports = async function (message) {
   if(itemName === "toss boost" || itemName === "tossboost") {
     itemName = "tossboost";
   }
+  if(itemName === "lootbox" || itemName === "loot box") {
+    itemName = "lootbox";
+  }
   
   const itemData = await db.findOne({name: itemName}).catch((e) => console.log(e));
   
   if(!itemData) {
-    message.reply("Not a valit item.");
+    message.reply("Not a valid item.");
     return 'err';
   }
   
