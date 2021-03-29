@@ -15,10 +15,10 @@ module.exports = async function(batsman, bowler) {
   const batArray = [0];
   const ballArray = [0];
   
+  let bruh = true;
+  
   loopBallCollect();
   loopBatCollect();
-  
-  let bruh = true;
 
   async function loopBallCollect() {
     if(bruh === false) {
@@ -140,3 +140,17 @@ async function changeStatus(a,b) {
   await db.findOneAndUpdate({_id: a.id}, { $set: { status: false } } );
   await db.findOneAndUpdate({_id: b.id}, { $set: { status: false } } );
 }
+
+/*@everyone 
+Tasks: Must complete **the first and either the second and third** to win!
+
+Task#1: 2 invites (must be verified and must send at least 10 msgs)
+ 
+Task#2: Spam 2000 msgs in #spam or #world_spam 
+                      (or)
+Task#3: Catch a Fire poke with double max (hard)
+
+Rewards:
+ #1: Shiny + 5k
+ #2: Shiny
+ #3: Alola Rokon + 5k*/

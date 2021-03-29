@@ -24,11 +24,11 @@ module.exports = async function(bowler, batsman, target) {
   const batArray = [0];
   const ballArray = [0];
   
+  let bruh = true;
+  
   loopBallCollect();
   loopBatCollect();
   
-  let bruh = true;
-
   async function loopBallCollect() {
     try {
       if(bruh === false) {
