@@ -109,7 +109,7 @@ module.exports = async function(batsman, bowler) {
         bruh = false;
         await batsman.send("Wicket! The bowler bowled " + bowled );
         await bowler.send("Wicket! The batsman hit " + c);
-        await secondInnings(batsman, bowler, target);
+        await secondInnings(batsman, bowler, batArray[batArray.length - 1] + 1);
         return;
       }
       //Push
