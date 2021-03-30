@@ -10,7 +10,7 @@ module.exports = {
   cooldown: '10s',
   description: 'Shows the profile of a user.',
   run: async ({message, args, text, client, prefix}) => {
-    const emoji = await getEmoji;
+    const emoji = (await getEmoji)[0];
     
     const target = message.mentions.users.first() || message.author;
 
@@ -33,9 +33,15 @@ module.exports = {
     if(data.tossBoost) {
       tb = ' ⏳';
     }
+    
+    const levels = getLevels();
+    const XPLine = await getXPLine(data.xp);
+    const level = (await getPreceedingPair(levels, data.xp))[0];
+    const targetXP = levels[level + 1];
+    
     const embed = new Discord.MessageEmbed()
     .setTitle(`Profile of **${target.tag}**`)
-    .addField("Level", "in dev")
+    .addField("Level - " + `${level} \`${(data.xp).toFixed(0)}xp\``, `**Next level:** ${XPLine} \`${targetXP}xp\` `)
     .addField("Balance", ` ${emoji} ${data.cc}`, true)
     .addField("Wins", data.wins, true)
     .addField("Toss Multi", data.tossMulti + tb, true)
@@ -50,7 +56,79 @@ module.exports = {
   }
 };
 
-async function getXPLine(xp) { //40
+async function getXPLine(xp) {
+  
+  const levels = getLevels();
+  const pair = await getPreceedingPair(levels, xp);
+  
+  //Get emojis!!!!!
+  const full = (await getEmoji)[1];
+  const half = (await getEmoji)[2];
+  const empty = (await getEmoji)[3];
+  
+  //Get Suceeding Level and xp
+  let pxp = xp - pair[1];
+  const targetLevel = pair[0] + 1;
+  const targetXP = levels[targetLevel];
+  
+  //Divide
+  const divider = targetXP/10; //5
+  const quotient = (pxp/divider).toFixed(0); //6
+  
+  //Decide Number of Bars
+  let number = quotient/2;
+  let numberOfFull;
+  let numberOfHalf;
+  //Change Bars Values
+  if(number.toFixed(0) == number) {
+    numberOfFull = number;
+  } else {
+    if(Number.isInteger(number)) {
+      numberOfFull = number.toFixed(0);
+    } else {
+        if(number.toFixed(0) == 1) {
+          numberOfFull = number.toFixed(0);
+        } else {
+          numberOfFull = number.toFixed(0) - 1;
+          numberOfHalf = 1;
+        }
+    }
+  }
+  
+  //Get Bars (perfect till now)
+  let emojis = ``;
+  let i = 0;
+  
+  for(i; i < numberOfFull; i++) {
+    emojis += `${full}`;
+  }
+  if(numberOfHalf == 1) {
+    emojis += `${half}`;
+  }
+  
+  const line = add5(emojis);
+  return line;
+}
+
+
+async function getPreceedingPair(levels, xp) {
+  //Get preceeding xps
+  const findXPs = Object.values(levels).filter(value => value < xp);
+  
+  //Get preceeding level
+  const levelXP = findXPs[findXPs.length - 1];
+  const level = Object.keys(levels).filter(key => levels[key] === levelXP);
+  
+  //Push the values into an array
+  const pair = [];
+  await pair.push( parseInt(level[0]) );
+  await pair.push(levelXP);
+  
+  console.log(pair);
+  return pair;
+}
+
+function getLevels() {
   const levels = {
     0: 2,
     1: 10,
@@ -74,28 +152,40 @@ async function getXPLine(xp) { //40
     19: 1234,
     20: 1500
   };
-  //0:1
-  const lowerLevels = [];
-  
-  //Fetches all lower exp milestones.
-  const findXPs = Object.values(levels).filter(value => value < xp);
-  
-  //Fetch the level having that xp
-  const levelXP = findXPs[findXPs.length - 1];
-  const level = Object.keys(levels).filter(key => levels[key] === levelXP);
-  
-  //Push em into an array.
-  const pair = [];
-  await pair.push( parseInt(level[0]) );
-  await pair.push(levelXP);
-  
-  console.log(pair);
-  
-  //Get emojis!!!!!
-  const full = require('../index.js');
-  const half = require('../index.js');
-  const empty = require('../index.js');
-  const fEmoji = await full[1];
-  const hEmoji = await half[2];
-  const eEmoji = await empty[3];
+  return levels;
 }
+
+async function add5(text) {
+  const empty = (await getEmoji)[3];
+  
+  let emojis = text;
+  
+  let splitted = text.split('><');
+  
+  if(splitted.length == 4) {
+    emojis += `${empty}`;
+  }
+  if(splitted.length == 3) {
+    emojis += `${empty}`;
+    emojis += `${empty}`;
+  }
+  if(splitted.length == 2) {
+    emojis += `${empty}`;
+    emojis += `${empty}`;
+    emojis += `${empty}`;
+  }
+  if(splitted.length == 1) {
+    emojis += `${empty}`;
+    emojis += `${empty}`;
+    emojis += `${empty}`;
+    emojis += `${empty}`;
+  }
+  if(splitted.length == 0) {
+    emojis += `${empty}`;
+    emojis += `${empty}`;
+    emojis += `${empty}`;
+    emojis += `${empty}`;
+    emojis += `${empty}`;
+  }
+  return emojis;
+} 

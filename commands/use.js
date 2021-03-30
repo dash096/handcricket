@@ -6,6 +6,7 @@ const updateBag = require('../functions/updateBag.js');
 const updateMulti = require('../functions/updateMulti.js');
 const openBox = require('../functions/openBox.js');
 const gain = require('../functions/gainExp.js');
+const getEmoji = require('../index.js');
 
 module.exports = {
   name: 'use',
@@ -15,6 +16,8 @@ module.exports = {
   run: async ({
     message
   }) => {
+    const emoji = (await getEmoji)[0];
+    
     const args = message.content.toLowerCase().trim().split(' ').slice(1);
 
     const itemArray = await checkItems(message);
@@ -81,7 +84,6 @@ module.exports = {
         }
         
         else if(parseInt(e2)) {
-          const emoji = await getEmoji;
           await msg.edit('You got a grand amount of **' + `${emoji} ${e2} coins!` + '**');
           updateCoins(parseInt(e2), playerData, message);
         }

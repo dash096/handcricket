@@ -13,7 +13,7 @@ module.exports = {
   run: async ({
     message
   }) => {
-    const emoji = await getEmoji;
+    const emoji = (await getEmoji)[0];
 
     const data = await db.findOne( {
       _id: message.author.id

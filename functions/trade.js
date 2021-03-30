@@ -2,6 +2,8 @@ const db = require('../schemas/player.js');
 const getEmoji = require('../index.js');
 
 module.exports = async function (what, amount, user, target, msg) {
+  const emoji = (await getEmoji)[0];
+  
   const args = msg.content.trim().split(' ');
   
   if(args.length == 4 && what === 'coins') {
@@ -18,7 +20,7 @@ module.exports = async function (what, amount, user, target, msg) {
       //Update Db 
       await db.findOneAndUpdate({ _id: user.id }, { $set: {cc: oldUserCC - parseInt(amount)} });
       await db.findOneAndUpdate({ _id: target.id }, { $set: {cc: oldTargetCC + parseInt(amount)} });
-      msg.reply("Successfully Traded " + `${await getEmoji} ${amount}` + " coins!");
+      msg.reply("Successfully Traded " + `${emoji} ${amount}` + " coins!");
     }
   }
   else {

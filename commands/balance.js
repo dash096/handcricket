@@ -11,7 +11,7 @@ module.exports = {
   category: 'handcricket',
   cooldown: '10s',
   run: async ({message, args, text, client, prefix}) => {
-    const emoji = await getEmoji;
+    const emoji = (await getEmoji)[0];
     const target = message.mentions.users.first() || message.author;
 
     const data = await db.findOne({

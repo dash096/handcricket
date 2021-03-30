@@ -1,6 +1,5 @@
 const db = require("../schemas/player.js");
 const Discord = require("discord.js");
-const getEmoji = require('../index.js');
 const gain = require('../functions/gainExp.js');
 
 module.exports = {

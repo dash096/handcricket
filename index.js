@@ -11,13 +11,7 @@ const db = require('./schemas/player.js');
 const topgg = require('@top-gg/sdk');
 const voteAPI = new topgg.Api(process.env.TOP);
 
-//Get Coins Emoji
-async function getEmoji() {
-  const emojiGuild = await client.guilds.fetch('823608260166025217');
-  const emoji = emojiGuild.emojis.cache.find(emoji => emoji.name === 'cc');
-  return emoji;
-}
-module.exports = getEmoji();
+module.exports = getEmojis();
 
 //Ready Event
 client.on("ready", async () => {
@@ -69,3 +63,14 @@ client.on("ready", async () => {
 });
 
 client.login(process.env.TOKEN);
+
+
+//Get Emojis
+async function getEmojis() {
+  const emojiGuild = await client.guilds.fetch('823608260166025217');
+  const coin = emojiGuild.emojis.cache.find(emoji => emoji.name === 'cc');
+  const full = emojiGuild.emojis.cache.find(emoji => emoji.name === 'full');
+  const half = emojiGuild.emojis.cache.find(emoji => emoji.name === 'half');
+  const empty = emojiGuild.emojis.cache.find(emoji => emoji.name === 'empty');
+  return [coin, full, half, empty];
+}

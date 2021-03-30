@@ -5,7 +5,7 @@ const rewards = require('./rewards.js');
 
 //shuffled
 module.exports = async function(bowler, batsman, target) {
-  const emoji = await getEmoji;
+  const emoji = (await getEmoji)[0];
 
   const embed = new Discord.MessageEmbed()
   .setTitle('Cricket Match - Second Innings')
