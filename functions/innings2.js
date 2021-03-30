@@ -4,9 +4,10 @@ const getEmoji = require('../index.js');
 const rewards = require('./rewards.js');
 
 //shuffled
-module.exports = async function(bowler, batsman, target) {
+module.exports = async function(bowler, batsman, boS, boB) {
   const emoji = (await getEmoji)[0];
-
+  const target = boS;
+  
   const embed = new Discord.MessageEmbed()
   .setTitle('Cricket Match - Second Innings')
   .addField(batsman.username + ' - Batsman', 0, true)
@@ -90,6 +91,7 @@ module.exports = async function(bowler, batsman, target) {
       const c = m.content;
       const bowled = await ballArray[ballArray.length - 1];
       const newScore = await batArray[batArray.length - 1] + parseInt(c);
+      const totalBalls = await ballArray.length;
 
       //End
       if (c.toLowerCase().trim() === "end") {
@@ -132,7 +134,7 @@ module.exports = async function(bowler, batsman, target) {
         bowler.send(`Wicket! The batsman hit ${c}! You won a grand amount of ${emoji} ${coins} coins`);
         batsman.send('Wicket! The bowler bowled' + bowled + '!');
 
-        rewards(bowler, batsman, coins);
+        rewards(bowler, batsman, coins, boS, boB, newScore, totalBalls);
         timeoutDecider = false;
         return;
       }
@@ -155,7 +157,7 @@ module.exports = async function(bowler, batsman, target) {
         bowler.send('You lost.., The Batsman\'s score is ' + newScore);
         batsman.send(`You won the match! and also a grand amount of ${emoji} ${coins} coins`);
 
-        rewards(batsman, bowler, coins);
+        rewards(batsman, bowler, coins, newScore, totalBalls, boS, boB);
         timeoutDecider = false;
         return;
       }

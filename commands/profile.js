@@ -36,18 +36,20 @@ module.exports = {
     
     const levels = getLevels();
     const XPLine = await getXPLine(data.xp);
-    let level = (await getPreceedingPair(levels, data.xp))[0];
-    let targetXP = levels[level + 1];
-    if(!targetXP) targetXP = 10;
-    if(!level) level = 'Nab (0)';
+    let level = (await getPreceedingPair(levels, data.xp))[0] || 'Nab (0)';
+    let targetXP = levels[level + 1] || 10;
+    const STR = data.strikeRate;
+    const WR = getWR(data);
     
     const embed = new Discord.MessageEmbed()
     .setTitle(`Profile of **${target.tag}**`)
     .addField("Level - " + `${level} \`${(data.xp).toFixed(0)}xp\``, `**Next level:** ${XPLine} \`${targetXP}xp\` `)
     .addField("Balance", ` ${emoji} ${data.cc}`, true)
     .addField("Wins", data.wins, true)
-    .addField("Toss Multi", data.tossMulti + tb, true)
-    .addField("Coins Multi", data.coinMulti + cb, true)
+    .addField("Win Rate", WR, true)
+    .addField("Strike Rate", STR, true)
+    .addField("Toss Multi", data.tossMulti.toFixed(3) + tb, true)
+    .addField("Coins Multi", data.coinMulti.toFixed(3) + cb, true)
     .setFooter(data.startedOn)
     .setColor('#2d61b5');
     
@@ -126,7 +128,6 @@ async function getPreceedingPair(levels, xp) {
   await pair.push( parseInt(level[0]) );
   await pair.push(levelXP);
   
-  console.log(pair);
   return pair;
 }
 
@@ -191,3 +192,11 @@ async function add5(text) {
   }
   return emojis;
 } 
+
+function getWR(data) {
+  const wins = data.wins;
+  const loses = data.loses;
+  if(wins + loses == 0) return 0; 
+  const WR = (wins/(wins + loses)) * 100;
+  return WR;
+}

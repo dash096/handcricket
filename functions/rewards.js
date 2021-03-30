@@ -1,7 +1,7 @@
 const db = require('../schemas/player.js');
 const gain = require('../functions/gainExp.js');
 
-module.exports = async function(winner, loser, coins) {
+module.exports = async function(winner, loser, coins, wS, wB, lS, lB) {
 
   const winnerData = await db.findOne({
     _id: winner.id
@@ -17,11 +17,18 @@ module.exports = async function(winner, loser, coins) {
   const winnerTossMulti = winnerData.tossMulti;
   const winnerWins = winnerData.wins;
   const winnerCoins = winnerData.cc;
-
+  const winnerSTR = winnerData.strikeRate;
+  
   //Loser Old Data
   const loserTossMulti = loserData.tossMulti;
   const loserLoses = loserData.loses;
-
+  const loserSTR = loserData.strikeRate;
+  
+  const wSTR = (winnerSTR + (wS/wB))/2;
+  const lSTR = (loserSTR + (lS/lB))/2;
+  
+  console.log(wSTR, lSTR);
+  
   //Set new Data
   const winnerSet = {
     $set: {
@@ -29,6 +36,7 @@ module.exports = async function(winner, loser, coins) {
       goldMulti: winnerCoinMulti + random.toFixed(3),
       tossMulti: winnerTossMulti - 0.069,
       wins: winnerWins + 1,
+      strikeRate: wSTR,
       status: false
     }
   };
@@ -37,6 +45,7 @@ module.exports = async function(winner, loser, coins) {
     $set: {
       tossMulti: loserTossMulti + 0.069,
       loses: loserLoses + 1,
+      strikeRate: lSTR,
       status: false
     }
   };

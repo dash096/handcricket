@@ -84,6 +84,7 @@ module.exports = async function(batsman, bowler) {
       const c = m.content;
       const newScore = await batArray[batArray.length - 1] + parseInt(c);
       const bowled = await ballArray[ballArray.length - 1];
+      const totalBalls = await ballArray.length;
       
       //End
       if (c.toLowerCase() === "end") {
@@ -112,7 +113,7 @@ module.exports = async function(batsman, bowler) {
         timeoutDecider = false;
         await batsman.send("Wicket! The bowler bowled " + bowled );
         await bowler.send("Wicket! The batsman hit " + c);
-        await secondInnings(batsman, bowler, batArray[batArray.length - 1] + 1);
+        await secondInnings(batsman, bowler, batArray[batArray.length - 1] + 1, totalBalls);
         return;
       }
       //Push

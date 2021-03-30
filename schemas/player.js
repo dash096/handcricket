@@ -10,6 +10,9 @@ const player = new mongoose.Schema({
   cc: {
     type: Number, default: 500
   },
+  strikeRate: {
+    type: Number, default: 0
+  },
   wins: {
     type: Number, default: 0
   },
@@ -35,4 +38,4 @@ const player = new mongoose.Schema({
 
 const model = mongoose.model("player", player);
 
-module.exports = model
+module.exports = model;
