@@ -46,7 +46,7 @@ module.exports = {
     .addField("Level - " + `${level} \`${(data.xp).toFixed(0)}xp\``, `**Next level:** ${XPLine} \`${targetXP}xp\` `)
     .addField("Balance", ` ${emoji} ${data.cc}`, true)
     .addField("Wins", data.wins, true)
-    .addField("Win Rate", WR, true)
+    .addField("Win Rate", WR.toFixed(3), true)
     .addField("Strike Rate", STR, true)
     .addField("Toss Multi", data.tossMulti.toFixed(3) + tb, true)
     .addField("Coins Multi", data.coinMulti.toFixed(3) + cb, true)

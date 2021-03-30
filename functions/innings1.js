@@ -4,10 +4,10 @@ const secondInnings = require("./innings2.js");
 
 module.exports = async function(batsman, bowler) {
   const embed = new Discord.MessageEmbed()
-  .setTitle("Cricket Match - First Innings")
-  .addField(batsman.username + " - Batsman", 0, true)
-  .addField(bowler.username + " - Bowler", 0, true)
-  .setColor("#2d61b5");
+    .setTitle("Cricket Match - First Innings")
+    .addField(batsman.username + " - Batsman", 0, true)
+    .addField(bowler.username + " - Bowler", 0, true)
+    .setColor("#2d61b5");
 
   const batEmbed = await batsman.send(embed);
   const ballEmbed = await bowler.send(embed);

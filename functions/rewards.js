@@ -27,8 +27,6 @@ module.exports = async function(winner, loser, coins, wS, wB, lS, lB) {
   const wSTR = (winnerSTR + (wS/wB))/2;
   const lSTR = (loserSTR + (lS/lB))/2;
   
-  console.log(wSTR, lSTR);
-  
   //Set new Data
   const winnerSet = {
     $set: {

@@ -9,10 +9,10 @@ module.exports = async function(bowler, batsman, boS, boB) {
   const target = boS;
   
   const embed = new Discord.MessageEmbed()
-  .setTitle('Cricket Match - Second Innings')
-  .addField(batsman.username + ' - Batsman', 0, true)
-  .addField(bowler.username + ' - Bowler', target, true)
-  .setColor('#2d61b5');
+    .setTitle('Cricket Match - Second Innings')
+    .addField(batsman.username + ' - Batsman', 0, true)
+    .addField(bowler.username + ' - Bowler', target, true)
+    .setColor('#2d61b5');
 
   //Embeds
   const batEmbed = await batsman.send(embed);
