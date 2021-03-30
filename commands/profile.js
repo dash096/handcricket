@@ -36,8 +36,10 @@ module.exports = {
     
     const levels = getLevels();
     const XPLine = await getXPLine(data.xp);
-    const level = (await getPreceedingPair(levels, data.xp))[0];
-    const targetXP = levels[level + 1];
+    let level = (await getPreceedingPair(levels, data.xp))[0];
+    let targetXP = levels[level + 1];
+    if(!targetXP) targetXP = 10;
+    if(!level) level = Nab (0);
     
     const embed = new Discord.MessageEmbed()
     .setTitle(`Profile of **${target.tag}**`)
@@ -117,7 +119,7 @@ async function getPreceedingPair(levels, xp) {
   
   //Get preceeding level
   const levelXP = findXPs[findXPs.length - 1];
-  const level = Object.keys(levels).filter(key => levels[key] === levelXP);
+  const level = Object.keys(levels).filter(key => levels[key] == levelXP);
   
   //Push the values into an array
   const pair = [];
