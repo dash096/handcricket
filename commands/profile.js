@@ -10,7 +10,7 @@ module.exports = {
   cooldown: '10s',
   description: 'Shows the profile of a user.',
   run: async ({message, args, text, client, prefix}) => {
-    const emoji = await getEmoji[0];
+    const emoji = await getEmoji;
     
     const target = message.mentions.users.first() || message.author;
 
@@ -35,7 +35,7 @@ module.exports = {
     }
     const embed = new Discord.MessageEmbed()
     .setTitle(`Profile of **${target.tag}**`)
-    .addField("Level")
+    .addField("Level", "in dev")
     .addField("Balance", ` ${emoji} ${data.cc}`, true)
     .addField("Wins", data.wins, true)
     .addField("Toss Multi", data.tossMulti + tb, true)
