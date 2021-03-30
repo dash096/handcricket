@@ -84,6 +84,8 @@ module.exports = async function(bowler, batsman, boS, boB) {
   
   async function loopBatCollect() {
     try {
+      if(timeoutDecider === false) return;
+      
       const msgs = await batsman.dmChannel.awaitMessages( m => m.author.id === batsman.id,
           {max: 1, time: 30000, errors: ['time']}
       );
@@ -131,10 +133,16 @@ module.exports = async function(bowler, batsman, boS, boB) {
         const rando = Math.random() * multi.toFixed(0);
         const coins = rando.toFixed(0);
 
-        bowler.send(`Wicket! The batsman hit ${c}! You won a grand amount of ${emoji} ${coins} coins`);
-        batsman.send('Wicket! The bowler bowled' + bowled + '!');
+        if((target - newScore) === 1) {
+          bowler.send(`Wicket! The batsman hit ${c}! It is a tie!`);
+          batsman.send('Wicket! The bowler bowled' + bowled + '! It is a tie!');
+        } else {
+          bowler.send(`Wicket! The batsman hit ${c}! You won a grand amount of ${emoji} ${coins}!`);
+          batsman.send('Wicket! The bowler bowled ' + bowled + '! You lose... Sadge');
+          rewards(bowler, batsman, coins, boS, boB, newScore, totalBalls);
+        }
 
-        rewards(bowler, batsman, coins, boS, boB, newScore, totalBalls);
+        changeStatus(batsman, bowler);
         timeoutDecider = false;
         return;
       }
@@ -154,10 +162,16 @@ module.exports = async function(bowler, batsman, boS, boB) {
         const rando = Math.random() * multi.toFixed(0);
         const coins = rando.toFixed(0);
 
-        bowler.send('You lost.., The Batsman\'s score is ' + newScore);
-        batsman.send(`You won the match! and also a grand amount of ${emoji} ${coins} coins`);
-
-        rewards(batsman, bowler, coins, newScore, totalBalls, boS, boB);
+        if((target - newScore) === 1) {
+          batsman.send(`The bowler bowled ${bowled}! It is a tie!`);
+          bowler.send('The batsman hit' + c + '! It is a tie!');
+        } else {
+          batsman.send(`Score is ${newScore + parseInt(c)}! The bowler bowled ${bowled}! You won a grand amount of ${emoji} ${coins}!`);
+          bowler.send(`Batsman score is ${newScore + parseInt(c)}! The batsman hit ${c}! You lost... sadge`);
+          rewards(batsman, bowler,  coins, newScore, totalBalls, boS, boB);
+        }
+        
+        changeStatus(batsman,bowler);
         timeoutDecider = false;
         return;
       }
