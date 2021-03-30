@@ -6,6 +6,7 @@ const updateBag = require('../functions/updateBag.js');
 const updateMulti = require('../functions/updateMulti.js');
 const openBox = require('../functions/openBox.js');
 const getEmoji = require('../index.js');
+const gain = require('../functions/gainExp.js');
 
 module.exports = {
   name: 'use',
@@ -93,7 +94,7 @@ module.exports = {
       message.reply('Usage of magikBall items is still under development.');
       return;
     }
-
+    await gain(playerData, 3);
   }
 };
 

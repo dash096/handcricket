@@ -1,4 +1,5 @@
 const db = require('../schemas/player.js');
+const gain = require('../functions/gainExp.js');
 
 module.exports = async function(winner, loser, coins) {
 
@@ -47,4 +48,7 @@ module.exports = async function(winner, loser, coins) {
   await db.findOneAndUpdate( {
     _id: loser.id
   }, loserSet);
+  
+  await gain(winnerData, 10);
+  await gain(loserData, 10);
 };

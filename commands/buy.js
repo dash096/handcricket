@@ -3,6 +3,7 @@ const itemDB = require("../schemas/items.js");
 const Discord = require("discord.js");
 const getEmoji = require('../index.js');
 const checkItems = require("../functions/checkItems.js");
+const gain = require('../functions/gainExp.js');
 
 module.exports = {
   name: 'buy',
@@ -68,5 +69,6 @@ module.exports = {
     });
     
     message.channel.send(`You bought **${number} ${item.name}** for ${emoji} ${cost} coins`);
+    await gain(player, 3);
   }
 };

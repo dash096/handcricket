@@ -1,5 +1,6 @@
 const db = require('../schemas/player.js');
 const getEmoji = require('../index.js');
+const gain = require('../functions/gainExp.js');
 
 module.exports = {
   name: 'balance',
@@ -24,6 +25,7 @@ module.exports = {
       return;
     }
     message.channel.send(`**${target.username}** has ${emoji} ${data.cc} coins.`);
+    await gain(data, 1);
 
   }
 }

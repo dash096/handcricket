@@ -2,6 +2,7 @@ const db = require("../schemas/player.js");
 const Discord = require("discord.js");
 const checkItems = require("../functions/checkItems.js");
 const trade = require('../functions/trade.js');
+const gain = require('../functions/gainExp.js');
 
 module.exports = {
   name: 'send',
@@ -50,6 +51,6 @@ module.exports = {
         return message.reply('Invalid item');
       }
     }
-    
+    await gain(userData, 2);
   }
 };

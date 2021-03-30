@@ -2,7 +2,7 @@ const db = require('../schemas/player.js');
 
 module.exports = (client, instance) => {
   client.on('message', async (msg) => {
-    const prefix = instance.getPrefix(msg.guild.id);
+    const prefix = instance.getPrefix(msg.guild);
     
     if(msg.author.bot) return;
     
