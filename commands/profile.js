@@ -34,7 +34,7 @@ module.exports = {
     }
     const embed = new Discord.MessageEmbed()
     .setTitle(`Profile of **${target.tag}**`)
-    .addField("Exp", target.xp)
+    .addField("Exp", data.xp)
     .addField("Balance", ` ${emoji} ${data.cc}`, true)
     .addField("Wins", data.wins, true)
     .addField("Toss Multi", data.tossMulti + tb, true)

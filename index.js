@@ -45,13 +45,14 @@ client.on("ready", async () => {
   new WOKCommands(client,
     {
       commandsDir: "commands",
+      featuresDir: "features",
       messagesPath,
       showWarns: true,
       dbOptions,
       disabledDefaultCommands
     })
   .setMongoPath(process.env.MONGO)
-  .setDefaultPrefix('.')
+  .setDefaultPrefix('e.')
   .setBotOwner("772368021821718549")
   .setColor('#2d61b5')
   .setCategorySettings([{

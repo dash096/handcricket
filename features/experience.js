@@ -4,9 +4,11 @@ module.exports = (client, instance) => {
   client.on('message', async (msg) => {
     const prefix = instance.getPrefix(msg.guild.id);
     
+    if(msg.author.bot) return;
+    
     if(msg.content.startsWith(prefix)) {
       
-      if(msg.content.length > 10) {
+      if(msg.content.length > 7) {
         const data = await db.findOne({_id: msg.author.id});
         
         if(!data) return;
@@ -24,3 +26,9 @@ module.exports = (client, instance) => {
     
   });
 };
+
+module.exports.config = {
+  displayName: 'exp',
+  dbName: 'xp',
+  loadDBFirst: true
+}
