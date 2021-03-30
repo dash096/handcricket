@@ -39,7 +39,7 @@ module.exports = {
     let level = (await getPreceedingPair(levels, data.xp))[0];
     let targetXP = levels[level + 1];
     if(!targetXP) targetXP = 10;
-    if(!level) level = Nab (0);
+    if(!level) level = 'Nab (0)';
     
     const embed = new Discord.MessageEmbed()
     .setTitle(`Profile of **${target.tag}**`)
