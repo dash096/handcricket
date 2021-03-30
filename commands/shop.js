@@ -25,21 +25,22 @@ module.exports = {
       message.reply(message.author.tag + "You are not a player. Do `" + prefix + "start`");
       return;
     }
-    const itemArray = await itemDb.find({});
+    
+    const docs = await itemDb.find({}).sort({_id: 1});
+    let text = '';
+    
+    docs.forEach(doc => {
+      const title = doc.name.charAt(0).toUpperCase() + doc.name.slice(1);
+      text += `**${title} - ${emoji} ${doc._id}**\n\n`;
+      text += `${doc.description}\n\n`;
+    });
     
     const embed = new Discord.MessageEmbed()
     .setTitle(`Shop Items`)
-    .setDescription(`You can buy an item by typing "!buy <name> <amount>", you have a total of ${emoji} ${data.cc}`)
-    .addField(`Red Bull ${emoji} 70`, '`Food` Boosts your stamina as high as a bull\'s stamina')
-    .addField(`Nuts ${emoji} 50`, '`Food` Strengthens your muscles to hold a bat.')
-    .addField(`Toss Boost ${emoji} 750`, '`Boost` Improves your luck when you play handcricket with someone for 1 hour!')
-    .addField(`Coin Boost ${emoji} 750`, '`Boost` Improves your gold Multiplier and makes you more richer 1 hour')
-    .addField(`Magik Ball ${emoji} 1000 `, '`Powerup` Make the batsman hit only any 1 from the given 2 numbers, 50% wicket possiblity, can only be used if the batsman score is 50+')
-    .addField(`Dots ${emoji} 350`, '`Powerup` Using a stoke during a match, will increase your score by what the bowler has bowled, can only be used 3 times per match')
-    .addField(`Loot Box ${emoji} 800`, '`Lucky Box` Good Luck to win a rare item')
-    .setFooter(`Requested by ${message.author.username}`)
+    .setDescription(`You can buy an item by typing "!buy <name> <amount>", you have a total of ${emoji} ${data.cc}\n\n` + text)
+    .setFooter(`Requested by ${message.author.tag}`)
     .setColor('#2d61b5');
 
-    message.reply(embed);
+    await message.reply(embed);
   }
 };

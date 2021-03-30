@@ -3,6 +3,12 @@ const db = require("../schemas/items.js");
 module.exports = async function (name, amount, data, msg) {
   const random = Math.random();
   
+  const docs = await db.find({}, ['name', 'rarity'])
+  .sort({
+    rarity: -1
+  });
+  console.log(docs);
+  
   if(random > 0.99) {
     return 'magikball';
   }
