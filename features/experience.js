@@ -15,7 +15,7 @@ module.exports = (client, instance) => {
         
         if(rando > 0.65) {
           const oldXP = data.xp;
-          await db.findOneAndUpdate({_id: data._id}, { $set: {xp: oldXP + 1 } });
+          await db.findOneAndUpdate({_id: data._id}, { $set: {xp: oldXP + 1 } }, {new: true, upsert: true});
         }
         
       }
