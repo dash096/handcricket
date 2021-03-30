@@ -113,7 +113,7 @@ async function getXPLine(xp) {
 
 async function getPreceedingPair(levels, xp) {
   //Get preceeding xps
-  const findXPs = Object.values(levels).filter(value => value < xp);
+  const findXPs = Object.values(levels).filter(value => value <= xp);
   
   //Get preceeding level
   const levelXP = findXPs[findXPs.length - 1];
@@ -130,7 +130,7 @@ async function getPreceedingPair(levels, xp) {
 
 function getLevels() {
   const levels = {
-    0: 2,
+    0: 0,
     1: 10,
     2: 25,
     3: 50,
