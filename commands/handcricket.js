@@ -17,7 +17,6 @@ module.exports = {
       return;
     }
 
-    //get Database
     const userdata = await db.findOne({
       _id: user.id
     }).catch((e) => {
@@ -30,7 +29,7 @@ module.exports = {
       console.log(e);
     });
 
-    //Validate Database
+    //Data Validation
     if (!userdata) {
       message.reply(user.tag + " is not a player. Do `" + prefix + "start`");
       return;

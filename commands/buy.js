@@ -11,39 +11,33 @@ module.exports = {
   category: 'handcricet',
   cooldown: '10s',
   run: async ({message, args, text, client, prefix}) => {
-    
     const emoji = (await getEmoji)[0];
     
     //Content in the message
-    const arr = await checkItems(message);
-    if(arr == 'err') {
+    const itemName = await checkItems(message);
+    if(itemName == 'err') {
       return;
     }
     
-    const itemsArray = arr;
+    const itemsArray = itemName;
     const name = itemsArray[0];
     const number = itemsArray[1];
     
     const player = await playerDB.findOne( {_id: message.author.id} ).catch(e => {
       console.log(e);
     });
-    const item = await itemDB.findOne( {name: name} ).catch(e => {
-      console.log(e);
-    });
-    
-    if (!player) { //Validation
+    if (!player) {
       message.reply(message.author.tag + " is not a player. Do `" + prefix + "start`");
       return;
     }
     
-    //Inventory
+    const item = await itemDB.findOne( {name: name} ).catch(e => {
+      console.log(e);
+    });
+    
     const bag = player.bag || {};
+    let oldAmount = bag[item.name] || 0;
     
-    //OldAmount
-    let oldAmount = bag[item.name];
-    if(!oldAmount) oldAmount = 0;
-    
-    //Cost of Buying
     const amount = parseInt(oldAmount) + parseInt(number);
     const balance = player.cc;
     const cost = item._id * number;

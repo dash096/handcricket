@@ -15,18 +15,13 @@ module.exports = {
     const data = await db.findOne({_id: target.id}).catch((e) => {
         console.log(e);
     });
-    
     if(!data) return message.reply(target.tag + ' isnt a player, Do "' + prefix + 'start"');
-      
-    let bagItems = data.bag;
-    if(!bagItems) {
-      bagItems = {};
-    }
+    
+    let bagItems = data.bag || {};
     
     const items = Object.keys(bagItems).map((key) => [key, bagItems[key]]);
-      
-    let fieldText = '';
     
+    let fieldText = '';
     for(const item of items) {
       const text = item;
       fieldText += `**${text[0].charAt(0).toUpperCase() + text[0].slice(1)}** (${text[1]}) \n`;
@@ -37,9 +32,9 @@ module.exports = {
       .setDescription('Pretty nice Inventory\n' + fieldText)
       .setFooter('Show this to your frnds!')
       .setColor('#2d61b5');
-    
+      
     message.reply(embed);
-    await gain(data, 1);
+    await gain(data, 0.5);
     
   }
 };

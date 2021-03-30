@@ -80,7 +80,7 @@ module.exports = {
         console.log(e2);
         if(isNaN(e2)) {
           await msg.edit('You got a **' + e2 + '**');
-          updateItem(e2, 1, playerData, message)
+          updateItem(e2, 1, playerData, message);
         }
         
         else if(parseInt(e2)) {
