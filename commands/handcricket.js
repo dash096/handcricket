@@ -89,7 +89,8 @@ module.exports = {
         await message.channel.awaitMessages( m => m.author.id === user.id, {
           max: 1,
           time: 30000
-        }).then( msg => {
+        }).then( msgs => {
+          const msg = msgs.first();
           if(msg.content.trim().toLowerCase() == 'y' || msg.content.trim().toLowerCase() == 'yes') {
             post = true;
           }
