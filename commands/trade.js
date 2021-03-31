@@ -10,25 +10,19 @@ module.exports = {
   description: 'send some pc to another user, mercy.',
   category: 'handcricket',
   run: async ({message, args, text, client, prefix}) => {
-    
     //User
     const user = message.author;
     //Data
     const userData = await db.findOne({_id: user.id});
-    if(!userData) {
-      return message.reply(`**${user.tag}(You)** isnt a player. Do !start`);
-    }
+    if(!userData) return message.reply(`**${user.tag}(You)** isnt a player. Do !start`);
     
     //Target
     const target = message.mentions.users.first();
-    if(!target || target.bot || target.id === message.author.id) {
-      return message.reply('The target is not valid.');
-    }
+    if(!target || target.bot || target.id === message.author.id) return message.reply('The target is not valid.');
+    
     //Data
     const targetData = await db.findOne({_id: target.id});
-    if(!targetData) {
-      return message.reply(`**${target.tag}** isnt a player. Do !start`);
-    }
+    if(!targetData) return message.reply(`**${target.tag}** isnt a player. Do !start`);
     
     const msgObj = {};
     const amount = args[args.length - 1];

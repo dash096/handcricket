@@ -1,5 +1,5 @@
-const db = require("../schemas/player.js");
 const Discord = require("discord.js");
+const db = require("../schemas/player.js");
 const gain = require('../functions/gainExp.js');
 
 module.exports = {
@@ -10,11 +10,8 @@ module.exports = {
   category: 'handcricket',
   cooldown: '10s',
   run: async ({message, args, text, client, prefix}) => {
-    
     const target = message.mentions.users.first() || message.author;
-    const data = await db.findOne({_id: target.id}).catch((e) => {
-        console.log(e);
-    });
+    const data = await db.findOne({_id: target.id});
     if(!data) return message.reply(target.tag + ' isnt a player, Do "' + prefix + 'start"');
     
     let bagItems = data.bag || {};
@@ -35,6 +32,5 @@ module.exports = {
       
     message.reply(embed);
     await gain(data, 0.5);
-    
   }
 };

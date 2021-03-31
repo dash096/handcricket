@@ -14,16 +14,10 @@ module.exports = {
     const emoji = (await getEmoji)[0];
     
     const target = message.mentions.users.first() || message.author;
-    const data = await db.findOne({
-      _id: target.id
-    });
-    if (!data) {
-      message.reply(target.tag + " is not a player. Do `" + prefix + "start`");
-      return;
-    }
+    const data = await db.findOne({_id: target.id});
+    if (!data) return message.reply(target.tag + " is not a player. Do `" + prefix + "start`");
     
     message.channel.send(`**${target.username}** has ${emoji} ${data.cc} coins.`);
     await gain(data, 0.3);
-
   }
 };

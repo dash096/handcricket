@@ -1,5 +1,5 @@
-const db = require("../schemas/player.js");
 const Discord = require("discord.js");
+const db = require("../schemas/player.js");
 const getEmoji = require('../index.js');
 const gain = require('../functions/gainExp.js');
 
@@ -14,16 +14,8 @@ module.exports = {
     
     const target = message.mentions.users.first() || message.author;
 
-    const data = await db.findOne({
-      _id: target.id
-    }).catch((e) => {
-      console.log(e);
-    });
-    
-    if (!data) {
-      message.reply(message.author.tag + " is not a player. Do `" + prefix + "start`");
-      return;
-    }
+    const data = await db.findOne({_id: target.id});
+    if (!data) return message.reply(message.author.tag + " is not a player. Do `" + prefix + "start`");
     
     let cb = '';
     if(data.coinBoost) {
@@ -42,18 +34,16 @@ module.exports = {
     const WR = getWR(data);
     
     const embed = new Discord.MessageEmbed()
-    .setTitle(`Profile of **${target.tag}**`)
-    .addField("Level - " + `${level} \`${(data.xp).toFixed(0)}xp\``, `**Next level:** ${XPLine} \`${targetXP}xp\` `)
-    .addField("Balance", ` ${emoji} ${data.cc}`, true)
-    .addField("Wins", data.wins, true)
-    .addField("Win Rate", WR.toFixed(3), true)
-    .addField("Strike Rate", STR, true)
-    .addField("Toss Multi", data.tossMulti.toFixed(3) + tb, true)
-    .addField("Coins Multi", data.coinMulti.toFixed(3) + cb, true)
-    .setFooter(data.startedOn)
-    .setColor('#2d61b5');
-    
-    getXPLine(data.xp);
+      .setTitle(`Profile of **${target.tag}**`)
+      .addField("Level - " + `${level} \`${(data.xp).toFixed(0)}xp\``, `**Next level:** ${XPLine} \`${targetXP}xp\` `)
+      .addField("Balance", ` ${emoji} ${data.cc}`, true)
+      .addField("Wins", data.wins, true)
+      .addField("Win Rate", WR.toFixed(3), true)
+      .addField("Strike Rate", STR, true)
+      .addField("Toss Multi", data.tossMulti.toFixed(3) + tb, true)
+      .addField("Coins Multi", data.coinMulti.toFixed(3) + cb, true)
+      .setFooter(data.startedOn)
+      .setColor('#2d61b5');
 
     message.reply(embed);
     await gain(data, 1);

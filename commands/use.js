@@ -21,22 +21,13 @@ module.exports = {
     const args = message.content.toLowerCase().trim().split(' ').slice(1);
 
     const itemArray = await checkItems(message);
+    if(itemArray == 'err') return;
     const itemAmount = itemArray[1];
     const itemName = itemArray[0];
-    const itemData = await itemDb.findOne({
-      name: itemName
-    }).catch((e) => {
-      console.log(e);
-    });
+    const itemData = await itemDb.findOne({name: itemName});
 
-    const playerData = await db.findOne({
-      _id: message.author.id
-    }).catch((e) => {
-      console.log(e);
-    });
-    if (!playerData) {
-      return message.reply("You arent a player. Do " + prefix + "start");
-    }
+    const playerData = await db.findOne({_id: message.author.id});
+    if (!playerData) return message.reply("You arent a player. Do " + prefix + "start");
 
     if (itemName === 'nuts') {
       const e = await updateBag(itemName, itemAmount, playerData, message);

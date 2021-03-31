@@ -1,6 +1,6 @@
+const Discord = require("discord.js");
 const playerDB = require("../schemas/player.js");
 const itemDB = require("../schemas/items.js");
-const Discord = require("discord.js");
 const getEmoji = require('../index.js');
 const checkItems = require("../functions/checkItems.js");
 const gain = require('../functions/gainExp.js');
@@ -14,26 +14,16 @@ module.exports = {
     const emoji = (await getEmoji)[0];
     
     //Content in the message
-    const itemName = await checkItems(message);
-    if(itemName == 'err') {
-      return;
-    }
+    const itemsArray = await checkItems(message);
+    if(itemsArray == 'err') return;
     
-    const itemsArray = itemName;
     const name = itemsArray[0];
     const number = itemsArray[1];
     
-    const player = await playerDB.findOne( {_id: message.author.id} ).catch(e => {
-      console.log(e);
-    });
-    if (!player) {
-      message.reply(message.author.tag + " is not a player. Do `" + prefix + "start`");
-      return;
-    }
+    const player = await playerDB.findOne( {_id: message.author.id} );
+    if (!player) return message.reply(message.author.tag + " is not a player. Do `" + prefix + "start`");
     
-    const item = await itemDB.findOne( {name: name} ).catch(e => {
-      console.log(e);
-    });
+    const item = await itemDB.findOne( {name: name} );
     
     const bag = player.bag || {};
     let oldAmount = bag[item.name] || 0;
@@ -45,22 +35,15 @@ module.exports = {
     //Update Inventory
     bag[item.name] = amount;
     
-    if(balance < cost) {
-      message.reply('You arent rich enough to buy that much.');
-      return;
-    }
+    //Check Bal to buy.
+    if(balance < cost) return message.reply('You arent rich enough to buy that much.');
     
     //Change Bag DB
     await playerDB.findOneAndUpdate(
       { _id: message.author.id }, 
       { $set: {bag: bag, cc: balance - cost} }, 
       { upsert: true }
-    ).catch((e) => {
-      if(e) {
-        console.log(e);
-        return;
-      }
-    });
+    );
     
     message.channel.send(`You bought **${number} ${item.name}** for ${emoji} ${cost} coins`);
     await gain(player, 3);
