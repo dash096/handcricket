@@ -4,7 +4,7 @@ const getEmoji = require('../index.js');
 const rewards = require('./rewards.js');
 
 //shuffled
-module.exports = async function(bowler, batsman, boS, boB) {
+module.exports = async function(bowler, batsman, boS, boB, mc) {
   const emoji = (await getEmoji)[0];
   const target = boS;
   
@@ -17,6 +17,7 @@ module.exports = async function(bowler, batsman, boS, boB) {
   //Embeds
   const batEmbed = await batsman.send(embed);
   const ballEmbed = await bowler.send(embed);
+  const mcEmbed = await mc.send("2nd Inning starts!",{embed});
 
   await bowler.send("2nd Innings starts");
   await batsman.send("2nd Innings starts");
@@ -134,11 +135,13 @@ module.exports = async function(bowler, batsman, boS, boB) {
         const coins = rando.toFixed(0);
 
         if((target - newScore) === 1) {
-          bowler.send(`Wicket! The batsman hit ${c}! It is a tie!`);
-          batsman.send('Wicket! The bowler bowled' + bowled + '! It is a tie!');
+          bowler.send(`Wicket! DUCK! The batsman hit ${c}! It is a tie!`);
+          batsman.send('Wicket! DUCK! The bowler bowled' + bowled + '! It is a tie!');
+          mc.send(`**${batsman.tag}** WICKET!! DUCK! He hit ${c} and was bowled ${bowled} by **${bowler.tag}**`);
         } else {
           bowler.send(`Wicket! The batsman hit ${c}! You won a grand amount of ${emoji} ${coins}!`);
           batsman.send('Wicket! The bowler bowled ' + bowled + '! You lose... Sadge');
+          mc.send(`**${batsman.tag}** WICKET! He hit ${c} and was bowled ${bowled} by **${bowler.tag}**`, {embed});
           rewards(bowler, batsman, coins, boS, boB, newScore, totalBalls);
         }
 
@@ -162,14 +165,10 @@ module.exports = async function(bowler, batsman, boS, boB) {
         const rando = Math.random() * multi.toFixed(0);
         const coins = rando.toFixed(0);
 
-        if((target - newScore) === 1) {
-          batsman.send(`The bowler bowled ${bowled}! It is a tie!`);
-          bowler.send('The batsman hit' + c + '! It is a tie!');
-        } else {
-          batsman.send(`Score is ${newScore + parseInt(c)}! The bowler bowled ${bowled}! You won a grand amount of ${emoji} ${coins}!`);
-          bowler.send(`Batsman score is ${newScore + parseInt(c)}! The batsman hit ${c}! You lost... sadge`);
-          rewards(batsman, bowler,  coins, newScore, totalBalls, boS, boB);
-        }
+        batsman.send(`Score is ${newScore + parseInt(c)}! The bowler bowled ${bowled}! You won a grand amount of ${emoji} ${coins}!`);
+        bowler.send(`Batsman score is ${newScore + parseInt(c)}! The batsman hit ${c}! You lost... sadge`);
+        mc.send(`**${batsman.tag}** crossed the target!! HE **WON**!! He hit ${c} and was bowled ${bowled} by **${bowler.tag}**`);
+        rewards(batsman, bowler,  coins, newScore, totalBalls, boS, boB);
         
         changeStatus(batsman,bowler);
         timeoutDecider = false;

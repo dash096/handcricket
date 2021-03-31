@@ -2,7 +2,7 @@ const db = require("../schemas/player.js");
 const Discord = require("discord.js");
 const secondInnings = require("./innings2.js");
 
-module.exports = async function(batsman, bowler) {
+module.exports = async function(batsman, bowler, message) {
   const embed = new Discord.MessageEmbed()
     .setTitle("Cricket Match - First Innings")
     .addField(batsman.username + " - Batsman", 0, true)
@@ -11,11 +11,15 @@ module.exports = async function(batsman, bowler) {
 
   const batEmbed = await batsman.send(embed);
   const ballEmbed = await bowler.send(embed);
+  
+  const mc = message.channel;
+  const mcEmbed = await mc.send(embed);
 
   const batArray = [0];
   const ballArray = [0];
   
   let timeoutDecider = true;
+  let muteSpec = false;
   
   loopBallCollect();
   loopBatCollect();
@@ -113,7 +117,8 @@ module.exports = async function(batsman, bowler) {
         timeoutDecider = false;
         await batsman.send("Wicket! The bowler bowled " + bowled );
         await bowler.send("Wicket! The batsman hit " + c);
-        await secondInnings(batsman, bowler, batArray[batArray.length - 1] + 1, totalBalls);
+        await mc.send(`**${batsman.tag}** WICKET!!! He hit ${c}, and was bowled ${bowled} by **${bowler.username}**`);
+        await secondInnings(batsman, bowler, batArray[batArray.length - 1] + 1, totalBalls, mc);
         return;
       }
       //Push
@@ -128,6 +133,7 @@ module.exports = async function(batsman, bowler) {
 
         await batsman.send(`You hit ${c} and you were bowled ${bowled}, **Scoreboard**`, {embed});
         await bowler.send(`Batsman hit ${c}, **Scoreboard**`, {embed});
+        await mc.send(`**${batsman.tag}** hit ${c}, and was bowled ${bowled} by **${bowler.username}**`, {embed});
         return loopBatCollect();
       }
     } catch(e) {

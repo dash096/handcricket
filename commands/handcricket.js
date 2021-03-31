@@ -54,7 +54,7 @@ module.exports = {
     let batsman;
     let bowler;
     
-    await message.reply(`${target} so do you wanna play with ${user.username}? Type \`y\`/\`n\` in 30s`);
+    await message.channel.send(`<@${target.id}> so do you wanna play with **${user.username}**? Type \`y\`/\`n\` in 30s`);
     
     async function checkWill() {
       try {
@@ -144,7 +144,7 @@ async function start(message, batsman, bowler) {
       $set: { status: true } },
       { new: true, upsert: true });
   
-  firstInnings(batsman, bowler);
+  firstInnings(batsman, bowler, message);
 }
 
 async function userWon(message, user, target) {
