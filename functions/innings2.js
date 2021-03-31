@@ -4,7 +4,7 @@ const getEmoji = require('../index.js');
 const rewards = require('./rewards.js');
 
 //shuffled
-module.exports = async function(bowler, batsman, boS, boB, mc) {
+module.exports = async function(bowler, batsman, boS, boB, mc, post) {
   const emoji = (await getEmoji)[0];
   const target = boS;
   
@@ -17,7 +17,7 @@ module.exports = async function(bowler, batsman, boS, boB, mc) {
   //Embeds
   const batEmbed = await batsman.send(embed);
   const ballEmbed = await bowler.send(embed);
-  const mcEmbed = await mc.send("2nd Inning starts!",{embed});
+  if(post === true) await mc.send("2nd Inning starts!",{embed});
 
   await bowler.send("2nd Innings starts");
   await batsman.send("2nd Innings starts");
@@ -42,12 +42,13 @@ module.exports = async function(bowler, batsman, boS, boB, mc) {
       const m = msgs.first();
       const c = m.content;
 
-      //End
+      //End the match
       if (c.toLowerCase().trim() === 'end') {
-        changeStatus(batsman,bowler);
+        timeoutDecider = false;
         bowler.send('You forfeited');
         batsman.send(`**${bowler.username}** forfeited`);
-        return;
+        if(post === true) mc.send('Match ended sadge, ' + `${bowler.tag} forfeited`);
+        return changeStatus(batsman,bowler);
       }
       //Communicatiom
       else if (isNaN(c)) {
@@ -72,14 +73,13 @@ module.exports = async function(bowler, batsman, boS, boB, mc) {
         return loopBallCollect();
       }
     } catch(e) {
-      console.log(e);
-      changeStatus(batsman,bowler);
       if(timeoutDecider === true) {
         timeoutDecider = false;
         bowler.send('Match ended as u were unactive for a long time');
         batsman.send('Match ended as the batsman was inactive.');
+        if(post === true) mc.send('Match ended sadge');
       }
-      return;
+      return changeStatus(batsman,bowler);
     }
   }
   
@@ -98,10 +98,11 @@ module.exports = async function(bowler, batsman, boS, boB, mc) {
 
       //End
       if (c.toLowerCase().trim() === "end") {
-        changeStatus(batsman,bowler);
+        timeoutDecider = false;
         batsman.send('You forfeited');
         bowler.send(`**${batsman.username}** forfeited`);
-        return;
+        if(post === true) mc.send('Match ended sadge, ' + `${batsman.tag} forfeited`);
+        return changeStatus(batsman,bowler);
       }
       //Communication
       else if (isNaN(c)) {
@@ -137,11 +138,11 @@ module.exports = async function(bowler, batsman, boS, boB, mc) {
         if((target - newScore) === 1) {
           bowler.send(`Wicket! DUCK! The batsman hit ${c}! It is a tie!`);
           batsman.send('Wicket! DUCK! The bowler bowled' + bowled + '! It is a tie!');
-          mc.send(`**${batsman.tag}** WICKET!! DUCK! He hit ${c} and was bowled ${bowled} by **${bowler.tag}**`);
+          if(post === true) mc.send(`**${batsman.tag}** WICKET!! DUCK! He hit ${c} and was bowled ${bowled} by **${bowler.tag}**`);
         } else {
           bowler.send(`Wicket! The batsman hit ${c}! You won a grand amount of ${emoji} ${coins}!`);
-          batsman.send('Wicket! The bowler bowled ' + bowled + '! You lose... Sadge');
-          mc.send(`**${batsman.tag}** WICKET! He hit ${c} and was bowled ${bowled} by **${bowler.tag}**`, {embed});
+          batsman.send('Wicket! The bowler bowled ' + bowled + '! You lost... Sadge');
+          if(post === true) mc.send(`**${batsman.tag}** WICKET! He hit ${c} and was bowled ${bowled} by **${bowler.tag}**`, {embed});
           rewards(bowler, batsman, coins, boS, boB, newScore, totalBalls);
         }
 
@@ -167,7 +168,7 @@ module.exports = async function(bowler, batsman, boS, boB, mc) {
 
         batsman.send(`Score is ${newScore + parseInt(c)}! The bowler bowled ${bowled}! You won a grand amount of ${emoji} ${coins}!`);
         bowler.send(`Batsman score is ${newScore + parseInt(c)}! The batsman hit ${c}! You lost... sadge`);
-        mc.send(`**${batsman.tag}** crossed the target!! HE **WON**!! He hit ${c} and was bowled ${bowled} by **${bowler.tag}**`);
+        if(post === true) mc.send(`**${batsman.tag}** crossed the target!! HE **WON**!! He hit ${c} and was bowled ${bowled} by **${bowler.tag}**`);
         rewards(batsman, bowler,  coins, newScore, totalBalls, boS, boB);
         
         changeStatus(batsman,bowler);
@@ -186,17 +187,17 @@ module.exports = async function(bowler, batsman, boS, boB, mc) {
 
         batsman.send(`You hit ${c} and you were bowled ${bowled}`, {embed});
         bowler.send(`${batsman.username} hit ${c}`, {embed});
+        if(post === true) mc.send(`${batsman.tag} hit ${c}, and was bowled ${bowled} by ${bowler.tag}`, {embed})
         return loopBatCollect();
       }
     } catch(e) {
-      console.log(e);
-      changeStatus(batsman,bowler);
       if(timeoutDecider === true) {
         timeoutDecider = false;
         batsman.send('Match ended as you were inactive');
         bowler.send('Match ended as the batsmam was inactive');
+        if(post === true) mc.send('Match ended sadge');
       }
-      return;
+      return changeStatus(batsman,bowler);
     }
   }
   
