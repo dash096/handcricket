@@ -51,6 +51,9 @@ module.exports = {
       return;
     }
     
+    await changeStatus(user, true);
+    await changeStatus(target, true);
+    
     let post = false;
     if(message.content.toLowerCase().includes('--post')) {
       post = true;
@@ -76,10 +79,15 @@ module.exports = {
         }
         else {
           message.channel.send(`Match aborted`);
+          await changeStatus(user, false);
+          await changeStatus(target, false);
           return;
         }
       } catch {
-        return message.channel.send('Times up');
+        message.channel.send('Times up');
+        await changeStatus(user, false);
+        await changeStatus(target, false);
+        return;
       }
     }
     
@@ -87,7 +95,7 @@ module.exports = {
     
     if(will === true) {
       if(post === false) {
-        await message.reply('If you have any frnds online rn, and if you want them to see the match score, type `yes` else, type something to continue.');
+        await message.reply('**POST SCORES?**\n If you have any frnds online rn, and if you want them to see the match score, type `yes` else, type something to continue.');
         message.channel.awaitMessages( m => m.author.id === user.id, {
           max: 1,
           time: 30000
@@ -98,9 +106,11 @@ module.exports = {
           } else {
             post = false;
           }
-        }).catch(e => {
+        }).catch(async e => {
           console.log(e);
           msg.channel.send('uhh, I guess you are offline. Match aborted.');
+          await changeStatus(user, false);
+          await changeStatus(target, false);
           return;
         });
       }
@@ -221,3 +231,8 @@ async function targetWon(message, user, target, post) {
         message.channel.send('Time\'s up!');
     }
   }
+  
+async function changeStatus(a, boolean) {
+  if(boolean !== true && boolean !== false) return;
+  await db.findOneAndUpdate({_id: a.id}, { $set: {status: boolean}})
+}
