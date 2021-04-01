@@ -79,7 +79,7 @@ client.on('message', message => {
 
   //Run Command
 	try {
-		command.run(message, args.slice(1), prefix);
+		command.run(message, args.slice(1), prefix, client);
 	} catch (error) {
 		console.error(error);
 		message.reply('there was an error trying to execute that command!');

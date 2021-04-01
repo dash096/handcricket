@@ -8,7 +8,8 @@ module.exports = {
   name: 'send',
   aliases: ['give'],
   description: 'send some pc to another user, mercy.',
-  category: 'handcricket',
+  category: 'Cricket',
+  syntax: 'e.send @user <coins/itemName> <amount>',
   run: async (message, argsf, prefix) => {
     const args = message.content.toLowerCase().trim().split(' ').slice(1);
     //User

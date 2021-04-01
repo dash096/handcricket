@@ -6,6 +6,7 @@ module.exports = {
   name: 'bag',
   aliases: ['inventory', 'inv'],
   description: 'Shows your backpack',
+  category: 'Cricket',
   syntax: 'e.bag',
   cooldown: 10,
   run: async (message, args, prefix) => {

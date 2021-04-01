@@ -8,6 +8,7 @@ const gain = require('../../functions/gainExp.js');
 module.exports = {
   name: 'buy',
   description: 'Buy an item from the shop',
+  category: 'Cricket',
   syntax: 'e.buy <itemName> <amount>',
   cooldown: 10,
   run: async (message, args, prefix) => {

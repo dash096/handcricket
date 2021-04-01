@@ -1,6 +1,7 @@
 module.exports = {
     name: 'ping',
     description: 'Pong!',
+    category: 'General',
     syntax: 'e.ping',
     cooldown: 2,
     run: (message) => {

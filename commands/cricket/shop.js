@@ -8,6 +8,7 @@ module.exports = {
   name: "shop",
   aliases: ["market"],
   description: 'Displays the items that are for sell in the shop',
+  category: 'Cricket',
   syntax: 'e.shop',
   cooldown: 10,
   run: async (message, args, prefix) => {

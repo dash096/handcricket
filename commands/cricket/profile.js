@@ -7,6 +7,7 @@ module.exports = {
   name: 'profile',
   aliases: ['pf', 'info'],
   description: 'Shows the profile of a user.',
+  category: 'Cricket',
   syntax: 'e.profile @user',
   cooldown: 10,
   run: async (message, args, prefix) => {

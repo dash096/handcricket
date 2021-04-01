@@ -11,7 +11,8 @@ const getEmoji = require('../../index.js');
 module.exports = {
   name: 'use',
   description: 'Use an item in your bag',
-  syntax: 'e,use <itemName>',
+  category: 'Cricket',
+  syntax: 'e.use <itemName>',
   cooldown: 15,
   run: async (message, args, prefix) => {
     const emoji = (await getEmoji)[0];

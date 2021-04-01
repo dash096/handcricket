@@ -5,6 +5,7 @@ module.exports = {
   name: "handcricket",
   aliases: ["hc", "cricket"],
   description: "Play handcricket with a user",
+  category: 'Cricket',
   syntax: 'e.handcricket @user --post (to post scores in channel)',
   cooldown: 10,
   run: async (message, args, prefix) => {
@@ -94,6 +95,8 @@ module.exports = {
           const msg = msgs.first();
           if(msg.content.trim().toLowerCase() == 'y' || msg.content.trim().toLowerCase() == 'yes') {
             post = true;
+          } else {
+            post = false;
           }
         }).catch(e => {
           console.log(e);

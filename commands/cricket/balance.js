@@ -6,6 +6,7 @@ module.exports = {
   name: 'balance',
   aliases: ['bal', 'cash', 'wallet'],
   description: 'Shows balance of a user.',
+  category: 'Cricket',
   syntax: 'e.balance @user',
   cooldown: 10,
   run: async (message, args, prefix) => {

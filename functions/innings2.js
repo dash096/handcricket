@@ -121,7 +121,6 @@ module.exports = async function(bowler, batsman, boS, boB, mc, post) {
       }
       //Wicket
       else if (parseInt(c) === parseInt(bowled)) {
-        timeoutDecider = false;
         changeStatus(batsman,bowler);
         const data = await db.findOne({
           _id: batsman.id
@@ -166,8 +165,8 @@ module.exports = async function(bowler, batsman, boS, boB, mc, post) {
         const rando = Math.random() * multi.toFixed(0);
         const coins = rando.toFixed(0);
 
-        batsman.send(`Score is ${newScore + parseInt(c)}! The bowler bowled ${bowled}! You won a grand amount of ${emoji} ${coins}!`);
-        bowler.send(`Batsman score is ${newScore + parseInt(c)}! The batsman hit ${c}! You lost... sadge`);
+        batsman.send(`Score is ${newScore}! The bowler bowled ${bowled}! You won a grand amount of ${emoji} ${coins}!`);
+        bowler.send(`Batsman score is ${newScore}! The batsman hit ${c}! You lost... sadge`);
         if(post === true) mc.send(`**${batsman.tag}** crossed the target!! HE **WON**!! He hit ${c} and was bowled ${bowled} by **${bowler.tag}**`);
         rewards(batsman, bowler,  coins, newScore, totalBalls, boS, boB);
         
