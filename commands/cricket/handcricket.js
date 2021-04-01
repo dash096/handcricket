@@ -87,8 +87,8 @@ module.exports = {
     
     if(will === true) {
       if(post === false) {
-        await message.channel.send('If you have any frnds online rn, and if you want them to see the match score, type `y` else, type something to continue.');
-        await message.channel.awaitMessages( m => m.author.id === user.id, {
+        await message.reply('If you have any frnds online rn, and if you want them to see the match score, type `yes` else, type something to continue.');
+        message.channel.awaitMessages( m => m.author.id === user.id, {
           max: 1,
           time: 30000
         }).then( msgs => {
