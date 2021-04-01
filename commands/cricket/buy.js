@@ -1,16 +1,16 @@
 const Discord = require("discord.js");
-const playerDB = require("../schemas/player.js");
-const itemDB = require("../schemas/items.js");
-const getEmoji = require('../index.js');
-const checkItems = require("../functions/checkItems.js");
-const gain = require('../functions/gainExp.js');
+const playerDB = require("../../schemas/player.js");
+const itemDB = require("../../schemas/items.js");
+const getEmoji = require('../../index.js');
+const checkItems = require("../../functions/checkItems.js");
+const gain = require('../../functions/gainExp.js');
 
 module.exports = {
   name: 'buy',
   description: 'Buy an item from the shop',
-  category: 'handcricet',
-  cooldown: '10s',
-  run: async ({message, args, text, client, prefix}) => {
+  syntax: 'e.buy <itemName> <amount>',
+  cooldown: 10,
+  run: async (message, args, prefix) => {
     const emoji = (await getEmoji)[0];
     
     //Content in the message

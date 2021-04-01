@@ -1,8 +1,7 @@
 const db = require('../schemas/player.js');
 
-module.exports = (client, instance) => {
+module.exports = (client, prefix) => {
   client.on('message', async (msg) => {
-    const prefix = instance.getPrefix(msg.guild);
     if(msg.author.bot) return;
     
     if(msg.content.startsWith(prefix)) {
@@ -18,10 +17,4 @@ module.exports = (client, instance) => {
       }
     }
   });
-};
-
-module.exports.config = {
-  displayName: 'exp',
-  dbName: 'xp',
-  loadDBFirst: true
 };

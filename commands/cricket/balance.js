@@ -1,16 +1,14 @@
-const db = require('../schemas/player.js');
-const getEmoji = require('../index.js');
-const gain = require('../functions/gainExp.js');
+const db = require('../../schemas/player.js');
+const getEmoji = require('../../index.js');
+const gain = require('../../functions/gainExp.js');
 
 module.exports = {
   name: 'balance',
-  aliases: ['bal',
-    'cash',
-    'wallet'],
+  aliases: ['bal', 'cash', 'wallet'],
   description: 'Shows balance of a user.',
-  category: 'handcricket',
-  cooldown: '10s',
-  run: async ({message, args, text, client, prefix}) => {
+  syntax: 'e.balance @user',
+  cooldown: 10,
+  run: async (message, args, prefix) => {
     const emoji = (await getEmoji)[0];
     
     const target = message.mentions.users.first() || message.author;

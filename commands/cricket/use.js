@@ -1,26 +1,23 @@
-const db = require('../schemas/player.js');
-const itemDb = require('../schemas/items.js');
+const db = require('../../schemas/player.js');
+const itemDb = require('../../schemas/items.js');
 const Discord = require('discord.js');
-const checkItems = require('../functions/checkItems.js');
-const updateBag = require('../functions/updateBag.js');
-const updateMulti = require('../functions/updateMulti.js');
-const openBox = require('../functions/openBox.js');
-const gain = require('../functions/gainExp.js');
-const getEmoji = require('../index.js');
+const checkItems = require('../../functions/checkItems.js');
+const updateBag = require('../../functions/updateBag.js');
+const updateMulti = require('../../functions/updateMulti.js');
+const openBox = require('../../functions/openBox.js');
+const gain = require('../../functions/gainExp.js');
+const getEmoji = require('../../index.js');
 
 module.exports = {
   name: 'use',
   description: 'Use an item in your bag',
-  category: 'handcricket',
-  cooldown: '15s',
-  run: async ({
-    message
-  }) => {
+  syntax: 'e,use <itemName>',
+  cooldown: 15,
+  run: async (message, args, prefix) => {
     const emoji = (await getEmoji)[0];
     
-    const args = message.content.toLowerCase().trim().split(' ').slice(1);
-
     const itemArray = await checkItems(message);
+    
     if(itemArray == 'err') return;
     const itemAmount = itemArray[1];
     const itemName = itemArray[0];

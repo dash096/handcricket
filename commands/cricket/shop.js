@@ -1,18 +1,16 @@
 const Discord = require('discord.js');
-const db = require('../schemas/player.js');
-const itemDb = require('../schemas/items.js');
-const gain = require('../functions/gainExp.js');
-const getEmoji = require('../index.js');
+const db = require('../../schemas/player.js');
+const itemDb = require('../../schemas/items.js');
+const gain = require('../../functions/gainExp.js');
+const getEmoji = require('../../index.js');
 
 module.exports = {
   name: "shop",
   aliases: ["market"],
-  category: "handcricket",
-  cooldown: '10s',
   description: 'Displays the items that are for sell in the shop',
-  run: async ({
-    message
-  }) => {
+  syntax: 'e.shop',
+  cooldown: 10,
+  run: async (message, args, prefix) => {
     const emoji = (await getEmoji)[0];
 
     const data = await db.findOne( {_id: message.author.id });

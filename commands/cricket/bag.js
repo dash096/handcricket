@@ -1,15 +1,14 @@
 const Discord = require("discord.js");
-const db = require("../schemas/player.js");
-const gain = require('../functions/gainExp.js');
+const db = require("../../schemas/player.js");
+const gain = require('../../functions/gainExp.js');
 
 module.exports = {
-    
   name: 'bag',
-  description: 'Shows your backpack',
   aliases: ['inventory', 'inv'],
-  category: 'handcricket',
-  cooldown: '10s',
-  run: async ({message, args, text, client, prefix}) => {
+  description: 'Shows your backpack',
+  syntax: 'e.bag',
+  cooldown: 10,
+  run: async (message, args, prefix) => {
     const target = message.mentions.users.first() || message.author;
     const data = await db.findOne({_id: target.id});
     if(!data) return message.reply(target.tag + ' isnt a player, Do "' + prefix + 'start"');

@@ -1,8 +1,9 @@
 module.exports = {
     name: 'ping',
     description: 'Pong!',
-    category: 'general',
-    run: ({message}) => {
+    syntax: 'e.ping',
+    cooldown: 2,
+    run: (message) => {
         message.reply(`Pong! ${Date.now() - message.createdTimestamp}ms.`);
     }
 };

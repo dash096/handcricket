@@ -1,15 +1,15 @@
 const Discord = require("discord.js");
-const db = require("../schemas/player.js");
-const getEmoji = require('../index.js');
-const gain = require('../functions/gainExp.js');
+const db = require("../../schemas/player.js");
+const getEmoji = require('../../index.js');
+const gain = require('../../functions/gainExp.js');
 
 module.exports = {
   name: 'profile',
   aliases: ['pf', 'info'],
-  category: 'handcricket',
-  cooldown: '10s',
   description: 'Shows the profile of a user.',
-  run: async ({message, args, text, client, prefix}) => {
+  syntax: 'e.profile @user',
+  cooldown: 10,
+  run: async (message, args, prefix) => {
     const emoji = (await getEmoji)[0];
     
     const target = message.mentions.users.first() || message.author;

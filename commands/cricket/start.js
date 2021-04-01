@@ -1,14 +1,13 @@
-const db = require("../schemas/player.js");
+const db = require("../../schemas/player.js");
 const Discord = require("discord.js");
 
 module.exports = {
     name: "start",
     aliases: ["play"],
-    category: "handcricket",
     description: "Creates a Database",
-    run: async({
-        message
-    }) => {
+    syntax: 'e.start',
+    cooldown: 30,
+    run: async (message) => {
         const player = new db({
             _id: message.author.id,
             startedOn: Date.now()

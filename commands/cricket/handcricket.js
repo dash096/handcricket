@@ -1,12 +1,13 @@
-const db = require("../schemas/player.js");
+const db = require("../../schemas/player.js");
 const Discord = require("discord.js");
 
 module.exports = {
   name: "handcricket",
   aliases: ["hc", "cricket"],
   description: "Play handcricket with a user",
-  category: "handcricket",
-  run: async ({message, args, text, client, prefix}) => {
+  syntax: 'e.handcricket @user --post (to post scores in channel)',
+  cooldown: 10,
+  run: async (message, args, prefix) => {
     //Players
     const user = message.author;
     const target = message.mentions.users.first();
@@ -155,7 +156,7 @@ module.exports = {
 async function start(message, batsman, bowler, post) {
   await message.channel.send(`${batsman} and ${bowler}, get to your dms to play!`);
 
-  const firstInnings = require("../functions/innings1.js");
+  const firstInnings = require("../../functions/innings1.js");
   
   await db.findOneAndUpdate( { _id: batsman.id }, {
       $set: { status: true } },
