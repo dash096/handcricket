@@ -47,6 +47,6 @@ module.exports = {
     );
     
     message.channel.send(`You bought **${number} ${item.name}** for ${emoji} ${cost} coins`);
-    await gain(player, 3, message);
+    await gain(player, 4, message);
   }
 };
