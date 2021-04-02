@@ -53,6 +53,8 @@ module.exports = {
     
     let goBack = false;
     
+    let inAbout = false;
+    
     loopHelp();
     async function loopHelp() {
       try {
@@ -64,6 +66,7 @@ module.exports = {
         if(msg.content == '1') {
           if(goBack == false) {
             embed.edit(aboutEmbed);
+            inAbout = true;
             goBack = true;
           } 
           setTimeout(() => {
@@ -95,6 +98,7 @@ module.exports = {
           if(goBack == true) {
             embed.edit(send);
             goBack = false;
+            inAbout = false;
           }
           return loopHelp();
         }
@@ -102,7 +106,10 @@ module.exports = {
           return loopHelp();
         }
       } catch(e) {
-        console.log(e);
+        if(inAbout == true) {
+          inAbout = false;
+          return loopHelp();
+        }
         embed.delete();
         return;
       }
