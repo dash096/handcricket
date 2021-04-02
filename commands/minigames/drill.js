@@ -15,13 +15,16 @@ module.exports = {
     const data = await db.findOne({_id: message.author.id});
     if(!data) return message.reply('You are not a player, do ' + prefix + 'start before playing');
     
+    const opt = [1,1,2,2,3];
+    const roll = opt[Math.floor(Math.random() * opt.length)];
+    console.log(roll, 'hi');
     try {
-      await message.channel.send('The coach decided on running drill now . You will be running a 100m race . Type the numbers in the right order.');
+      await message.channel.send('The coach decided on running drill now . You will be running a 100m race . Type the upcoming message in the right order.');
       await message.channel.send('Ready');
       await message.channel.send('Go!');
       
-      const rando = getRando();
-      await message.channel.send(`Type the number mentioned here.. + ${rando}`);
+      const rando = getRando(roll);
+      await message.channel.send(`Type this within 8s.. ${rando}`);
     
       const answers = await message.channel.awaitMessages(m => m.author.id === message.author.id, {
         max: 1,
@@ -45,11 +48,30 @@ module.exports = {
   }
 };
 
-function getRando() {
+function getRando(difficulty) {
   let rando = [];
+  const chars = ['!', '#', '*', '@'];
+  const alphs = ['a', 'e', 'i', 'o', 'u'];
   const nums = [1,2,3,4,5,6,7,8,9,0];
+  
   for(const num in nums) {
-    rando.push(nums[Math.floor(Math.random() * nums.length)]);
+    if(difficulty == 1) {
+      let i;
+      const type = Math.floor(Math.random() * 4);
+      if(type == 1 || type == 3) rando.push(alphs[Math.floor(Math.random() * alphs.length)]);
+      if(type == 2) rando.push(nums[Math.floor(Math.random() * nums.length)]);
+    } else if(difficulty == 2) {
+      let i;
+      const type = Math.floor(Math.random() * 4);
+      if(type == 1 || type == 3) rando.push(nums[Math.floor(Math.random() * nums.length)]);
+      if(type == 2) rando.push(chars[Math.floor(Math.random() * chars.length)]);
+    } else if(difficulty == 3) {
+      let i;
+      const type = Math.floor(Math.random() * 4);
+      if(type == 1 || type == 3) rando.push(chars[Math.floor(Math.random() * chars.length)]);
+      if(type == 2) rando.push(nums[Math.floor(Math.random() * nums.length)]);
+    }
+    console.log(difficulty, rando);
   }
   const number = rando.join('');
   return number;
