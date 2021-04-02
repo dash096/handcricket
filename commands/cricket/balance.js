@@ -17,6 +17,6 @@ module.exports = {
     if (!data) return message.reply(target.tag + " is not a player. Do `" + prefix + "start`");
     
     message.channel.send(`**${target.username}** has ${emoji} ${data.cc} coins.`);
-    await gain(data, 0.3);
+    await gain(data, 0.3, message);
   }
 };

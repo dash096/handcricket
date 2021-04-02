@@ -84,7 +84,7 @@ module.exports = {
       message.reply('Usage of magikBall items is still under development.');
       return;
     }
-    await gain(playerData, 3);
+    await gain(playerData, 3, message);
   }
 };
 

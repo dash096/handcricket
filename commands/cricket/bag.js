@@ -31,6 +31,6 @@ module.exports = {
       .setColor('#2d61b5');
       
     message.reply(embed);
-    await gain(data, 0.5);
+    await gain(data, 0.5, message);
   }
 };

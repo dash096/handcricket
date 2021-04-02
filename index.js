@@ -71,7 +71,7 @@ client.on('message', message => {
 		const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
    if (now < expirationTime) {
 			const timeLeft = (expirationTime - now) / 1000;
-			return message.reply(`please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`);
+			return message.reply(`Wait for ${timeLeft.toFixed(0)} more seconds before spamming that command again.`);
 		}
 	}
 	timestamps.set(message.author.id, now);
@@ -101,5 +101,6 @@ async function getEmojis() {
   const full = emojiGuild.emojis.cache.find(emoji => emoji.name === 'full');
   const half = emojiGuild.emojis.cache.find(emoji => emoji.name === 'half');
   const empty = emojiGuild.emojis.cache.find(emoji => emoji.name === 'empty');
-  return [coin, full, half, empty];
+  const pixel = emojiGuild.emojis.cache.find(emoji => emoji.name === 'PixelHeart');
+  return [coin, full, half, empty, pixel];
 }

@@ -46,6 +46,6 @@ module.exports = {
         return;
       }
     }
-    await gain(userData, 2);
+    await gain(userData, 2, message);
   }
 };

@@ -2,7 +2,7 @@ const Discord = require("discord.js");
 const db = require("../../schemas/player.js");
 const getEmoji = require('../../index.js');
 const gain = require('../../functions/gainExp.js');
-
+const getLevels = require('../../functions/getLevels.js');
 module.exports = {
   name: 'profile',
   aliases: ['pf', 'info'],
@@ -47,14 +47,14 @@ module.exports = {
       .setColor('#2d61b5');
 
     message.reply(embed);
-    await gain(data, 1);
+    await gain(data, 1, message);
   }
 };
 
 async function getXPLine(xp) {
   
   const levels = getLevels();
-  const pair = await getPreceedingPair(levels, xp);
+  const pair = await getPreceedingPair(levels, xp); //[level ,xp]
   
   //Get emojis!!!!!
   const full = (await getEmoji)[1];
@@ -64,11 +64,11 @@ async function getXPLine(xp) {
   //Get Suceeding Level and xp
   let pxp = xp - pair[1];
   const targetLevel = pair[0] + 1;
-  const targetXP = levels[targetLevel];
+  const targetXP = (levels[targetLevel]) - (levels[pair[0]]);
   
   //Divide
-  const divider = targetXP/10; //5
-  const quotient = (pxp/divider).toFixed(0); //6
+  const divider = targetXP/10;
+  const quotient = (pxp/divider).toFixed(0);
   
   //Decide Number of Bars
   let number = quotient/2;
@@ -120,33 +120,6 @@ async function getPreceedingPair(levels, xp) {
   await pair.push(levelXP);
   
   return pair;
-}
-
-function getLevels() {
-  const levels = {
-    0: 0,
-    1: 10,
-    2: 25,
-    3: 50,
-    4: 75,
-    5: 100,
-    6: 130,
-    7: 165,
-    8: 200,
-    9: 250,
-    10: 310,
-    11: 365,
-    12: 520,
-    13: 585,
-    14: 655,
-    15: 720,
-    16: 800,
-    17: 888,
-    18: 1001,
-    19: 1234,
-    20: 1500
-  };
-  return levels;
 }
 
 async function add5(text) {
