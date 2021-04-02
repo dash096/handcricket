@@ -99,12 +99,14 @@ module.exports = {
         message.channel.awaitMessages( m => m.author.id === user.id, {
           max: 1,
           time: 30000
-        }).then( msgs => {
+        }).then( async msgs => {
           const msg = msgs.first();
           if(msg.content.trim().toLowerCase() == 'y' || msg.content.trim().toLowerCase() == 'yes') {
             post = true;
+            await rollToss(post);
           } else {
             post = false;
+            await rollToss(post);
           }
         }).catch(async e => {
           console.log(e);
@@ -114,7 +116,6 @@ module.exports = {
           return;
         });
       }
-      await rollToss(post);
     }
     
     async function rollToss(post) {
