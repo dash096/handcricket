@@ -6,8 +6,8 @@ module.exports = async function (name, data, msg) {
 //Change Coin Boost
   if (name === 'coinboost') {
     const oldBag = data.bag || {};
-    const oldAmount = oldBag[name];
-    let oldCoinMulti = data.coinMulti;
+    const oldAmount = oldBag[name] || 0;
+    let oldCoinMulti = data.coinMulti || 0;
 
     //Check No. of Items is bigger than usage
     if (!oldAmount || oldAmount === 0) {
@@ -34,10 +34,7 @@ module.exports = async function (name, data, msg) {
     const expireDate = Date.now() + 60 * 1000;
     
     //Validate 1+ Boost
-    let newCoinMulti;
-    if(oldCoinMulti * 2 > 0.9) {
-      newCoinMulti = 0.9;
-    }
+    let newCoinMulti = oldCoinMulti * 2;
 
     //Update Database
     await db.findOneAndUpdate({ _id: data._id }, {
@@ -45,9 +42,9 @@ module.exports = async function (name, data, msg) {
         coinBoost: expireDate,
         coinMulti: newCoinMulti
       }
-    }, { upsert: true }
+    }, { new: true, upsert: true }
     ).catch((e) => {
-        console.log(e);
+      console.log(e);
     });
     
     //Set timeout
@@ -61,8 +58,9 @@ module.exports = async function (name, data, msg) {
       }
       await db.findOneAndUpdate( {_id: data._id},
         { $set: { 
-              coinMulti: newCoinMulti,
-              coinBoost: undefined,
+            coinMulti: newCoinMulti
+          }, $unset: {
+            coinBoost: ''
           }
         }
       );
@@ -102,6 +100,10 @@ module.exports = async function (name, data, msg) {
     //Const Expiry Date of Boost 
     const expireDate = Date.now() + 60 * 1000;
     
+    let newTossMulti = oldTossMulti * 1.4;
+    if(newTossMulti > 0.9) {
+      newTossMulti = 0.9;
+    }
     //Update Database
     await db.findOneAndUpdate({ _id: data._id }, {
         $set: {
@@ -124,8 +126,9 @@ module.exports = async function (name, data, msg) {
       }
       await db.findOneAndUpdate( {_id: data._id},
         { $set: { 
-            tossMulti: newTossMulti,
-            tossBoost: undefined,
+            tossMulti: newTossMulti
+          }, $unset: {
+            tossBoost: ''
           }
         }
       );
