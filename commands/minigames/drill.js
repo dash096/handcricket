@@ -8,6 +8,7 @@ module.exports = {
   description: 'Run the Drill! Exercise!',
   category: 'Minigames',
   syntax: 'e.run',
+  cooldown: 600,
   run: async (message, args, prefix) => {
     const emoji = (await emojis)[0];
     
