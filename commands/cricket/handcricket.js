@@ -197,6 +197,9 @@ async function userWon(message, user, target, post) {
     else if (m.content.toLowerCase().trim() === "bowling") {
       batsman = target;
       bowler = user;
+    }
+    else if (m.content.toLowerCase().trim() === "end" || m.content.toLowerCase().trim() === "cancel" || m.content.toLowerCase().trim() === "exit") {
+      return message.channel.send('Aborted');
     } else {
       m.reply("Type either `batting` or `bowling`");
       return userWon(message, user, target);
@@ -222,6 +225,8 @@ async function targetWon(message, user, target, post) {
       else if (m.content.toLowerCase().trim() === "bowling") {
         batsman = user;
         bowler = target;
+      } else if (m.content.toLowerCase().trim() === "end" || m.content.toLowerCase().trim() === "cancel" || m.content.toLowerCase().trim() === "exit") {
+        return message.channel.send('Aborted');
       } else {
         m.reply("Type either `batting` or `bowling`");
         return targetWon(message, user, target);
