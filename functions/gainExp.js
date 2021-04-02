@@ -11,8 +11,6 @@ module.exports = async function (nabdata, amt, msg) {
   const add = rando * amount;
   const newXP = oldxp + add;
   
-  console.log(oldxp, newXP);
-  
   const pXPArray = Object.values(levels).filter(value => value < oldxp);
   const pXP = pXPArray[pXPArray.length - 1];
   const pLevel = Object.keys(levels).find(key => levels[key] === pXP);
