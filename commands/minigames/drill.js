@@ -39,7 +39,7 @@ module.exports = {
       }
       await gain(data, 2, message);
     } catch(e) {
-      message.reply('Time\'s up');
+      message.reply('Looks like you need to get quicker at running. sadge..');
     }
   }
 };
