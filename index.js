@@ -70,8 +70,15 @@ client.on('message', message => {
 	if (timestamps.has(message.author.id)) {
 		const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
    if (now < expirationTime) {
-			const timeLeft = (expirationTime - now) / 1000;
-			return message.reply(`Wait for ${timeLeft.toFixed(0)} more seconds before spamming that command again.`);
+			let timeLeft = (expirationTime - now) / 1000;
+			let sec;
+			let min;
+			if(timeLeft >= 60) {
+			  min = (timeLeft/60).toFixed(0) + 'm';
+			  sec = (timeLeft % 60) + 's';
+			  if(sec = '0s') sec = '';
+			} else sec = timeLeft.toFixed(0);
+			return message.reply(`Wait for ${min} ${sec} before spamming that command again.`);
 		}
 	}
 	timestamps.set(message.author.id, now);

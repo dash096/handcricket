@@ -10,6 +10,7 @@ module.exports = {
   description: 'send some pc to another user, mercy.',
   category: 'Cricket',
   syntax: 'e.send @user <coins/itemName> <amount>',
+  cooldown: 10,
   run: async (message, argsf, prefix) => {
     const args = message.content.toLowerCase().trim().split(' ').slice(1);
     //User

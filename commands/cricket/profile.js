@@ -9,7 +9,7 @@ module.exports = {
   description: 'Shows the profile of a user.',
   category: 'Cricket',
   syntax: 'e.profile @user',
-  cooldown: 10,
+  cooldown: 6,
   run: async (message, args, prefix) => {
     const emoji = (await getEmoji)[0];
     

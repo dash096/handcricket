@@ -13,7 +13,7 @@ module.exports = {
   description: 'Use an item in your bag',
   category: 'Cricket',
   syntax: 'e.use <itemName>',
-  cooldown: 15,
+  cooldown: 7,
   run: async (message, args, prefix) => {
     const emoji = (await getEmoji)[0];
     

@@ -8,7 +8,7 @@ module.exports = {
   description: 'Shows your backpack',
   category: 'Cricket',
   syntax: 'e.bag',
-  cooldown: 10,
+  cooldown: 5,
   run: async (message, args, prefix) => {
     const target = message.mentions.users.first() || message.author;
     const data = await db.findOne({_id: target.id});
