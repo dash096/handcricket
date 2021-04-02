@@ -11,6 +11,7 @@ module.exports = async function(winner, loser, coins, wS, wB, lS, lB) {
   });
 
   const random = Math.random();
+  const randoXP = Math.random() * 6.9;
 
   //Winner Old Data
   const winnerCoinMulti = winnerData.coinMulti;
@@ -18,11 +19,13 @@ module.exports = async function(winner, loser, coins, wS, wB, lS, lB) {
   const winnerWins = winnerData.wins;
   const winnerCoins = winnerData.cc;
   const winnerSTR = winnerData.strikeRate;
+  const winnerXP = winnerData.xp;
   
   //Loser Old Data
   const loserTossMulti = loserData.tossMulti;
   const loserLoses = loserData.loses;
   const loserSTR = loserData.strikeRate;
+  const loserXP = loserData.xp;
   
   const wSTR = (winnerSTR + (wS/wB))/2;
   const lSTR = (loserSTR + (lS/lB))/2;
@@ -35,6 +38,7 @@ module.exports = async function(winner, loser, coins, wS, wB, lS, lB) {
       tossMulti: winnerTossMulti - 0.069,
       wins: winnerWins + 1,
       strikeRate: wSTR,
+      xp: winnerXP + randoXP,
       status: false
     }
   };
@@ -44,6 +48,7 @@ module.exports = async function(winner, loser, coins, wS, wB, lS, lB) {
       tossMulti: loserTossMulti + 0.069,
       loses: loserLoses + 1,
       strikeRate: lSTR,
+      xp: loserXP + randoXP,
       status: false
     }
   };

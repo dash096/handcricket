@@ -11,13 +11,13 @@ module.exports = {
     const commands = await getCommands();
     const general = commands[0];
     const cricket = commands[1];
-    const training = commands [2];
+    const minigames = commands[2];
     
     const send = new Discord.MessageEmbed()
       .setTitle('Help')
       .setDescription('Here\'s an Interactive GUIDE for you!\n\n')
       .addField('Navigate via the pages of the guide by typing the number.', 
-      '1) 👀 - **__General Conmands__**\n2) 🏏 - **__Cricket Commands__**\n3) 🏋️ - **__Training Commands__**')
+      '1) 👀 - **__General Conmands__**\n2) 🏏 - **__Cricket Commands__**\n3) 🏋️ - **__Minigames Commands__**')
       .setColor('BLUE')
       .setFooter('Requested by ' + message.author.tag);
     
@@ -33,9 +33,9 @@ module.exports = {
       .setColor('BLUE')
       .setFooter('Type `back` to navigate back.');
       
-    const trainingEmbed = new Discord.MessageEmbed()
-      .setTitle('Training Commands')
-      .setDescription(training)
+    const minigamesEmbed = new Discord.MessageEmbed()
+      .setTitle('Minigames Commands')
+      .setDescription(minigames)
       .setColor('BLUE')
       .setFooter('Type `back` to navigate back.');
       
@@ -67,7 +67,7 @@ module.exports = {
         }
         else if(msg.content == '3') {
           if(goBack == false) {
-            embed.edit(trainingEmbed);
+            embed.edit(minigamesEmbed);
             goBack = true;
           }
           return loopHelp();
@@ -94,7 +94,7 @@ module.exports = {
 function getCommands() {
   let General = '';
   let Cricket = '';
-  let Training = '';
+  let Minigames = '';
   const folders = fs.readdirSync('./commands');
   for(const folder of folders) {
     const files = fs.readdirSync(`./commands/${folder}`);
@@ -104,12 +104,12 @@ function getCommands() {
         Cricket += `**${command.name}** - \`${command.syntax}\`\n ${command.description}\n\n`;
       } else if (folder.toLowerCase() == 'general') {
         General += `**${command.name}** - \`${command.syntax}\`\n ${command.description}\n\n`;
-      } else if (folder.toLowerCase() == 'training') {
-        Training += `**${command.name}** - \`${command.syntax}\`\n ${command.description}\n\n`;
+      } else if (folder.toLowerCase() == 'minigames') {
+        Minigames += `**${command.name}** - \`${command.syntax}\`\n ${command.description}\n\n`;
       }
     }
   }
   return [
-    General, Cricket, Training
+    General, Cricket, Minigames
   ];
 }

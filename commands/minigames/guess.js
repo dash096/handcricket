@@ -7,7 +7,7 @@ module.exports = {
   name: 'guess',
   aliases: ['guesstheno', 'gtn'],
   description: 'Guess The Number! Train your brain!',
-  category: 'Training',
+  category: 'Minigames',
   syntax: 'e.guess',
   cooldown: 600,
   run: async (message) => {
@@ -39,7 +39,7 @@ module.exports = {
         time: 30000,
         errors: ['time']
       });
-      const randoCoins = (Math.random() * 696).toFixed(0);
+      const randoCoins = (Math.random() * 464).toFixed(0);
       const msg = collected.first();
       const { content, author, channel } = msg;
       const guess = content;
@@ -53,7 +53,7 @@ module.exports = {
       if(guess.toLowerCase() == 'end') {
         channel.send('Game Ended');
         await channel.send(`You got some experience.`);
-        return await gainExp(data, 1, message);
+        return await gainExp(data, 0.5, message);
       } else if(isNaN(guess)) {
         lives -= 1;
         edit.setDescription('Wrong answer! ' + guess + ' is not even a number!');
@@ -62,7 +62,7 @@ module.exports = {
           channel.send('You lost! I thought of ' + number);
           const coins = await updateCoins(data, 'lose', randoCoins);
           await channel.send(`You got ${coinEmoji} ${coins} and some experience.`);
-          return await gainExp(data, 3, message);
+          return await gainExp(data, 2, message);
         }
         return play();
       } else if (guess == number) {
@@ -70,7 +70,7 @@ module.exports = {
         channel.send(edit);
         const coins = await updateCoins(data, 'win', randoCoins);
         await channel.send(`You won ${coinEmoji} ${coins} and some experience.`);
-        return await gainExp(data, 5, message);
+        return await gainExp(data, 3, message);
       } else {
         lives -= 1;
         edit.setDescription('Wrong answer! ' + guess + ` is ${getGteLte(guess,  number)} the number I thought!`);
@@ -79,7 +79,7 @@ module.exports = {
           channel.send('You lost! I thought of ' + number);
           const coins = await updateCoins(data, 'lose', randoCoins);
           await channel.send(`You got ${coinEmoji} ${coins} and some experience.`);
-          return await gainExp(data, 3, message);
+          return await gainExp(data, 2, message);
         }
         return play();
       }
