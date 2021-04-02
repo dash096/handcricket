@@ -16,7 +16,14 @@ module.exports = async function (data, amount, msg) {
   const sLevel = Object.keys(levels).find(key => levels[key] === sXP);
   
   if(pLevel != sLevel) {
-    msg.channel.send(`You leveled up to ${sLevel}! Nice.`);
+    msg.reply(`CONGRATS!!! You leveled up to **${sLevel}**! You also got a lootbox!!!`);
+    const bag = data.bag || {};
+    const amount = bag[lootbox] || 0;
+    bag[lootbox] = amount + 1;
+    await db.findOneAndUpdate({_id: data._id},
+    { $set: {
+      bag: bag
+    }});
   }
   
   await db.findOneAndUpdate({_id: data._id},
