@@ -3,8 +3,8 @@ const itemDb = require('../schemas/items.js');
 
 module.exports = async function (name, amount, data, msg) {
 
-  const oldBag = data.bag;
-  const oldAmount = oldBag[name];
+  const oldBag = data.bag || {};
+  const oldAmount = oldBag[name] || 0;
   const newAmount = oldAmount - parseInt(amount);
 
   if (!oldAmount || oldAmount < amount) {
