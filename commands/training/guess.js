@@ -128,6 +128,6 @@ async function updateCoins(data, wl, amount) {
     coins = (amount / 2).toFixed(0);
   }
   const oldcc = data.cc;
-  await db.findOneAndUpdate({_id: data._id}, {$set: {cc: data.cc + coins}});
+  await db.findOneAndUpdate({_id: data._id}, {$set: {cc: parseInt(data.cc) + parseInt(coins)}});
   return coins;
 }
