@@ -96,18 +96,17 @@ module.exports = {
     if(will === true) {
       if(post === false) {
         await message.reply('**POST SCORES?**\n If you have any frnds online rn, and if you want them to see the match score, type `yes` else, type something to continue.');
-        message.channel.awaitMessages( m => m.author.id === user.id, {
+        await message.channel.awaitMessages( m => m.author.id === user.id, {
           max: 1,
           time: 30000
-        }).then( async msgs => {
+        }).then( msgs => {
           const msg = msgs.first();
           if(msg.content.trim().toLowerCase() == 'y' || msg.content.trim().toLowerCase() == 'yes') {
             post = true;
-            await rollToss(post);
           } else {
             post = false;
-            await rollToss(post);
           }
+          rollToss(post);
         }).catch(async e => {
           console.log(e);
           msg.channel.send('uhh, I guess you are offline. Match aborted.');
