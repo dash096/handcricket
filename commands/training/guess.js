@@ -70,7 +70,7 @@ module.exports = {
         channel.send(edit);
         const coins = await updateCoins(data, 'win', randoCoins);
         await channel.send(`You won ${coinEmoji} ${coins} and some experience.`);
-        return await gainExp(data, 7, message);
+        return await gainExp(data, 5, message);
       } else {
         lives -= 1;
         edit.setDescription('Wrong answer! ' + guess + ` is ${getGteLte(guess,  number)} the number I thought!`);

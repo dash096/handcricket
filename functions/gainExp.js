@@ -1,13 +1,14 @@
 const db = require('../schemas/player.js');
 const getLevels = require('./getLevels.js');
 
-module.exports = async function (nabdata, amount, msg) {
+module.exports = async function (nabdata, amt, msg) {
   const data = await db.findOne({_id: msg.author.id});
   
   const levels = getLevels();
+  const amount = parseInt(amt);
   const oldxp = data.xp;
   const rando = Math.random();
-  const add = parseInt(rando * amount);
+  const add = rando * amount;
   
   console.log(oldxp, rando, amount, add)
   const pXPArray = Object.values(levels).filter(value => value < oldxp);
