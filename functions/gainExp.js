@@ -6,8 +6,10 @@ module.exports = async function (nabdata, amount, msg) {
   
   const levels = getLevels();
   const oldxp = data.xp;
-  const add = parseInt(Math.random() * amount);
+  const rando = Math.random();
+  const add = parseInt(rando * amount);
   
+  console.log(oldxp, rando, amount, add)
   const pXPArray = Object.values(levels).filter(value => value < oldxp);
   const pXP = pXPArray[pXPArray.length - 1];
   const pLevel = Object.keys(levels).find(key => levels[key] === pXP);
