@@ -11,7 +11,7 @@ module.exports = async function (nabdata, amt, msg) {
   const add = rando * amount;
   const newXP = oldxp + add;
   
-  console.log(oldxp, add);
+  console.log(oldxp, newXP);
   
   const pXPArray = Object.values(levels).filter(value => value < oldxp);
   const pXP = pXPArray[pXPArray.length - 1];
@@ -28,8 +28,12 @@ module.exports = async function (nabdata, amt, msg) {
     bag['lootbox'] = amount + 1;
     await db.findOneAndUpdate({_id: data._id},
     { $set: {
-      bag: bag,
-      xp: newXP
+      bag: bag
     }});
   }
+  
+  await db.findOneAndUpdate({_id: data._id},
+    { $set: {
+      xp: newXP
+    }});
 };
