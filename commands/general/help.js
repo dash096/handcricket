@@ -17,10 +17,20 @@ module.exports = {
       .setTitle('Help')
       .setDescription('Here\'s an Interactive GUIDE for you!\n\n')
       .addField('Navigate via the pages of the guide by typing the number.', 
-      '1) 👀 - **__General Conmands__**\n2) 🏏 - **__Cricket Commands__**\n3) 🏋️ - **__Minigames Commands__**')
+      '1) ❓ - **__About and Guide__**\n 👀 - **__General Conmands__**\n3) 🏏 - **__Cricket Commands__**\n4) 🏋️ - **__Minigames Commands__**')
       .setColor('BLUE')
       .setFooter('Requested by ' + message.author.tag);
     
+    const aboutEmbed = new Discord.MessageEmbed()
+      .setTitle('About Cricket')
+      .setDescription('Not actually cricket, but **__handcricket__**. A popular kiddo game originated in **South India** and spread to whole India')
+      .addField('How to Play?', 'Once when you start a match, get to dms to play. It is played in dms cause the numbers are supposed to be hidden...\n\n' +
+      'The bowler bowls a ball(types a number), the batsman is gonna hit the ball(typing a number). If both the numbers are same, it is a Wicket(His chance got over) else the batsman number adds to his score, and after wicket, the next innings starts with a target that batsman has hit in total\n\n' +
+      'The batsman and bowler in first innings gets swapped their position. Now the batsman(i.e the bowler in innings 1) had to chase the bowler\'s(i.e. batsman in innings 1) score\n\n' +
+      'If the batsman ever hit the same number that was bowler, bolwer wins, else if the batsman crosses the target, batsman wins. **Sounds trash(coz u were lazy to read, weren\'t you?) but Great When you Get Real with your friends! Get Real When!**')
+      .setFooter('Type `back` to navigate back.')
+      .setColor('BLUE');
+       
     const generalEmbed = new Discord.MessageEmbed()
       .setTitle('General Commands')
       .setDescription(general)
@@ -50,22 +60,31 @@ module.exports = {
           { max: 1, time: 30000, errors: ['time'] }
         );
         const msg = collected.first();
-        
+       
         if(msg.content == '1') {
+          if(goBack == false) {
+            embed.edit(aboutEmbed);
+            goBack = true;
+          } 
+          setTimeout(() => {
+            return loopHelp();
+          }, 10000);
+        }
+        else if(msg.content == '2') {
           if(goBack == false) {
             embed.edit(generalEmbed);
             goBack = true;
           }
           return loopHelp();
         }
-        else if(msg.content == '2') {
+        else if(msg.content == '3') {
           if(goBack == false) {
             embed.edit(cricketEmbed);
             goBack = true;
           }
           return loopHelp();
         }
-        else if(msg.content == '3') {
+        else if(msg.content == '4') {
           if(goBack == false) {
             embed.edit(minigamesEmbed);
             goBack = true;
