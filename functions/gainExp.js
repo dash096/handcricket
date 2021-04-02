@@ -1,7 +1,9 @@
 const db = require('../schemas/player.js');
 const getLevels = require('./getLevels.js');
 
-module.exports = async function (data, amount, msg) {
+module.exports = async function (nabdata, amount, msg) {
+  const data = await db.findOne({_id: msg.author.id});
+  
   const levels = getLevels();
   const oldxp = data.xp;
   const add = Math.random() * amount;
@@ -22,15 +24,8 @@ module.exports = async function (data, amount, msg) {
     bag[lootbox] = amount + 1;
     await db.findOneAndUpdate({_id: data._id},
     { $set: {
-      bag: bag
+      bag: bag,
+      xp: oldxp + add
     }});
   }
-  
-  await db.findOneAndUpdate({_id: data._id},
-    {
-      $set: {
-        xp: oldxp + add
-      }
-    }
-  );
 };

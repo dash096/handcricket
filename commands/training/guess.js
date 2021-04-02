@@ -127,6 +127,7 @@ async function updateCoins(data, wl, amount) {
   } else if (wl == 'lose') {
     coins = (amount / 2).toFixed(0);
   }
-  await db.findOneAndUpdate({_id: data._id}, {$set: {cc: coins}});
+  const oldcc = data.cc;
+  await db.findOneAndUpdate({_id: data._id}, {$set: {cc: data.cc + coins}});
   return coins;
 }
