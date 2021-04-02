@@ -1,7 +1,8 @@
 const db = require('../schemas/player.js');
-const levels = require('./getLevels.js');
+const getLevels = require('./getLevels.js');
 
 module.exports = async function (data, amount, msg) {
+  const levels = getLevels();
   const oldxp = data.xp;
   const add = Math.random() * amount;
   
@@ -13,8 +14,6 @@ module.exports = async function (data, amount, msg) {
   const sXPArray = Object.values(levels).filter(value => value < newXP);
   const sXP = sXPArray[sXPArray.length - 1];
   const sLevel = Object.keys(levels).find(key => levels[key] === sXP);
-  
-  console.log(pLevel, sLevel);
   
   if(pLevel != sLevel) {
     msg.channel.send(`You leveled up to ${sLevel}! Nice.`);
