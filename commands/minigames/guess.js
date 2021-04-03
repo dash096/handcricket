@@ -10,7 +10,7 @@ module.exports = {
   category: 'Minigames',
   syntax: 'e.guess',
   cooldown: 60,
-  run: async (message) => {
+  run: async (message, args, prefix, client, train) => {
     const coinEmoji = (await getEmoji)[0];
     const pixel = (await getEmoji)[4];
     
@@ -31,7 +31,8 @@ module.exports = {
       
     await message.channel.send(embed);
     
-    play();
+    const toReturn = await play();
+    return toReturn;
     
     async function play() {
       const collected = await message.channel.awaitMessages(msg => msg.author.id === message.author.id, {
@@ -43,7 +44,7 @@ module.exports = {
       const msg = collected.first();
       const { content, author, channel } = msg;
       const guess = content;
-      let win;
+      let win = false;
     
       const edit = new Discord.MessageEmbed()
        .setTitle('Guess the Number ' + `${await getLives(lives)}`)
@@ -55,15 +56,13 @@ module.exports = {
         channel.send('Game Ended');
         await channel.send(`You got some experience.`);
         await gainExp(data, 0.5, message);
-        win = false;
         return [message, win, 0];
       } else if(isNaN(guess)) {
         lives -= 1;
-        edit.setDescription('Wrong answer! ' + guess + ' is not even a number!');
+        edit.setDescription('Wrong answer! ' + `\`guess\`` + ' is not even a number!');
         channel.send(edit);
         if(lives == 0) {
           channel.send('You lost! I thought of ' + number);
-          win = false;
           await gainExp(data, 2, message);
           return [message, win, randoCoins];
         }
@@ -71,7 +70,7 @@ module.exports = {
       } else if (guess == number) {
         edit.setDescription('Correct Answer! You are good at guessing!');
         channel.send(edit);
-        if(train == true) channel.reply(`You got ${coins} as Training rewards!`);
+        if(train == true) channel.reply(`You got ${randoCoins} as Training rewards!`);
         await gainExp(data, 3, message);
         win = true;
         return [message, win, randoCoins];
@@ -82,7 +81,6 @@ module.exports = {
         if(lives == 0) {
           channel.send('You lost! I thought of ' + number);
           await gainExp(data, 2, message);
-          win = false;
           return [message, win, randoCoins];
         }
         return play();

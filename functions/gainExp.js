@@ -1,8 +1,9 @@
 const db = require('../schemas/player.js');
 const getLevels = require('./getLevels.js');
 
-module.exports = async function (nabdata, amt, msg) {
-  const data = await db.findOne({_id: msg.author.id});
+module.exports = async function (nabData, amt, msg) {
+  let data = nabData;
+  if(!data) data = await db.findOne({_id: msg.author.id});
   
   const levels = getLevels();
   const amount = parseInt(amt);

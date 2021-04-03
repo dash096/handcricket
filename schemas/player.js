@@ -26,6 +26,9 @@ const player = new mongoose.Schema({
     type: Number, default: 0.5
   },
   bag: {},
+  quests: {
+    type: {}, default: {}
+  },
   coinBoost: Date,
   tossBoost: Date,
   startedOn: {

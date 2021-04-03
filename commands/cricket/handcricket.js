@@ -1,6 +1,10 @@
 const db = require("../../schemas/player.js");
 const Discord = require("discord.js");
 
+
+//To fix awaitMessages collevtion error
+let fixErrors = true;
+
 module.exports = {
   name: "handcricket",
   aliases: ["hc", "cricket"],
@@ -51,6 +55,14 @@ module.exports = {
       return;
     }
     
+    //Fix errors on collectin
+    setTimeout(async () => {
+      if(fixErrors == true) {
+        await changeStatus(user, false);
+        await changeStatus(target, false);
+      }
+    }, 15000);
+    
     await changeStatus(user, true);
     await changeStatus(target, true);
     
@@ -95,25 +107,26 @@ module.exports = {
     
     if(will === true) {
       if(post === false) {
-        await message.reply('**POST SCORES?**\n If you have any frnds online rn, and if you want them to see the match score, type `yes` else, type something to continue.');
-        await message.channel.awaitMessages( m => m.author.id === user.id, {
-          max: 1,
-          time: 30000
-        }).then( msgs => {
+        try {
+          await message.reply('**POST SCORES?**\n If you have any frnds online rn, and if you want them to see the match score, type `yes` else, type something to continue.');
+          const msgs = await message.channel.awaitMessages( m => m.author.id === user.id, {
+            max: 1,
+            time: 30000
+          })
           const msg = msgs.first();
           if(msg.content.trim().toLowerCase() == 'y' || msg.content.trim().toLowerCase() == 'yes') {
             post = true;
           } else {
             post = false;
           }
-          rollToss(post);
-        }).catch(async e => {
+          await rollToss(post);
+        } catch(e) {
           console.log(e);
           msg.channel.send('uhh, I guess you are offline. Match aborted.');
           await changeStatus(user, false);
           await changeStatus(target, false);
           return;
-        });
+        };
       }
     }
     
@@ -163,6 +176,7 @@ module.exports = {
         }
       }
     }
+    fixErrors = false;
   }
 };
 
@@ -178,7 +192,7 @@ async function start(message, batsman, bowler, post) {
   await db.findOneAndUpdate( { _id: bowler.id }, {
       $set: { status: true } },
       { new: true, upsert: true });
-  
+  fixErrors = false;
   firstInnings(batsman, bowler, message, post);
 }
 

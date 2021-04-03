@@ -134,7 +134,7 @@ module.exports = async function(bowler, batsman, boS, boB, mc, post) {
         const rando = Math.random() * multi.toFixed(0);
         const coins = rando.toFixed(0);
 
-        if((target - newScore) === 1) {
+        if((target - (newScore - parseInt(c))) === 1) {
           bowler.send(`Wicket! DUCK! The batsman hit ${c}! It is a tie!`);
           batsman.send('Wicket! DUCK! The bowler bowled' + bowled + '! It is a tie!');
           if(post === true) mc.send(`**${batsman.tag}** WICKET!! DUCK! He hit ${c} and was bowled ${bowled} by **${bowler.tag}**`);
@@ -142,7 +142,7 @@ module.exports = async function(bowler, batsman, boS, boB, mc, post) {
           bowler.send(`Wicket! The batsman hit ${c}! You won a grand amount of ${emoji} ${coins}!`);
           batsman.send('Wicket! The bowler bowled ' + bowled + '! You lost... Sadge');
           if(post === true) mc.send(`**${batsman.tag}** WICKET! He hit ${c} and was bowled ${bowled} by **${bowler.tag}**`, {embed});
-          rewards(bowler, batsman, coins, boS, boB, newScore, totalBalls);
+          rewards(bowler, batsman, coins, boS, boB, newScore, totalBalls,mc);
         }
 
         changeStatus(batsman, bowler);
@@ -168,7 +168,7 @@ module.exports = async function(bowler, batsman, boS, boB, mc, post) {
         batsman.send(`Score is ${newScore}! The bowler bowled ${bowled}! You won a grand amount of ${emoji} ${coins}!`);
         bowler.send(`Batsman score is ${newScore}! The batsman hit ${c}! You lost... sadge`);
         if(post === true) mc.send(`**${batsman.tag}** crossed the target!! HE **WON**!! He hit ${c} and was bowled ${bowled} by **${bowler.tag}**`);
-        rewards(batsman, bowler,  coins, newScore, totalBalls, boS, boB);
+        rewards(batsman, bowler,  coins, newScore, totalBalls, boS, boB, mc);
         
         changeStatus(batsman,bowler);
         timeoutDecider = false;

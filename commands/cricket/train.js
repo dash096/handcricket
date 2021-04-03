@@ -8,7 +8,9 @@ module.exports = {
   category: 'Cricket',
   syntax: 'e.train',
   cooldown: 600,
-  run: async (message, args, prefix) => {
+  run: async (message, args, prefix, client) => {
+    const data = await db.findOne({_id: message.author.id});
+    
     const exercises = {};
     const trainFiles = fs.readdirSync('./commands/minigames');
     for(const trainFile of trainFiles) {
@@ -20,11 +22,21 @@ module.exports = {
     const randoName = names[Math.floor(Math.random() * names.length)];
     const randoGame = exercises[randoName];
     
-    const execute = await randoGame(message);
-    const msg = execute[0];
+    const execute = await randoGame(message, args, prefix, client, true);
+    
+    const msg = message;
     const win = execute[1];
     const amount = execute[2];
     updateCoins(message, win, amount, true);
+    
+    const quests = data.quests;
+    const trainings = quests.beFit || 0;
+    
+    if(trainings != true) {
+      quests.beFit = trainings + 1;
+    }
+    
+    await db.findOneAndUpdate({_id: message.author.id}, {$set: {quests: quests}});
   }
 };
 
