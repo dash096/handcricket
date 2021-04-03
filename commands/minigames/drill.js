@@ -28,7 +28,7 @@ module.exports = {
       await message.channel.send('Go!');
       
       const rando = getRando(roll);
-      await message.channel.send(`Type this within ${time}.. \`${rando}\``);
+      await message.channel.send(`Type this within ${time/1000}.. \`${rando}\``);
     
       const answers = await message.channel.awaitMessages(m => m.author.id === message.author.id, {
         max: 1,

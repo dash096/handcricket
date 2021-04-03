@@ -78,6 +78,7 @@ client.on('message', message => {
 			  sec = (timeLeft % 60) + 's';
 			  if(sec = '0s') sec = '';
 			} else sec = timeLeft.toFixed(0);
+			if(!min) min = '';
 			return message.reply(`Wait for ${min} ${sec} before spamming that command again.`);
 		}
 	}
