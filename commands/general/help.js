@@ -17,7 +17,7 @@ module.exports = {
       .setTitle('Help')
       .setDescription('Here\'s an Interactive GUIDE for you!\n\n')
       .addField('Navigate via the pages of the guide by typing the number.', 
-      '1) ❓ - **__About and Guide__**\n 👀 - **__General Conmands__**\n3) 🏏 - **__Cricket Commands__**\n4) 🏋️ - **__Minigames Commands__**')
+      '1) ❓ - **__About and Guide__**\n2) 👀 - **__General Conmands__**\n3) 🏏 - **__Cricket Commands__**\n4) 🏋️ - **__Minigames Commands__**')
       .setColor('BLUE')
       .setFooter('Requested by ' + message.author.tag);
     
@@ -94,7 +94,7 @@ module.exports = {
           }
           return loopHelp();
         }
-        else if(msg.content.toLowerCase() == 'b' || msg.content == 'back') {
+        else if(msg.content.trim().toLowerCase() == 'b' || msg.content.trim().toLowerCase() == 'back') {
           if(goBack == true) {
             embed.edit(send);
             goBack = false;
