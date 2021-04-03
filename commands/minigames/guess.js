@@ -63,7 +63,6 @@ module.exports = {
         channel.send(edit);
         if(lives == 0) {
           channel.send('You lost! I thought of ' + number);
-          await channel.send(`You got ${coinEmoji} ${randoCoins} and some experience.`);
           win = false;
           await gainExp(data, 2, message);
           return [message, win, randoCoins];
@@ -72,8 +71,7 @@ module.exports = {
       } else if (guess == number) {
         edit.setDescription('Correct Answer! You are good at guessing!');
         channel.send(edit);
-        await channel.send(`You won ${coinEmoji} ${randoCoins} and some experience.`);
-        if(train ==true) channel.reply(`You got ${coins} as Training rewards!`);
+        if(train == true) channel.reply(`You got ${coins} as Training rewards!`);
         await gainExp(data, 3, message);
         win = true;
         return [message, win, randoCoins];
@@ -83,7 +81,6 @@ module.exports = {
         channel.send(edit);
         if(lives == 0) {
           channel.send('You lost! I thought of ' + number);
-          await channel.send(`You got ${coinEmoji} ${coins} and some experience.`);
           await gainExp(data, 2, message);
           win = false;
           return [message, win, randoCoins];
