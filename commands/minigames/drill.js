@@ -5,7 +5,7 @@ const emojis = require('../../index.js');
 module.exports = {
   name: 'drill',
   aliases: 'run',
-  description: 'Run the Drill! Exercise!',
+  description: 'Coach coming! Run the Drill! Exercise!',
   category: 'Minigames',
   syntax: 'e.run',
   cooldown: 600,
@@ -17,7 +17,7 @@ module.exports = {
     
     const opt = [1,1,2,2,3];
     const roll = opt[Math.floor(Math.random() * opt.length)];
-    console.log(roll, 'hi');
+    
     try {
       await message.channel.send('The coach decided on running drill now . You will be running a 100m race . Type the upcoming message in the right order.');
       await message.channel.send('Ready');
@@ -71,8 +71,7 @@ function getRando(difficulty) {
       if(type == 1 || type == 3) rando.push(chars[Math.floor(Math.random() * chars.length)]);
       if(type == 2) rando.push(nums[Math.floor(Math.random() * nums.length)]);
     }
-    console.log(difficulty, rando);
-  }
+  } 
   const number = rando.join('');
   return number;
 }
