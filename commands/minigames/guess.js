@@ -10,10 +10,11 @@ module.exports = {
   category: 'Minigames',
   syntax: 'e.guess',
   cooldown: 60,
-  run: async (message, args, prefix, client, train) => {
+  run: async (message, args, prefix, client, boolean) => {
     const coinEmoji = (await getEmoji)[0];
     const pixel = (await getEmoji)[4];
-    
+    let train = boolean;
+    if(!train) train = false;
     const data = await db.findOne({_id: message.author.id});
     if(!data) return message.channel.reply('Do `e.start` before playing.');
     
