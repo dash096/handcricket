@@ -9,7 +9,7 @@ module.exports = {
   description: 'Guess The Number! Train your brain!',
   category: 'Minigames',
   syntax: 'e.guess',
-  cooldown: 600,
+  cooldown: 60,
   run: async (message) => {
     const coinEmoji = (await getEmoji)[0];
     const pixel = (await getEmoji)[4];
@@ -43,6 +43,7 @@ module.exports = {
       const msg = collected.first();
       const { content, author, channel } = msg;
       const guess = content;
+      let win;
     
       const edit = new Discord.MessageEmbed()
        .setTitle('Guess the Number ' + `${await getLives(lives)}`)
@@ -53,33 +54,39 @@ module.exports = {
       if(guess.toLowerCase() == 'end') {
         channel.send('Game Ended');
         await channel.send(`You got some experience.`);
-        return await gainExp(data, 0.5, message);
+        await gainExp(data, 0.5, message);
+        win = false;
+        return [message, win, 0];
       } else if(isNaN(guess)) {
         lives -= 1;
         edit.setDescription('Wrong answer! ' + guess + ' is not even a number!');
         channel.send(edit);
         if(lives == 0) {
           channel.send('You lost! I thought of ' + number);
-          const coins = await updateCoins(data, 'lose', randoCoins);
-          await channel.send(`You got ${coinEmoji} ${coins} and some experience.`);
-          return await gainExp(data, 2, message);
+          await channel.send(`You got ${coinEmoji} ${randoCoins} and some experience.`);
+          win = false;
+          await gainExp(data, 2, message);
+          return [message, win, randoCoins];
         }
         return play();
       } else if (guess == number) {
-        edit.setDescription('Correct Answer! You WON!');
+        edit.setDescription('Correct Answer! You are good at guessing!');
         channel.send(edit);
-        const coins = await updateCoins(data, 'win', randoCoins);
-        await channel.send(`You won ${coinEmoji} ${coins} and some experience.`);
-        return await gainExp(data, 3, message);
+        await channel.send(`You won ${coinEmoji} ${randoCoins} and some experience.`);
+        if(train ==true) channel.reply(`You got ${coins} as Training rewards!`);
+        await gainExp(data, 3, message);
+        win = true;
+        return [message, win, randoCoins];
       } else {
         lives -= 1;
         edit.setDescription('Wrong answer! ' + guess + ` is ${getGteLte(guess,  number)} the number I thought!`);
         channel.send(edit);
         if(lives == 0) {
           channel.send('You lost! I thought of ' + number);
-          const coins = await updateCoins(data, 'lose', randoCoins);
           await channel.send(`You got ${coinEmoji} ${coins} and some experience.`);
-          return await gainExp(data, 2, message);
+          await gainExp(data, 2, message);
+          win = false;
+          return [message, win, randoCoins];
         }
         return play();
       }
@@ -118,16 +125,4 @@ function getGteLte(guess, number) {
   } else if (parseInt(guess) < number) {
     return '**smaller than**';
   }
-}
-
-async function updateCoins(data, wl, amount) {
-  let coins = amount;
-  if(wl == 'win') {
-    coins = amount * 1;
-  } else if (wl == 'lose') {
-    coins = (amount / 2).toFixed(0);
-  }
-  const oldcc = data.cc;
-  await db.findOneAndUpdate({_id: data._id}, {$set: {cc: parseInt(data.cc) + parseInt(coins)}});
-  return coins;
 }

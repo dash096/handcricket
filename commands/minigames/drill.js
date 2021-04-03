@@ -1,6 +1,7 @@
 const gain = require('../../functions/gainExp.js');
 const db = require('../../schemas/player.js');
 const emojis = require('../../index.js');
+const updateCoins = require('../cricket/train.js');
 
 module.exports = {
   name: 'drill',
@@ -8,9 +9,10 @@ module.exports = {
   description: 'Coach coming! Run the Drill! Exercise!',
   category: 'Minigames',
   syntax: 'e.run',
-  cooldown: 600,
-  run: async (message, args, prefix) => {
+  cooldown: 60,
+  run: async (message, args, prefix, getTrain) => {
     const emoji = (await emojis)[0];
+    let train = getTrain || false;
     
     const data = await db.findOne({_id: message.author.id});
     if(!data) return message.reply('You are not a player, do ' + prefix + 'start before playing');
@@ -36,21 +38,24 @@ module.exports = {
     
       if(answer == rando) {
         const coins = (Math.random() * 363).toFixed(0);
-        msg.reply(`Nice, Coach awarded you! You won ${emoji} ${coins} amount of coins!`);
-        updateCoins(data, coins);
+        msg.reply(`Nice, You are good at running.`);
+        if(train ==true) msg.reply(`You got ${coins} as Training rewards!`);
+        return [msg, true, coins];
       } else {
         msg.reply('Looks like you need to get quicker at running. sadge..');
+        return [msg, false, coins];
       }
       await gain(data, 2, message);
     } catch(e) {
       message.reply('Looks like you need to get quicker at running. sadge..');
+      return [message, false, 0];
     }
   }
 };
 
 function getRando(difficulty) {
   let rando = [];
-  const chars = ['!', '#', '*', '@'];
+  const chars = ['!', '#', '@'];
   const alphs = ['a', 'e', 'i', 'o', 'u'];
   const nums = [1,2,3,4,5,6,7,8,9,0];
   
@@ -74,10 +79,4 @@ function getRando(difficulty) {
   } 
   const number = rando.join('');
   return number;
-}
-
-async function updateCoins(data, amount) {
-  const oldcc = data.cc;
-  const cc = oldcc + parseInt(amount);
-  await db.findOneAndUpdate({_id: data._id}, { $set: { cc: cc }});
 }
