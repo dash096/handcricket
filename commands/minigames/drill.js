@@ -3,6 +3,8 @@ const db = require('../../schemas/player.js');
 const emojis = require('../../index.js');
 const updateCoins = require('../cricket/train.js');
 
+    let time = 7000;
+    
 module.exports = {
   name: 'drill',
   aliases: 'run',
@@ -26,11 +28,11 @@ module.exports = {
       await message.channel.send('Go!');
       
       const rando = getRando(roll);
-      await message.channel.send(`Type this within 8s.. ${rando}`);
+      await message.channel.send(`Type this within ${time}.. \`${rando}\``);
     
       const answers = await message.channel.awaitMessages(m => m.author.id === message.author.id, {
         max: 1,
-        time: 8500,
+        time: time,
         errors: ['time']
       });
       const msg = answers.first();
@@ -65,16 +67,19 @@ function getRando(difficulty) {
       const type = Math.floor(Math.random() * 4);
       if(type == 1 || type == 3) rando.push(alphs[Math.floor(Math.random() * alphs.length)]);
       if(type == 2) rando.push(nums[Math.floor(Math.random() * nums.length)]);
+      time = 7000;
     } else if(difficulty == 2) {
       let i;
       const type = Math.floor(Math.random() * 4);
       if(type == 1 || type == 3) rando.push(nums[Math.floor(Math.random() * nums.length)]);
       if(type == 2) rando.push(chars[Math.floor(Math.random() * chars.length)]);
+      time = 8500;
     } else if(difficulty == 3) {
       let i;
       const type = Math.floor(Math.random() * 4);
       if(type == 1 || type == 3) rando.push(chars[Math.floor(Math.random() * chars.length)]);
       if(type == 2) rando.push(nums[Math.floor(Math.random() * nums.length)]);
+      time = 10000;
     }
   } 
   const number = rando.join('');
