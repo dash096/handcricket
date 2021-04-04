@@ -13,9 +13,10 @@ module.exports = {
   syntax: 'e.handcricket @user --post (to post scores in channel)',
   cooldown: 10,
   run: async (message, args, prefix) => {
+    const { content, author, channel, mentions } = message;
     //Players
-    const user = message.author;
-    const target = message.mentions.users.first();
+    const user = author;
+    const target = mentions.users.first();
 
     //Target Validation
     if (!target || target.bot || target.id === user.id) {
@@ -25,14 +26,9 @@ module.exports = {
 
     const userdata = await db.findOne({
       _id: user.id
-    }).catch((e) => {
-      console.log(e);
     });
-    
     const targetdata = await db.findOne({
       _id: target.id
-    }).catch((e) => {
-      console.log(e);
     });
 
     //Data Validation
@@ -55,19 +51,13 @@ module.exports = {
       return;
     }
     
-    //Fix errors on collectin
-    setTimeout(async () => {
-      if(fixErrors == true) {
-        await changeStatus(user, false);
-        await changeStatus(target, false);
-      }
-    }, 15000);
-    
+    //Change status to avoid 2 matchs at same time
     await changeStatus(user, true);
     await changeStatus(target, true);
     
+    //Check if to post socres in the channel.
     let post = false;
-    if(message.content.toLowerCase().includes('--post')) {
+    if(content.toLowerCase().includes('--post')) {
       post = true;
     }
 
@@ -76,11 +66,12 @@ module.exports = {
     let batsman;
     let bowler;
     
-    await message.channel.send(`<@${target.id}> so do you wanna play with **${user.username}**? Type \`y\`/\`n\` in 30s`);
+    await channel.send(`<@${target.id}> Do you wanna play with **${user.username}**? Type \`y\`/\`n\` in 30s`);
     
+    //Ask the target if he wants to duel.
     async function checkWill() {
       try {
-        const msgs = await message.channel.awaitMessages(m => m.author.id === target.id, {
+        const msgs = await channel.awaitMessages(m => m.author.id === target.id, {
           max: 1,
           time: 30000,
           errors: ['time']
@@ -90,21 +81,30 @@ module.exports = {
           return true;
         }
         else {
-          message.channel.send(`Match aborted`);
+          channel.send(`Match aborted`);
           await changeStatus(user, false);
           await changeStatus(target, false);
           return;
         }
-      } catch {
-        message.channel.send('Times up');
+      } catch(e) {
+        channel.send('Times up');
         await changeStatus(user, false);
         await changeStatus(target, false);
         return;
       }
     }
     
+    //Execute check will
     const will = await checkWill();
+    //Change status on awaitMessages bug.
+    setTimeout(async () => {
+      if(fixErrors == true) {
+        await changeStatus(user, false);
+        await changeStatus(target, false);
+      }
+    }, 15000);
     
+    //If will is true, roll the toss
     if(will === true) {
       try {
         await rollToss(post);
@@ -113,7 +113,7 @@ module.exports = {
         await changeStatus(user, false);
         await changeStatus(target, false);
         return;
-      };
+      }
     }
     
     async function rollToss(post) {
@@ -121,7 +121,7 @@ module.exports = {
       if (user.tossMulti > target.tossMulti) {
         //Users with roll.
         if (roll < user.tossMulti) {
-          const rolling = await message.channel.send('Rolling the Coin of Wisdom....');
+          const rolling = await channel.send('Rolling the Coin of Wisdom....');
           setTimeout( () => {
             rolling.edit(`${user} won the toss, type either \`batting\` or \`bowling\``);
           }, 3000);
@@ -130,7 +130,7 @@ module.exports = {
 
         //Target wins with roll.
         if (roll >= user.tossMulti) {
-          const rolling = await message.channel.send('Rolling the Coin of Wisdom....');
+          const rolling = await channel.send('Rolling the Coin of Wisdom....');
           setTimeout( () => {
             rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\``);
           }, 3000);
@@ -142,7 +142,7 @@ module.exports = {
       if (user.tossMulti < target.tossMulti) {
         //Target wins with roll
         if (roll < target.tossMulti) {
-          const rolling = await message.channel.send('Rolling the Coin of Wisdom....');
+          const rolling = await channel.send('Rolling the Coin of Wisdom....');
           setTimeout( () => {
             rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\``);
           }, 3000);
@@ -151,7 +151,7 @@ module.exports = {
 
         //User wins with roll
         if (roll >= target.tossMulti) {
-          const rolling = await message.channel.send('Rolling the Coin of Wisdom....');
+          const rolling = await channel.send('Rolling the Coin of Wisdom....');
           setTimeout( () => {
             rolling.edit(`${user} won the toss, type either \`batting\` or \`bowling\``);
           }, 3000);
@@ -164,7 +164,7 @@ module.exports = {
         const roll2 = Math.floor(Math.random() * 3);
 
         if (roll2 === 1) { //User wins
-          const rolling = await message.channel.send('Rolling the Coin of Wisdom....');
+          const rolling = await channel.send('Rolling the Coin of Wisdom....');
           setTimeout( () => {
             rolling.edit(`${user} won the toss, type either \`batting\` or \`bowling\``);
           }, 3000);
@@ -172,7 +172,7 @@ module.exports = {
         }
 
         if (roll2 === 2) { //Target wins
-          const rolling = await message.channel.send('Rolling the Coin of Wisdom....');
+          const rolling = await channel.send('Rolling the Coin of Wisdom....');
           setTimeout( () => {
             rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\``);
           }, 3000);
@@ -185,7 +185,9 @@ module.exports = {
 };
 
 async function start(message, batsman, bowler, post) {
-  await message.channel.send(`${batsman} and ${bowler}, get to your dms to play!`);
+  const { content, author, channel, mentions } = message;
+  
+  await channel.send(`${batsman} and ${bowler}, get to your dms to play!`);
 
   const firstInnings = require("../../functions/innings1.js");
   
@@ -201,8 +203,10 @@ async function start(message, batsman, bowler, post) {
 }
 
 async function userWon(message, user, target, post) {
+  const { content, author, channel, mentions } = message;
+    
   try {
-    const msgs = await message.channel.awaitMessages(
+    const msgs = await channel.awaitMessages(
       m => m.author.id === user.id, { max: 1, time: 20000, errors: ['time'] }
     );
   
@@ -216,22 +220,24 @@ async function userWon(message, user, target, post) {
       bowler = user;
     }
     else if (m.content.toLowerCase().trim() === "end" || m.content.toLowerCase().trim() === "cancel" || m.content.toLowerCase().trim() === "exit") {
-      return message.channel.send('Aborted');
+      return channel.send('Aborted');
     } else {
       m.reply("Type either `batting` or `bowling`");
       return userWon(message, user, target);
     }
-    await message.channel.send(`Batsman is ${batsman}, Bowler is ${bowler}`);
+    await channel.send(`Batsman is ${batsman}, Bowler is ${bowler}`);
     start(message, batsman, bowler, post);
   } catch (e) { 
-    if (e) message.channel.send('Time\'s up!');
+    channel.send('Time\'s up!');
   }
   
 }
 
 async function targetWon(message, user, target, post) {
+    const { content, author, channel, mentions } = message;
+    
     try {
-      const msgs = await message.channel.awaitMessages(
+      const msgs = await channel.awaitMessages(
         m => m.author.id === target.id, { max: 1, time: 20000, errors: ['time'] }
       );
       const m = msgs.first();
@@ -243,15 +249,15 @@ async function targetWon(message, user, target, post) {
         batsman = user;
         bowler = target;
       } else if (m.content.toLowerCase().trim() === "end" || m.content.toLowerCase().trim() === "cancel" || m.content.toLowerCase().trim() === "exit") {
-        return message.channel.send('Aborted');
+        return channel.send('Aborted');
       } else {
         m.reply("Type either `batting` or `bowling`");
         return targetWon(message, user, target);
       }
-      await message.channel.send(`Batsman is ${batsman}, Bowler is ${bowler}`);
+      await channel.send(`Batsman is ${batsman}, Bowler is ${bowler}`);
       start(message, batsman, bowler, post);
     } catch (e) { 
-        message.channel.send('Time\'s up!');
+        channel.send('Time\'s up!');
     }
   }
   

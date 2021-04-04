@@ -7,6 +7,7 @@ module.exports = {
   category: 'General',
   syntax: 'e.help',
   run: async (message, args, prefix, client) => {
+    const { content, author, channel, mentions } = message;
     
     const commands = await getCommands();
     const general = commands[0];
@@ -19,7 +20,7 @@ module.exports = {
       .addField('Navigate via the pages of the guide by typing the number.', 
       '1) ❓ - **__About and Guide__**\n2) 👀 - **__General Conmands__**\n3) 🏏 - **__Cricket Commands__**\n4) 🏋️ - **__Minigames Commands__**')
       .setColor('BLUE')
-      .setFooter('Requested by ' + message.author.tag);
+      .setFooter('Requested by ' + author.tag);
     
     const aboutEmbed = new Discord.MessageEmbed()
       .setTitle('About Cricket')
@@ -49,7 +50,7 @@ module.exports = {
       .setColor('BLUE')
       .setFooter('Type `back` to navigate back.');
       
-    const embed = await message.channel.send(send);
+    const embed = await channel.send(send);
     
     let goBack = false;
     
@@ -58,7 +59,7 @@ module.exports = {
     loopHelp();
     async function loopHelp() {
       try {
-        const collected = await message.channel.awaitMessages(m => m.author.id === message.author.id,
+        const collected = await channel.awaitMessages(m => m.author.id === author.id,
           { max: 1, time: 30000, errors: ['time'] }
         );
         const msg = collected.first();

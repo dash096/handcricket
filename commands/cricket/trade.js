@@ -12,16 +12,18 @@ module.exports = {
   syntax: 'e.send @user <coins/itemName> <amount>',
   cooldown: 10,
   run: async (message, argsf, prefix) => {
-    const args = message.content.toLowerCase().trim().split(' ').slice(1);
+    const { content, author, channel, mentions } = message;
+    
+    const args = content.toLowerCase().trim().split(' ').slice(1);
     //User
-    const user = message.author;
+    const user = author;
     //Data
     const userData = await db.findOne({_id: user.id});
     if(!userData) return message.reply(`**${user.tag}(You)** isnt a player. Do !start`);
     
     //Target
-    const target = message.mentions.users.first();
-    if(!target || target.bot || target.id === message.author.id) return message.reply('The target is not valid.');
+    const target = mentions.users.first();
+    if(!target || target.bot || target.id === author.id) return message.reply('The target is not valid.');
     
     //Data
     const targetData = await db.findOne({_id: target.id});
@@ -38,7 +40,7 @@ module.exports = {
         await trade('coins', amount, user, target, message);
       }
     } else {
-      message.content = message.content.slice(1);
+      message.content = content.split(' ').slice(1).join(' ');
       const itemName = await checkItems(message);
       
       if(itemName != 'err') {

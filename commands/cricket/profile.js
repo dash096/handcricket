@@ -11,12 +11,13 @@ module.exports = {
   syntax: 'e.profile @user',
   cooldown: 6,
   run: async (message, args, prefix) => {
-    const emoji = (await getEmoji)[0];
+    const { content, author, channel, mentions } = message;
+    const coinEmoji = (await getEmoji)[0];
     
-    const target = message.mentions.users.first() || message.author;
+    const target = mentions.users.first() || message.author;
 
     const data = await db.findOne({_id: target.id});
-    if (!data) return message.reply(message.author.tag + " is not a player. Do `" + prefix + "start`");
+    if (!data) return message.reply(author.tag + " is not a player. Do `" + prefix + "start`");
     
     let cb = '';
     if(data.coinBoost) {
@@ -37,7 +38,7 @@ module.exports = {
     const embed = new Discord.MessageEmbed()
       .setTitle(`Profile of **${target.tag}**`)
       .addField("Level - " + `${level} \`${(data.xp).toFixed(0)}xp\``, `**Next level:** ${XPLine} \`${targetXP}xp\` `)
-      .addField("Balance", ` ${emoji} ${data.cc}`, true)
+      .addField("Balance", ` ${coinEmoji} ${data.cc}`, true)
       .addField("Wins", data.wins, true)
       .addField("Win Rate", WR.toFixed(3), true)
       .addField("Strike Rate", STR.toFixed(3), true)

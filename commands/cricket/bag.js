@@ -10,9 +10,11 @@ module.exports = {
   syntax: 'e.bag',
   cooldown: 5,
   run: async (message, args, prefix) => {
-    const target = message.mentions.users.first() || message.author;
+    const { content, author, channel, mentions } = message;
+    
+    const target = mentions.users.first() || author;
     const data = await db.findOne({_id: target.id});
-    if(!data) return message.reply(target.tag + ' isnt a player, Do "' + prefix + 'start"');
+    if(!data) return message.reply(`${target.tag} isnt a player, Do \`${prefix}start\``);
     
     let bagItems = data.bag || {};
     

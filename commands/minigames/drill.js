@@ -13,24 +13,25 @@ module.exports = {
   syntax: 'e.run',
   cooldown: 60,
   run: async (message, args, prefix, getTrain) => {
+    const { content, author, channel, mentions } = message;
     const emoji = (await emojis)[0];
     let train = getTrain || false;
     
-    const data = await db.findOne({_id: message.author.id});
+    const data = await db.findOne({_id: author.id});
     if(!data) return message.reply('You are not a player, do ' + prefix + 'start before playing');
     
     const opt = [1,1,2,2,3];
     const roll = opt[Math.floor(Math.random() * opt.length)];
     
     try {
-      await message.channel.send('The coach decided on running drill now . You will be running a 100m race . Type the upcoming message in the right order.');
-      await message.channel.send('Ready');
-      await message.channel.send('Go!');
+      await channel.send('The coach decided on running drill now . You will be running a 100m race . Type the upcoming message in the right order.');
+      await channel.send('Ready');
+      await channel.send('Go!');
       
       const rando = getRando(roll);
-      await message.channel.send(`Type this within ${time/1000}.. \`${rando}\``);
+      await channel.send(`Type this within ${time/1000}.. \`${rando}\``);
     
-      const answers = await message.channel.awaitMessages(m => m.author.id === message.author.id, {
+      const answers = await channel.awaitMessages(m => m.author.id === author.id, {
         max: 1,
         time: time,
         errors: ['time']

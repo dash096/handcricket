@@ -15,6 +15,7 @@ module.exports = {
   syntax: 'e.use <itemName>',
   cooldown: 7,
   run: async (message, args, prefix) => {
+    const { content, author, channel, mentions } = message;
     const emoji = (await getEmoji)[0];
     
     const itemArray = await checkItems(message);
@@ -24,7 +25,7 @@ module.exports = {
     const itemName = itemArray[0];
     const itemData = await itemDb.findOne({name: itemName});
 
-    const playerData = await db.findOne({_id: message.author.id});
+    const playerData = await db.findOne({_id: author.id});
     if (!playerData) return message.reply("You arent a player. Do " + prefix + "start");
 
     if (itemName === 'nuts') {

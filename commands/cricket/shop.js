@@ -12,24 +12,25 @@ module.exports = {
   syntax: 'e.shop',
   cooldown: 5,
   run: async (message, args, prefix) => {
-    const emoji = (await getEmoji)[0];
+    const { content, author, channel, mentions } = message;
+    const coinsEmoji = (await getEmoji)[0];
 
-    const data = await db.findOne( {_id: message.author.id });
-    if (!data) return message.reply(message.author.tag + "You are not a player. Do `" + prefix + "start`");
+    const data = await db.findOne( {_id: author.id });
+    if (!data) return message.reply(author.tag + "You are not a player. Do `" + prefix + "start`");
     
     const docs = await itemDb.find({}).sort({_id: 1});
     let text = '';
     
     docs.forEach(doc => {
       const title = doc.name.charAt(0).toUpperCase() + doc.name.slice(1);
-      text += `**${title} - ${emoji} ${doc._id}**\n\n`;
+      text += `**${title} - ${coinsEmoji} ${doc._id}**\n\n`;
       text += `${doc.description}\n\n`;
     });
     
     const embed = new Discord.MessageEmbed()
       .setTitle(`Shop Items`)
-      .setDescription(`You can buy an item by typing "!buy <name> <amount>", you have a total of ${emoji} ${data.cc}\n\n` + text)
-      .setFooter(`Requested by ${message.author.tag}`)
+      .setDescription(`You can buy an item by typing "!buy <name> <amount>", you have a total of ${coinsEmoji} ${data.cc}\n\n` + text)
+      .setFooter(`Requested by ${author.tag}`)
       .setColor('#2d61b5');
 
     await message.reply(embed);

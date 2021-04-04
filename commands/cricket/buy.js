@@ -12,25 +12,28 @@ module.exports = {
   syntax: 'e.buy <itemName> <amount>',
   cooldown: 10,
   run: async (message, args, prefix) => {
-    const emoji = (await getEmoji)[0];
+    const { content, author, channel, mentions } = message;
+    const coinEmoji = (await getEmoji)[0];
     
-    //Content in the message
+    //Get items
     const itemsArray = await checkItems(message);
     if(itemsArray == 'err') return;
     
+    //Item Info
     const name = itemsArray[0];
     const number = itemsArray[1];
     
-    const player = await playerDB.findOne( {_id: message.author.id} );
-    if (!player) return message.reply(message.author.tag + " is not a player. Do `" + prefix + "start`");
+    //Data
+    const data = await playerDB.findOne( {_id: author.id} );
+    if (!data) return message.reply(`${author.tag} is not a player. Do\`${prefix}start\``);
     
     const item = await itemDB.findOne( {name: name} );
     
-    const bag = player.bag || {};
+    const bag = data.bag || {};
     let oldAmount = bag[item.name] || 0;
     
     const amount = parseInt(oldAmount) + parseInt(number);
-    const balance = player.cc;
+    const balance = data.cc;
     const cost = item._id * number;
     
     //Update Inventory
@@ -41,12 +44,12 @@ module.exports = {
     
     //Change Bag DB
     await playerDB.findOneAndUpdate(
-      { _id: message.author.id }, 
+      { _id: author.id }, 
       { $set: {bag: bag, cc: balance - cost} }, 
       { upsert: true }
     );
     
-    message.channel.send(`You bought **${number} ${item.name}** for ${emoji} ${cost} coins`);
-    await gain(player, 1.7, message);
+    message.channel.send(`You bought **${number} ${item.name}** for ${coinEmoji} ${cost} coins`);
+    await gain(data, 1.7, message);
   }
 };

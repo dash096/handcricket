@@ -11,14 +11,15 @@ module.exports = async function (message) {
   
   //Name
   let itemNameArray = args; //Message in []
-  if(itemAmount) {
+  if(itemAmount && parseInt(itemAmount)) {
     itemNameArray.pop(); //Kill the last element
   }
-  let itemName = itemNameArray.join(' ');
+  let itemName = itemNameArray.join('');
   
   if(!itemAmount || isNaN(itemAmount)) { //Validates Item
     itemAmount = 1;
   }
+  
   
   /*redbull, nuts, dot, magikball, coinboost, tossboost, lootbox */
   if(itemName === "red bull" || itemName === "redbull") {
@@ -42,7 +43,7 @@ module.exports = async function (message) {
   if(itemName === "lootbox" || itemName === "loot box") {
     itemName = "lootbox";
   }
-  
+  console.log(itemName);
   const itemData = await db.findOne({name: itemName}).catch((e) => console.log(e));
   
   if(!itemData) {

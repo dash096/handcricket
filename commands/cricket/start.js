@@ -9,8 +9,10 @@ module.exports = {
   syntax: 'e.start',
   cooldown: 30,
   run: async (message) => {
+    const { content, author, channel, mentions } = message;
+    
     const player = new db({
-      _id: message.author.id,
+      _id: author.id,
       startedOn: Date.now()
     });
 

@@ -9,7 +9,9 @@ module.exports = {
   syntax: 'e.train',
   cooldown: 600,
   run: async (message, args, prefix, client) => {
-    const data = await db.findOne({_id: message.author.id});
+    const { content, author, channel, mentions } = message;
+    
+    const data = await db.findOne({_id: author.id});
     
     const exercises = {};
     const trainFiles = fs.readdirSync('./commands/minigames');
@@ -36,12 +38,13 @@ module.exports = {
       quests.beFit = parseInt(trainings) + 1;
     }
     
-    await db.findOneAndUpdate({_id: message.author.id}, {$set: {quests: quests}});
+    await db.findOneAndUpdate({_id: author.id}, {$set: {quests: quests}});
   }
 };
 
 async function updateCoins(message, win, amount) {
-  const data = await db.findOne({_id: message.author.id});
+  const { content, author, channel, mentions } = message;
+  const data = await db.findOne({_id: author.id});
   
   let coins = amount;
   if(win == true) {
