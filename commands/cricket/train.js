@@ -35,7 +35,11 @@ module.exports = {
     const trainings = quests.beFit || 0;
     
     if(trainings !== true) {
-      quests.beFit = parseInt(trainings) + 1;
+      if(parseInt(trainings) + 1 === 5) {
+        quests.beFit = true;
+      } else {
+        quests.beFit = parseInt(trainings) + 1;
+      }
     }
     
     await db.findOneAndUpdate({_id: author.id}, {$set: {quests: quests}});

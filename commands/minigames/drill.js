@@ -14,8 +14,9 @@ module.exports = {
   cooldown: 60,
   run: async (message, args, prefix, getTrain) => {
     const { content, author, channel, mentions } = message;
-    const emoji = (await emojis)[0];
+    const coinEmoji = (await emojis)[0];
     let train = getTrain || false;
+    const randoCoins = (Math.random() * 363).toFixed(0);
     
     const data = await db.findOne({_id: author.id});
     if(!data) return message.reply('You are not a player, do ' + prefix + 'start before playing');
@@ -42,7 +43,7 @@ module.exports = {
       if(answer == rando) {
         const coins = (Math.random() * 363).toFixed(0);
         msg.reply(`Nice, You are good at running.`);
-        if(train ==true) msg.channel.send(`You got ${coins} as Training rewards!`);
+        if(train ==true) msg.channel.send(`You got ${coinEmoji} ${coins} as Training rewards!`);
         return [msg, true, coins];
       } else {
         msg.reply('Looks like you need to get quicker at running. sadge..');

@@ -30,7 +30,8 @@ client.on("ready", async () => {
   const dbOptions = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useFindAndModify: false
+    useFindAndModify: false,
+    useCreateIndex: true
   };
   await mongoose.connect(process.env.MONGO, dbOptions).catch (e => {
     console.log(e);
@@ -104,11 +105,13 @@ client.login(process.env.TOKEN);
 
 //Get Emojis
 async function getEmojis() {
-  const emojiGuild = await client.guilds.fetch('823608260166025217');
+  const emojiGuild = await client.guilds.fetch('828269371699888178');
   const coin = emojiGuild.emojis.cache.find(emoji => emoji.name === 'cc');
   const full = emojiGuild.emojis.cache.find(emoji => emoji.name === 'full');
   const half = emojiGuild.emojis.cache.find(emoji => emoji.name === 'half');
   const empty = emojiGuild.emojis.cache.find(emoji => emoji.name === 'empty');
   const pixel = emojiGuild.emojis.cache.find(emoji => emoji.name === 'PixelHeart');
-  return [coin, full, half, empty, pixel];
+  const ok = emojiGuild.emojis.cache.find(emoji => emoji.name === 'ok');
+  const no = emojiGuild.emojis.cache.find(emoji => emoji.name === 'no');
+  return [coin, full, half, empty, pixel, ok, no];
 }

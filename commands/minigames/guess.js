@@ -44,8 +44,7 @@ module.exports = {
         });
         const randoCoins = (Math.random() * 464).toFixed(0);
         const msg = collected.first();
-        const { content, author, channel } = msg;
-        const guess = content;
+        const guess = msg.content;
         let win = false;
     
         const edit = new Discord.MessageEmbed()
@@ -72,7 +71,7 @@ module.exports = {
         } else if (guess == number) {
           edit.setDescription('Correct Answer! You are good at guessing!');
           channel.send(edit);
-          if(train == true) channel.send(`You got ${randoCoins} as Training rewards!`);
+          if(train == true) channel.send(`You got ${coinEmoji} ${randoCoins} as Training rewards!`);
           await gainExp(data, 3, message);
           win = true;
           return [message, win, randoCoins];
@@ -91,7 +90,8 @@ module.exports = {
         channel.send('Time\'s up');
       }
     }
-    return toReturn; 
+    console.log(toReturn);
+    return toReturn;
   }
 };
 
