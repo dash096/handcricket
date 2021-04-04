@@ -41,7 +41,7 @@ module.exports = {
       if(answer == rando) {
         const coins = (Math.random() * 363).toFixed(0);
         msg.reply(`Nice, You are good at running.`);
-        if(train ==true) msg.reply(`You got ${coins} as Training rewards!`);
+        if(train ==true) msg.channel.send(`You got ${coins} as Training rewards!`);
         return [msg, true, coins];
       } else {
         msg.reply('Looks like you need to get quicker at running. sadge..');

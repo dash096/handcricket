@@ -71,7 +71,7 @@ module.exports = {
       } else if (guess == number) {
         edit.setDescription('Correct Answer! You are good at guessing!');
         channel.send(edit);
-        if(train == true) channel.reply(`You got ${randoCoins} as Training rewards!`);
+        if(train == true) channel.send(`You got ${randoCoins} as Training rewards!`);
         await gainExp(data, 3, message);
         win = true;
         return [message, win, randoCoins];
