@@ -22,9 +22,9 @@ module.exports = async function(winner, loser, coins, wS, wB, lS, lB, channel) {
   const winnerXP = winnerData.xp;
   const winnerQuests = winnerData.quests;
   //Duck?
-  const winnerDuck = winnerQuests[duck] || 0;
+  const winnerDuck = winnerQuests.duck || 0;
   if(winnerQuests != true && wB.length == 2) {
-    winnerQuests[duck] = true;
+    winnerQuests.duck = true;
   }
   console.log(wB, lB);
   //TripWin?
@@ -48,9 +48,9 @@ module.exports = async function(winner, loser, coins, wS, wB, lS, lB, channel) {
   const loserXP = loserData.xp;
   const loserQuests = loserData.quests;
   //Duck?
-  const loserDuck = loserQuests[duck] || 0;
+  const loserDuck = loserQuests.duck || 0;
   if(loserQuests != true && lB.length == 2) {
-    loserQuests[duck] = true;
+    loserQuests.duck = true;
   }
   //TripWin?
   let loserTrip = loserQuests.tripWin;
