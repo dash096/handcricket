@@ -1,10 +1,6 @@
 const db = require("../../schemas/player.js");
 const Discord = require("discord.js");
 
-
-//To fix awaitMessages collevtion error
-let fixErrors = true;
-
 module.exports = {
   name: "handcricket",
   aliases: ["hc", "cricket"],
@@ -51,6 +47,9 @@ module.exports = {
       return;
     }
     
+    //To fix awaitMessages collevtion error
+    let fixErrors = true;
+
     //Change status to avoid 2 matchs at same time
     await changeStatus(user, true);
     await changeStatus(target, true);
@@ -66,7 +65,7 @@ module.exports = {
     let batsman;
     let bowler;
     
-    await channel.send(`<@${target.id}> Do you wanna play with **${user.username}**? Type \`y\`/\`n\` in 30s`);
+    await channel.send(`<@${target.id}> Do you wanna play with **${user.username}**? Type \`y\`/\`n\` in 30s, ${user}, Type \`end\` to end the cancel request.`);
     
     //Ask the target if he wants to duel.
     async function checkWill() {
@@ -93,16 +92,24 @@ module.exports = {
         return;
       }
     }
-    
+    try {
+      const checkEnd = channel.awaitMessages(m => m.author.id === user.id || m.author.id === target.id, {
+        max: 1, time: 10000, errors: ['time'],
+      });
+      const checkEndMsg = checkEnd.first();
+      const checkEndContent = checkEndMsg.content.trim().toLowerCase();
+      const checkEndArray = ['end', 'cancel', 'exit', 'quit'];
+      for(const checkEndItem of checkEndArray) {
+        const prefixed = `${prefix}{$checkEndItem}`;
+        if(checkEndContent == checkEndItem || checkEndContent == prefixed) {
+          channel.send('Aborted');
+          changeStatus(user, false);
+          changeStatus(target, false);
+        }
+      }
+    } catch (e) {}
     //Execute check will
     const will = await checkWill();
-    //Change status on awaitMessages bug.
-    setTimeout(async () => {
-      if(fixErrors == true) {
-        await changeStatus(user, false);
-        await changeStatus(target, false);
-      }
-    }, 15000);
     
     //If will is true, roll the toss
     if(will === true) {
