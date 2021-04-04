@@ -37,7 +37,7 @@ module.exports = {
       return;
     }
 
-    //Status Validation
+    /*//Status Validation
     if (userdata.status === true) {
       message.reply(user.username + " is already in a match");
       return;
@@ -45,11 +45,8 @@ module.exports = {
     if (targetdata.status === true) {
       message.reply(target.username + " is already in a match");
       return;
-    }
+    }*/
     
-    //To fix awaitMessages collevtion error
-    let fixErrors = true;
-
     //Change status to avoid 2 matchs at same time
     await changeStatus(user, true);
     await changeStatus(target, true);
@@ -65,7 +62,7 @@ module.exports = {
     let batsman;
     let bowler;
     
-    await channel.send(`<@${target.id}> Do you wanna play with **${user.username}**? Type \`y\`/\`n\` in 30s, ${user}, Type \`end\` to end the cancel request.`);
+    await channel.send(`<@${target.id}> Do you wanna play with **${user.username}**? Type \`y\`/\`n\` in 30s`);
     
     //Ask the target if he wants to duel.
     async function checkWill() {
@@ -75,15 +72,19 @@ module.exports = {
           time: 30000,
           errors: ['time']
         });
+        const msg = msgs.first();
         const c = msgs.first().content;
         if(c.trim().toLowerCase() == 'y' || c.trim().toLowerCase() == 'yes') {
           return true;
         }
-        else {
+        else if(c.trim().toLowerCase() == 'n' || c.trim().toLowerCase() == 'no'){
           channel.send(`Match aborted`);
           await changeStatus(user, false);
           await changeStatus(target, false);
           return;
+        } else {
+          msg.reply(`Type either \`y\`/\`n\``);
+          return checlWill();
         }
       } catch(e) {
         channel.send('Times up');
@@ -92,22 +93,7 @@ module.exports = {
         return;
       }
     }
-    try {
-      const checkEnd = channel.awaitMessages(m => m.author.id === user.id || m.author.id === target.id, {
-        max: 1, time: 10000, errors: ['time'],
-      });
-      const checkEndMsg = checkEnd.first();
-      const checkEndContent = checkEndMsg.content.trim().toLowerCase();
-      const checkEndArray = ['end', 'cancel', 'exit', 'quit'];
-      for(const checkEndItem of checkEndArray) {
-        const prefixed = `${prefix}{$checkEndItem}`;
-        if(checkEndContent == checkEndItem || checkEndContent == prefixed) {
-          channel.send('Aborted');
-          changeStatus(user, false);
-          changeStatus(target, false);
-        }
-      }
-    } catch (e) {}
+    
     //Execute check will
     const will = await checkWill();
     
@@ -130,7 +116,7 @@ module.exports = {
         if (roll < user.tossMulti) {
           const rolling = await channel.send('Rolling the Coin of Wisdom....');
           setTimeout( () => {
-            rolling.edit(`${user} won the toss, type either \`batting\` or \`bowling\``);
+            rolling.edit(`${user} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
           }, 3000);
           userWon(message, user, target, post);
         }
@@ -139,7 +125,7 @@ module.exports = {
         if (roll >= user.tossMulti) {
           const rolling = await channel.send('Rolling the Coin of Wisdom....');
           setTimeout( () => {
-            rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\``);
+            rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
           }, 3000);
           targetWon(message, user, target, post);
         }
@@ -151,7 +137,7 @@ module.exports = {
         if (roll < target.tossMulti) {
           const rolling = await channel.send('Rolling the Coin of Wisdom....');
           setTimeout( () => {
-            rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\``);
+            rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
           }, 3000);
           targetWon(message, user, target, post);
         }
@@ -160,7 +146,7 @@ module.exports = {
         if (roll >= target.tossMulti) {
           const rolling = await channel.send('Rolling the Coin of Wisdom....');
           setTimeout( () => {
-            rolling.edit(`${user} won the toss, type either \`batting\` or \`bowling\``);
+            rolling.edit(`${user} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
           }, 3000);
           userWon(message, user, target, post);
         }
@@ -173,7 +159,7 @@ module.exports = {
         if (roll2 === 1) { //User wins
           const rolling = await channel.send('Rolling the Coin of Wisdom....');
           setTimeout( () => {
-            rolling.edit(`${user} won the toss, type either \`batting\` or \`bowling\``);
+            rolling.edit(`${user} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
           }, 3000);
           userWon(message, user, target, post);
         }
@@ -181,13 +167,12 @@ module.exports = {
         if (roll2 === 2) { //Target wins
           const rolling = await channel.send('Rolling the Coin of Wisdom....');
           setTimeout( () => {
-            rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\``);
+            rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
           }, 3000);
           targetWon(message, user, target, post);
         }
       }
     }
-    fixErrors = false;
   }
 };
 
@@ -205,7 +190,6 @@ async function start(message, batsman, bowler, post) {
   await db.findOneAndUpdate( { _id: bowler.id }, {
       $set: { status: true } },
       { new: true, upsert: true });
-  fixErrors = false;
   firstInnings(batsman, bowler, message, post);
 }
 
