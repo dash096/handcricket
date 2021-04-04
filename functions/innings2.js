@@ -4,7 +4,7 @@ const getEmoji = require('../index.js');
 const rewards = require('./rewards.js');
 
 //shuffled
-module.exports = async function(bowler, batsman, boS, boB, mc, post) {
+module.exports = async function(bowler, batsman, baS, boB, mc, post) {
   const emoji = (await getEmoji)[0];
   const target = boS;
   
@@ -142,7 +142,7 @@ module.exports = async function(bowler, batsman, boS, boB, mc, post) {
           bowler.send(`Wicket! The batsman hit ${c}! You won a grand amount of ${emoji} ${coins}!`);
           batsman.send('Wicket! The bowler bowled ' + bowled + '! You lost... Sadge');
           if(post === true) mc.send(`**${batsman.tag}** WICKET! He hit ${c} and was bowled ${bowled} by **${bowler.tag}**`, {embed});
-          rewards(bowler, batsman, coins, boS, boB, newScore, totalBalls,mc);
+          rewards(bowler, batsman, coins, baS, totalBalls, newScore, boB, mc);
         }
 
         changeStatus(batsman, bowler);

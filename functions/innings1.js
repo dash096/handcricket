@@ -87,7 +87,6 @@ module.exports = async function(batsman, bowler, message, post) {
       const c = m.content;
       const newScore = (await batArray[batArray.length - 1]) + parseInt(c);
       const bowled = await ballArray[ballArray.length - 1];
-      const totalBalls = await ballArray.length;
 
       //End the match
       if (c.toLowerCase() === "end") {
@@ -125,8 +124,8 @@ module.exports = async function(batsman, bowler, message, post) {
           batsman,
           bowler,
           batArray[batArray.length - 1] + 1,
-          totalBalls,
-          mc,
+          await (ballArray.length - 1),
+          channel,
           post
         );
         return;
