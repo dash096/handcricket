@@ -7,7 +7,11 @@ module.exports = {
   category: 'Cricket',
   syntax: 'e.quests',
   run: async (message) => {
+    const { channel, author, content } = message;
+    
     const data = await db.findOne({_id: message.author.id});
+    if(!data) return channel.send(`You are not a player, Do \`${prefix}start\``);
+    
     console.log(data.quests);
   }
 }

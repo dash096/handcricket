@@ -106,28 +106,14 @@ module.exports = {
     const will = await checkWill();
     
     if(will === true) {
-      if(post === false) {
-        try {
-          await message.reply('**POST SCORES?**\n If you have any frnds online rn, and if you want them to see the match score, type `yes` else, type something to continue.');
-          const msgs = await message.channel.awaitMessages( m => m.author.id === user.id, {
-            max: 1,
-            time: 30000
-          })
-          const msg = msgs.first();
-          if(msg.content.trim().toLowerCase() == 'y' || msg.content.trim().toLowerCase() == 'yes') {
-            post = true;
-          } else {
-            post = false;
-          }
-          await rollToss(post);
-        } catch(e) {
-          console.log(e);
-          msg.channel.send('uhh, I guess you are offline. Match aborted.');
-          await changeStatus(user, false);
-          await changeStatus(target, false);
-          return;
-        };
-      }
+      try {
+        await rollToss(post);
+      } catch(e) {
+        console.log(e);
+        await changeStatus(user, false);
+        await changeStatus(target, false);
+        return;
+      };
     }
     
     async function rollToss(post) {
@@ -135,13 +121,19 @@ module.exports = {
       if (user.tossMulti > target.tossMulti) {
         //Users with roll.
         if (roll < user.tossMulti) {
-          message.channel.send(`${user} won the toss, type either \`batting\` or \`bowling\``);
+          const rolling = await message.channel.send('Rolling the Coin of Wisdom....');
+          setTimeout( () => {
+            rolling.edit(`${user} won the toss, type either \`batting\` or \`bowling\``);
+          }, 3000);
           userWon(message, user, target, post);
         }
 
         //Target wins with roll.
         if (roll >= user.tossMulti) {
-          message.channel.send(`${target} won the toss, type either \`batting\` or \`bowling\``);
+          const rolling = await message.channel.send('Rolling the Coin of Wisdom....');
+          setTimeout( () => {
+            rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\``);
+          }, 3000);
           targetWon(message, user, target, post);
         }
       }
@@ -150,13 +142,19 @@ module.exports = {
       if (user.tossMulti < target.tossMulti) {
         //Target wins with roll
         if (roll < target.tossMulti) {
-          message.channel.send(`${target} won the toss, type either \`batting\` or \`bowling\``);
+          const rolling = await message.channel.send('Rolling the Coin of Wisdom....');
+          setTimeout( () => {
+            rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\``);
+          }, 3000);
           targetWon(message, user, target, post);
         }
 
         //User wins with roll
         if (roll >= target.tossMulti) {
-          message.channel.send(`${user} won the toss, type either \`batting\` or \`bowling\``);
+          const rolling = await message.channel.send('Rolling the Coin of Wisdom....');
+          setTimeout( () => {
+            rolling.edit(`${user} won the toss, type either \`batting\` or \`bowling\``);
+          }, 3000);
           userWon(message, user, target, post);
         }
       }
@@ -166,12 +164,18 @@ module.exports = {
         const roll2 = Math.floor(Math.random() * 3);
 
         if (roll2 === 1) { //User wins
-          message.channel.send(`${user} won the toss, type either \`batting\` or \`bowling\``);
+          const rolling = await message.channel.send('Rolling the Coin of Wisdom....');
+          setTimeout( () => {
+            rolling.edit(`${user} won the toss, type either \`batting\` or \`bowling\``);
+          }, 3000);
           userWon(message, user, target, post);
         }
 
         if (roll2 === 2) { //Target wins
-          message.channel.send(`${target} won the toss, type either \`batting\` or \`bowling\``);
+          const rolling = await message.channel.send('Rolling the Coin of Wisdom....');
+          setTimeout( () => {
+            rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\``);
+          }, 3000);
           targetWon(message, user, target, post);
         }
       }
