@@ -53,32 +53,46 @@ module.exports = {
     
     await channel.send(`<@${target.id}> Do you wanna play with **${user.username}**? Type \`y\`/\`n\` in 30s`);
     
+    setTimeout(() => {
+      if(fixStatus == true) {
+        changeStatus(user, false);
+        changeStatus(target, false);
+      } else {
+        return;
+      }
+    },20000);
+    
     //Execute check will
     const will = await checkWill();
     
     //Ask the target if he wants to duel.
     async function checkWill() {
       try {
-        const msgs = await channel.awaitMessages(m => m.author.id === target.id, {
+        const msgs = await channel.awaitMessages(m => m.author.id === target.id || m.author.id === user.id, {
           max: 1,
           time: 17000,
           errors: ['time']
         });
         const msg = msgs.first();
         const c = msgs.first().content;
-        if(c.trim().toLowerCase() == 'y' || c.trim().toLowerCase() == 'yes') {
+        if(msg.author.id === user.id) {
+          if(c.trim().toLowerCase() === 'end') {
+            return;
+          } else {
+            return await checkWill();
+          }
+        } else if(c.trim().toLowerCase() == 'y' || c.trim().toLowerCase() == 'yes') {
           return true;
         }
         else if(c.trim().toLowerCase() == 'n' || c.trim().toLowerCase() == 'no'){
           channel.send(`Match aborted`);
           await changeStatus(user, false);
           await changeStatus(target, false);
-          return;
+          return false;
         } else {
           msg.reply(`Type either \`y\`/\`n\``);
-          return checkWill();
+          return await checkWill();
         }
-        return checkWill();
       } catch(e) {
         channel.send(getErrors('time'));
         await changeStatus(user, false);
@@ -86,12 +100,7 @@ module.exports = {
         return;
       }
     }
-    setTimeout(() => {
-      if(fixStatus == true) {
-        changeStatus(user, false);
-        changeStatus(target, false);
-      }
-    },20000);
+    
     //If will is true, roll the toss
     if(will === true) {
       try {
