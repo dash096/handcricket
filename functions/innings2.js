@@ -4,9 +4,9 @@ const getEmoji = require('../index.js');
 const rewards = require('./rewards.js');
 
 //shuffled
-module.exports = async function(bowler, batsman, baS, boB, mc, post) {
+module.exports = async function(bowler, batsman, boS, baB, mc, post) {
   const emoji = (await getEmoji)[0];
-  const target = baS;
+  const target = boS;
   
   const embed = new Discord.MessageEmbed()
     .setTitle('Cricket Match - Second Innings')
@@ -95,6 +95,8 @@ module.exports = async function(bowler, batsman, baS, boB, mc, post) {
       const bowled = await ballArray[ballArray.length - 1];
       const newScore = await batArray[batArray.length - 1] + parseInt(c);
       const totalBalls = await ballArray.length;
+      const boB = totalBalls;
+      const baS = newScore;
 
       //End
       if (c.toLowerCase().trim() === "end") {
@@ -142,7 +144,7 @@ module.exports = async function(bowler, batsman, baS, boB, mc, post) {
           bowler.send(`Wicket! The batsman hit ${c}! You won a grand amount of ${emoji} ${coins}!`);
           batsman.send('Wicket! The bowler bowled ' + bowled + '! You lost... Sadge');
           if(post === true) mc.send(`**${batsman.tag}** WICKET! He hit ${c} and was bowled ${bowled} by **${bowler.tag}**`, {embed});
-          rewards(bowler, batsman, coins, baS, totalBalls, newScore, boB, mc);
+          rewards(bowler, batsman, coins, boS, boB, baS, baB, mc);
         }
 
         changeStatus(batsman, bowler);
@@ -168,7 +170,7 @@ module.exports = async function(bowler, batsman, baS, boB, mc, post) {
         batsman.send(`Score is ${newScore}! The bowler bowled ${bowled}! You won a grand amount of ${emoji} ${coins}!`);
         bowler.send(`Batsman score is ${newScore}! The batsman hit ${c}! You lost... sadge`);
         if(post === true) mc.send(`**${batsman.tag}** crossed the target!! HE **WON**!! He hit ${c} and was bowled ${bowled} by **${bowler.tag}**`);
-        rewards(batsman, bowler,  coins, newScore, totalBalls, boS, boB, mc);
+        rewards(batsman, bowler,  coins, baS, baB, boS, boB, mc);
         
         changeStatus(batsman,bowler);
         timeoutDecider = false;

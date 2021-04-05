@@ -47,7 +47,7 @@ module.exports = {
       if(userQuests.tripWin == true) {
         return `${tickEmoji} **${name}** (3/3)`;
       }
-      return `${crossEmoji} **${name}** (${stat}/3)`;
+      return `${crossEmoji} **${name}** (${stat[0]}/3)`;
     }
     function duck(name) {
       let stat;
