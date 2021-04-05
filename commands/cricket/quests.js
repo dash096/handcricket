@@ -2,6 +2,7 @@ const Discord = require('discord.js');
 const db = require('../../schemas/player.js');
 const questDB = require('../../schemas/quests.js');
 const getEmoji = require('../../index.js');
+const getErrors = require('../../functions/getErrors.js');
 
 module.exports = {
   name: 'quests',
@@ -16,7 +17,7 @@ module.exports = {
     const crossEmoji = (await getEmoji)[6];
     
     const data = await db.findOne({_id: author.id});
-    if(!data) return channel.send(`You are not a player, Do \`${prefix}start\``);
+    if(!data) return channel.send(getErrors('data', author));
     
     const userQuests = data.quests;
     //Status

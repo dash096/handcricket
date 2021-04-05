@@ -16,7 +16,7 @@ module.exports = async function() {
     for(const boost of brokeCoinBoosts) {
       const clearBoost = require('./clearBoost.js');
       clearBoost('coin', boost);
-      console.log(boost._id + ' - broken Coin Boost found!')
+      console.log(boost._id + ' - broken Coin Boost found!');
     }
   }
   
@@ -34,18 +34,13 @@ module.exports = async function() {
     for(const boost of brokeTossBoosts) {
       const clearBoost = require('./clearBoost.js');
       clearBoost('toss', boost);
-      console.log(boost._id + ' - broken toss boost found!')
+      console.log(boost._id + ' - broken toss boost found!');
     }
   }
-  
-  
   
   if(brokeTossBoosts.length === 0 && brokeCoinBoosts.length === 0) {
     return console.log('No broken boosts.');
   }
-  
-  
-  
   
   async function getBrokenTossBoosts() {
     const lte = await db.find({ tossBoost : { $lte : Date.now() } });
@@ -57,7 +52,6 @@ module.exports = async function() {
       brokeTossBoosts.push(a);
     }
   }
-  
   
   async function getBrokenCoinBoosts() {
     const lte = await db.find({ coinBoost : { $lte : Date.now() } });

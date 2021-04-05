@@ -7,6 +7,7 @@ const updateMulti = require('../../functions/updateMulti.js');
 const openBox = require('../../functions/openBox.js');
 const gain = require('../../functions/gainExp.js');
 const getEmoji = require('../../index.js');
+const getErrors = require('../../functions/getErrors.js');
 
 module.exports = {
   name: 'use',
@@ -26,7 +27,7 @@ module.exports = {
     const itemData = await itemDb.findOne({name: itemName});
 
     const playerData = await db.findOne({_id: author.id});
-    if (!playerData) return message.reply("You arent a player. Do " + prefix + "start");
+    if (!playerData) return message.reply(getErrors('data', author));
 
     if (itemName === 'nuts') {
       const e = await updateBag(itemName, itemAmount, playerData, message);

@@ -2,6 +2,7 @@ const Discord = require('discord.js');
 const db = require('../../schemas/player.js');
 const getEmoji = require('../../index.js');
 const gainExp = require('../../functions/gainExp.js');
+const getErrors = require('../../functions/getErrors.js');
 
 module.exports = {
   name: 'guess',
@@ -12,19 +13,25 @@ module.exports = {
   cooldown: 60,
   run: async (message, args, prefix, client, boolean) => {
     const { content, author, channel, mentions } = message;
+    
+    //Emojis
     const coinEmoji = (await getEmoji)[0];
     const pixel = (await getEmoji)[4];
-    let train = boolean;
-    if(!train) train = false;
-    const data = await db.findOne({_id: author.id});
-    if(!data) return channel.reply('Do `e.start` before playing.');
     
+    let train = boolean || false;
+    
+    //Data Validation
+    const data = await db.findOne({_id: author.id});
+    if(!data) return channel.reply(getErrors('data', author));
+    
+    //Numbers
     const start = (Math.random() * 100).toFixed(0);
     const end = parseInt(start) + 10;
     const array = await getArray(parseInt(start));
     const number = array[Math.floor(Math.random() * array.length)];
     let lives = 3;
     
+    //Send Embed
     const embed = new Discord.MessageEmbed()
       .setTitle(`Guess The Number! ${pixel} ${pixel} ${pixel}`)
       .setColor('BLUE')
@@ -87,7 +94,7 @@ module.exports = {
           return play();
         }
       } catch (e) {
-        channel.send('Time\'s up');
+        channel.send(getErrors('time'));
       }
     }
     console.log(toReturn);

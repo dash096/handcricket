@@ -23,8 +23,8 @@ module.exports = async function (nabData, amt, msg) {
   if(pLevel != sLevel) {
     msg.reply(`CONGRATS!!! You leveled up to **${sLevel}**! You also got a lootbox!!!`);
     const bag = data.bag || {};
-    const amount = bag['lootbox'] || 0;
-    bag['lootbox'] = amount + 1;
+    const amount = bag.lootbox || 0;
+    bag.lootbox = amount + 1;
     await db.findOneAndUpdate({_id: data._id},
     { $set: {
       bag: bag

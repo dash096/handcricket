@@ -1,5 +1,6 @@
 const db = require("../schemas/items.js");
 const Discord = require("discord.js");
+const getErrors = require('./getErrors.js');
 
 module.exports = async function (message) {
   
@@ -43,11 +44,11 @@ module.exports = async function (message) {
   if(itemName === "lootbox" || itemName === "loot box") {
     itemName = "lootbox";
   }
-  console.log(itemName);
+  
   const itemData = await db.findOne({name: itemName}).catch((e) => console.log(e));
   
   if(!itemData) {
-    message.reply("Not a valid item.");
+    message.reply(getErrors('item', itemName));
     return 'err';
   }
   

@@ -3,6 +3,8 @@ const db = require("../../schemas/player.js");
 const getEmoji = require('../../index.js');
 const gain = require('../../functions/gainExp.js');
 const getLevels = require('../../functions/getLevels.js');
+const getErrors = require('../../functions/getErrors.js');
+
 module.exports = {
   name: 'profile',
   aliases: ['pf', 'info'],
@@ -17,7 +19,7 @@ module.exports = {
     const target = mentions.users.first() || message.author;
 
     const data = await db.findOne({_id: target.id});
-    if (!data) return message.reply(author.tag + " is not a player. Do `" + prefix + "start`");
+    if (!data) return message.reply(getErrors('data', target));
     
     let cb = '';
     if(data.coinBoost) {

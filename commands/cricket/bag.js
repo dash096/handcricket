@@ -1,6 +1,7 @@
 const Discord = require("discord.js");
 const db = require("../../schemas/player.js");
 const gain = require('../../functions/gainExp.js');
+const getErrors = require('../../functions/getErrors.js');
 
 module.exports = {
   name: 'bag',
@@ -13,8 +14,9 @@ module.exports = {
     const { content, author, channel, mentions } = message;
     
     const target = mentions.users.first() || author;
+    
     const data = await db.findOne({_id: target.id});
-    if(!data) return message.reply(`${target.tag} isnt a player, Do \`${prefix}start\``);
+    if(!data) return message.reply(getErrors('data', target));
     
     let bagItems = data.bag || {};
     

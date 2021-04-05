@@ -1,4 +1,5 @@
 const db = require('../schemas/player.js');
+const getErrors = require('./getErrors.js');
 
 module.exports = async function (name, data, msg) {
 
@@ -11,7 +12,7 @@ module.exports = async function (name, data, msg) {
 
     //Check No. of Items is bigger than usage
     if (!oldAmount || oldAmount === 0) {
-      msg.reply('You dont have that many ' + name);
+      msg.reply(getErrors('lessAsset', 'e', name));
       return 'err';
     }
     

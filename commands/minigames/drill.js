@@ -2,8 +2,9 @@ const gain = require('../../functions/gainExp.js');
 const db = require('../../schemas/player.js');
 const emojis = require('../../index.js');
 const updateCoins = require('../cricket/train.js');
+const getErrors = require('../../functions/getErrors.js');
 
-    let time = 7000;
+let time = 7000;
     
 module.exports = {
   name: 'drill',
@@ -14,13 +15,18 @@ module.exports = {
   cooldown: 60,
   run: async (message, args, prefix, getTrain) => {
     const { content, author, channel, mentions } = message;
+    
     const coinEmoji = (await emojis)[0];
-    let train = getTrain || false;
+    
+    const train = getTrain || false;
+    
     const randoCoins = (Math.random() * 363).toFixed(0);
     
+    //Data Validation
     const data = await db.findOne({_id: author.id});
-    if(!data) return message.reply('You are not a player, do ' + prefix + 'start before playing');
+    if(!data) return message.reply(getErrors('data', author));
     
+    //Difficulty
     const opt = [1,1,2,2,3];
     const roll = opt[Math.floor(Math.random() * opt.length)];
     
@@ -29,9 +35,9 @@ module.exports = {
       await channel.send('Ready');
       await channel.send('Go!');
       
-      const rando = getRando(roll);
+      const rando = getRando(roll); //Gets text
       await channel.send(`Type this within ${time/1000}.. \`${rando}\``);
-    
+      //Msg Collector
       const answers = await channel.awaitMessages(m => m.author.id === author.id, {
         max: 1,
         time: time,
@@ -43,7 +49,7 @@ module.exports = {
       if(answer == rando) {
         const coins = (Math.random() * 363).toFixed(0);
         msg.reply(`Nice, You are good at running.`);
-        if(train ==true) msg.channel.send(`You got ${coinEmoji} ${coins} as Training rewards!`);
+        if(train == true) msg.channel.send(`You got ${coinEmoji} ${coins} as Training rewards!`);
         return [msg, true, coins];
       } else {
         msg.reply('Looks like you need to get quicker at running. sadge..');
@@ -51,7 +57,7 @@ module.exports = {
       }
       await gain(data, 2, message);
     } catch(e) {
-      message.reply('Looks like you need to get quicker at running. sadge..');
+      message.reply(getErrors('time'));
       return [message, false, 0];
     }
   }

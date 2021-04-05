@@ -1,5 +1,6 @@
 const db = require('../schemas/player.js');
 const getEmoji = require('../index.js');
+const getErrors = require('./getErrors.js');
 
 module.exports = async function (what, amount, user, target, msg) {
   const emoji = (await getEmoji)[0];
@@ -14,7 +15,7 @@ module.exports = async function (what, amount, user, target, msg) {
     const oldTargetCC = targetData.cc;
     
     if(oldUserCC < amount) {
-      msg.reply('You dont have that many coins!');
+      msg.reply(getErrors('lessAssets', user, itemName));
       return;
     } else {
       //Update Db 

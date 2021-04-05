@@ -4,6 +4,7 @@ const itemDB = require("../../schemas/items.js");
 const getEmoji = require('../../index.js');
 const checkItems = require("../../functions/checkItems.js");
 const gain = require('../../functions/gainExp.js');
+const getErrors = require('../../functions/getErrors.js');
 
 module.exports = {
   name: 'buy',
@@ -25,7 +26,7 @@ module.exports = {
     
     //Data
     const data = await playerDB.findOne( {_id: author.id} );
-    if (!data) return message.reply(`${author.tag} is not a player. Do\`${prefix}start\``);
+    if (!data) return message.reply(getErrors('data', author));
     
     const item = await itemDB.findOne( {name: name} );
     

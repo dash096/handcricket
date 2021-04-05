@@ -1,5 +1,6 @@
 const db = require("../../schemas/player.js");
 const Discord = require("discord.js");
+const getErrors = require('../../functions/getErrors.js');
 
 module.exports = {
   name: "handcricket",
@@ -29,15 +30,15 @@ module.exports = {
 
     //Data Validation
     if (!userdata) {
-      message.reply(user.tag + " is not a player. Do `" + prefix + "start`");
+      message.reply(getErrors('data', user));
       return;
     }
     if (!targetdata) {
-      message.reply(target.tag + " is not a player. Do `" + prefix + "start`");
+      message.reply(getErrors('data', target));
       return;
     }
 
-    /*//Status Validation
+    //Status Validation
     if (userdata.status === true) {
       message.reply(user.username + " is already in a match");
       return;
@@ -45,7 +46,7 @@ module.exports = {
     if (targetdata.status === true) {
       message.reply(target.username + " is already in a match");
       return;
-    }*/
+    }
     
     //Change status to avoid 2 matchs at same time
     await changeStatus(user, true);
@@ -87,7 +88,7 @@ module.exports = {
           return checlWill();
         }
       } catch(e) {
-        channel.send('Times up');
+        channel.send(getErrors('time'));
         await changeStatus(user, false);
         await changeStatus(target, false);
         return;
@@ -219,7 +220,7 @@ async function userWon(message, user, target, post) {
     await channel.send(`Batsman is ${batsman}, Bowler is ${bowler}`);
     start(message, batsman, bowler, post);
   } catch (e) { 
-    channel.send('Time\'s up!');
+    channel.send(getErrors('time'));
   }
   
 }
@@ -248,7 +249,7 @@ async function targetWon(message, user, target, post) {
       await channel.send(`Batsman is ${batsman}, Bowler is ${bowler}`);
       start(message, batsman, bowler, post);
     } catch (e) { 
-        channel.send('Time\'s up!');
+        channel.send(getErrors('time'));
     }
   }
   

@@ -3,6 +3,7 @@ const Discord = require("discord.js");
 const checkItems = require("../../functions/checkItems.js");
 const trade = require('../../functions/trade.js');
 const gain = require('../../functions/gainExp.js');
+const getErrors = require('../../functions/getErrors.js');
 
 module.exports = {
   name: 'send',
@@ -19,7 +20,7 @@ module.exports = {
     const user = author;
     //Data
     const userData = await db.findOne({_id: user.id});
-    if(!userData) return message.reply(`**${user.tag}(You)** isnt a player. Do !start`);
+    if(!userData) return message.reply(getErrors('data', user));
     
     //Target
     const target = mentions.users.first();
@@ -27,14 +28,14 @@ module.exports = {
     
     //Data
     const targetData = await db.findOne({_id: target.id});
-    if(!targetData) return message.reply(`**${target.tag}** isnt a player. Do !start`);
+    if(!targetData) return message.reply(getErrors('data', target));
     
     const amount = args[args.length - 1];
       
     //send @ping c/coins 1
-    if(args[1] == 'c' || args[1] == 'coins' || args[1].toLowerCase() == 'coin') {
+    if(args[1].toLowerCase() == 'c' || args[1].toLowerCase() == 'coin') {
       if(!amount || isNaN(amount)) {
-        return message.reply('Syntax error: "' + prefix + 'send @user <coins/itemName> [amount]"');
+        return message.reply(getErrors('syntax', 'e', 'e', 'cricket/trade.js'));
       } else if (args.length === 3) { 
         //send @ping item_name 1
         await trade('coins', amount, user, target, message);

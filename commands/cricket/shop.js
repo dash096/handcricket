@@ -3,6 +3,7 @@ const db = require('../../schemas/player.js');
 const itemDb = require('../../schemas/items.js');
 const gain = require('../../functions/gainExp.js');
 const getEmoji = require('../../index.js');
+const getErrors = require('../../functions/getErrors.js');
 
 module.exports = {
   name: "shop",
@@ -16,7 +17,7 @@ module.exports = {
     const coinsEmoji = (await getEmoji)[0];
 
     const data = await db.findOne( {_id: author.id });
-    if (!data) return message.reply(author.tag + "You are not a player. Do `" + prefix + "start`");
+    if (!data) return message.reply(getErrors('data', author));
     
     const docs = await itemDb.find({}).sort({_id: 1});
     let text = '';

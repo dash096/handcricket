@@ -1,5 +1,6 @@
 const fs = require('fs');
 const db = require('../../schemas/player.js');
+const getErrors = require('../../functions/getErrors.js');
 
 module.exports = {
   name: 'train',
@@ -12,6 +13,7 @@ module.exports = {
     const { content, author, channel, mentions } = message;
     
     const data = await db.findOne({_id: author.id});
+    if(!data) message.reply(getErrors('data', author));
     
     const exercises = {};
     const trainFiles = fs.readdirSync('./commands/minigames');
