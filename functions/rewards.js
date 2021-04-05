@@ -55,8 +55,8 @@ module.exports = async function(winner, loser, coins, wS, wB, lS, lB, channel) {
   //TripWin?
   delete loserQuests.tripWin;
   
-  const wSTR = (winnerSTR + (wS/wB))/2;
-  const lSTR = (loserSTR + (lS/lB))/2;
+  const wSTR = (winnerSTR + (wS/lB))/2;
+  const lSTR = (loserSTR + (lS/wB))/2;
   
   //Set new Data
   const winnerSet = {

@@ -24,7 +24,6 @@ module.exports = {
     const data = await db.findOne({_id: author.id});
     if(!data) return channel.reply(getErrors('data', author));
     
-    if(data.status == true) return message.reply(getErrors('engaged', author));
     await db.findOneAndUpdate({_id: author.id}, { $set: { status: true} } );
     
     //Numbers

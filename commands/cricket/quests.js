@@ -26,7 +26,7 @@ module.exports = {
       let stat;
       if(!userQuests.beFit) stat = 0;
       else stat = userQuests.beFit;
-      if(userQuests.beFit == true) {
+      if(stat == true) {
         return `${tickEmoji} **${name}** (5/5)`;
       }
       return `${crossEmoji} **${name}** (${stat}/5)`;
@@ -44,7 +44,7 @@ module.exports = {
       let stat;
       if(!userQuests.tripWin) stat = 0;
       else stat = userQuests.tripWin;
-      if(userQuests.tripWin == true) {
+      if((userQuests.tripWin)[0] == true) {
         return `${tickEmoji} **${name}** (3/3)`;
       }
       return `${crossEmoji} **${name}** (${stat[0]}/3)`;
@@ -91,7 +91,7 @@ module.exports = {
 
 async function checkIfCompleted(message, data) {
   const quests = data.quests;
-  const completedOnes = Object.values(quests).filter(value => value === true);
+  const completedOnes = Object.values(quests).filter(value => value === true || value[0] === true);
   
   if(completedOnes.length >= 2) {
     message.reply('You have completed your daily quests and you got a lootbox');
@@ -101,12 +101,17 @@ async function checkIfCompleted(message, data) {
     bag.lootbox = parseInt(oldLootbox) + 1;
     
     const quests = data.quests || {};
+    
     const time = quests.time;
     if(time) return;
-    const newTime = Date.now() + (( (60 * 60) * 12) * 1000);
-    quests.time = newTime;
+    const xp = parseInt(data.xp);
     
-    await db.findOneAndUpdate({_id: data._id}, { $set:{ bag: bag, quests } });
+    const newTime = 60 * 1000;
+    const DateTime = Date.now() + ( ( (60 * 60) * 12) * 1000);
+    const Date = new Date(DateTime);
+    
+    quests = reset(quest, Date);
+    await db.findOneAndUpdate({_id: data._id}, { $set:{ bag: bag, quests: quests, xp: (xp + 10) } });
     
     setTimeout(async () => {
       await db.findOneAndUpdate({_id: data._id}, { $unset: {quests: 'doesnt matter'}});
@@ -116,4 +121,14 @@ async function checkIfCompleted(message, data) {
     return;
   }
   
+}
+
+function reset(nabQuest, time) {
+  let quest = nabQuest;
+  quest.beFit = 0;
+  quest.duck = 0;
+  quest.tripWin = 0;
+  quest.support = 0;
+  quest.time = time;
+  return quests;
 }

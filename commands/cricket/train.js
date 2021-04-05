@@ -13,7 +13,6 @@ module.exports = {
     const { content, author, channel, mentions } = message;
     
     const data = await db.findOne({_id: author.id});
-    
     await db.findOneAndUpdate( { _id: author.id }, { $set: { status: true } });
     
     const exercises = {};

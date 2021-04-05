@@ -8,7 +8,10 @@ module.exports = async function() {
   let toFixQuests = [];
   
   for(const data of datas) {
-    if(data.time.getTime() < Date.now()) {
+    if(!data.time) {
+      return;
+    }
+    else if(data.time.getTime() < Date.now()) {
       console.log(data.time + 'Past');
       brokeQuests.push(data);
     } else if(data.time.getTime() > Date.now()) {
@@ -17,11 +20,13 @@ module.exports = async function() {
     }
   }
   
+  console.log(brokeQuests, toFixQuests);
+  
   if(!brokeQuests || brokeQuests.length === 0) {
     console.log('No BrokeQuests Past now.');
   } else {
     for(const data of brokeQuests) {
-      await db.findOneAndUpdate({_id:data._id}, { $unset: {data.quests} });
+      await db.findOneAndUpdate({_id:data._id}, { $unset: {quests} });
     }
   }
   
@@ -31,8 +36,8 @@ module.exports = async function() {
     for(const data of toFixQuests) {
       const time = data.quests.time.getTime() - Date.now();
       console.log(time);
-      setTimeout(() => {
-        await db.findOneAndUpdate({_id:data._id}, { $unset: {data.quests} });
+      setTimeout(async () => {
+        await db.findOneAndUpdate({_id:data._id}, { $unset: {quests} });
       }, time);
     }
   }

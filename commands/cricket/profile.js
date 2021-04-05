@@ -131,32 +131,12 @@ async function add5(text) {
   let emojis = text;
   
   let splitted = text.split('><');
+  let i = splitted.length;
   
-  if(splitted.length == 4) {
-    emojis += `${empty}`;
+  for(i; i < 5; i++) {
+    emojis += `${empty}`
   }
-  if(splitted.length == 3) {
-    emojis += `${empty}`;
-    emojis += `${empty}`;
-  }
-  if(splitted.length == 2) {
-    emojis += `${empty}`;
-    emojis += `${empty}`;
-    emojis += `${empty}`;
-  }
-  if(splitted.length == 1) {
-    emojis += `${empty}`;
-    emojis += `${empty}`;
-    emojis += `${empty}`;
-    emojis += `${empty}`;
-  }
-  if(splitted.length == 0) {
-    emojis += `${empty}`;
-    emojis += `${empty}`;
-    emojis += `${empty}`;
-    emojis += `${empty}`;
-    emojis += `${empty}`;
-  }
+  
   return emojis;
 } 
 
