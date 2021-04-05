@@ -9,7 +9,7 @@ module.exports = (error, user, itemName, filePath) => {
     return `Incorrect Syntax. Use this syntax: \`${file.syntax}\``;
   } else if( error == 'data') {
     return `**${user.tag}** is not a player, Do \`${prefix}start\``;
-  } else if( error == 'lessAssests') {
+  } else if( error == 'lessAssets') {
     return `You dont have that many ${itemName}`;
   }
   return 'hmm';
