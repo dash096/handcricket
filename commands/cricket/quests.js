@@ -118,7 +118,7 @@ async function checkIfCompleted(message, data, tick, cross) {
     
     return `\`${tick} Claimed\` - **Lootbox**`;
   } else {
-    return `\`${cross} Rewards on completion of any three\` - **Lootbox**`;
+    return `${cross} \`Rewards on completion of any three\` - **Lootbox**`;
   }
   
 }
