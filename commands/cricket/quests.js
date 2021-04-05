@@ -18,6 +18,8 @@ module.exports = {
     
     const data = await db.findOne({_id: author.id});
     
+    checkIfCompleted(message, data);
+    
     const userQuests = data.quests;
     //Status
     function beFit(name) {
@@ -86,3 +88,32 @@ module.exports = {
     channel.send(embed);
   }
 };
+
+async function checkIfCompleted(message, data) {
+  const quests = data.quests;
+  const completedOnes = Object.values(quests).filter(value => value === true);
+  
+  if(completedOnes.length >= 2) {
+    message.reply('You have completed your daily quests and you got a lootbox');
+    
+    const bag = data.bag || {};
+    const oldLootbox = bag.lootbox || 0;
+    bag.lootbox = parseInt(oldLootbox) + 1;
+    
+    const quests = data.quests || {};
+    const time = quests.time;
+    if(time) return;
+    const newTime = Date.now() + (( (60 * 60) * 12) * 1000);
+    quests.time = newTime;
+    
+    await db.findOneAndUpdate({_id: data._id}, { $set:{ bag: bag, quests } });
+    
+    setTimeout(async () => {
+      await db.findOneAndUpdate({_id: data._id}, { $unset: {quests: 'doesnt matter'}});
+    }, newTime);
+    
+  } else {
+    return;
+  }
+  
+}

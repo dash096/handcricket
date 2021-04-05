@@ -78,10 +78,8 @@ module.exports = async function(batsman, bowler, message, post) {
   }
 
   async function loopBatCollect() {
+    if(timeoutDecider === false) return;
     try {
-      if(timeoutDecider == false) {
-        return;
-      }
       const msgs = await batsman.dmChannel.awaitMessages(
         m => m.author.id === batsman.id,
         { max: 1, time: 30000, errors: ["time"] }
@@ -128,7 +126,7 @@ module.exports = async function(batsman, bowler, message, post) {
           bowler,
           batArray[batArray.length - 1] + 1,
           await (ballArray.length - 1),
-          channel,
+          mc,
           post
         );
         return;

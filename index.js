@@ -55,7 +55,9 @@ client.on("ready", async () => {
   });
     
   const brokenBoosts = require('./functions/brokenBoosts.js');
+  const brokenQuests = require('./functions/brokenQuests.js');
   await brokenBoosts();
+  await brokenQuests();
 });
 
 client.login(process.env.TOKEN);
