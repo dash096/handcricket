@@ -2,6 +2,8 @@ const db = require("../../schemas/player.js");
 const Discord = require("discord.js");
 const getErrors = require('../../functions/getErrors.js');
 
+let fixStatus = true;
+
 module.exports = {
   name: "handcricket",
   aliases: ["hc", "cricket"],
@@ -65,12 +67,15 @@ module.exports = {
     
     await channel.send(`<@${target.id}> Do you wanna play with **${user.username}**? Type \`y\`/\`n\` in 30s`);
     
+    //Execute check will
+    const will = await checkWill();
+    
     //Ask the target if he wants to duel.
     async function checkWill() {
       try {
         const msgs = await channel.awaitMessages(m => m.author.id === target.id, {
           max: 1,
-          time: 30000,
+          time: 17000,
           errors: ['time']
         });
         const msg = msgs.first();
@@ -87,6 +92,7 @@ module.exports = {
           msg.reply(`Type either \`y\`/\`n\``);
           return checkWill();
         }
+        return checkWill();
       } catch(e) {
         channel.send(getErrors('time'));
         await changeStatus(user, false);
@@ -94,10 +100,12 @@ module.exports = {
         return;
       }
     }
-    
-    //Execute check will
-    const will = await checkWill();
-    
+    setTimeout(() => {
+      if(fixStatus = true) {
+        changeStatus(user, false);
+        changeStatus(target, false);
+      }
+    },20000)
     //If will is true, roll the toss
     if(will === true) {
       try {
@@ -192,6 +200,7 @@ async function start(message, batsman, bowler, post) {
       $set: { status: true } },
       { new: true, upsert: true });
   firstInnings(batsman, bowler, message, post);
+  fixStatus = false;
 }
 
 async function userWon(message, user, target, post) {
