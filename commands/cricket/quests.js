@@ -38,10 +38,8 @@ module.exports = {
       return `${crossEmoji} **${name}** (${stat}/1)`;
     }
     function tripWin(name) {
-      let stat;
-      if(!userQuests.tripWin) stat = 0;
-      else stat = userQuests.tripWin;
-      if((userQuests.tripWin)[0] == true) {
+      let stat = userQuests.tripWin || [0];
+      if(stat[0] == true) {
         return `${tickEmoji} **${name}** (3/3)`;
       }
       return `${crossEmoji} **${name}** (${stat[0]}/3)`;
