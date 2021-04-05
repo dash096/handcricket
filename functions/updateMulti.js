@@ -12,7 +12,7 @@ module.exports = async function (name, data, msg) {
 
     //Check No. of Items is bigger than usage
     if (!oldAmount || oldAmount === 0) {
-      msg.reply(getErrors('lessAsset', 'e', name));
+      msg.reply(getErrors('lessAssets', 'e', name));
       return 'err';
     }
     
