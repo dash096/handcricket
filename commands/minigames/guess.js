@@ -102,7 +102,6 @@ module.exports = {
         return [message, false, 0];
       }
     }
-    console.log(toReturn);
     return toReturn;
   }
 };

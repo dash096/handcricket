@@ -18,8 +18,6 @@ module.exports = {
     
     const data = await db.findOne({_id: author.id});
     
-    checkIfCompleted(message, data);
-    
     const userQuests = data.quests;
     //Status
     function beFit(name) {
@@ -78,9 +76,11 @@ module.exports = {
       text += `${namestatus} \`${quest.description}\`\n`;
     }
     
+    text += checkifCompleted(message, data, tickEmoji, crossEmoji);
+    
     const embed = new Discord.MessageEmbed()
       .setTitle(`**${author.tag}**'s Quests`)
-      .setDescription(`Here is a status of your quests\n\n${text}\n\n \`Rewards on completion of any three\` - **Lootbox**` )
+      .setDescription(`Here is a status of your quests\n\n${text}\n\n`)
       .setColor('BLUE')
       .setFooter(`Vote the bot when?`);
       
@@ -88,11 +88,11 @@ module.exports = {
   }
 };
 
-async function checkIfCompleted(message, data) {
+async function checkIfCompleted(message, data, tick, cross) {
   const quests = data.quests;
   const completedOnes = Object.values(quests).filter(value => value === true || value[0] === true);
   
-  if(completedOnes.length >= 2) {
+  if(completedOnes.length >= 3) {
     message.reply('You have completed your daily quests and you got a lootbox');
     
     const bag = data.bag || {};
@@ -116,8 +116,9 @@ async function checkIfCompleted(message, data) {
       await db.findOneAndUpdate({_id: data._id}, { $unset: {quests: 'doesnt matter'}});
     }, newTime);
     
+    return `\`${tick} Claimed\` - **Lootbox**`;
   } else {
-    return;
+    return `\`${cross} Rewards on completion of any three\` - **Lootbox**`;
   }
   
 }

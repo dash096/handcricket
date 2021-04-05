@@ -35,12 +35,12 @@ module.exports = {
     
     const quests = data.quests;
     const trainings = quests.beFit || 0;
-    
+    let newValue = parseInt(trainings) + 1;
     if(trainings !== true) {
-      if(parseInt(trainings) + 1 === 5) {
+      if(newValue === 5) {
         quests.beFit = true;
       } else {
-        quests.beFit = parseInt(trainings) + 1;
+        quests.beFit = newValue;
       }
     }
     
