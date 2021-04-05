@@ -23,13 +23,12 @@ module.exports = {
     const userQuests = data.quests;
     //Status
     function beFit(name) {
-      let stat;
-      if(!userQuests.beFit) stat = 0;
-      else stat = userQuests.beFit;
-      if(stat == true) {
+      let stat = userQuests.beFit || 0;
+      if(stat === true) {
         return `${tickEmoji} **${name}** (5/5)`;
+      } else {
+        return `${crossEmoji} **${name}** (${stat}/5)`;
       }
-      return `${crossEmoji} **${name}** (${stat}/5)`;
     }
     function support(name) {
       let stat;
