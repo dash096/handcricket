@@ -54,6 +54,8 @@ module.exports = async function(winner, loser, coins, wS, wB, lS, lB, channel) {
   }
   //TripWin?
   delete loserQuests.tripWin;
+  loserQuests.tripWin = [];
+  (loserQuests.tripWin).push(0);
   
   const wSTR = (winnerSTR + (wS/lB))/2;
   const lSTR = (loserSTR + (lS/wB))/2;
