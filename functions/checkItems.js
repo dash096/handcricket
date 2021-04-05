@@ -23,7 +23,7 @@ module.exports = async function (message) {
   
   
   /*redbull, nuts, dot, magikball, coinboost, tossboost, lootbox */
-  if(itemName === "red bull" || itemName === "redbull") {
+  if(itemName === "redbull" || itemName === "red") {
     itemName = "redbull";
   }
   if(itemName === "nuts" || itemName === "nut") {
@@ -32,13 +32,13 @@ module.exports = async function (message) {
   if(itemName === "dots" || itemName === "dot") {
     itemName = "dots";
   }
-  if(itemName === "magik ball" || itemName === "magikball") {
+  if(itemName === "magikball" || itemName === "magik") {
     itemName = "magikball";
   }
-  if(itemName === "coin boost" || itemName === "coinboost") {
+  if(itemName === "coin" || itemName === "coinboost" || itemName === 'cb') {
     itemName = "coinboost";
   }
-  if(itemName === "toss boost" || itemName === "tossboost") {
+  if(itemName === "toss" || itemName === "tossboost" || itemName === 'tb') {
     itemName = "tossboost";
   }
   if(itemName === "lootbox" || itemName === "loot box") {

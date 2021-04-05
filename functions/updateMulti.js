@@ -6,15 +6,7 @@ module.exports = async function (name, data, msg) {
 
 //Change Coin Boost
   if (name === 'coinboost') {
-    const oldBag = data.bag || {};
-    const oldAmount = oldBag[name] || 0;
     let oldCoinMulti = data.coinMulti || 0;
-
-    //Check No. of Items is bigger than usage
-    if (!oldAmount || oldAmount === 0) {
-      msg.reply(getErrors('lessAssets', 'e', name));
-      return 'err';
-    }
     
     //Check if boost is 0, and change to 0.1
     if (oldCoinMulti === 0) {
@@ -74,15 +66,8 @@ module.exports = async function (name, data, msg) {
 
 //Change Toss Boost
   if (name === 'tossboost') {
-    const oldBag = data.bag || {};
-    const oldAmount = oldBag[name];
     let oldTossMulti = data.tossMulti;
-
-    //Check if usage is smaller than balance
-    if (!oldAmount || oldAmount === 0) {
-      msg.reply('You dont have that many ' + name);
-      return 'err';
-    }
+    
     //Check if tossmulti is 0 and change to 0.1
     if(oldTossMulti === 0) {
       oldTossMulti = 0.1;

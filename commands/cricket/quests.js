@@ -17,7 +17,6 @@ module.exports = {
     const crossEmoji = (await getEmoji)[6];
     
     const data = await db.findOne({_id: author.id});
-    if(!data) return channel.send(getErrors('data', author));
     
     const userQuests = data.quests;
     //Status

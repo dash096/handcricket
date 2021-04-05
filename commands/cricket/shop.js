@@ -17,7 +17,6 @@ module.exports = {
     const coinsEmoji = (await getEmoji)[0];
 
     const data = await db.findOne( {_id: author.id });
-    if (!data) return message.reply(getErrors('data', author));
     
     const docs = await itemDb.find({}).sort({_id: 1});
     let text = '';

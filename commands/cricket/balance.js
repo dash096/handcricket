@@ -17,7 +17,6 @@ module.exports = {
     const target = mentions.users.first() || author;
     
     const data = await db.findOne({_id: target.id});
-    if (!data) return message.reply(getErrors('data', author));
     
     message.channel.send(`**${target.username}** has ${emoji} ${data.cc} coins.`);
     await gain(data, 1, message);

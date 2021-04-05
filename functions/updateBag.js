@@ -8,7 +8,6 @@ module.exports = async function (name, amount, data, msg) {
   const newAmount = oldAmount - parseInt(amount);
 
   if (!oldAmount || oldAmount < amount) {
-    console.log(name, getErrors('lessAssets', 'e', name ));
     msg.reply(`Error: ${getErrors('lessAssets', 'e', name )}`);
     return 'err';
   } 

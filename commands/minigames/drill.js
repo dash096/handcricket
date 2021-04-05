@@ -26,6 +26,9 @@ module.exports = {
     const data = await db.findOne({_id: author.id});
     if(!data) return message.reply(getErrors('data', author));
     
+    if(data.status == true) return message.reply(getErrors('engaged', author));
+    await db.findOneAndUpdate({_id: author.id}, { $set: { status: true} } );
+    
     //Difficulty
     const opt = [1,1,2,2,3];
     const roll = opt[Math.floor(Math.random() * opt.length)];
@@ -36,7 +39,7 @@ module.exports = {
       await channel.send('Go!');
       
       const rando = getRando(roll); //Gets text
-      await channel.send(`Type this within ${time/1000}.. \`${rando}\``);
+      await channel.send(`Type this within ${time/1000} seconds.. \`${rando}\``);
       //Msg Collector
       const answers = await channel.awaitMessages(m => m.author.id === author.id, {
         max: 1,
@@ -57,7 +60,10 @@ module.exports = {
       }
       await gain(data, 2, message);
     } catch(e) {
+      console.log(e);
       message.reply(getErrors('time'));
+    } finally {
+      await db.findOneAndUpdate( { _id: author.id }, { $set: { status: false} });
       return [message, false, 0];
     }
   }
@@ -71,23 +77,23 @@ function getRando(difficulty) {
   
     if(difficulty == 1) {
       let i;
-      for(i = 0; i < 7; i++) {
+      for(i = 0; i < 8; i++) {
         const type = Math.floor(Math.random() * 4);
         if(type == 1 || type == 3) rando.push(alphs[Math.floor(Math.random() * alphs.length)]);
         if(type == 2) rando.push(nums[Math.floor(Math.random() * nums.length)]);
         time = 7000;
       }
-    } else if(difficulty == 2) {
+    } else if(difficulty == 10) {
       let i;
-      for(i = 0; i < 8; i++) {
+      for(i = 0; i < 11; i++) {
         const type = Math.floor(Math.random() * 4);
         if(type == 1 || type == 3) rando.push(nums[Math.floor(Math.random() * nums.length)]);
         if(type == 2) rando.push(chars[Math.floor(Math.random() * chars.length)]);
         time = 8500;
       }
-    } else if(difficulty == 3) {
+    } else if(difficulty == 12) {
       let i;
-      for(i = 0; i < 9; i++) {
+      for(i = 0; i < 12; i++) {
         const type = Math.floor(Math.random() * 4);
         if(type == 1 || type == 3) rando.push(chars[Math.floor(Math.random() * chars.length)]);
         if(type == 2) rando.push(nums[Math.floor(Math.random() * nums.length)]);

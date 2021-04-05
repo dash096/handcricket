@@ -19,7 +19,6 @@ module.exports = {
     //User
     const user = author;
     //Data
-    const userData = await db.findOne({_id: user.id});
     if(!userData) return message.reply(getErrors('data', user));
     
     //Target
@@ -28,8 +27,7 @@ module.exports = {
     
     //Data
     const targetData = await db.findOne({_id: target.id});
-    if(!targetData) return message.reply(getErrors('data', target));
-    
+    if(!targetData) message.reply(getErrors('data'), target)
     const amount = args[args.length - 1];
       
     //send @ping c/coins 1

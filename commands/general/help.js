@@ -9,6 +9,7 @@ module.exports = {
   run: async (message, args, prefix, client) => {
     const { content, author, channel, mentions } = message;
     
+    await db.findOneAndUpdate({_id: author.id}, { $set: {status: true} });
     const commands = await getCommands();
     const general = commands[0];
     const cricket = commands[1];
@@ -20,7 +21,7 @@ module.exports = {
       .addField('Navigate via the pages of the guide by typing the number.', 
       '1) ❓ - **__About and Guide__**\n2) 👀 - **__General Conmands__**\n3) 🏏 - **__Cricket Commands__**\n4) 🏋️ - **__Minigames Commands__**')
       .setColor('BLUE')
-      .setFooter('Requested by ' + author.tag);
+      .setFooter('Requested by ' + author.tag + + 'Type `end` to exit the help command.');
     
     const aboutEmbed = new Discord.MessageEmbed()
       .setTitle('About Cricket')
@@ -29,7 +30,7 @@ module.exports = {
       'The bowler bowls a ball(types a number), the batsman is gonna hit the ball(typing a number). If both the numbers are same, it is a Wicket(His chance got over) else the batsman number adds to his score, and after wicket, the next innings starts with a target that batsman has hit in total\n\n' +
       'The batsman and bowler in first innings gets swapped their position. Now the batsman(i.e the bowler in innings 1) had to chase the bowler\'s(i.e. batsman in innings 1) score\n\n' +
       'If the batsman ever hit the same number that was bowler, bolwer wins, else if the batsman crosses the target, batsman wins. **Sounds trash(coz u were lazy to read, weren\'t you?) but Great When you Get Real with your friends! Get Real When!**')
-      .setFooter('Type `back` to navigate back.')
+      .setFooter('Type `back` to navigate back and `end` to exit the command')
       .setColor('BLUE');
        
     const generalEmbed = new Discord.MessageEmbed()
@@ -73,35 +74,35 @@ module.exports = {
           setTimeout(() => {
             return loopHelp();
           }, 10000);
-        }
-        else if(msg.content == '2') {
+        } else if(msg.content == '2') {
           if(goBack == false) {
             embed.edit(generalEmbed);
             goBack = true;
           }
           return loopHelp();
-        }
-        else if(msg.content == '3') {
+        } else if(msg.content == '3') {
           if(goBack == false) {
             embed.edit(cricketEmbed);
             goBack = true;
           }
           return loopHelp();
-        }
-        else if(msg.content == '4') {
+        } else if(msg.content == '4') {
           if(goBack == false) {
             embed.edit(minigamesEmbed);
             goBack = true;
           }
           return loopHelp();
-        }
-        else if(msg.content.trim().toLowerCase() == 'b' || msg.content.trim().toLowerCase() == 'back') {
+        } else if(msg.content.trim().toLowerCase() == 'b' || msg.content.trim().toLowerCase() == 'back') {
           if(goBack == true) {
             embed.edit(send);
             goBack = false;
             inAbout = false;
           }
           return loopHelp();
+        } else if(msg.content.trim().toLowerCase() == 'end' || msg.content.trim().toLowerCase() == 'exit') {
+          embed.delete();
+          await db.findOneAndUpdate({_id: author.id}, { $set: {status: false} });
+          return;
         }
         else {
           return loopHelp();
@@ -110,6 +111,7 @@ module.exports = {
         if(inAbout == true) {
           inAbout = false;
           return loopHelp();
+          await db.findOneAndUpdate({_id: author.id}, { $set: {status: false} });
         }
         embed.delete();
         return;

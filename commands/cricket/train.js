@@ -13,7 +13,8 @@ module.exports = {
     const { content, author, channel, mentions } = message;
     
     const data = await db.findOne({_id: author.id});
-    if(!data) message.reply(getErrors('data', author));
+    
+    await db.findOneAndUpdate( { _id: author.id }, { $set: { status: true } });
     
     const exercises = {};
     const trainFiles = fs.readdirSync('./commands/minigames');
@@ -44,7 +45,7 @@ module.exports = {
       }
     }
     
-    await db.findOneAndUpdate({_id: author.id}, {$set: {quests: quests}});
+    await db.findOneAndUpdate({_id: author.id}, { $set: { quests: quests, status: false } });
   }
 };
 

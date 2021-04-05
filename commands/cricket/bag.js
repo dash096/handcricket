@@ -16,7 +16,6 @@ module.exports = {
     const target = mentions.users.first() || author;
     
     const data = await db.findOne({_id: target.id});
-    if(!data) return message.reply(getErrors('data', target));
     
     let bagItems = data.bag || {};
     

@@ -31,22 +31,8 @@ module.exports = {
     });
 
     //Data Validation
-    if (!userdata) {
-      message.reply(getErrors('data', user));
-      return;
-    }
     if (!targetdata) {
       message.reply(getErrors('data', target));
-      return;
-    }
-
-    //Status Validation
-    if (userdata.status === true) {
-      message.reply(user.username + " is already in a match");
-      return;
-    }
-    if (targetdata.status === true) {
-      message.reply(target.username + " is already in a match");
       return;
     }
     
@@ -101,11 +87,11 @@ module.exports = {
       }
     }
     setTimeout(() => {
-      if(fixStatus = true) {
+      if(fixStatus == true) {
         changeStatus(user, false);
         changeStatus(target, false);
       }
-    },20000)
+    },20000);
     //If will is true, roll the toss
     if(will === true) {
       try {

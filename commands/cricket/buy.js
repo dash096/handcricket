@@ -26,7 +26,6 @@ module.exports = {
     
     //Data
     const data = await playerDB.findOne( {_id: author.id} );
-    if (!data) return message.reply(getErrors('data', author));
     
     const item = await itemDB.findOne( {name: name} );
     
