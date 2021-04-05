@@ -76,7 +76,7 @@ module.exports = {
       text += `${namestatus} \`${quest.description}\`\n`;
     }
     
-    text += checkIfCompleted(message, data, tickEmoji, crossEmoji);
+    text += `\n ${await checkIfCompleted(message, data, tickEmoji, crossEmoji)}`;
     
     const embed = new Discord.MessageEmbed()
       .setTitle(`**${author.tag}**'s Quests`)
