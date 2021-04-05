@@ -12,5 +12,5 @@ module.exports = (error, user, itemName, filePath) => {
   } else if( error == 'lessAssets') {
     return `You dont have that many ${itemName}`;
   }
-  return 'hmm';
+  return 'cant get the err, dm and report it to `Dash#7374` or `UltraMoonEagle#3876`';
 };
