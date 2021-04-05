@@ -114,6 +114,8 @@ async function getArray(start) {
   await arr.push(start + 7);
   await arr.push(start + 8);
   await arr.push(start + 9);
+  await arr.push(start + 10);
+  await arr.push(start + 11);
   return arr;
 }
 

@@ -69,27 +69,31 @@ function getRando(difficulty) {
   const alphs = ['a', 'e', 'i', 'o', 'u'];
   const nums = [1,2,3,4,5,6,7,8,9,0];
   
-  for(const num in nums) {
     if(difficulty == 1) {
       let i;
-      const type = Math.floor(Math.random() * 4);
-      if(type == 1 || type == 3) rando.push(alphs[Math.floor(Math.random() * alphs.length)]);
-      if(type == 2) rando.push(nums[Math.floor(Math.random() * nums.length)]);
-      time = 7000;
+      for(i = 0; i < 7; i++) {
+        const type = Math.floor(Math.random() * 4);
+        if(type == 1 || type == 3) rando.push(alphs[Math.floor(Math.random() * alphs.length)]);
+        if(type == 2) rando.push(nums[Math.floor(Math.random() * nums.length)]);
+        time = 7000;
+      }
     } else if(difficulty == 2) {
       let i;
-      const type = Math.floor(Math.random() * 4);
-      if(type == 1 || type == 3) rando.push(nums[Math.floor(Math.random() * nums.length)]);
-      if(type == 2) rando.push(chars[Math.floor(Math.random() * chars.length)]);
-      time = 8500;
+      for(i = 0; i < 8; i++) {
+        const type = Math.floor(Math.random() * 4);
+        if(type == 1 || type == 3) rando.push(nums[Math.floor(Math.random() * nums.length)]);
+        if(type == 2) rando.push(chars[Math.floor(Math.random() * chars.length)]);
+        time = 8500;
+      }
     } else if(difficulty == 3) {
       let i;
-      const type = Math.floor(Math.random() * 4);
-      if(type == 1 || type == 3) rando.push(chars[Math.floor(Math.random() * chars.length)]);
-      if(type == 2) rando.push(nums[Math.floor(Math.random() * nums.length)]);
-      time = 10000;
+      for(i = 0; i < 9; i++) {
+        const type = Math.floor(Math.random() * 4);
+        if(type == 1 || type == 3) rando.push(chars[Math.floor(Math.random() * chars.length)]);
+        if(type == 2) rando.push(nums[Math.floor(Math.random() * nums.length)]);
+        time = 10000;
+      }
     }
-  } 
   const number = rando.join('');
   return number;
 }

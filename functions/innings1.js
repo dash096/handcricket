@@ -79,6 +79,9 @@ module.exports = async function(batsman, bowler, message, post) {
 
   async function loopBatCollect() {
     try {
+      if(timeoutDecider == false) {
+        return;
+      }
       const msgs = await batsman.dmChannel.awaitMessages(
         m => m.author.id === batsman.id,
         { max: 1, time: 30000, errors: ["time"] }
