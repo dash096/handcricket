@@ -85,7 +85,7 @@ module.exports = {
           return;
         } else {
           msg.reply(`Type either \`y\`/\`n\``);
-          return checlWill();
+          return checkWill();
         }
       } catch(e) {
         channel.send(getErrors('time'));
