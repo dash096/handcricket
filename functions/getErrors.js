@@ -12,4 +12,5 @@ module.exports = (error, user, itemName, filePath) => {
   } else if( error == 'lessAssests') {
     return `You dont have that many ${itemName}`;
   }
+  return 'hmm';
 };
