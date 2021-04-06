@@ -99,7 +99,7 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
       const m = msgs.first();
       let c = m.content;
       let bowled = await ballArray[ballArray.length - 1];
-      const newScore = await batArray[batArray.length - 1] + parseInt(c);
+      let newScore = await batArray[batArray.length - 1] + parseInt(c);
       const totalBalls = await ballArray.length;
       const boB = totalBalls;
       const baS = newScore;
@@ -145,6 +145,7 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
           useDot = true;
           batDots += 1;
           c = bowled;
+          newScore = (batArray[batArray.length - 1]) + parseInt(bowled);
         }
       }
       //Wicket

@@ -136,6 +136,7 @@ module.exports = async function(batsman, bowler, message, post) {
           useDot = true;
           batDots += 1;
           c = bowled;
+          newScore = (await batArray[batArray.length - 1]) + parseInt(bowled);
         }
       }
       //Wicket
@@ -147,7 +148,7 @@ module.exports = async function(batsman, bowler, message, post) {
         await secondInnings( batsman, bowler, batArray[batArray.length - 1] + 1, await (ballArray.length - 1), mc, post );
         return;
       } else { //Push
-        batArray.push(newScore);
+        batArray.push();
         const embed = new Discord.MessageEmbed()
           .setTitle("Cricket Match - First Innings")
           .addField(batsman.username + " - Batsman", newScore, true)
