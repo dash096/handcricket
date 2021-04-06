@@ -21,7 +21,7 @@ module.exports = {
       .addField('Navigate via the pages of the guide by typing the number.', 
       '1) ❓ - **__About and Guide__**\n2) 👀 - **__General Conmands__**\n3) 🏏 - **__Cricket Commands__**\n4) 🏋️ - **__Minigames Commands__**')
       .setColor('BLUE')
-      .setFooter('Requested by ' + author.tag + + 'Type `end` to exit the help command.');
+      .setFooter('Requested by ' + author.tag + 'Type `end` to exit the help command.');
     
     const aboutEmbed = new Discord.MessageEmbed()
       .setTitle('About Cricket')
