@@ -101,9 +101,13 @@ module.exports = {
           }
           return loopHelp();
         } else if(msg.content.trim().toLowerCase() == 'end' || msg.content.trim().toLowerCase() == 'exit') {
+          channel.send('Guide ended');
           embed.delete();
           await db.findOneAndUpdate({_id: author.id}, { $set: {status: false} });
           return;
+        } else if(msg.content.startsWith(prefix)) {
+          channel.send('End the guide before you can use other commands');
+          return loopHelp();
         }
         else {
           return loopHelp();

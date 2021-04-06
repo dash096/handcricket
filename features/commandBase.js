@@ -18,14 +18,22 @@ module.exports = (client, prefix) => {
     const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
     if (!command) return;
     
+    //Ignore some commands for status
+    let ignore = false;
+    const ignoreCommands = ['start', 'status'];
+    for(const ignoreCommand of ignoreCommands) {
+      if(ignoreCommand == commandName) {
+        ignore = true;
+      }
+    }
     //Check engagement
     const data = await db.findOne({
       _id: author.id
     });
-    if (!data && commandName.toLowerCase() != 'start') {
+    if (!data && ignore !== true) {
       return message.reply(getErrors('data', author));
     }
-    if (data.status === true) return;
+    if (data.status === true && ignore !== true) return;
     
     //Check Perms
     if (command.permissions) {
