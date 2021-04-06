@@ -27,18 +27,18 @@ client.on("ready", async () => {
   };
   try {
     await mongoose.connect(process.env.MONGO, dbOptions);
-    console.log('Mongo Connected')
+    console.log('Mongo Connected');
   
     await loadFiles();
   
-    let loadFunctions = ['brokenQuests.js', 'brokenBoosts.js']
+    let loadFunctions = ['brokenQuests.js', 'brokenBoosts.js'];
     for(const loadFunction of loadFunctions) {
       const execute = require(`./functions/${loadFunction}`);
       execute(client, prefix);
     }
   } catch (e) {
     return console.log(e);
-  };
+  }
 });
 
 function loadFiles() {

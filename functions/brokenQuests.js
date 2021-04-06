@@ -10,23 +10,21 @@ module.exports = async function() {
   
   for(const data of datas) {
     quests = data.quests;
-    if(!quests.time) {
-      return console.log('No Quests to fix');
-    }
-    else if(data.time.getTime() < Date.now()) {
-      console.log(data.time + 'Past');
-      brokeQuests.push(data);
-    } else if(data.time.getTime() > Date.now()) {
-      console.log(data.time + 'Future');
-      toFixQuests.push(data);
+    if(quests.time) {
+      if(quests.time.getTime() < Date.now()) {
+        console.log(data.time.getTime() + ' Past');
+        brokeQuests.push(data);
+      } else if(quests.time.getTime() > Date.now()) {
+        console.log(quests.time.getTime() + ' Future');
+        toFixQuests.push(data);
+      }
     }
   }
-  
-  console.log(brokeQuests, toFixQuests);
   
   if(!brokeQuests || brokeQuests.length === 0) {
     console.log('No BrokeQuests Past now.');
   } else {
+    console.log(`${brokeQuests.length} past broken quests found`);
     for(const data of brokeQuests) {
       await db.findOneAndUpdate({_id:data._id}, { $unset: {quests} });
     }
@@ -35,10 +33,11 @@ module.exports = async function() {
   if(!toFixQuests || toFixQuests.length === 0) {
     console.log('No toFixQuests Future now.');
   } else {
+    console.log(`${toFixQuests.length} future broken quests found`);
     for(const data of toFixQuests) {
-      const time = data.quests.time.getTime() - Date.now();
-      console.log(time);
-      setTimeout(async () => {
+      const quests = data.quests;
+      const time = quests.time.getTime() - Date.now();
+      setTimeout( async () => {
         await db.findOneAndUpdate({_id:data._id}, { $unset: {quests} });
       }, time);
     }

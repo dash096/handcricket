@@ -94,14 +94,14 @@ module.exports = {
 function getFooter(data) {
   quests = data.quests || {};
   if(quests.time) {
-    let remainingMS = quests.time.getTime();
+    let MS = quests.time.getTime();
     let nowMS = Date.now();
-    let remainingMS = remainingMS - nowMS;
+    let remainingMS = MS - nowMS;
     let remainingS = remainingMS/1000;
     let remainingM = remainingS/60;
     let remainingH = (remainingM/60).toFixed(0);
     let remainingMin = remainingM % 60;
-    let remainingTime = `${remainingH}hours ${remainingMin}mins`
+    let remainingTime = `${remainingH} hours ${remainingMin.toFixed(0)} mins`
     return `Quest resets in ${remainingTime} minutes`
   } else {
     return `Finish the quest!`;
