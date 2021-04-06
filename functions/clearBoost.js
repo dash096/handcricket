@@ -29,8 +29,8 @@ module.exports = async function (what, boost) {
   if(what === 'coin') {
     let oldCoinMulti = boost.coinMulti;
     
-    if(oldCoinMulti === 0.2) {
-      oldCoinMulti = 0;
+    if(oldCoinMulti === 0.1) {
+      oldCoinMulti = 0.2;
     }
     let time;
     if(boost.coinBoost) {

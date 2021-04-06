@@ -10,7 +10,7 @@ module.exports = async function (name, data, msg) {
     
     //Check if boost is 0, and change to 0.1
     if (oldCoinMulti === 0) {
-      oldCoinMulti = 0.1;
+      oldCoinMulti = 0.05;
     }
     
     //Check if a boost exists
@@ -44,8 +44,8 @@ module.exports = async function (name, data, msg) {
     setTimeout( async function () {
       oldCoinMulti = data.coinMulti;
       let newCoinMulti;
-      if(oldCoinMulti === 0.2) {
-        newCoinMulti = 0;
+      if(oldCoinMulti === 0.1) {
+        newCoinMulti = 0.2;
       } else {
         newCoinMulti = oldCoinMulti/2;
       }
@@ -53,7 +53,7 @@ module.exports = async function (name, data, msg) {
         { $set: { 
             coinMulti: newCoinMulti
           }, $unset: {
-            coinBoost: ''
+            coinBoost: 'no Matter'
           }
         }
       );
