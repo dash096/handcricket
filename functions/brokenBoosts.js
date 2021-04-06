@@ -38,10 +38,6 @@ module.exports = async function() {
     }
   }
   
-  if(brokeTossBoosts.length === 0 && brokeCoinBoosts.length === 0) {
-    return console.log('No broken boosts.');
-  }
-  
   async function getBrokenTossBoosts() {
     const lte = await db.find({ tossBoost : { $lte : Date.now() } });
     const gte = await db.find({ tossBoost : { $gte : Date.now() } });

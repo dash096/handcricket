@@ -7,9 +7,11 @@ module.exports = async function() {
   let brokeQuests = [];
   let toFixQuests = [];
   
+  
   for(const data of datas) {
-    if(!data.time) {
-      return;
+    quests = data.quests;
+    if(!quests.time) {
+      return console.log('No Quests to fix');
     }
     else if(data.time.getTime() < Date.now()) {
       console.log(data.time + 'Past');
