@@ -1,5 +1,6 @@
 const fs = require('fs');
 const Discord = require('discord.js');
+const db = require('../../schemas/player.js');
 
 module.exports = {
   name: 'help',

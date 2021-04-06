@@ -1,6 +1,7 @@
 const db = require("../schemas/player.js");
 const Discord = require("discord.js");
 const secondInnings = require("./innings2.js");
+const updateBag = require('./updateBag.js');
 
 module.exports = async function(batsman, bowler, message, post) {
   const embed = new Discord.MessageEmbed()
@@ -11,7 +12,8 @@ module.exports = async function(batsman, bowler, message, post) {
 
   const batEmbed = await batsman.send(embed);
   const ballEmbed = await bowler.send(embed);
-
+  
+  let batDots = 0;
   const batArray = [0];
   const ballArray = [0];
 
@@ -85,10 +87,11 @@ module.exports = async function(batsman, bowler, message, post) {
         { max: 1, time: 30000, errors: ["time"] }
       );
       const m = msgs.first();
-      const c = m.content;
-      const newScore = (await batArray[batArray.length - 1]) + parseInt(c);
-      const bowled = await ballArray[ballArray.length - 1];
+      let c = m.content;
+      let newScore = (await batArray[batArray.length - 1]) + parseInt(c);
+      let bowled = await ballArray[ballArray.length - 1];
 
+      let useDot = false;
       //End the match
       if (c.toLowerCase() === "end") {
         changeStatus(batsman, bowler);
@@ -101,56 +104,62 @@ module.exports = async function(batsman, bowler, message, post) {
       else if (isNaN(c)) {
         bowler.send(`\`${batsman.username}\`:  ${c}`);
         return loopBatCollect();
-      }
-      //Number validation
-      else if (c > 6) {
-        //m.react("❌");
-        batsman.send("Max number that can be hit is 6");
-        return loopBatCollect();
-      }
+      } 
       //Wait for the ball
       else if (ballArray.length === batArray.length) {
         batsman.send("Wait for the ball dude");
         return loopBatCollect();
       }
+      //Dot
+      else if (parseInt(c) === 0) {
+        const updateBagObj = {}; 
+        updateBagObj.channel = batsman;
+        const bal = await updateBag('dots', 1, await db.findOne({_id: batsman.id}), updateBagObj);
+        if(bal == 'err') {
+          return loopBatCollect();
+        } else if(batDots === 3) {
+          batsman.send('Only 3 dots can be used in a match and you are left with 0!');
+          return loopBatCollect();
+        } else if(c === bowled) {
+          await batsman.send(`Hehe! The bowler guessed you, Wicket!`);
+          await bowler.send(`You guessed, it\'s a Wicket!`);
+          if(post === true) await mc.send(`Batsman hit a dot, the bowler guessed so! Wicket!`);
+          await secondInnings(batsman, bowler, batArray[batArray.length - 1] + 1, await (ballArray.length - 1), message, post);
+          return loopBatCollect();
+        } else {
+          useDot = true;
+          batDots += 1;
+          c = bowled;
+        }
+      }
+      //Number validation
+      if (c > 6) {
+        batsman.send("Max number that can be hit is 6");
+        return loopBatCollect();
+      }
       //Wicket
-      else if (parseInt(bowled) === parseInt(c)) {
+      else if (parseInt(bowled) === parseInt(c) && useDot == false) {
         timeoutDecider = false;
         await batsman.send("Wicket! The bowler bowled " + bowled);
         await bowler.send("Wicket! The batsman hit " + c);
-        if (post === true) await mc.send(
-            `**${batsman.tag}** wicket!!! He hit ${c}, and was bowled ${bowled} by **${bowler.username}**`
-          );
-        await secondInnings(
-          batsman,
-          bowler,
-          batArray[batArray.length - 1] + 1,
-          await (ballArray.length - 1),
-          mc,
-          post
-        );
+        if (post === true) await mc.send(`**${batsman.tag}** wicket!!! He hit ${c}, and was bowled ${bowled} by **${bowler.username}**`);
+        await secondInnings( batsman, bowler, batArray[batArray.length - 1] + 1, await (ballArray.length - 1), mc, post );
         return;
       } else { //Push
         batArray.push(newScore);
-
         const embed = new Discord.MessageEmbed()
           .setTitle("Cricket Match - First Innings")
           .addField(batsman.username + " - Batsman", newScore, true)
           .addField(bowler.username + " - Bowler", 0, true)
           .setColor("#2d61b5");
 
-        await batsman.send(
-          `You hit ${c} and you were bowled ${bowled}, **Scoreboard**`,
-          { embed }
-        );
+        await batsman.send(`You hit ${c} and you were bowled ${bowled}, **Scoreboard**`, { embed });
         await bowler.send(`Batsman hit ${c}, **Scoreboard**`, { embed });
-        if (post === true) await mc.send(
-            `**${batsman.tag}** hit ${c}, and was bowled ${bowled} by **${bowler.username}**`,
-            { embed }
-          );
+        if (post === true) await mc.send(`**${batsman.tag}** hit ${c}, and was bowled ${bowled} by **${bowler.username}**`, { embed });
         return loopBatCollect();
       }
     } catch (e) {
+      console.log(e)
       if (timeoutDecider === true) {
         timeoutDecider = false;
         batsman.send("Match ended as you were inactive.");

@@ -8,7 +8,7 @@ module.exports = async function (name, amount, data, msg) {
   const newAmount = oldAmount - parseInt(amount);
 
   if (!oldAmount || oldAmount < amount) {
-    msg.reply(`Error: ${getErrors('lessAssets', 'e', name )}`);
+    msg.channel.send(`Error: ${getErrors('lessAssets', 'e', name )}`);
     return 'err';
   } 
   

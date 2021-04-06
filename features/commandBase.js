@@ -11,21 +11,22 @@ module.exports = (client, prefix) => {
     
     if (!content.toLowerCase().startsWith(prefix) || author.bot || channel.type === 'dm') return;
 
-    //Check engagement
-    const data = await db.findOne({
-      _id: author.id
-    });
-    if (!data) return message.reply(getErrors('data', author));
-    if (data.status === true) return;
-
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
 
     //Check Aliases
     const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
-
     if (!command) return;
-
+    
+    //Check engagement
+    const data = await db.findOne({
+      _id: author.id
+    });
+    if (!data && commandName.toLowerCase() != 'start') {
+      return message.reply(getErrors('data', author));
+    }
+    if (data.status === true) return;
+    
     //Check Perms
     if (command.permissions) {
       const authorPerms = message.channel.permissionsFor(message.author);

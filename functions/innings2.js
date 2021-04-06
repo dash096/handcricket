@@ -2,12 +2,26 @@ const db = require("../schemas/player.js");
 const Discord = require("discord.js");
 const getEmoji = require('../index.js');
 const rewards = require('./rewards.js');
+const updateBag = require('./updateBag.js');
 
 //shuffled
-module.exports = async function(bowler, batsman, boS, baB, mc, post) {
+module.exports = async function(bowler, batsman, boS, baB, message, post) {
   const emoji = (await getEmoji)[0];
-  const target = boS;
   
+  const target = boS;
+  const mc = message.channel;
+  let batDots = 0;
+  let useDot = false;
+  
+  function getCoins(data) {
+    let coinMulti = data.coinMulti;
+    if (coinMulti === 0) coinMulti = 0.2;
+    const multi = coinMulti * 696;
+    const rando = Math.random() * multi.toFixed(0);
+    const coins = rando.toFixed(0);
+    return coins;
+  }
+
   const embed = new Discord.MessageEmbed()
     .setTitle('Cricket Match - Second Innings')
     .addField(batsman.username + ' - Batsman', 0, true)
@@ -55,14 +69,14 @@ module.exports = async function(bowler, batsman, boS, baB, mc, post) {
         batsman.send(`\`${bowler.username}\`: ${c}`);
         return loopBallCollect();
       }
-      //Number Validation
-      else if (parseInt(c) > 6) {
-        m.react('❌');
-        return loopBallCollect();
-      }
       //Turn based
       else if (batArray.length < ballArray.length) {
         m.reply('Wait for the batsman to hit your previous ball!');
+        return loopBallCollect();
+      }
+      //Number Validation
+      else if (parseInt(c) > 6) {
+        m.react('❌');
         return loopBallCollect();
       }
       //Push
@@ -91,13 +105,13 @@ module.exports = async function(bowler, batsman, boS, baB, mc, post) {
           {max: 1, time: 30000, errors: ['time']}
       );
       const m = msgs.first();
-      const c = m.content;
-      const bowled = await ballArray[ballArray.length - 1];
+      let c = m.content;
+      let bowled = await ballArray[ballArray.length - 1];
       const newScore = await batArray[batArray.length - 1] + parseInt(c);
       const totalBalls = await ballArray.length;
       const boB = totalBalls;
       const baS = newScore;
-
+      
       //End
       if (c.toLowerCase().trim() === "end") {
         timeoutDecider = false;
@@ -121,20 +135,34 @@ module.exports = async function(bowler, batsman, boS, baB, mc, post) {
         m.reply('Wait for the ball dude.');
         return loopBatCollect();
       }
+      //Dot
+      else if (parseInt(c) === 0) {
+        const updateBagObj = {}; 
+        updateBagObj.channel = batsman;
+        const bal = await updateBag('dots', 1, await db.findOneAndUpdate({_id: batsman.id}), updateBagObj);
+        if(bal == 'err') return loopBatCollect();
+        else if(batDots == 3) {
+          batsman.send(`You can only use Dot 3 times per match and you have 0 left!`);
+          return loopBatCollect();
+        } else if(parseInt(c) == bowled) {
+          await batsman.send(`Hehe! Bowler guessed you, Wicket! You lost sadge..`);
+          await bowler.send(`Wicket! You guessed the batsman. You won a grand amount of ${emoji} ${coins}!`);
+          if(post === true) mc.send(`Wicket! The bowler won!`);
+          return rewards(bowler, batsman, coins, boS, boB, baS, baB, mc);
+        } else {
+          useDot = true;
+          batDots += 1;
+          c = bowled;
+        }
+      }
       //Wicket
-      else if (parseInt(c) === parseInt(bowled)) {
+      if (parseInt(c) === parseInt(bowled) && useDot == false) {
         changeStatus(batsman,bowler);
         const data = await db.findOne({
-          _id: batsman.id
+          _id: bowler.id
         });
-
-        let coinMulti = data.coinMulti;
-        if (coinMulti === 0) coinMulti = 0.2;
-
-        const multi = coinMulti * 696;
-
-        const rando = Math.random() * multi.toFixed(0);
-        const coins = rando.toFixed(0);
+        
+        const coins = getCoins(data);
 
         if((target - (newScore - parseInt(c))) === 1) {
           bowler.send(`Wicket! DUCK! The batsman hit ${c}! It is a tie!`);
@@ -158,15 +186,9 @@ module.exports = async function(bowler, batsman, boS, baB, mc, post) {
         const data = await db.findOne({
           _id: batsman.id
         });
-
-        let coinMulti = data.coinMulti;
-        if (coinMulti === 0) coinMulti = 0.2;
-
-        const multi = coinMulti * 696;
-
-        const rando = Math.random() * multi.toFixed(0);
-        const coins = rando.toFixed(0);
-
+        
+        const coins = getCoins(data);
+        
         batsman.send(`Score is ${newScore}! The bowler bowled ${bowled}! You won a grand amount of ${emoji} ${coins}!`);
         bowler.send(`Batsman score is ${newScore}! The batsman hit ${c}! You lost... sadge`);
         if(post === true) mc.send(`**${batsman.tag}** crossed the target!! HE **WON**!! He hit ${c} and was bowled ${bowled} by **${bowler.tag}**`);
