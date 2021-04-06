@@ -31,6 +31,7 @@ module.exports = {
     const msg = message;
     const win = execute[1];
     const amount = execute[2];
+    
     updateCoins(message, win, amount, true);
     
     const quests = data.quests;
@@ -59,6 +60,6 @@ async function updateCoins(message, win, amount) {
     coins = (amount / 2).toFixed(0);
   }
   const oldcc = data.cc;
-  await db.findOneAndUpdate({_id: data._id}, {$set: {cc: parseInt(data.cc) + parseInt(coins)}});
+  await db.findOneAndUpdate({_id: data._id}, {$set: {cc: parseInt(oldcc) + parseInt(coins)}});
   return coins;
 }

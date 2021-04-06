@@ -99,7 +99,6 @@ module.exports = {
         channel.send(getErrors('time'));
       } finally {
         await db.findOneAndUpdate( { _id: author.id }, { $set: { status: false} });
-        return [message, false, 0];
       }
     }
     return toReturn;
