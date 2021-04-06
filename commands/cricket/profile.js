@@ -37,9 +37,13 @@ module.exports = {
     const STR = data.strikeRate;
     const WR = getWR(data);
     
+    const xpFixed = data.xp.toFixed(0);
+    
     const embed = new Discord.MessageEmbed()
       .setTitle(`Profile of **${target.tag}**`)
-      .addField("Level - " + `${level} \`${(data.xp).toFixed(0)}xp\``, `**Next level:** ${XPLine} \`${targetXP}xp\` `)
+      .setThumbnail(author.displayAvatarURL())
+      .addField("Level - " + `${level} \`${xpFixed}xp\``,
+      `**Next level:** ${XPLine} \`${targetXP}xp\` `)
       .addField("Balance", ` ${coinEmoji} ${data.cc}`, true)
       .addField("Wins", data.wins, true)
       .addField("Win Rate", WR.toFixed(3), true)

@@ -45,7 +45,7 @@ module.exports = async function (what, boost) {
             coinMulti: oldCoinMulti/2
           },
           $unset: {
-            coinBoost
+            coinBoost: 'no matter'
           }
         }
       );
