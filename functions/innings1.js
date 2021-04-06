@@ -150,6 +150,7 @@ module.exports = async function(batsman, bowler, message, post) {
         await secondInnings( batsman, bowler, batArray[batArray.length - 1] + 1, await (ballArray.length - 1), mc, post );
         return;
       } else { //Push
+        useDot = false;
         batArray.push(newScore);
         const embed = new Discord.MessageEmbed()
           .setTitle("Cricket Match - First Innings")

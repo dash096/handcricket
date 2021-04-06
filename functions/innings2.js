@@ -174,6 +174,7 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
       }
       //Target
       else if (parseInt(newScore) >= target) {
+        useDot = false;
         timeoutDecider = false;
         changeStatus(batsman,bowler);
         const data = await db.findOne({
@@ -193,6 +194,7 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
       }
       //Push
       else {
+        useDot = false;
         batArray.push(parseInt(newScore));
 
         const embed = new Discord.MessageEmbed()
