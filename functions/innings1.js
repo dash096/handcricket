@@ -43,6 +43,7 @@ module.exports = async function(batsman, bowler, message, post) {
 
       //End the match
       if (c == "end") {
+        timeoutDecider = false;
         changeStatus(batsman, bowler);
         batsman.send(`**${bowler.username}** forfeited`);
         bowler.send(`You forfeited`);
@@ -95,6 +96,7 @@ module.exports = async function(batsman, bowler, message, post) {
 
       //End the match
       if (c.toLowerCase() === "end") {
+        timeoutDecider = false;
         changeStatus(batsman, bowler);
         batsman.send(`**${batsman.username}(You)** forfeited`);
         bowler.send(`**${batsman.username}** forfeited`);
