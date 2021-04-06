@@ -93,6 +93,6 @@ module.exports = async function(winner, loser, coins, wS, wB, lS, lB, channel) {
     _id: loser.id
   }, loserSet);
   
-  await gain(winnerData, 7, channel);
-  await gain(loserData, 6, channel);
+  await gain(winnerData, 7, channel, winner);
+  await gain(loserData, 6, channel, loser);
 };

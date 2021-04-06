@@ -55,14 +55,16 @@ module.exports = {
     
     await channel.send(`<@${target.id}> Do you wanna play with **${user.username}**? Type \`y\`/\`n\` in 30s`);
     
-    setTimeout(() => {
-      if(fixStatus == true) {
-        changeStatus(user, false);
-        changeStatus(target, false);
-      } else {
-        return;
-      }
-    },20000);
+    function careful() {
+      setTimeout(() => {
+        if(fixStatus == true) {
+          changeStatus(user, false);
+          changeStatus(target, false);
+        } else {
+          return;
+        }
+      },20000);
+    }
     
     //Execute check will
     const will = await checkWill();
@@ -70,20 +72,16 @@ module.exports = {
     //Ask the target if he wants to duel.
     async function checkWill() {
       try {
-        const msgs = await channel.awaitMessages(m => m.author.id === target.id || m.author.id === user.id, {
+        careful();
+        const msgs = await channel.awaitMessages(m => m.author.id === target.id, {
           max: 1,
           time: 17000,
           errors: ['time']
         });
         const msg = msgs.first();
-        const c = msgs.first().content;
-        if(msg.author.id === user.id) {
-          if(c.trim().toLowerCase() === 'end') {
-            return;
-          } else {
-            return await checkWill();
-          }
-        } else if(c.trim().toLowerCase() == 'y' || c.trim().toLowerCase() == 'yes') {
+        const c = msg.content;
+        
+        if(c.trim().toLowerCase() == 'y' || c.trim().toLowerCase() == 'yes') {
           return true;
         }
         else if(c.trim().toLowerCase() == 'n' || c.trim().toLowerCase() == 'no'){
@@ -96,6 +94,7 @@ module.exports = {
           return await checkWill();
         }
       } catch(e) {
+        console.log(e);
         channel.send(getErrors('time'));
         await changeStatus(user, false);
         await changeStatus(target, false);
@@ -225,7 +224,8 @@ async function userWon(message, user, target, post) {
     }
     await channel.send(`Batsman is ${batsman}, Bowler is ${bowler}`);
     start(message, batsman, bowler, post);
-  } catch (e) { 
+  } catch (e) {
+    console.log(e);
     channel.send(getErrors('time'));
   }
   
@@ -254,8 +254,9 @@ async function targetWon(message, user, target, post) {
       }
       await channel.send(`Batsman is ${batsman}, Bowler is ${bowler}`);
       start(message, batsman, bowler, post);
-    } catch (e) { 
-        channel.send(getErrors('time'));
+    } catch (e) {
+      console.log(e);
+      channel.send(getErrors('time'));
     }
   }
   

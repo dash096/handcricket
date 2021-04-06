@@ -1,7 +1,7 @@
 const db = require('../schemas/player.js');
 const getLevels = require('./getLevels.js');
 
-module.exports = async function (nabData, amt, msg) {
+module.exports = async function (nabData, amt, msg, user) {
   let data = nabData;
   if(!data) data = await db.findOne({_id: msg.author.id});
   
@@ -21,7 +21,8 @@ module.exports = async function (nabData, amt, msg) {
   const sLevel = Object.keys(levels).find(key => levels[key] === sXP);
   
   if(pLevel != sLevel) {
-    msg.reply(`CONGRATS!!! You leveled up to **${sLevel}**! You also got a lootbox!!!`);
+    if(user) msg.send(`${user} CONGRATS!!! You leveled up to **${sLevel}**! You also got a lootbox!!!`);
+    else msg.reply(`CONGRATS!!! You leveled up to **${sLevel}**! You also got a lootbox!!!`);
     const bag = data.bag || {};
     const amount = bag.lootbox || 0;
     bag.lootbox = amount + 1;
