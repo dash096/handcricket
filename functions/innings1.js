@@ -128,12 +128,12 @@ module.exports = async function(batsman, bowler, message, post) {
         } else if(batDots === 3) {
           batsman.send('Only 3 dots can be used in a match and you are left with 0!');
           return loopBatCollect();
-        } else if(c === bowled) {
+        } else if(parseInt(c) === parseInt(bowled)) {
           await batsman.send(`Hehe! The bowler guessed you, Wicket!`);
           await bowler.send(`You guessed, it\'s a Wicket!`);
           if(post === true) await mc.send(`Batsman hit a dot, the bowler guessed so! Wicket!`);
           await secondInnings(batsman, bowler, batArray[batArray.length - 1] + 1, await (ballArray.length - 1), message, post);
-          return loopBatCollect();
+          return;
         } else {
           useDot = true;
           batDots += 1;
