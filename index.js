@@ -14,51 +14,59 @@ const { commands, cooldowns } = client;
 
 module.exports = getEmojis();
 
-const listeners = fs.readdirSync('./features');
-console.log(`${listeners.length} listeners loaded`);
-for(const listener of listeners) {
-  try {
-    const feature = require(`./features/${listener}`);
-    feature(client, prefix);
-  } catch (e) {
-    console.error(e);
-  }
-}
-
-const folders = fs.readdirSync('./commands').filter(folder => !folder.includes('.'));
-for(const folder of folders) {
-  const files = fs.readdirSync(`./commands/${folder}`);
-  console.log(`${files.length} ${folder} commands loaded`);
-  for(const file of files) {
-    try {
-      const command = require(`./commands/${folder}/${file}`);
-      client.commands.set(command.name, command);
-    } catch(e) {
-      console.log(e);
-    }
-  }
-}
-
 //Ready Event
 client.on("ready", async () => {
   console.log("Logged in!");
-  client.user.setActivity("HandCricket");
+  client.user.setActivity("Cricket");
+  
   const dbOptions = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
     useCreateIndex: true
   };
-  await mongoose.connect(process.env.MONGO, dbOptions).catch (e => {
-    console.log(e);
-    return;
-  });
-    
-  const brokenBoosts = require('./functions/brokenBoosts.js');
-  const brokenQuests = require('./functions/brokenQuests.js');
-  await brokenBoosts();
-  await brokenQuests();
+  try {
+    await mongoose.connect(process.env.MONGO, dbOptions);
+    console.log('Mongo Connected')
+  
+    await loadFiles();
+  
+    let loadFunctions = ['brokenQuests.js', 'brokenBoosts.js']
+    for(const loadFunction of loadFunctions) {
+      const execute = require(`./functions/${loadFunction}`);
+      execute(client, prefix);
+    }
+  } catch (e) {
+    return console.log(e);
+  };
 });
+
+function loadFiles() {
+  const listeners = fs.readdirSync('./features');
+  for(const listener of listeners) {
+    try {
+      const feature = require(`./features/${listener}`);
+      feature(client, prefix);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  const folders = fs.readdirSync('./commands').filter(folder => !folder.includes('.'));
+  for(const folder of folders) {
+    const files = fs.readdirSync(`./commands/${folder}`);
+    for(const file of files) {
+      try {
+        const command = require(`./commands/${folder}/${file}`);
+        client.commands.set(command.name, command);
+      } catch(e) {
+        console.log(e);
+      }
+    }
+  }
+  console.log(`${listeners.length} listeners loaded`);
+  console.log(`${client.commands.size} commands loaded`);
+}
 
 client.login(process.env.TOKEN);
 
