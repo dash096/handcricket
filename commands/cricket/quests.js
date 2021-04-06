@@ -94,54 +94,51 @@ module.exports = {
 function getFooter(data) {
   quests = data.quests || {};
   if(quests.time) {
-    return `Quest resets in ${((quests.time.getTime() - Date.now())/60).toFixed(2)} minutes`
+    let remainingMS = quests.time.getTime();
+    let nowMS = Date.now();
+    let remainingMS = remainingMS - nowMS;
+    let remainingS = remainingMS/1000;
+    let remainingM = remainingS/60;
+    let remainingH = (remainingM/60).toFixed(0);
+    let remainingMin = remainingM % 60;
+    let remainingTime = `${remainingH}hours ${remainingMin}mins`
+    return `Quest resets in ${remainingTime} minutes`
   } else {
-    return `Finish the quest!`
+    return `Finish the quest!`;
   }
 }
     
 async function checkIfCompleted(message, data, tick, cross) {
-  const quests = data.quests;
+  const quests = data.quests || {};
   
   const completedOnes = Object.values(quests).filter(value => value === true || value[0] === true);
   
-  if(completedOnes.length >= 2) {
+  const time = quests.time;
+  
+  if(time) {
+    return `${tick} Claimed - **Lootbox**`;
+  } else if (completedOnes.length >= 2) {
     message.reply('You have completed your daily quests and you got a lootbox');
     
     const bag = data.bag || {};
     const oldLootbox = bag.lootbox || 0;
     bag.lootbox = parseInt(oldLootbox) + 1;
     
-    const quests = data.quests || {};
-    
-    const time = quests.time;
-    if(time) return;
     const xp = parseInt(data.xp);
     
-    const newTime = 60 * 1000;
-    const DateTime = Date.now() + ( ( (60 * 60) * 12) * 1000);
+    const newTime = ((60 * 60) * 12) * 1000;
+    const DateTime = Date.now() + (newTime);
     const resetDate = new Date(DateTime);
-    
-    quests = reset(quest, resetDate);
-    await db.findOneAndUpdate({_id: data._id}, { $set:{ bag: bag, quests: quests, xp: (xp + 10) } });
+    quests.time = resetDate;
+    await db.findOneAndUpdate({_id: data._id}, { $set: {bag: bag, xp: xp + 6.9, quests: quests} });
     
     setTimeout(async () => {
       await db.findOneAndUpdate({_id: data._id}, { $unset: {quests: 'doesnt matter'}});
     }, newTime);
     
-    return `\`${tick} Claimed\` - **Lootbox**`;
+    return `${tick} Claimed - **Lootbox**`;
   } else {
     return `${cross} \`Rewards on completion of any three\` - **Lootbox**`;
   }
   
-}
-
-function reset(nabQuest, time) {
-  let quest = nabQuest;
-  quest.beFit = 0;
-  quest.duck = 0;
-  quest.tripWin = 0;
-  quest.support = false;;
-  quest.time = time;
-  return quests;
 }
