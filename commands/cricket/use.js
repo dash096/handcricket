@@ -16,7 +16,7 @@ module.exports = {
   cooldown: 7,
   run: async (message, args, prefix) => {
     const { content, author, channel, mentions } = message;
-    const emoji = (await getEmoji)[0];
+    const coinsEmoji = await getEmoji('coin');
     
     const itemArray = await checkItems(message);
     
@@ -72,7 +72,7 @@ module.exports = {
         }
         
         else if(parseInt(e2)) {
-          await msg.edit('You got a grand amount of **' + `${emoji} ${e2} coins!` + '**');
+          await msg.edit('You got a grand amount of **' + `${coinsEmoji} ${e2} coins!` + '**');
           updateCoins(parseInt(e2), playerData, message);
         }
       }, 5000);

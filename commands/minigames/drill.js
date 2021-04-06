@@ -1,6 +1,6 @@
 const gain = require('../../functions/gainExp.js');
 const db = require('../../schemas/player.js');
-const emojis = require('../../index.js');
+const getEmoji = require('../../index.js');
 const updateCoins = require('../cricket/train.js');
 const getErrors = require('../../functions/getErrors.js');
 
@@ -16,7 +16,7 @@ module.exports = {
   run: async (message, args, prefix, getTrain) => {
     const { content, author, channel, mentions } = message;
     
-    const coinEmoji = (await emojis)[0];
+    const coinEmoji = await getEmoji('coin');
     
     const train = getTrain || false;
     
@@ -52,10 +52,10 @@ module.exports = {
         const coins = (Math.random() * 363).toFixed(0);
         msg.reply(`Nice, You are good at running.`);
         if(train == true) msg.channel.send(`You got ${coinEmoji} ${coins} as Training rewards!`);
-        return [msg, true, coins];
+        return [msg, true, randoCoins];
       } else {
         msg.reply('Looks like you need to get quicker at running. sadge..');
-        return [msg, false, coins];
+        return [msg, false, randoCoins];
       }
       await gain(data, 2, message);
     } catch(e) {
@@ -82,7 +82,7 @@ function getRando(difficulty) {
         if(type == 2) rando.push(nums[Math.floor(Math.random() * nums.length)]);
         time = 7000;
       }
-    } else if(difficulty == 10) {
+    } else if(difficulty == 2) {
       let i;
       for(i = 0; i < 11; i++) {
         const type = Math.floor(Math.random() * 4);
@@ -90,7 +90,7 @@ function getRando(difficulty) {
         if(type == 2) rando.push(chars[Math.floor(Math.random() * chars.length)]);
         time = 8500;
       }
-    } else if(difficulty == 12) {
+    } else if(difficulty == 3) {
       let i;
       for(i = 0; i < 12; i++) {
         const type = Math.floor(Math.random() * 4);

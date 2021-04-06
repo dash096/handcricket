@@ -12,13 +12,13 @@ module.exports = {
   cooldown: 5,
   run: async (message, args, prefix) => {
     const { content, author, channel, mentions } = message;
-    const emoji = (await getEmoji)[0];
+    const coinEmoji = await getEmoji('coin');
     
     const target = mentions.users.first() || author;
     
     const data = await db.findOne({_id: target.id});
     
-    message.channel.send(`**${target.username}** has ${emoji} ${data.cc} coins.`);
+    message.channel.send(`**${target.username}** has ${coinEmoji} ${data.cc} coins.`);
     await gain(data, 1, message);
   }
 };

@@ -15,8 +15,8 @@ module.exports = {
     const { content, author, channel, mentions } = message;
     
     //Emojis
-    const coinEmoji = (await getEmoji)[0];
-    const pixel = (await getEmoji)[4];
+    const coinEmoji = await getEmoji('coin');
+    const pixel = await getEmoji('pixelHeart');
     
     let train = boolean || false;
     
@@ -125,7 +125,7 @@ async function getArray(start) {
 
 async function getLives(lives) {
  let i;
- const pixel = (await getEmoji)[4];
+ const pixel = await getEmoji('pixelHeart');
  let text = ``;
  for(i = 0; i < (lives - 1); i++) {
    text += `${pixel} `;

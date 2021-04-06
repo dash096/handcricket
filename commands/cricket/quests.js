@@ -13,8 +13,8 @@ module.exports = {
   run: async (message) => {
     const { channel, author, content } = message;
     
-    const tickEmoji = (await getEmoji)[5];
-    const crossEmoji = (await getEmoji)[6];
+    const tickEmoji = await getEmoji('ok');
+    const crossEmoji = await getEmoji('no');
     
     const data = await db.findOne({_id: author.id});
     
@@ -39,7 +39,7 @@ module.exports = {
     }
     function tripWin(name) {
       let stat = userQuests.tripWin || [0];
-      if(stat[0] == true) {
+      if(stat[0] === true) {
         return `${tickEmoji} **${name}** (3/3)`;
       }
       return `${crossEmoji} **${name}** (${stat[0]}/3)`;
@@ -76,21 +76,33 @@ module.exports = {
     
     text += `\n ${await checkIfCompleted(message, data, tickEmoji, crossEmoji)}`;
     
+    let footer = getFooter(data);
+    
     const embed = new Discord.MessageEmbed()
       .setTitle(`**${author.tag}**'s Quests`)
       .setDescription(`Here is a status of your quests\n\n${text}\n\n`)
       .setColor('BLUE')
-      .setFooter(`Vote the bot when?`);
+      .setFooter(footer);
       
     channel.send(embed);
   }
 };
 
+function getFooter(data) {
+  quests = data.quests || {};
+  if(quests.time) {
+    return `Quest resets in ${((quests.time.getTime() - Date.now())/60).toFixed(2)} minutes`
+  } else {
+    return `Finish the quest!`
+  }
+}
+    
 async function checkIfCompleted(message, data, tick, cross) {
   const quests = data.quests;
+  console.log(quests);
   const completedOnes = Object.values(quests).filter(value => value === true || value[0] === true);
   
-  if(completedOnes.length >= 3) {
+  if(completedOnes.length >= 2) {
     message.reply('You have completed your daily quests and you got a lootbox');
     
     const bag = data.bag || {};

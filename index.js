@@ -12,7 +12,7 @@ const db = require('./schemas/player.js');
 const prefix = 'e.';
 const { commands, cooldowns } = client;
 
-module.exports = getEmojis();
+module.exports = getEmojis;
 
 //Ready Event
 client.on("ready", async () => {
@@ -71,14 +71,8 @@ function loadFiles() {
 client.login(process.env.TOKEN);
 
 //Get Emojis
-async function getEmojis() {
+async function getEmojis(name) {
   const emojiGuild = await client.guilds.fetch('828269371699888178');
-  const coin = emojiGuild.emojis.cache.find(emoji => emoji.name === 'cc');
-  const full = emojiGuild.emojis.cache.find(emoji => emoji.name === 'full');
-  const half = emojiGuild.emojis.cache.find(emoji => emoji.name === 'half');
-  const empty = emojiGuild.emojis.cache.find(emoji => emoji.name === 'empty');
-  const pixel = emojiGuild.emojis.cache.find(emoji => emoji.name === 'PixelHeart');
-  const ok = emojiGuild.emojis.cache.find(emoji => emoji.name === 'ok');
-  const no = emojiGuild.emojis.cache.find(emoji => emoji.name === 'no');
-  return [coin, full, half, empty, pixel, ok, no];
+  const emoji = emojiGuild.emojis.cache.find(emoji => emoji.name == name);
+  return emoji;
 }

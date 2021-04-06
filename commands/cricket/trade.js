@@ -12,7 +12,7 @@ module.exports = {
   category: 'Cricket',
   syntax: 'e.send @user <coins/itemName> <amount>',
   cooldown: 10,
-  run: async (message, argsf, prefix) => {
+  run: async (message, nabArgs, prefix) => {
     const { content, author, channel, mentions } = message;
     
     const args = content.toLowerCase().trim().split(' ').slice(1);

@@ -14,7 +14,7 @@ module.exports = {
   cooldown: 10,
   run: async (message, args, prefix) => {
     const { content, author, channel, mentions } = message;
-    const coinEmoji = (await getEmoji)[0];
+    const coinEmoji = await getEmoji('coin');
     
     //Get items
     const itemsArray = await checkItems(message);

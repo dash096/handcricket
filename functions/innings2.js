@@ -6,7 +6,7 @@ const updateBag = require('./updateBag.js');
 
 //shuffled
 module.exports = async function(bowler, batsman, boS, baB, message, post) {
-  const emoji = (await getEmoji)[0];
+  const emoji = await getEmoji('coin');
   
   const target = boS;
   const mc = message.channel;

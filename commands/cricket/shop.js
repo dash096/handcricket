@@ -14,7 +14,7 @@ module.exports = {
   cooldown: 5,
   run: async (message, args, prefix) => {
     const { content, author, channel, mentions } = message;
-    const coinsEmoji = (await getEmoji)[0];
+    const coinsEmoji = await getEmoji('coin');
 
     const data = await db.findOne( {_id: author.id });
     

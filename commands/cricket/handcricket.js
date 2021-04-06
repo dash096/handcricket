@@ -1,6 +1,7 @@
 const db = require("../../schemas/player.js");
 const Discord = require("discord.js");
 const getErrors = require('../../functions/getErrors.js');
+const getEmoji = require('../../index.js');
 
 let fixStatus = true;
 
@@ -12,6 +13,7 @@ module.exports = {
   syntax: 'e.handcricket @user --post (to post scores in channel)',
   cooldown: 10,
   run: async (message, args, prefix) => {
+    const tossEmoji = await getEmoji('toss');
     const { content, author, channel, mentions } = message;
     //Players
     const user = author;
@@ -118,7 +120,7 @@ module.exports = {
       if (user.tossMulti > target.tossMulti) {
         //Users with roll.
         if (roll < user.tossMulti) {
-          const rolling = await channel.send('Rolling the Lucky Coin....');
+          const rolling = await channel.send(`Rolling the ${tossEmoji} Lucky Coin....`);
           setTimeout( () => {
             rolling.edit(`${user} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
           }, 3000);
@@ -127,7 +129,7 @@ module.exports = {
 
         //Target wins with roll.
         if (roll >= user.tossMulti) {
-          const rolling = await channel.send('Rolling the Lucky Coin....');
+          const rolling = await channel.send(`Rolling the ${tossEmoji} Lucky Coin....`);
           setTimeout( () => {
             rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
           }, 3000);
@@ -139,7 +141,7 @@ module.exports = {
       if (user.tossMulti < target.tossMulti) {
         //Target wins with roll
         if (roll < target.tossMulti) {
-          const rolling = await channel.send('Rolling the Lucky Coin....');
+          const rolling = await channel.send(`Rolling the ${tossEmoji} Lucky Coin....`);
           setTimeout( () => {
             rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
           }, 3000);
@@ -148,7 +150,7 @@ module.exports = {
 
         //User wins with roll
         if (roll >= target.tossMulti) {
-          const rolling = await channel.send('Rolling the Lucky Coin....');
+          const rolling = await channel.send(`Rolling the ${tossEmoji} Lucky Coin....`);
           setTimeout( () => {
             rolling.edit(`${user} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
           }, 3000);
@@ -161,7 +163,7 @@ module.exports = {
         const roll2 = Math.floor(Math.random() * 3);
 
         if (roll2 === 1) { //User wins
-          const rolling = await channel.send('Rolling the Lucky Coin....');
+          const rolling = await channel.send(`Rolling the ${tossEmoji} Lucky Coin....`);
           setTimeout( () => {
             rolling.edit(`${user} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
           }, 3000);
@@ -169,7 +171,7 @@ module.exports = {
         }
 
         if (roll2 === 2) { //Target wins
-          const rolling = await channel.send('Rolling the Lucky Coin....');
+          const rolling = await channel.send(`Rolling the ${tossEmoji} Lucky Coin....`);
           setTimeout( () => {
             rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
           }, 3000);

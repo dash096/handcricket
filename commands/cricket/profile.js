@@ -14,7 +14,7 @@ module.exports = {
   cooldown: 6,
   run: async (message, args, prefix) => {
     const { content, author, channel, mentions } = message;
-    const coinEmoji = (await getEmoji)[0];
+    const coinEmoji = await getEmoji('coin');
     
     const target = mentions.users.first() || message.author;
 
@@ -60,9 +60,9 @@ async function getXPLine(xp) {
   const pair = await getPreceedingPair(levels, xp); //[level ,xp]
   
   //Get emojis!!!!!
-  const full = (await getEmoji)[1];
-  const half = (await getEmoji)[2];
-  const empty = (await getEmoji)[3];
+  const full = await getEmoji('full');
+  const half = await getEmoji('half');
+  const empty = await getEmoji('empty');
   
   //Get Suceeding Level and xp
   let pxp = xp - pair[1];
@@ -104,7 +104,7 @@ async function getXPLine(xp) {
     emojis += `${half}`;
   }
   
-  const line = add5(emojis);
+  const line = add5(emojis, empty);
   return line;
 }
 
@@ -125,9 +125,7 @@ async function getPreceedingPair(levels, xp) {
   return pair;
 }
 
-async function add5(text) {
-  const empty = (await getEmoji)[3];
-  
+async function add5(text, empty) {
   let emojis = text;
   
   let splitted = text.split('><');
