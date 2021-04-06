@@ -21,9 +21,9 @@ module.exports = {
         console.log(e);
         message.reply("You are already a player nab.");
         return;
-      }
-
+      } else {
       message.reply("Get the party started");
+      }
     });
   }
 };

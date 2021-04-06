@@ -30,10 +30,10 @@ module.exports = (client, prefix) => {
     const data = await db.findOne({
       _id: author.id
     });
-    if (!data && ignore !== true) {
+    if (ignore !== true && !data) {
       return message.reply(getErrors('data', author));
     }
-    if (data.status === true && ignore !== true) return;
+    if (ignore !== true && data.status === true ) return;
     
     //Check Perms
     if (command.permissions) {
