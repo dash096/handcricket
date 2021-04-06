@@ -19,6 +19,7 @@ module.exports = {
     const data = await db.findOne({_id: author.id});
     
     const userQuests = data.quests;
+    
     //Status
     function beFit(name) {
       let stat = userQuests.beFit || 0;
@@ -66,7 +67,9 @@ module.exports = {
          return duck(name);
       }
     }
+    
     let text = ``;
+    
     const quests = await questDB.find();
     for(const quest of quests) {
       const namestatus = whatQuest(quest.name);
@@ -99,7 +102,7 @@ function getFooter(data) {
     
 async function checkIfCompleted(message, data, tick, cross) {
   const quests = data.quests;
-  console.log(quests);
+  
   const completedOnes = Object.values(quests).filter(value => value === true || value[0] === true);
   
   if(completedOnes.length >= 2) {
@@ -117,9 +120,9 @@ async function checkIfCompleted(message, data, tick, cross) {
     
     const newTime = 60 * 1000;
     const DateTime = Date.now() + ( ( (60 * 60) * 12) * 1000);
-    const Date = new Date(DateTime);
+    const resetDate = new Date(DateTime);
     
-    quests = reset(quest, Date);
+    quests = reset(quest, resetDate);
     await db.findOneAndUpdate({_id: data._id}, { $set:{ bag: bag, quests: quests, xp: (xp + 10) } });
     
     setTimeout(async () => {
@@ -138,7 +141,7 @@ function reset(nabQuest, time) {
   quest.beFit = 0;
   quest.duck = 0;
   quest.tripWin = 0;
-  quest.support = 0;
+  quest.support = false;;
   quest.time = time;
   return quests;
 }
