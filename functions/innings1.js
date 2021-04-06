@@ -14,6 +14,8 @@ module.exports = async function(batsman, bowler, message, post) {
   const ballEmbed = await bowler.send(embed);
   
   let batDots = 0;
+  let useDot = false;
+  
   const batArray = [0];
   const ballArray = [0];
 
@@ -91,7 +93,6 @@ module.exports = async function(batsman, bowler, message, post) {
       let newScore = (await batArray[batArray.length - 1]) + parseInt(c);
       let bowled = await ballArray[ballArray.length - 1];
 
-      let useDot = false;
       //End the match
       if (c.toLowerCase() === "end") {
         changeStatus(batsman, bowler);
@@ -104,10 +105,15 @@ module.exports = async function(batsman, bowler, message, post) {
       else if (isNaN(c)) {
         bowler.send(`\`${batsman.username}\`:  ${c}`);
         return loopBatCollect();
-      } 
+      }
       //Wait for the ball
       else if (ballArray.length === batArray.length) {
         batsman.send("Wait for the ball dude");
+        return loopBatCollect();
+      }
+      //Number validation
+      else if (c > 6) {
+        batsman.send("Max number that can be hit is 6");
         return loopBatCollect();
       }
       //Dot
@@ -132,13 +138,8 @@ module.exports = async function(batsman, bowler, message, post) {
           c = bowled;
         }
       }
-      //Number validation
-      if (c > 6) {
-        batsman.send("Max number that can be hit is 6");
-        return loopBatCollect();
-      }
       //Wicket
-      else if (parseInt(bowled) === parseInt(c) && useDot == false) {
+      if (parseInt(bowled) === parseInt(c) && useDot == false) {
         timeoutDecider = false;
         await batsman.send("Wicket! The bowler bowled " + bowled);
         await bowler.send("Wicket! The batsman hit " + c);

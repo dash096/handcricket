@@ -118,7 +118,7 @@ module.exports = {
       if (user.tossMulti > target.tossMulti) {
         //Users with roll.
         if (roll < user.tossMulti) {
-          const rolling = await channel.send('Rolling the Coin of Wisdom....');
+          const rolling = await channel.send('Rolling the Lucky Coin....');
           setTimeout( () => {
             rolling.edit(`${user} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
           }, 3000);
@@ -127,7 +127,7 @@ module.exports = {
 
         //Target wins with roll.
         if (roll >= user.tossMulti) {
-          const rolling = await channel.send('Rolling the Coin of Wisdom....');
+          const rolling = await channel.send('Rolling the Lucky Coin....');
           setTimeout( () => {
             rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
           }, 3000);
@@ -139,7 +139,7 @@ module.exports = {
       if (user.tossMulti < target.tossMulti) {
         //Target wins with roll
         if (roll < target.tossMulti) {
-          const rolling = await channel.send('Rolling the Coin of Wisdom....');
+          const rolling = await channel.send('Rolling the Lucky Coin....');
           setTimeout( () => {
             rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
           }, 3000);
@@ -148,7 +148,7 @@ module.exports = {
 
         //User wins with roll
         if (roll >= target.tossMulti) {
-          const rolling = await channel.send('Rolling the Coin of Wisdom....');
+          const rolling = await channel.send('Rolling the Lucky Coin....');
           setTimeout( () => {
             rolling.edit(`${user} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
           }, 3000);
@@ -161,7 +161,7 @@ module.exports = {
         const roll2 = Math.floor(Math.random() * 3);
 
         if (roll2 === 1) { //User wins
-          const rolling = await channel.send('Rolling the Coin of Wisdom....');
+          const rolling = await channel.send('Rolling the Lucky Coin....');
           setTimeout( () => {
             rolling.edit(`${user} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
           }, 3000);
@@ -169,7 +169,7 @@ module.exports = {
         }
 
         if (roll2 === 2) { //Target wins
-          const rolling = await channel.send('Rolling the Coin of Wisdom....');
+          const rolling = await channel.send('Rolling the Lucky Coin....');
           setTimeout( () => {
             rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
           }, 3000);

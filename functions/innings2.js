@@ -10,17 +10,9 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
   
   const target = boS;
   const mc = message.channel;
+  
   let batDots = 0;
   let useDot = false;
-  
-  function getCoins(data) {
-    let coinMulti = data.coinMulti;
-    if (coinMulti === 0) coinMulti = 0.2;
-    const multi = coinMulti * 696;
-    const rando = Math.random() * multi.toFixed(0);
-    const coins = rando.toFixed(0);
-    return coins;
-  }
 
   const embed = new Discord.MessageEmbed()
     .setTitle('Cricket Match - Second Innings')
@@ -229,4 +221,13 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
 async function changeStatus(a,b) {
   await db.findOneAndUpdate({_id: a.id}, { $set: { status: false } } );
   await db.findOneAndUpdate({_id: b.id}, { $set: { status: false } } );
+}
+
+function getCoins(data) {
+  let coinMulti = data.coinMulti;
+  if (coinMulti === 0) coinMulti = 0.2;
+  const multi = coinMulti * 696;
+  const rando = Math.random() * multi.toFixed(0);
+  const coins = rando.toFixed(0);
+  return coins;
 }
