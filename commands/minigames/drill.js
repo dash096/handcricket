@@ -78,7 +78,6 @@ function getRando(difficulty) {
       let i;
       for(i = 0; i < 8; i++) {
         const type = Math.floor(Math.random() * 4);
-        console.log(i);
         if(type == 1 || type == 3) rando.push(alphs[Math.floor(Math.random() * alphs.length)]);
         if(type == 2) rando.push(nums[Math.floor(Math.random() * nums.length)]);
         time = 7000;
@@ -87,7 +86,6 @@ function getRando(difficulty) {
       let i;
       for(i = 0; i < 11; i++) {
         const type = Math.floor(Math.random() * 4);
-        console.log(type);
         if(type == 1 || type == 3) rando.push(nums[Math.floor(Math.random() * nums.length)]);
         if(type == 2) rando.push(chars[Math.floor(Math.random() * chars.length)]);
         time = 8500;
@@ -96,7 +94,6 @@ function getRando(difficulty) {
       let i;
       for(i = 0; i < 12; i++) {
         const type = Math.floor(Math.random() * 4);
-        console.log(type);
         if(type == 1 || type == 3) rando.push(chars[Math.floor(Math.random() * chars.length)]);
         if(type == 2) rando.push(nums[Math.floor(Math.random() * nums.length)]);
         time = 10000;
