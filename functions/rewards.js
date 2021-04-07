@@ -26,7 +26,6 @@ module.exports = async function(winner, loser, coins, wS, wB, lS, lB, channel) {
   if(winnerDuck !== true && wB == 2) {
     winnerQuests.duck = true;
   }
-  
   //TripWin?
   let winnerTripArray = winnerQuests.tripWin || [];
   let winnerTrip = winnerTripArray[0] || 0;

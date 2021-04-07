@@ -147,7 +147,7 @@ module.exports = async function(batsman, bowler, message, post) {
         await batsman.send("Wicket! The bowler bowled " + bowled);
         await bowler.send("Wicket! The batsman hit " + c);
         if (post === true) await mc.send(`**${batsman.tag}** wicket!!! He hit ${c}, and was bowled ${bowled} by **${bowler.username}**`);
-        await secondInnings( batsman, bowler, batArray[batArray.length - 1] + 1, await (ballArray.length - 1), mc, post );
+        await secondInnings( batsman, bowler, batArray[batArray.length - 1] + 1, await ballArray.length, mc, post );
         return;
       } else { //Push
         useDot = false;

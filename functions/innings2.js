@@ -186,7 +186,7 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
         batsman.send(`Score is ${newScore}! The bowler bowled ${bowled}! You won a grand amount of ${emoji} ${coins}!`);
         bowler.send(`Batsman score is ${newScore}! The batsman hit ${c}! You lost... sadge`);
         if(post === true) mc.send(`**${batsman.tag}** crossed the target!! HE **WON**!! He hit ${c} and was bowled ${bowled} by **${bowler.tag}**`);
-        rewards(batsman, bowler,  coins, baS, baB, boS, boB, mc);
+        rewards(batsman, bowler, coins, baS, baB, boS, boB, mc);
         
         changeStatus(batsman,bowler);
         timeoutDecider = false;
