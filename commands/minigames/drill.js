@@ -17,29 +17,29 @@ module.exports = {
   run: async (message, args, prefix, getTrain) => {
     const { content, author, channel, mentions } = message;
     
-    const coinEmoji = await getEmoji('coin');
-    
-    const train = getTrain || false;
-    
-    const randoCoins = (Math.random() * 363).toFixed(0);
-    
-    //Data Validation
-    const data = await db.findOne({_id: author.id});
-    if(!data) return message.reply(getErrors('data', author));
-    
-    await db.findOneAndUpdate({_id: author.id}, { $set: { status: true} } );
-    
-    //Difficulty
-    const opt = [1,1,2,2,3];
-    const roll = opt[Math.floor(Math.random() * opt.length)];
-    
     try {
+      const coinEmoji = await getEmoji('coin');
+    
+      const train = getTrain || false;
+    
+      const randoCoins = (Math.random() * 363).toFixed(0);
+    
+      //Data Validation
+      const data = await db.findOne({_id: author.id});
+      if(!data) return message.reply(getErrors('data', author));
+    
+      await db.findOneAndUpdate({_id: author.id}, { $set: { status: true} } );
+    
+      //Difficulty
+      const opt = [1,1,2,2,3];
+      const roll = opt[Math.floor(Math.random() * opt.length)];
+      const rando = getRando(roll); //Gets text
+      
       await channel.send('The coach decided on running drill now . You will be running a 100m race . Type the upcoming message in the right order.');
       await channel.send('Ready');
       await channel.send('Go!');
-      
-      const rando = getRando(roll); //Gets text
       await channel.send(`Type this within ${time/1000} seconds.. \`${rando}\``);
+      
       //Msg Collector
       const answers = await channel.awaitMessages(m => m.author.id === author.id, {
         max: 1,
@@ -53,15 +53,17 @@ module.exports = {
         const coins = (Math.random() * 363).toFixed(0);
         msg.reply(`Nice, You are good at running.`);
         if(train == true) msg.channel.send(`You got ${coinEmoji} ${coins} as Training rewards!`);
-        return [msg, true, randoCoins];
+        return [true, randoCoins];
       } else {
         msg.reply('Looks like you need to get quicker at running. sadge..');
-        return [msg, false, randoCoins];
+        return [false, randoCoins];
       }
       await gain(data, 2, message);
+      return [false, 0];
     } catch(e) {
       console.log(e);
       message.reply(getErrors('time'));
+      return [false, 1]
     } finally {
       await db.findOneAndUpdate( { _id: author.id }, { $set: { status: false} });
     }

@@ -15,77 +15,85 @@ module.exports = {
   run: async (message, args, prefix, client, boolean) => {
     const { content, author, channel, mentions } = message;
     
-    //Emojis
-    const coinEmoji = await getEmoji('coin');
-    const pixel = await getEmoji('pixelHeart');
+    try {
+      //Emojis
+      const coinEmoji = await getEmoji('coin');
+      const pixel = await getEmoji('pixelHeart');
     
-    let train = boolean || false;
+      let train = boolean || false;
     
-    //Data Validation
-    const data = await db.findOne({_id: author.id});
-    if(!data) return channel.reply(getErrors('data', author));
+      //Data Validation
+      const data = await db.findOne({_id: author.id});
+      if(!data) return channel.reply(getErrors('data', author));
     
-    await db.findOneAndUpdate({_id: author.id}, { $set: { status: true} } );
+      await db.findOneAndUpdate({_id: author.id}, { $set: { status: true} } );
     
-    //Numbers
-    const between = 12;
-    const start = Math.floor(Math.random() * 100);
-    const end = start + between;
-    const array = await getArray(start, between);
-    const number = array[Math.floor(Math.random() * array.length)];
-    let lives = 3;
+      //Numbers
+      const between = 12;
+      const start = Math.floor(Math.random() * 100);
+      const end = start + between;
+      const array = await getArray(start, between);
+      const number = array[Math.floor(Math.random() * array.length)];
+      let lives = 3;
     
-    //Send Embed
-    const embed = new Discord.MessageEmbed()
-      .setTitle(`Guess The Number! ${pixel} ${pixel} ${pixel}`)
-      .setColor('BLUE')
-      .setDescription(`**You got 3 lives to guess the number in my mind!**\n That number is between ${start} and ${end}.`)
-      .setFooter('I am playing with ' + author.tag);
+      //Send Embed
+      const embed = new Discord.MessageEmbed()
+        .setTitle(`Guess The Number! ${pixel} ${pixel} ${pixel}`)
+        .setColor('BLUE')
+        .setDescription(`**You got 3 lives to guess the number in my mind!**\n That number is between ${start} and ${end}.`)
+        .setFooter('I am playing with ' + author.tag);
       
-    await channel.send(embed);
+      await channel.send(embed);
     
-    const toReturn = await play();
-    
-    async function play() {
-      try {
+      let returnThis = [];
+      await play();
+      
+      return returnThis;
+      
+      async function play() {
         const collected = await channel.awaitMessages(msg => msg.author.id === author.id, {
           max: 1,
           time: 30000,
           errors: ['time']
         });
-        const randoCoins = (Math.random() * 464).toFixed(0);
+        const randoCoins = parseInt((Math.random() * 464).toFixed(0));
         const msg = collected.first();
         const guess = msg.content;
-        let win = false;
-    
+        
         const edit = new Discord.MessageEmbed()
-         .setTitle('Guess the Number ' + `${await getLives(lives)}`)
-         .setDescription(`**You got ${lives} more  to guess the number in my mind!**\n That number is between ${start} and ${end}.`)
-         .setColor('BLUE')
-         .setFooter('Im playing with ' + author.tag);
+          .setTitle('Guess the Number ' + `${await getLives(lives)}`)
+          .setDescription(`**You got ${lives} more  to guess the number in my mind!**\n That number is between ${start} and ${end}.`)
+          .setColor('BLUE')
+          .setFooter('Im playing with ' + author.tag);
      
         if(guess.toLowerCase() == 'end') {
           channel.send('Game Ended');
           await channel.send(`You got some experience.`);
           await gainExp(data, 0.5, message);
-          return [message, win, 0];
+          await returnThis.push(false);
+          await returnThis.push(0);
+          return;
         } else if(isNaN(guess)) {
           lives -= 1;
           edit.setDescription('Wrong answer! ' + `\`${guess}\`` + ' is not even a number!');
           channel.send(edit);
-          if(lives == 0) {
+          if(lives === 0) {
             channel.send('You lost! I thought of ' + number);
             await gainExp(data, 2, message);
-            return [message, win, randoCoins];
+            await returnThis.push(false);
+            await returnThis.push(randoCoins);
+            return;
+          } else {
+            return play();
           }
-          return play();
         } else if (guess == number) {
           edit.setDescription('Correct Answer! You are good at guessing!');
           channel.send(edit);
           if(train == true) channel.send(`You got ${coinEmoji} ${randoCoins} as Training rewards!`);
           await gainExp(data, 3, message);
-          win = true;
-          return [message, win, randoCoins];
+          await returnThis.push(true);
+          await returnThis.push(randoCoins);
+          return;
         } else {
           lives -= 1;
           edit.setDescription('Wrong answer! ' + guess + ` is ${getGteLte(guess,  number)} the number I thought!`);
@@ -93,17 +101,20 @@ module.exports = {
           if(lives == 0) {
             channel.send('You lost! I thought of ' + number);
             await gainExp(data, 2, message);
-            return [message, win, randoCoins];
+            await returnThis.push(false);
+            await returnThis.push(randoCoins);
+            return;
           }
-          return play();
+          return play()
         }
-      } catch (e) {
-        channel.send(getErrors('time'));
-      } finally {
-        await db.findOneAndUpdate( { _id: author.id }, { $set: { status: false} });
       }
+    } catch (e) {
+      console.log(e);
+      channel.send(getErrors('time'));
+      return [false, 0];
+    } finally {
+      await db.findOneAndUpdate( { _id: author.id }, { $set: { status: false} });
     }
-    return toReturn;
   }
 };
 
@@ -113,7 +124,6 @@ async function getArray(start, more) {
   let i;
   for(i = 0; i < more; i++) {
     start += 1;
-    console.log(start);
     arr.push(start);
   }
   return arr;

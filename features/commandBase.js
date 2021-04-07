@@ -13,29 +13,22 @@ module.exports = (client, prefix) => {
 
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
-
+    
     //Check Aliases
     const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
     if (!command) return;
     
     //Status
-    let statusRequired= false;
-    if(command.status) statusRequired = true;
+    let statusRequired = false;
+    if(command.status === true) statusRequired = true;
     
     //Check engagement
     const data = await db.findOne({ _id: author.id });
-    if (!data && commandName != 'start') {
+    if (!data && command.name != 'start') {
       return message.reply(getErrors('data', author));
     }
-    if (statusRequired === true && data.status === true ) return message.reply('You are already engaged in a game');
     
-    //Check Perms
-    if (command.permissions) {
-      const authorPerms = message.channel.permissionsFor(message.author);
-      if (!authorPerms || !authorPerms.has(command.permissions)) {
-        return message.reply('Missing perms. Sus!');
-      }
-    }
+    if (statusRequired === true && data.status) return message.reply('You are already engaged in a game, and you cant use the command - ' + command.name.charAt(0).toUpperCase() + command.name.slice(1));
 
     //Cooldowns
     if (!cooldowns.has(command.name)) {
@@ -64,7 +57,7 @@ module.exports = (client, prefix) => {
 
     //Run Command
     try {
-      command.run(message, args.slice(1), prefix, client);
+      command.run(message, args, prefix, client);
     } catch (error) {
       console.error(error);
       message.reply('there was an error trying to execute that command!');
