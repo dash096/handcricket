@@ -28,9 +28,10 @@ module.exports = {
     await db.findOneAndUpdate({_id: author.id}, { $set: { status: true} } );
     
     //Numbers
+    const between = 12;
     const start = (Math.random() * 100).toFixed(0);
-    const end = parseInt(start) + 10;
-    const array = await getArray(parseInt(start));
+    const end = parseInt(start) + between;
+    const array = await getArray(parseInt(start, between));
     const number = array[Math.floor(Math.random() * array.length)];
     let lives = 3;
     
@@ -106,22 +107,11 @@ module.exports = {
   }
 };
 
-async function getArray(start) {
+async function getArray(start, between) {
   const arr = [];
-  await arr.push(start);
-  await arr.push(start + 1);
-  await arr.push(start + 2);
-  await arr.push(start + 3);
-  await arr.push(start + 4);
-  await arr.push(start + 5);
-  await arr.push(start + 6);
-  await arr.push(start + 7);
-  await arr.push(start + 8);
-  await arr.push(start + 9);
-  await arr.push(start + 10);
-  await arr.push(start + 11);
-  await arr.push(start + 12);
-  await arr.push(start + 13);
+  for(var i = start; i < (start + between); i++) {
+    arr.push(i);
+  }
   return arr;
 }
 
