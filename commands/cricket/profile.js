@@ -41,7 +41,7 @@ module.exports = {
     
     const embed = new Discord.MessageEmbed()
       .setTitle(`Profile of **${target.tag}**`)
-      .setThumbnail(target.displayAvatarURL({size: 16, dynamic: true}))
+      .setThumbnail(target.displayAvatarURL({size: 64}))
       .addField("Level - " + `${level} \`${xpFixed}xp\``,
       `**Next level:** ${XPLine} \`${targetXP}xp\` `)
       .addField("Balance", ` ${coinEmoji} ${data.cc}`, true)
@@ -56,7 +56,7 @@ module.exports = {
     message.reply(embed);
     await gain(data, 1, message);
   }
-};
+}
 
 async function getXPLine(xp) {
   
