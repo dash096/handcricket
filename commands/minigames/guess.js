@@ -109,11 +109,11 @@ module.exports = {
 
 async function getArray(start, between) {
   const arr = [];
-<<<<<<< HEAD
+  
   for(var i = start; i < (start + between); i++) {
     arr.push(i);
   }
-=======
+  
   await arr.push(start);
   await arr.push(start + 1);
   await arr.push(start + 2);
@@ -126,7 +126,6 @@ async function getArray(start, between) {
   await arr.push(start + 9);
   await arr.push(start + 10);
   await arr.push(start + 11);
->>>>>>> parent of e8569e4... Code development
   return arr;
 }
 
