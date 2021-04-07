@@ -29,9 +29,9 @@ module.exports = {
     
     //Numbers
     const between = 12;
-    const start = (Math.random() * 100).toFixed(0);
-    const end = parseInt(start) + between;
-    const array = await getArray(parseInt(start, between));
+    const start = Math.floor(Math.random() * 100);
+    const end = start + between;
+    const array = await getArray(start, between);
     const number = array[Math.floor(Math.random() * array.length)];
     let lives = 3;
     
@@ -107,25 +107,15 @@ module.exports = {
   }
 };
 
-async function getArray(start, between) {
+async function getArray(start, more) {
   const arr = [];
   
-  for(var i = start; i < (start + between); i++) {
-    arr.push(i);
+  let i;
+  for(i = 0; i < more; i++) {
+    start += 1;
+    console.log(start);
+    arr.push(start);
   }
-  
-  await arr.push(start);
-  await arr.push(start + 1);
-  await arr.push(start + 2);
-  await arr.push(start + 3);
-  await arr.push(start + 4);
-  await arr.push(start + 5);
-  await arr.push(start + 6);
-  await arr.push(start + 7);
-  await arr.push(start + 8);
-  await arr.push(start + 9);
-  await arr.push(start + 10);
-  await arr.push(start + 11);
   return arr;
 }
 
