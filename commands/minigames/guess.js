@@ -120,6 +120,8 @@ async function getArray(start) {
   await arr.push(start + 9);
   await arr.push(start + 10);
   await arr.push(start + 11);
+  await arr.push(start + 12);
+  await arr.push(start + 13);
   return arr;
 }
 

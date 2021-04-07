@@ -121,6 +121,8 @@ module.exports = {
         }
         embed.delete();
         return;
+      } finally {
+        await db.findOneAndUpdate({_id: author.id}, { $set: {status: false} });
       }
     }
   }
