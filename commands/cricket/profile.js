@@ -41,7 +41,7 @@ module.exports = {
     
     const embed = new Discord.MessageEmbed()
       .setTitle(`Profile of **${target.tag}**`)
-      .setThumbnail(author.displayAvatarURL())
+      .setThumbnail(target.displayAvatarURL())
       .addField("Level - " + `${level} \`${xpFixed}xp\``,
       `**Next level:** ${XPLine} \`${targetXP}xp\` `)
       .addField("Balance", ` ${coinEmoji} ${data.cc}`, true)
