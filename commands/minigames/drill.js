@@ -12,6 +12,7 @@ module.exports = {
   description: 'Coach coming! Run the Drill! Exercise!',
   category: 'Minigames',
   syntax: 'e.run',
+  status: true,
   cooldown: 60,
   run: async (message, args, prefix, getTrain) => {
     const { content, author, channel, mentions } = message;

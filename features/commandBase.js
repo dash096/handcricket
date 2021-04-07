@@ -18,22 +18,16 @@ module.exports = (client, prefix) => {
     const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
     if (!command) return;
     
-    //Ignore some commands for status
-    let ignore = false;
-    const ignoreCommands = ['start', 'status'];
-    for(const ignoreCommand of ignoreCommands) {
-      if(ignoreCommand == commandName) {
-        ignore = true;
-      }
-    }
+    //Status
+    let statusRequired= false;
+    if(command.status) statusRequired = true;
+    
     //Check engagement
-    const data = await db.findOne({
-      _id: author.id
-    });
-    if (ignore !== true && !data) {
+    const data = await db.findOne({ _id: author.id });
+    if (!data && commandName != 'start') {
       return message.reply(getErrors('data', author));
     }
-    if (ignore !== true && data.status === true ) return;
+    if (statusRequired === true && data.status === true ) return message.reply('You are already engaged in a game');
     
     //Check Perms
     if (command.permissions) {

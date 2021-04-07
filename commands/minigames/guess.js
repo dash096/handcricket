@@ -10,6 +10,7 @@ module.exports = {
   description: 'Guess The Number! Train your brain!',
   category: 'Minigames',
   syntax: 'e.guess',
+  status: true,
   cooldown: 60,
   run: async (message, args, prefix, client, boolean) => {
     const { content, author, channel, mentions } = message;

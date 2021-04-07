@@ -11,6 +11,7 @@ module.exports = {
   description: "Play handcricket with a user",
   category: 'Cricket',
   syntax: 'e.handcricket @user --post (to post scores in channel)',
+  status: true,
   cooldown: 10,
   run: async (message, args, prefix) => {
     const tossEmoji = await getEmoji('toss');

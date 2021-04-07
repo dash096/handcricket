@@ -8,6 +8,7 @@ module.exports = {
   description: 'Exercise, Fitness, Be Firm',
   category: 'Cricket',
   syntax: 'e.train',
+  status: true,
   cooldown: 600,
   run: async (message, args, prefix, client) => {
     const { content, author, channel, mentions } = message;
