@@ -44,11 +44,12 @@ module.exports = {
         } else {
           quests.beFit = newValue;
         }
+        await db.findOneAndUpdate({ _id: author.id }, { $set: { quests: quests } } );
       }
     } catch (e) {
       console.log(e);
     } finally {
-      await db.findOneAndUpdate({_id: author.id}, { $set: { quests: quests, status: false } });
+      await db.findOneAndUpdate({_id: author.id}, { $set: { status: false } });
     }
   }
 };
@@ -64,6 +65,7 @@ async function updateCoins(message, win, amount) {
     coins = (amount / 2).toFixed(0);
   }
   const oldcc = data.cc;
+  console.log(oldcc + parseInt(coins));
   await db.findOneAndUpdate({_id: data._id}, {$set: {cc: parseInt(oldcc) + parseInt(coins)}});
   return coins;
 }
