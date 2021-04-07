@@ -109,9 +109,24 @@ module.exports = {
 
 async function getArray(start, between) {
   const arr = [];
+<<<<<<< HEAD
   for(var i = start; i < (start + between); i++) {
     arr.push(i);
   }
+=======
+  await arr.push(start);
+  await arr.push(start + 1);
+  await arr.push(start + 2);
+  await arr.push(start + 3);
+  await arr.push(start + 4);
+  await arr.push(start + 5);
+  await arr.push(start + 6);
+  await arr.push(start + 7);
+  await arr.push(start + 8);
+  await arr.push(start + 9);
+  await arr.push(start + 10);
+  await arr.push(start + 11);
+>>>>>>> parent of e8569e4... Code development
   return arr;
 }
 
