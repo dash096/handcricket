@@ -14,26 +14,32 @@ module.exports = {
   cooldown: 5,
   run: async (message, args, prefix) => {
     const { content, author, channel, mentions } = message;
-    const coinsEmoji = await getEmoji('coin');
+    const coinsEmoji = await getEmoji('smallcoin');
 
     const data = await db.findOne( {_id: author.id });
     
     const docs = await itemDb.find({}).sort({_id: 1});
-    let text = '';
     
-    docs.forEach(doc => {
-      const title = doc.name.charAt(0).toUpperCase() + doc.name.slice(1);
-      text += `**${title} - ${coinsEmoji} ${doc._id}**\n\n`;
-      text += `${doc.description}\n\n`;
-    });
+    let meh = 0;
+    let text = `You can buy an item by typing "!buy <name> <amount>", you have a total of ${coinsEmoji} ${data.cc}\n\n`;
     
     const embed = new Discord.MessageEmbed()
       .setTitle(`Shop Items`)
-      .setDescription(`You can buy an item by typing "!buy <name> <amount>", you have a total of ${coinsEmoji} ${data.cc}\n\n` + text)
+      .setDescription(text)
       .setFooter(`Requested by ${author.tag}`)
       .setColor('#2d61b5');
-
-    await message.reply(embed);
-    await gain(data, 1, message);
+        
+    docs.forEach(async doc => {
+      const title = doc.name.charAt(0).toUpperCase() + doc.name.slice(1);
+      const itemEmoji = await getEmoji(doc.name)
+      text += `** ${itemEmoji} ${title}** - [${doc._id}](https://egal)`;
+      text += `\n${doc.description}\n\n`;
+      embed.setDescription(text);
+      meh += 1;
+      if(meh === docs.length) {
+        await message.reply(embed);
+        await gain(data, 1, message);
+      }
+    });
   }
 };
