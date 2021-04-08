@@ -3,7 +3,7 @@ const getEmoji = require('../index.js');
 const getErrors = require('./getErrors.js');
 
 module.exports = async function (what, amount, user, target, msg) {
-  const emoji = (await getEmoji)[0];
+  const coinEmoji = await getEmoji('coin');
   
   const args = msg.content.trim().split(' ');
   
@@ -21,7 +21,7 @@ module.exports = async function (what, amount, user, target, msg) {
       //Update Db 
       await db.findOneAndUpdate({ _id: user.id }, { $set: {cc: oldUserCC - parseInt(amount)} });
       await db.findOneAndUpdate({ _id: target.id }, { $set: {cc: oldTargetCC + parseInt(amount)} });
-      msg.reply("Successfully Traded " + `${emoji} ${amount}` + " coins!");
+      msg.reply("Successfully Traded " + `${coinEmoji} ${amount}` + " coins!");
     }
   }
   else {

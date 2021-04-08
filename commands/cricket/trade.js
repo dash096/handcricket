@@ -16,18 +16,21 @@ module.exports = {
     const { content, author, channel, mentions } = message;
     
     const args = content.toLowerCase().trim().split(' ').slice(1);
+    
     //User
     const user = author;
-    //Data
-    if(!userData) return message.reply(getErrors('data', user));
     
     //Target
     const target = mentions.users.first();
     if(!target || target.bot || target.id === author.id) return message.reply('The target is not valid.');
     
     //Data
+    const userData = await db.findOne({_id: user.id});
+    if(!userData) return message.reply(getErrors('data', user));
+    
     const targetData = await db.findOne({_id: target.id});
     if(!targetData) message.reply(getErrors('data'), target)
+    
     const amount = args[args.length - 1];
       
     //send @ping c/coins 1

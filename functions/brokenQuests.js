@@ -12,28 +12,26 @@ module.exports = async function() {
     quests = data.quests;
     if(quests.time) {
       if(quests.time.getTime() < Date.now()) {
-        console.log(data.time.getTime() + ' Past');
         brokeQuests.push(data);
       } else if(quests.time.getTime() > Date.now()) {
-        console.log(quests.time.getTime() + ' Future');
         toFixQuests.push(data);
       }
     }
   }
   
   if(!brokeQuests || brokeQuests.length === 0) {
-    console.log('No BrokeQuests Past now.');
+    console.log('0 BrokeQuests found.');
   } else {
-    console.log(`${brokeQuests.length} past broken quests found`);
+    console.log(`${brokeQuests.length} brokenQuests found`);
     for(const data of brokeQuests) {
       await db.findOneAndUpdate({_id:data._id}, { $unset: {quests} });
     }
   }
   
   if(!toFixQuests || toFixQuests.length === 0) {
-    console.log('No toFixQuests Future now.');
+    console.log('0 toFixQuests found.');
   } else {
-    console.log(`${toFixQuests.length} future broken quests found`);
+    console.log(`${toFixQuests.length} toFixQuests found`);
     for(const data of toFixQuests) {
       const quests = data.quests;
       const time = quests.time.getTime() - Date.now();

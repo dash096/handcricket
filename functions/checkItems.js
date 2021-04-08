@@ -6,6 +6,12 @@ module.exports = async function (message) {
   
   const args = message.content.toLowerCase().trim().split(' ').slice(1);
   
+  //Check args count
+  if(args.length <= 1) {
+    message.reply(getErrors('syntax', 'e', 'e', 'cricket/trade.js'));
+    return 'err';
+  }
+  
   //Amount (last word)
   let itemAmountArray = args[args.length - 1]; //returns last word in string
   let itemAmount = parseInt(itemAmountArray); //integer
@@ -15,7 +21,8 @@ module.exports = async function (message) {
   if(itemAmount && parseInt(itemAmount)) {
     itemNameArray.pop(); //Kill the last element
   }
-  let itemName = itemNameArray.join('');
+  
+  let itemName = itemNameArray.join('') || itemAmount;
   
   if(!itemAmount || isNaN(itemAmount)) { //Validates Item
     itemAmount = 1;
@@ -48,7 +55,7 @@ module.exports = async function (message) {
   const itemData = await db.findOne({name: itemName}).catch((e) => console.log(e));
   
   if(!itemData) {
-    message.reply(getErrors('item', itemName));
+    message.reply(getErrors('item', 'e', itemName));
     return 'err';
   }
   

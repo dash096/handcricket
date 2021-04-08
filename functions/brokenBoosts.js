@@ -10,7 +10,7 @@ module.exports = async function() {
   
   //If no boosts return;
   if(brokeCoinBoosts.length === 0) {
-    console.log('No broken coin boosts');
+    console.log('0 broken coin boosts');
   } else {
     //Clear Boosts
     for(const boost of brokeCoinBoosts) {
@@ -28,7 +28,7 @@ module.exports = async function() {
   
   //If no boosts return.
   if(brokeTossBoosts.length === 0) {
-    console.log('No broken toss boosts');
+    console.log('0 broken toss boosts');
   } else {
     //Clear Boosts
     for(const boost of brokeTossBoosts) {
