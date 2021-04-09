@@ -193,8 +193,8 @@ async function getImage(target, type, paths) {
     for(const path of paths) {
       if(published === true) {
         character = await jimp.read(exportPath);
-        published = true;
       }
+      published = true;
       const toComposite = await jimp.read(path);
       character
       .composite(toComposite, 0, 0)
