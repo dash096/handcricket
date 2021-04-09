@@ -40,7 +40,7 @@ module.exports = {
     let level = (await getPreceedingPair(levels, data.xp))[0] || 'Nab (0)';
     let targetXP = levels[level + 1] || 10;
     const STR = data.strikeRate;
-    const charPath = await getCharacter(message);
+    const charPath = await getCharacter(target);
     const WR = getWR(data);
     
     const xpFixed = data.xp.toFixed(0);
@@ -161,10 +161,8 @@ function getWR(data) {
   return WR;
 }
 
-async function getCharacter(message) {
-  const { content, author, channel, mentions } = message;
-  
-  const userData = await db.findOne({_id: author.id});
+async function getCharacter(target) {
+  const userData = await db.findOne({_id: target.id});
   const decorsData = getDecors;
   
   let type = 'type1';
@@ -181,13 +179,13 @@ async function getCharacter(message) {
     }
   });
   
-  const image = await getImage(message, type, images);
+  const image = await getImage(target, type, images);
   return image;
 }
 
-async function getImage(message, type, paths) {
+async function getImage(target, type, paths) {
   let character = await jimp.read(`./decors/${type}/character.png`);
-  let exportPath = `./${message.author.id}.png`;
+  let exportPath = `./${target.id}.png`;
   let published = false;
   
   if(paths.length > 1) {
@@ -206,8 +204,10 @@ async function getImage(message, type, paths) {
     character
     .composite(toComposite, 0, 0)
     .write(exportPath);
+  } else {
+    character.write(exportPath);
   }
   
-  return `${message.author.id}.png`;
+  return `${target.id}.png`;
   
 }
