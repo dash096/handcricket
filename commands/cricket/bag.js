@@ -30,11 +30,15 @@ module.exports = {
       fieldText += `**${emoji} ${text[0].charAt(0).toUpperCase() + text[0].slice(1)}** (${text[1]}) \n`;
     }
     
-    const userDecors = data.decors;
+    const userDecors = data.decors || {};
     const keys = Object.keys(userDecors);
     fieldText += `\n**__Decorations__**\n\n`;
-    for(const key of keys) {
-      fieldText += `**${key}** - \`${userDecors[key]}\`\n`;
+    
+    if(!keys || keys.length === 0) fieldText += 'None here hehehe';
+    else {
+      for(const key of keys) {
+        fieldText += `**${key}** - \`${userDecors[key]}\`\n`;
+      }
     }
     
     const embed = await new Discord.MessageEmbed()
