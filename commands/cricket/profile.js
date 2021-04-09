@@ -39,11 +39,12 @@ module.exports = {
     const XPLine = await getXPLine(data.xp);
     let level = (await getPreceedingPair(levels, data.xp))[0] || 'Nab (0)';
     let targetXP = levels[level + 1] || 10;
-    const STR = data.strikeRate;
-    const charPath = await getCharacter(target);
-    const WR = getWR(data);
-    
     const xpFixed = data.xp.toFixed(0);
+    const STR = data.strikeRate;
+    const WR = getWR(data);
+    const charPath = await getCharacter(target);
+    let startDate = data.startedOn.toString().split(' ');startDate.pop();startDate.pop();startDate.pop();startDate.pop();startDate.pop();
+    startDate = startDate.join(' ');
     
     const embed = new Discord.MessageEmbed()
       .setTitle(`Profile of **${target.tag}**`)
@@ -56,7 +57,7 @@ module.exports = {
       .addField("Strike Rate", STR.toFixed(3), true)
       .addField("Toss Multi", data.tossMulti.toFixed(3) + tb, true)
       .addField("Coins Multi", data.coinMulti.toFixed(3) + cb, true)
-      .setFooter("Your Character looks cool! You started playing on " + data.startedOn.toString().split(' ').slice(5, 10))
+      .setFooter("Your Character looks cool! You started playing on " + startDate)
       .attachFiles(`./${charPath}`)
       .setImage(`attachment://${charPath}`)
       .setColor('#2d61b5');
