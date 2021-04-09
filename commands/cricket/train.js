@@ -35,7 +35,7 @@ module.exports = {
     
       updateCoins(message, win, amount, true);
     
-      const quests = data.quests;
+      const quests = data.quests || {};
       const trainings = quests.beFit || 0;
       let newValue = parseInt(trainings) + 1;
       if(trainings !== true) {
