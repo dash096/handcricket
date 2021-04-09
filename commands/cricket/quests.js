@@ -49,7 +49,7 @@ module.exports = {
     }
     function duck(name) {
       let stat;
-      if(!userQuests.duck) stat = 0;
+      if(userQuests && !userQuests.duck) stat = 0;
       else stat = userQuests.duck;
       if(userQuests.duck == true) {
         return `${tickEmoji} **${name}** (1/1)`;
