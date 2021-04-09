@@ -7,6 +7,7 @@ const openBox = require('../../functions/openBox.js');
 const gain = require('../../functions/gainExp.js');
 const getEmoji = require('../../index.js');
 const getErrors = require('../../functions/getErrors.js');
+const getDecors = require('../../functions/getDecors.js');
 
 module.exports = {
   name: 'use',
@@ -19,9 +20,10 @@ module.exports = {
     const coinsEmoji = await getEmoji('coin');
     
     const itemArray = await checkItems(message);
+    console.log(itemArray);
     
     if(itemArray == 'err') return;
-    const itemAmount = itemArray[1];
+    let itemAmount = itemArray[1];
     const itemName = itemArray[0];
     
     const playerData = await db.findOne({_id: author.id});
@@ -57,16 +59,25 @@ module.exports = {
     } 
     
     else if (itemName === 'lootbox' ) {
+      itemAmount = 1;
       const e1 = await updateBag(itemName, itemAmount, playerData, message);
       if(e1 == 'err') return;
-      const e2 = await openBox(itemName, itemAmount, playerData, message);
+      
+      const e2 = await openBox(itemAmount, playerData, message);
       if(e2 == 'err') return;
       
       const msg = await message.reply('Opening a lootBox!!!');
       
       setTimeout( async () => {
-        console.log(e2);
-        if(isNaN(e2)) {
+        
+        if(e2 == 'decor') {
+          const decors = getDecors.type1;
+          const decor = decors[Math.floor(Math.random() * decors.length)];
+          await msg.edit(`Oh Damn, You got a ${decor}!`);
+          updateDecor(message, decor);
+        }
+        
+        else if(isNaN(e2)) {
           await msg.edit('You got a **' + e2 + '**');
           updateItem(e2, 1, playerData, message);
         }
@@ -102,4 +113,15 @@ async function updateItem(itemName, amount, data, message) {
   bag[itemName] = amount;
   
   await db.findOneAndUpdate({_id: data._id}, {$set: { bag: bag }});
+}
+
+async function updateDecor(message, name) {
+  const { author } = message
+  const data = await db.findOne({_id: author.id});
+  const userDecors = data.decors || {};
+  const oldBal = userDecors[name] || 0;
+  const newBal = oldBal + 1;
+  userDecors[name] = 1;
+  
+  await db.findOneAndUpdate({_id: author.id}, {$set: { decors: userDecors }});
 }

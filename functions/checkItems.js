@@ -2,13 +2,13 @@ const db = require("../schemas/items.js");
 const Discord = require("discord.js");
 const getErrors = require('./getErrors.js');
 
-module.exports = async function (message) {
+module.exports = async function (message, file) {
   
   const args = message.content.toLowerCase().trim().split(' ').slice(1);
   
   //Check args count
-  if(args.length <= 1) {
-    message.reply(getErrors('syntax', 'e', 'e', 'cricket/trade.js'));
+  if(file && args.length <= 1) {
+    message.reply(getErrors('syntax', 'e', 'e', file));
     return 'err';
   }
   
@@ -48,7 +48,7 @@ module.exports = async function (message) {
   if(itemName === "toss" || itemName === "tossboost" || itemName === 'tb') {
     itemName = "tossboost";
   }
-  if(itemName === "lootbox" || itemName === "loot box") {
+  if(itemName === "lootbox" || itemName === "lb") {
     itemName = "lootbox";
   }
   

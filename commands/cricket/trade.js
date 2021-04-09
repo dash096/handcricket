@@ -43,7 +43,7 @@ module.exports = {
       }
     } else {
       message.content = content.split(' ').slice(1).join(' ');
-      const itemName = await checkItems(message);
+      const itemName = await checkItems(message, 'cricket/trade.js');
       
       if(itemName != 'err') {
         trade(itemName, amount, user, target, message);
