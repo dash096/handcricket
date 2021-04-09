@@ -1,9 +1,13 @@
+const fs = require('fs');
 const Discord = require("discord.js");
 const db = require("../../schemas/player.js");
 const getEmoji = require('../../index.js');
 const gain = require('../../functions/gainExp.js');
 const getLevels = require('../../functions/getLevels.js');
 const getErrors = require('../../functions/getErrors.js');
+
+const jimp = require('jimp');
+const getDecors = require('../../functions/getDecors.js');
 
 module.exports = {
   name: 'profile',
@@ -14,6 +18,7 @@ module.exports = {
   cooldown: 6,
   run: async (message, args, prefix) => {
     const { content, author, channel, mentions } = message;
+    
     const coinEmoji = await getEmoji('coin');
     
     const target = mentions.users.first() || message.author;
@@ -35,6 +40,7 @@ module.exports = {
     let level = (await getPreceedingPair(levels, data.xp))[0] || 'Nab (0)';
     let targetXP = levels[level + 1] || 10;
     const STR = data.strikeRate;
+    const charPath = await getCharacter(message);
     const WR = getWR(data);
     
     const xpFixed = data.xp.toFixed(0);
@@ -50,13 +56,18 @@ module.exports = {
       .addField("Strike Rate", STR.toFixed(3), true)
       .addField("Toss Multi", data.tossMulti.toFixed(3) + tb, true)
       .addField("Coins Multi", data.coinMulti.toFixed(3) + cb, true)
-      .setFooter(data.startedOn)
+      .setFooter("Your Character looks cool! You started playing on " + data.startedOn.toString().split(' ').slice(5, 10))
+      .attachFiles(`./${charPath}`)
+      .setImage(`attachment://${charPath}`)
       .setColor('#2d61b5');
 
-    message.reply(embed);
+    await message.reply(embed);
     await gain(data, 1, message);
+    await fs.unlink(`./${charPath}`, (e) => {
+      if(e) console.log(e);
+    });
   }
-}
+};
 
 async function getXPLine(xp) {
   
@@ -136,7 +147,7 @@ async function add5(text, empty) {
   let i = splitted.length;
   
   for(i; i < 5; i++) {
-    emojis += `${empty}`
+    emojis += `${empty}`;
   }
   
   return emojis;
@@ -148,4 +159,55 @@ function getWR(data) {
   if(wins + loses == 0) return 0; 
   const WR = (wins/(wins + loses)) * 100;
   return WR;
+}
+
+async function getCharacter(message) {
+  const { content, author, channel, mentions } = message;
+  
+  const userData = await db.findOne({_id: author.id});
+  const decorsData = getDecors;
+  
+  let type = 'type1';
+  const decorsData1 = decorsData[type];
+  
+  const userDecors = userData.decors || {};
+  
+  const images = [];
+  
+  decorsData1.forEach(decorData => {
+    const userHas = Object.keys(userDecors).filter(key => key == decorData);
+    if(userHas.length !== 0) {
+      userHas.forEach(decor => images.push(`./decors/${type}/${decorData}.png`));
+    }
+  });
+  
+  const image = await getImage(message, type, images);
+  return image;
+}
+
+async function getImage(message, type, paths) {
+  let character = await jimp.read(`./decors/${type}/character.png`);
+  let exportPath = `./${message.author.id}.png`;
+  let published = false;
+  
+  if(paths.length > 1) {
+    for(const path of paths) {
+      if(published === true) {
+        character = await jimp.read(exportPath);
+        published = true;
+      }
+      const toComposite = await jimp.read(path);
+      character
+      .composite(toComposite, 0, 0)
+      .write(exportPath);
+    }
+  } else if (paths.length === 1) {
+    const toComposite = await jimp.read(paths[0]);
+    character
+    .composite(toComposite, 0, 0)
+    .write(exportPath);
+  }
+  
+  return `${message.author.id}.png`;
+  
 }
