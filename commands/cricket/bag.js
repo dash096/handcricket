@@ -2,6 +2,7 @@ const Discord = require("discord.js");
 const db = require("../../schemas/player.js");
 const gain = require('../../functions/gainExp.js');
 const getErrors = require('../../functions/getErrors.js');
+const getEmoji = require('../../index.js');
 
 module.exports = {
   name: 'bag',
@@ -22,14 +23,23 @@ module.exports = {
     const items = Object.keys(bagItems).map((key) => [key, bagItems[key]]);
     
     let fieldText = '';
+    fieldText += `**__BackPack__**\n\n`
     for(const item of items) {
       const text = item;
-      fieldText += `**${text[0].charAt(0).toUpperCase() + text[0].slice(1)}** (${text[1]}) \n`;
+      const emoji = await getEmoji(item[0]);
+      fieldText += `**${emoji} ${text[0].charAt(0).toUpperCase() + text[0].slice(1)}** (${text[1]}) \n`;
+    }
+    
+    const userDecors = data.decors;
+    const keys = Object.keys(userDecors);
+    fieldText += `\n**__Decorations__**\n\n`;
+    for(const key of keys) {
+      fieldText += `**${key}** - \`${userDecors[key]}\`\n`;
     }
     
     const embed = await new Discord.MessageEmbed()
       .setTitle(`${target.tag}'s bag`)
-      .setDescription('Pretty nice Inventory\n' + fieldText)
+      .setDescription('Pretty nice Inventory\n\n' + fieldText)
       .setFooter('Show this to your frnds!')
       .setColor('#2d61b5');
       
