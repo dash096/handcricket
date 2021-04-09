@@ -31,7 +31,7 @@ module.exports = {
     }
     function support(name) {
       let stat;
-      if(!userQuests.support) stat = 0;
+      if(!userQuests || !userQuests.support) stat = 0;
       else stat = userQuests.support;
       if(userQuests.support == true) {
         return `${tickEmoji} **${name}** (1/1)`;
@@ -40,7 +40,7 @@ module.exports = {
     }
     function tripWin(name) {
       let stat;
-      if(!userQuests) stat = [0];
+      if(!userQuests || !userQuests.tripWin) stat = [0];
       else stat = userQuests.tripWin || [0];
       if(stat[0] === true) {
         return `${tickEmoji} **${name}** (3/3)`;
@@ -49,7 +49,7 @@ module.exports = {
     }
     function duck(name) {
       let stat;
-      if(userQuests && !userQuests.duck) stat = 0;
+      if(!userQuests || !userQuests.duck) stat = 0;
       else stat = userQuests.duck;
       if(userQuests.duck == true) {
         return `${tickEmoji} **${name}** (1/1)`;
@@ -135,7 +135,12 @@ async function checkIfCompleted(message, data, tick, cross) {
     await db.findOneAndUpdate({_id: data._id}, { $set: {bag: bag, xp: xp + 6.9, quests: quests} });
     
     setTimeout(async () => {
-      await db.findOneAndUpdate({_id: data._id}, { $unset: {quests: 'doesnt matter'}});
+      const quests = data.quests;
+      quests.beFit = 0;
+      quests.support = 0;
+      quests.tripWin = 0;
+      quests.duck = 0;
+      await db.findOneAndUpdate({_id: data._id}, { $set: {quests: quests}});
     }, newTime);
     
     return `${tick} Claimed - **Lootbox**`;
