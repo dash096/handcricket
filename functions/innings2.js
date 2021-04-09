@@ -158,8 +158,8 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
         const coins = getCoins(data);
 
         if((target - (newScore - parseInt(c))) === 1) {
-          bowler.send(`Wicket! DUCK! The batsman hit ${c}! It is a tie!`);
-          batsman.send('Wicket! DUCK! The bowler bowled' + bowled + '! It is a tie!');
+          bowler.send(`Wicket! The batsman hit ${c}! It is a tie!`);
+          batsman.send('Wicket! The bowler bowled' + bowled + '! It is a tie!');
           if(post === true) mc.send(`**${batsman.tag}** WICKET!! DUCK! He hit ${c} and was bowled ${bowled} by **${bowler.tag}**`);
         } else {
           bowler.send(`Wicket! The batsman hit ${c}! You won a grand amount of ${emoji} ${coins}!`);
