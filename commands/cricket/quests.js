@@ -18,12 +18,12 @@ module.exports = {
     
     const data = await db.findOne({_id: author.id});
     
-    const userQuests = data.quests;
+    const userQuests = data.quests || {};
     
     //Status
     function beFit(name) {
       let stat;
-      if(!userQuests?.beFit) stat = 0;
+      if(!userQuests || !userQuests.beFit) stat = 0;
       else stat = userQuests.beFit;
       if(stat === true) {
         return `${tickEmoji} **${name}** (5/5)`;
@@ -33,7 +33,7 @@ module.exports = {
     }
     function support(name) {
       let stat;
-      if(!userQuests?.support) stat = 0;
+      if(!userQuests || !userQuests.support) stat = 0;
       else stat = userQuests.support;
       if(userQuests.support == true) {
         return `${tickEmoji} **${name}** (1/1)`;
@@ -42,7 +42,7 @@ module.exports = {
     }
     function tripWin(name) {
       let stat;
-      if(!userQuests?.tripWin) stat = [0];
+      if(!userQuests || !userQuests.tripWin) stat = [0];
       else stat = userQuests.tripWin || [0];
       if(stat[0] === true) {
         return `${tickEmoji} **${name}** (3/3)`;
@@ -51,7 +51,7 @@ module.exports = {
     }
     function duck(name) {
       let stat;
-      if(!userQuests?.duck) stat = 0;
+      if(!userQuests || !userQuests.duck) stat = 0;
       else stat = userQuests.duck;
       if(userQuests.duck == true) {
         return `${tickEmoji} **${name}** (1/1)`;
@@ -137,8 +137,7 @@ async function checkIfCompleted(message, data, tick, cross) {
     await db.findOneAndUpdate({_id: data._id}, { $set: {bag: bag, xp: xp + 6.9, quests: quests} });
     
     setTimeout(async () => {
-      const quests = data.quests;
-      await db.findOneAndUpdate({_id: data._id}, { $unset: {quests: quests}});
+      await db.findOneAndUpdate({_id: data._id}, { $unset: {quests: 'never mind'}});
     }, newTime);
     
     return `${tick} Claimed - **Lootbox**`;
