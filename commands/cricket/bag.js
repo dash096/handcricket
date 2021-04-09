@@ -24,10 +24,15 @@ module.exports = {
     
     let fieldText = '';
     fieldText += `**__BackPack__**\n\n`
-    for(const item of items) {
-      const text = item;
-      const emoji = await getEmoji(item[0]);
-      fieldText += `**${emoji} ${text[0].charAt(0).toUpperCase() + text[0].slice(1)}** (${text[1]}) \n`;
+    
+    if(!items || items.length === 0) {
+      fieldText += `Nothing here! hehe`;
+    } else {
+      for(const item of items) {
+        const text = item;
+        const emoji = await getEmoji(item[0]);
+        fieldText += `**${emoji} ${text[0].charAt(0).toUpperCase() + text[0].slice(1)}** (${text[1]}) \n`;
+      }
     }
     
     const userDecors = data.decors || {};
