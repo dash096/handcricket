@@ -39,7 +39,9 @@ module.exports = {
       return `${crossEmoji} **${name}** (${stat}/1)`;
     }
     function tripWin(name) {
-      let stat = userQuests.tripWin || [0];
+      let stat;
+      if(!userQuests) stat = [0];
+      else stat = userQuests.tripWin || [0];
       if(stat[0] === true) {
         return `${tickEmoji} **${name}** (3/3)`;
       }
