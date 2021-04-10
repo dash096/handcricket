@@ -19,8 +19,8 @@ module.exports = (client, prefix) => {
     if (!command) return;
     
     //Status
-    let statusRequired = false;
-    if(command.status === true) statusRequired = true;
+    let commandStatus = false;
+    if(command.status === true) commandStatus = true;
     
     //Check engagement
     const data = await db.findOne({ _id: author.id });
@@ -28,7 +28,7 @@ module.exports = (client, prefix) => {
       return message.reply(getErrors('data', author));
     }
     
-    if (statusRequired === true && data.status) return message.reply('You are already engaged in a game, and you cant use the command - ' + command.name.charAt(0).toUpperCase() + command.name.slice(1));
+    if (commandStatus === true && data.status) return message.reply('You are already engaged in a game, and you cant use the command - ' + command.name.charAt(0).toUpperCase() + command.name.slice(1));
 
     //Cooldowns
     if (!cooldowns.has(command.name)) {
