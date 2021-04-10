@@ -105,7 +105,7 @@ module.exports = {
             await returnThis.push(randoCoins);
             return;
           }
-          return play()
+          return play();
         }
       }
     } catch (e) {
