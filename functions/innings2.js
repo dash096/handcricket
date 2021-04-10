@@ -148,6 +148,13 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
           newScore = (batArray[batArray.length - 1]) + parseInt(bowled);
         }
       }
+      const dot = () => {
+        if(bowled == c) {
+          return ' (used a dot)';
+        } else {
+          return '';
+        }
+      }
       //Wicket
       if (parseInt(c) === parseInt(bowled) && useDot == false) {
         changeStatus(batsman,bowler);
@@ -158,13 +165,13 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
         const coins = getCoins(data);
 
         if((target - (newScore - parseInt(c))) === 1) {
-          bowler.send(`Wicket! The batsman hit ${c}! It is a tie!`);
+          bowler.send(`Wicket! The batsman hit ${c}${dot()}! It is a tie!`);
           batsman.send('Wicket! The bowler bowled' + bowled + '! It is a tie!');
-          if(post === true) mc.send(`**${batsman.tag}** WICKET!! DUCK! He hit ${c} and was bowled ${bowled} by **${bowler.tag}**`);
+          if(post === true) mc.send(`**${batsman.tag}** WICKET!! DUCK! He hit ${c}${dot()} and was bowled ${bowled} by **${bowler.tag}**`);
         } else {
-          bowler.send(`Wicket! The batsman hit ${c}! You won a grand amount of ${emoji} ${coins}!`);
+          bowler.send(`Wicket! The batsman hit ${c}${dot()}! You won a grand amount of ${emoji} ${coins}!`);
           batsman.send('Wicket! The bowler bowled ' + bowled + '! You lost... Sadge');
-          if(post === true) mc.send(`**${batsman.tag}** WICKET! He hit ${c} and was bowled ${bowled} by **${bowler.tag}**`, {embed});
+          if(post === true) mc.send(`**${batsman.tag}** WICKET! He hit ${c}${dot()} and was bowled ${bowled} by **${bowler.tag}**`, {embed});
           rewards(bowler, batsman, coins, boS, boB, baS, baB, mc);
         }
 
@@ -184,8 +191,8 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
         const coins = getCoins(data);
         
         batsman.send(`Score is ${newScore}! The bowler bowled ${bowled}! You won a grand amount of ${emoji} ${coins}!`);
-        bowler.send(`Batsman score is ${newScore}! The batsman hit ${c}! You lost... sadge`);
-        if(post === true) mc.send(`**${batsman.tag}** crossed the target!! HE **WON**!! He hit ${c} and was bowled ${bowled} by **${bowler.tag}**`);
+        bowler.send(`Batsman score is ${newScore}! The batsman hit ${c}${dot()}! You lost... sadge`);
+        if(post === true) mc.send(`**${batsman.tag}** crossed the target!! HE **WON**!! He hit ${c}${dot()} and was bowled ${bowled} by **${bowler.tag}**`);
         rewards(batsman, bowler, coins, baS, baB, boS, boB, mc);
         
         changeStatus(batsman,bowler);
@@ -204,8 +211,8 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
         .setColor('#2d61b5');
 
         batsman.send(`You hit ${c} and you were bowled ${bowled}`, {embed});
-        bowler.send(`${batsman.username} hit ${c}`, {embed});
-        if(post === true) mc.send(`${batsman.tag} hit ${c}, and was bowled ${bowled} by ${bowler.tag}`, {embed})
+        bowler.send(`${batsman.username} hit ${c}${dot()}`, {embed});
+        if(post === true) mc.send(`${batsman.tag} hit ${c}${dot()}, and was bowled ${bowled} by ${bowler.tag}`, {embed})
         return loopBatCollect();
       }
     } catch(e) {

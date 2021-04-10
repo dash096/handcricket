@@ -141,12 +141,19 @@ module.exports = async function(batsman, bowler, message, post) {
           newScore = (await batArray[batArray.length - 1]) + parseInt(bowled);
         }
       }
+      const dot = () => {
+        if(bowled == c) {
+          return ' (used a dot)';
+        } else {
+          return '';
+        }
+      }
       //Wicket
       if (parseInt(bowled) === parseInt(c) && useDot == false) {
         timeoutDecider = false;
         await batsman.send("Wicket! The bowler bowled " + bowled);
-        await bowler.send("Wicket! The batsman hit " + c);
-        if (post === true) await mc.send(`**${batsman.tag}** wicket!!! He hit ${c}, and was bowled ${bowled} by **${bowler.username}**`);
+        await bowler.send(`Wicket! The batsman hit ${c}${dot()}`);
+        if (post === true) await mc.send(`**${batsman.tag}** wicket!!! He hit ${c}${dot()}, and was bowled ${bowled} by **${bowler.username}**`);
         await secondInnings( batsman, bowler, batArray[batArray.length - 1] + 1, await ballArray.length, mc, post );
         return;
       } else { //Push
@@ -159,8 +166,8 @@ module.exports = async function(batsman, bowler, message, post) {
           .setColor("#2d61b5");
 
         await batsman.send(`You hit ${c} and you were bowled ${bowled}, **Scoreboard**`, { embed });
-        await bowler.send(`Batsman hit ${c}, **Scoreboard**`, { embed });
-        if (post === true) await mc.send(`**${batsman.tag}** hit ${c}, and was bowled ${bowled} by **${bowler.username}**`, { embed });
+        await bowler.send(`Batsman hit ${c}${dot()}, **Scoreboard**`, { embed });
+        if (post === true) await mc.send(`**${batsman.tag}** hit ${c}${dot()}, and was bowled ${bowled} by **${bowler.username}**`, { embed });
         return loopBatCollect();
       }
     } catch (e) {

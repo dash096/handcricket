@@ -22,7 +22,7 @@ module.exports = {
     
       const train = getTrain || false;
     
-      const randoCoins = (Math.random() * 363).toFixed(0);
+      const randoCoins = (Math.random() * 269).toFixed(0);
     
       //Data Validation
       const data = await db.findOne({_id: author.id});

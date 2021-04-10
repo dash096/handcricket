@@ -25,7 +25,8 @@ module.exports = {
       }
     
       const names = Object.keys(exercises);
-      const randoName = names[Math.floor(Math.random() * names.length)];
+      let randoName = names[Math.floor(Math.random() * names.length)];
+      if(randoName === 'slots') randoName = 'drill';
       const randoGame = exercises[randoName];
     
       const execute = await randoGame(message, args, prefix, client, true);

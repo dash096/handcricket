@@ -56,7 +56,7 @@ module.exports = {
           time: 30000,
           errors: ['time']
         });
-        const randoCoins = parseInt((Math.random() * 464).toFixed(0));
+        const randoCoins = parseInt((Math.random() * 269).toFixed(0));
         const msg = collected.first();
         const guess = msg.content;
         
