@@ -47,9 +47,9 @@ module.exports = (client, prefix) => {
           min = (timeLeft/60).toFixed(0) + 'm';
           sec = (timeLeft % 60) + 's';
           if (sec == '0s') sec = '';
-        } else sec = timeLeft.toFixed(0);
+        } else sec = timeLeft.toFixed(0) + 's';
         if (!min) min = '';
-        return message.reply(`Wait for ${min} ${sec} before spamming that command again.`);
+        return message.reply(`Wait for ${min}${sec} before spamming that command again.`);
       }
     }
     timestamps.set(message.author.id, now);

@@ -78,7 +78,7 @@ module.exports = {
         }
         
         else if(isNaN(e2)) {
-          const emoji = getEmoji(e2);
+          const emoji = await getEmoji(e2);
           await msg.edit(`You got a **${emoji} ${e2}**`);
           updateItem(e2, 1, playerData, message);
         }
