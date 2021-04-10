@@ -11,7 +11,6 @@ module.exports = {
   category: 'Minigames',
   syntax: 'e.guess',
   status: true,
-  cooldown: 60,
   run: async (message, args, prefix, client, boolean) => {
     const { content, author, channel, mentions } = message;
     
@@ -47,6 +46,13 @@ module.exports = {
     
       let returnThis = [];
       await play();
+      
+      //Set cooldown
+      if(!train) {
+        const timestamps = client.cooldowns.get('guess');
+         timestamps.set(author.id, Date.now());
+        setTimeout(() => timestamps.delete(author.id), 60 * 1000);
+      }
       
       return returnThis;
       

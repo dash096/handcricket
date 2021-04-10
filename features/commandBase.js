@@ -52,9 +52,11 @@ module.exports = (client, prefix) => {
         return message.reply(`Wait for ${min}${sec} before spamming that command again.`);
       }
     }
-    timestamps.set(message.author.id, now);
-    setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
-
+    if(command.cooldowm) {
+      timestamps.set(message.author.id, now);
+      setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+    }
+    
     //Run Command
     try {
       command.run(message, args, prefix, client);

@@ -15,7 +15,7 @@ module.exports = {
   category: 'Minigames',
   syntax: 'e.slots <amount>',
   cooldown: 60,
-  run: async (message, prefix) => {
+  run: async (message, args, prefix, client) => {
     const { content, channel, mentions, author } = message;
     
     try {
@@ -55,7 +55,12 @@ module.exports = {
         .addField(what(), text, true)
         .setFooter(`${author.tag}'s Slots`)
         .setColor('BLUE');
-    
+      
+      //Set cooldowm
+      const timestamps = client.cooldowns.get('slots');
+      timestamps.set(author.id, Date.now());
+      setTimeout(() => timestamps.delete(author.id), 60 * 1000);
+      
       channel.send(embed);
       await calc(bet, author);
       await gainExp(data, 1, message);

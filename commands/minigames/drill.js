@@ -13,8 +13,7 @@ module.exports = {
   category: 'Minigames',
   syntax: 'e.run',
   status: true,
-  cooldown: 60,
-  run: async (message, args, prefix, getTrain) => {
+  run: async (message, args, prefix, client, getTrain) => {
     const { content, author, channel, mentions } = message;
     
     try {
@@ -48,22 +47,34 @@ module.exports = {
       });
       const msg = answers.first();
       const answer = answers.first().content.trim();
-    
-      if(answer == rando) {
-        const coins = (Math.random() * 363).toFixed(0);
-        msg.reply(`Nice, You are good at running.`);
-        if(train == true) msg.channel.send(`You got ${coinEmoji} ${coins} as Training rewards!`);
-        return [true, randoCoins];
-      } else {
-        msg.reply('Looks like you need to get quicker at running. sadge..');
-        return [false, randoCoins];
+      const result = await checkAnswer();
+      
+      async function checkAnswer() {
+        if(answer == rando) {
+          const coins = (Math.random() * 363).toFixed(0);
+          msg.reply(`Nice, You are good at running.`);
+          if(train == true) msg.channel.send(`You got ${coinEmoji} ${coins} as Training rewards!`);
+          return [true, randoCoins];
+        } else {
+          msg.reply('Looks like you need to get quicker at running. sadge..');
+          return [false, randoCoins];
+        }
+        await gain(data, 2, message);
+        return [false, 0];
       }
-      await gain(data, 2, message);
-      return [false, 0];
+      
+      //Set Cooldown
+      if(!train) {
+        const timestamps = client.cooldowns.get('drill');
+        timestamps.set(author.id, Date.now());
+        setTimeout(() => timestamps.delete(author.id), 60 * 1000);
+      }
+      
+      return (result || [false, 0]);
     } catch(e) {
       console.log(e);
       message.reply(getErrors('time'));
-      return [false, 1]
+      return [false, 1];
     } finally {
       await db.findOneAndUpdate( { _id: author.id }, { $set: { status: false} });
     }

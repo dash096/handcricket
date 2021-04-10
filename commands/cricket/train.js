@@ -9,7 +9,6 @@ module.exports = {
   category: 'Cricket',
   syntax: 'e.train',
   status: true,
-  cooldown: 600,
   run: async (message, args, prefix, client) => {
     const { content, author, channel, mentions } = message;
     
@@ -47,6 +46,10 @@ module.exports = {
         }
         await db.findOneAndUpdate({ _id: author.id }, { $set: { quests: quests } } );
       }
+      //Set cooldown
+      const timestamps = client.cooldowns.get('train');
+      timestamps.set(author.id, Date.now());
+      setTimeout(() => timestamps.delete(author.id), 60 * 1000);
     } catch (e) {
       console.log(e);
     } finally {
