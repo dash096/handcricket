@@ -48,8 +48,15 @@ module.exports = {
           return `**Nothing!** So Unlucky`;
         }
       };
-    
-      const embed = new Discord.MessageEmbed()
+      
+      const slotsEmbed = new Discord.MessageEmbed()
+        .setTitle('Slots')
+        .setDescription('Testing your luck')
+        .addField('...', `${await getEmoji('slots')} ${await getEmoji('slots')} ${await getEmoji('slots')}`)
+        .setFooter(`${author.tag}'s Slots`)
+        .setColor('BLUE');
+        
+      const resultEmbed = new Discord.MessageEmbed()
         .setTitle('Slots')
         .setDescription('Here is what you got!!! ')
         .addField(what(), text, true)
@@ -61,15 +68,17 @@ module.exports = {
       timestamps.set(author.id, Date.now());
       setTimeout(() => timestamps.delete(author.id), 60 * 1000);
       
-      channel.send(embed);
+      const slots = await channel.send(slotsEmbed);
+      setTimeout(() => slots.edit(resultEmbed), 3000);
+      
       await calc(bet, author);
       await gainExp(data, 1, message);
     
       async function getText() {
         const random = Math.random();
         const decideWin = () => {
-          if(bet/2500 > 0.3) {
-            return 0.425;
+          if(bet/500 > 0.45) {
+            return 0.5;
           } else {
             return bet/2500;
           }
