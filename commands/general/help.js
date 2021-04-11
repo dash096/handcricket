@@ -7,7 +7,7 @@ module.exports = {
   description: 'Get help!',
   category: 'General',
   syntax: 'e.help',
-  run: async ({message, args}) => {
+  run: async ({message, args, prefix}) => {
     const { content, author, channel, mentions } = message;
     
     try {
