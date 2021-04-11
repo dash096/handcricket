@@ -1,11 +1,11 @@
 module.exports = {
   name: 'vote',
-  aliases: ['v'],
+  aliases: ['v', 'daily', 'claim'],
   description: 'Vote the bot! Support when',
   category: 'general',
   syntax: 'e.vote',
-  run: (message) => {
+  run: async (message, args, prefix, client, api) => {
     const { content, author, channel, mentions } = message;
-    message.reply('The bot has been sent for approval to lazy devs of top.gg who are still doing nothing!');
+    channel.send(`Vote - ${await api.hasVoted(author.id)}`)
   }
 };

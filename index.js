@@ -13,6 +13,15 @@ const prefix = 'e.';
 const { commands, cooldowns } = client;
 
 module.exports = getEmojis;
+  
+const Topgg = require('@top-gg/sdk');
+const api = new Topgg.Api(process.env.TOPGG_TOKEN);
+
+setInterval(() => {
+  api.postStats({
+    serverCount: client.guilds.cache.size
+  })
+}, 600 * 1000);
 
 //Ready Event
 client.on("ready", async () => {
@@ -46,7 +55,7 @@ function loadFiles() {
   for(const listener of listeners) {
     try {
       const feature = require(`./features/${listener}`);
-      feature(client, prefix);
+      feature(client, prefix, api);
     } catch (e) {
       console.error(e);
     }
