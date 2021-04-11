@@ -78,7 +78,7 @@ module.exports = {
     for(const quest of quests) {
       const namestatus = whatQuest(quest.name);
       const name = (quest.name).charAt(0).toUpperCase() + quest.name.slice(1);
-      text += `${namestatus} \`${quest.description}\`\n`;
+      text += `${namestatus} \`${quest.type}\`\n \`${quest.description}\`\n`;
     }
     
     text += `\n ${await checkIfCompleted(message, data, tickEmoji, crossEmoji)}`;
