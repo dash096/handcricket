@@ -13,7 +13,7 @@ module.exports = {
   syntax: 'e.handcricket @user --post (to post scores in channel)',
   status: true,
   cooldown: 10,
-  run: async (message, args, prefix) => {
+  run: async ({message}) => {
     const tossEmoji = await getEmoji('toss');
     const { content, author, channel, mentions } = message;
     //Players

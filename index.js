@@ -55,7 +55,7 @@ function loadFiles() {
   for(const listener of listeners) {
     try {
       const feature = require(`./features/${listener}`);
-      feature(client, prefix, api);
+      feature({client, prefix, api});
     } catch (e) {
       console.error(e);
     }

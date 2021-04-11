@@ -12,7 +12,7 @@ module.exports = {
   category: 'Cricket',
   syntax: 'e.buy <itemName> <amount>',
   cooldown: 10,
-  run: async (message, args, prefix) => {
+  run: async ({message}) => {
     const { content, author, channel, mentions } = message;
     const coinEmoji = await getEmoji('coin');
     

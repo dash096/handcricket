@@ -1,6 +1,6 @@
 const db = require('../schemas/player.js');
 
-module.exports = (client, prefix) => {
+module.exports = ({client, prefix}) => {
   client.on('message', async (msg) => {
     if(msg.author.bot) return;
     

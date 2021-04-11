@@ -10,7 +10,7 @@ module.exports = {
   category: 'Cricket',
   syntax: 'e.balance @user',
   cooldown: 5,
-  run: async (message, args, prefix) => {
+  run: async ({message}) => {
     const { content, author, channel, mentions } = message;
     const coinEmoji = await getEmoji('coin');
     

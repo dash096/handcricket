@@ -11,7 +11,7 @@ module.exports = {
   category: 'Minigames',
   syntax: 'e.guess',
   status: true,
-  run: async (message, args, prefix, client, boolean) => {
+  run: async ({message, client, getTrain}) => {
     const { content, author, channel, mentions } = message;
     
     try {
@@ -19,7 +19,7 @@ module.exports = {
       const coinEmoji = await getEmoji('coin');
       const pixel = await getEmoji('pixelHeart');
     
-      let train = boolean || false;
+      let train = getTrain || false;
     
       //Data Validation
       const data = await db.findOne({_id: author.id});

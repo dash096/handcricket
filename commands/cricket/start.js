@@ -8,7 +8,7 @@ module.exports = {
   category: 'Cricket',
   syntax: 'e.start',
   cooldown: 30,
-  run: async (message) => {
+  run: async ({message}) => {
     const { content, author, channel, mentions } = message;
     
     const player = new db({

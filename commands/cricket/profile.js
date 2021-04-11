@@ -16,7 +16,7 @@ module.exports = {
   category: 'Cricket',
   syntax: 'e.profile @user',
   cooldown: 6,
-  run: async (message, args, prefix) => {
+  run: async ({message}) => {
     const { content, author, channel, mentions } = message;
     
     const coinEmoji = await getEmoji('coin');

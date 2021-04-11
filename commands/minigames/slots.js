@@ -15,7 +15,7 @@ module.exports = {
   category: 'Minigames',
   syntax: 'e.slots <amount>',
   cooldown: 60,
-  run: async (message, args, prefix, client) => {
+  run: async ({ message, client, prefix }) => {
     const { content, channel, mentions, author } = message;
     
     try {

@@ -9,7 +9,7 @@ module.exports = {
   category: 'Cricket',
   syntax: 'e.train',
   status: true,
-  run: async (message, args, prefix, client) => {
+  run: async ({message, client}) => {
     const { content, author, channel, mentions } = message;
     
     try {
@@ -28,7 +28,8 @@ module.exports = {
       if(randoName === 'slots') randoName = 'drill';
       const randoGame = exercises[randoName];
     
-      const execute = await randoGame(message, args, prefix, client, true);
+      let getTrain = true;
+      const execute = await randoGame({message, client, getTrain});
     
       const win = execute[0];
       const amount = execute[1];

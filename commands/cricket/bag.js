@@ -11,7 +11,7 @@ module.exports = {
   category: 'Cricket',
   syntax: 'e.bag',
   cooldown: 5,
-  run: async (message, args, prefix) => {
+  run: async ({message}) => {
     const { content, author, channel, mentions } = message;
     
     const target = mentions.users.first() || author;
@@ -23,7 +23,7 @@ module.exports = {
     const items = Object.keys(bagItems).map((key) => [key, bagItems[key]]);
     
     let fieldText = '';
-    fieldText += `**__BackPack__**\n\n`
+    fieldText += `**__BackPack__**\n\n`;
     
     if(!items || items.length === 0) {
       fieldText += `Nothing here! hehe`;

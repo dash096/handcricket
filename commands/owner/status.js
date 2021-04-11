@@ -6,7 +6,7 @@ module.exports = {
   description: 'Changes the status of the users mentioned',
   category: 'owner',
   syntax: 'e.status <user> <user>',
-  run: async (message) => {
+  run: async ({message}) => {
     const { channel, content, author, mentions } = message;
     
     if(author.id === '772368021821718549') {

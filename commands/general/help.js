@@ -7,7 +7,7 @@ module.exports = {
   description: 'Get help!',
   category: 'General',
   syntax: 'e.help',
-  run: async (message, args, prefix, client) => {
+  run: async ({message, args}) => {
     const { content, author, channel, mentions } = message;
     
     try {
@@ -42,7 +42,7 @@ module.exports = {
           .setDescription(general)
           .setColor('BLUE')
           .setFooter('Requested by ' + author.tag);
-        channel.send(generalEmbed)
+        channel.send(generalEmbed);
       } else if(args[0] == 3) {
         const cricketEmbed = new Discord.MessageEmbed()
           .setTitle('Cricket Commands')

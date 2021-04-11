@@ -10,7 +10,7 @@ module.exports = {
   description: 'Your daily tasks and to keep you interested',
   category: 'Cricket',
   syntax: 'e.quests',
-  run: async (message) => {
+  run: async ({message}) => {
     const { channel, author, content } = message;
     
     const tickEmoji = await getEmoji('ok');

@@ -13,7 +13,7 @@ module.exports = {
   category: 'Minigames',
   syntax: 'e.run',
   status: true,
-  run: async (message, args, prefix, client, getTrain) => {
+  run: async ({message, client, getTrain}) => {
     const { content, author, channel, mentions } = message;
     
     try {

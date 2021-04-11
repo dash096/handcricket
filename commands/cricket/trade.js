@@ -12,7 +12,7 @@ module.exports = {
   category: 'Cricket',
   syntax: 'e.send @user <coins/itemName> <amount>',
   cooldown: 10,
-  run: async (message, nabArgs, prefix) => {
+  run: async ({message}) => {
     const { content, author, channel, mentions } = message;
     
     const args = content.toLowerCase().trim().split(' ').slice(1);
@@ -29,7 +29,7 @@ module.exports = {
     if(!userData) return message.reply(getErrors('data', user));
     
     const targetData = await db.findOne({_id: target.id});
-    if(!targetData) message.reply(getErrors('data'), target)
+    if(!targetData) message.reply(getErrors('data'), target);
     
     const amount = args[args.length - 1];
       
