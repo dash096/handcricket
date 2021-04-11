@@ -149,7 +149,7 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
         }
       }
       const dot = () => {
-        if(bowled == c) {
+        if(bowled == c && useDot !== false) {
           return ' (used a dot)';
         } else {
           return '';
