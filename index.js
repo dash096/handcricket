@@ -4,24 +4,17 @@ const Discord = require("discord.js");
 const client = new Discord.Client({
   partials: ['USER', 'CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 'REACTION']
 });
-client.commands = new Discord.Collection();
-client.cooldowns = new Discord.Collection();
-const WOKCommands = require("wokcommands");
 const mongoose = require("mongoose");
 const db = require('./schemas/player.js');
 const prefix = 'e.';
 const { commands, cooldowns } = client;
+client.commands = new Discord.Collection();
+client.cooldowns = new Discord.Collection();
 
 module.exports = getEmojis;
   
 const Topgg = require('@top-gg/sdk');
 const api = new Topgg.Api(process.env.TOPGG_TOKEN);
-
-setInterval(() => {
-  api.postStats({
-    serverCount: client.guilds.cache.size
-  })
-}, 600 * 1000);
 
 //Ready Event
 client.on("ready", async () => {
@@ -54,8 +47,9 @@ function loadFiles() {
   const listeners = fs.readdirSync('./features');
   for(const listener of listeners) {
     try {
+      let topggapi = api;
       const feature = require(`./features/${listener}`);
-      feature({client, prefix, api});
+      feature({client, prefix, topggapi});
     } catch (e) {
       console.error(e);
     }
