@@ -1,3 +1,5 @@
+const Discord = require('discord.js');
+
 module.exports = {
   name: 'vote',
   aliases: ['v', 'daily', 'claim'],
