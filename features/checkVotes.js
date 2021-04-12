@@ -49,7 +49,7 @@ module.exports = async ({client, topggapi}) => {
       }
     }
     votes = newVotes;
-  }, 30 * 1000);
+  }, (60 * 15) * 1000);
   
 };
 
