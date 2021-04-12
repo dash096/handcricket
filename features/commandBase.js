@@ -28,12 +28,17 @@ module.exports = ({client, prefix, topggapi}) => {
       let user = author; let error = 'data';
       return message.reply(getErrors({error, user}));
     }
-    const targets = mentions.users;
-    for(const target of targets) {
-      let targetData = await db.findOne({ _id: target.id });
-      if(!targetData) {
-        let error = 'data'; let user = target;
-        return message.reply(getErrors({error, user}));
+    let targets = mentions.users;
+    targets = targets.values();
+    if(targets || targets.length !== 0) {
+      for(const target of targets) {
+        let targetData = await db.findOne({ _id: target.id });
+        if(!targetData) {
+          let error = 'data';
+          let user = target;
+          message.reply(getErrors({error, user}));
+          return;
+        }
       }
     }
     if (commandStatus === true && data.status) return message.reply('You are already engaged in a game, and you cant use the command - ' + command.name.charAt(0).toUpperCase() + command.name.slice(1));
