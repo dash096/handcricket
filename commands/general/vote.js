@@ -21,7 +21,8 @@ module.exports = {
     } else {
       const embed = new Discord.MessageEmbed()
         .setTitle('Vote Command')
-        .setDescription('You havent voted yet, Support us [here](https://top.gg/bot/804346878027235398/vote)')
+        .setDescription('You havent voted yet, Support us [here](https://top.gg/bot/804346878027235398/vote)' + 
+        'Note: It might take a maximum of 10 minutes for you to get the vote reward')
         .setColor('BLUE')
         .setThumbnail(author.displayAvatarURL());
       channel.send(embed);

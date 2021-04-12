@@ -12,7 +12,7 @@ client.commands = new Discord.Collection();
 client.cooldowns = new Discord.Collection();
 
 module.exports = getEmojis;
-  
+
 const Topgg = require('@top-gg/sdk');
 const api = new Topgg.Api(process.env.TOPGG_TOKEN);
 
@@ -33,7 +33,7 @@ client.on("ready", async () => {
   
     await loadFiles();
   
-    let loadFunctions = ['brokenQuests.js', 'brokenBoosts.js'];
+    let loadFunctions = ['brokenVotes.js', 'brokenQuests.js', 'brokenBoosts.js'];
     for(const loadFunction of loadFunctions) {
       const execute = require(`./functions/${loadFunction}`);
       execute(client, prefix);
