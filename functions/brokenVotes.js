@@ -18,19 +18,19 @@ module.exports = async ({client, topggapi}) => {
   }
   
   for(const data of lesserCooldown) {
-    brokeVote(data);
+    brokeVote(data, client);
   }
   for(const data of greaterCooldown) {
-    fixVote(data);
+    fixVote(data, client);
   }
 };
 
-async function brokeVote(data) {
+async function brokeVote(data, client) {
   const user = client.users.fetch(data._id);
   user.send('Your vote timer has refreshed, you can vote here: ' + 'https://top.gg/bot/804346878027235398/vote');
   await db.findOneAndUpdate({_id: user.id}, {$set: {voteCooldown: false, voteClaim: false}});
 }
-async function fixVote(data) {
+async function fixVote(data, client) {
   const user = client.users.fetch(data._id);
   const time = user.voteCooldown.getTime() - Date.now();
   setTimeout( async () => {
