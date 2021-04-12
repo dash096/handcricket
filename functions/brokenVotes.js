@@ -30,7 +30,7 @@ module.exports = async ({client, topggapi}) => {
     await db.findOneAndUpdate({_id: user.id}, {$set: {voteCooldown: false, voteClaim: false}});
   }
   async function fixVote(data) {
-    const user = client.users.fetch(data._id);
+    const user = await client.users.fetch(data._id);
     const time = user.voteCooldown.getTime() - Date.now();
     setTimeout( async () => {
       user.send('Your vote timer has refreshed, you can vote here: ' + 'https://top.gg/bot/804346878027235398/vote');
