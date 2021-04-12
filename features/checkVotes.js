@@ -43,6 +43,7 @@ module.exports = async ({client, topggapi}) => {
       try {
         user.send('Thanks for voting, you got ' + await rewards(user));
         await db.findOneAndUpdate({ _id: user.id }, { $set: {voteClaim: true, voteCooldown: nextVoteTime }});
+        console.log(await db.findOne({_id: user.id}));
       } catch (e) {
         votes = newVotes;
         return;

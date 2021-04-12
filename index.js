@@ -15,6 +15,7 @@ module.exports = getEmojis;
 
 const Topgg = require('@top-gg/sdk');
 const api = new Topgg.Api(process.env.TOPGG_TOKEN);
+let topggapi = api;
 
 //Ready Event
 client.on("ready", async () => {
@@ -36,7 +37,7 @@ client.on("ready", async () => {
     let loadFunctions = ['brokenVotes.js', 'brokenQuests.js', 'brokenBoosts.js'];
     for(const loadFunction of loadFunctions) {
       const execute = require(`./functions/${loadFunction}`);
-      execute(client, prefix);
+      execute({client, prefix, topggapi});
     }
   } catch (e) {
     return console.log(e);
@@ -47,7 +48,6 @@ function loadFiles() {
   const listeners = fs.readdirSync('./features');
   for(const listener of listeners) {
     try {
-      let topggapi = api;
       const feature = require(`./features/${listener}`);
       feature({client, prefix, topggapi});
     } catch (e) {
