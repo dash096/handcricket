@@ -104,13 +104,11 @@ async function updateCoins(amount, data, msg) {
 }
 
 async function updateItem(itemName, amount, data, message) {
-  let bag = data.bag;
-  if(!bag) bag = {};
+  let bag = data.bag || {};
   
-  let oldAmount = bag[itemName];
-  if (!oldAmount) oldAmount = 0;
+  let oldAmount = bag[itemName] || 0;
   
-  bag[itemName] = amount;
+  bag[itemName] = oldAmount + 1;
   
   await db.findOneAndUpdate({_id: data._id}, {$set: { bag: bag }});
 }
@@ -121,7 +119,7 @@ async function updateDecor(message, name) {
   const userDecors = data.decors || {};
   const oldBal = userDecors[name] || 0;
   const newBal = oldBal + 1;
-  userDecors[name] = 1;
+  userDecors[name] = newBal;
   
   await db.findOneAndUpdate({_id: author.id}, {$set: { decors: userDecors }});
 }
