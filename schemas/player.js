@@ -39,9 +39,7 @@ const player = new mongoose.Schema({
   voteClaim: {
     type: Boolean, default: false
   },
-  voteCooldown: {
-    type: Date
-  }
+  voteCooldown: Date,
 });
 
 const model = mongoose.model("player", player);
