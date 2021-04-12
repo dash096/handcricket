@@ -1,4 +1,4 @@
-module.exports = (error, user, itemName, filePath) => {
+module.exports = ({error, user, itemName, filePath}) => {
   let prefix = 'e.';
   if(error == 'time') {
     return 'Time\'s up!';

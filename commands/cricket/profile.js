@@ -4,7 +4,6 @@ const db = require("../../schemas/player.js");
 const getEmoji = require('../../index.js');
 const gain = require('../../functions/gainExp.js');
 const getLevels = require('../../functions/getLevels.js');
-const getErrors = require('../../functions/getErrors.js');
 
 const jimp = require('jimp');
 const getDecors = require('../../functions/getDecors.js');
@@ -24,7 +23,6 @@ module.exports = {
     const target = mentions.users.first() || message.author;
 
     const data = await db.findOne({_id: target.id});
-    if (!data) return message.reply(getErrors('data', target));
     
     let cb = '';
     if(data.coinBoost) {

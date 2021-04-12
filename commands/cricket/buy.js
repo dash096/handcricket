@@ -4,7 +4,6 @@ const itemDB = require("../../schemas/items.js");
 const getEmoji = require('../../index.js');
 const checkItems = require("../../functions/checkItems.js");
 const gain = require('../../functions/gainExp.js');
-const getErrors = require('../../functions/getErrors.js');
 
 module.exports = {
   name: 'buy',

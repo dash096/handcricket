@@ -2,7 +2,6 @@ const Discord = require('discord.js');
 const db = require('../../schemas/player.js');
 const questDB = require('../../schemas/quests.js');
 const getEmoji = require('../../index.js');
-const getErrors = require('../../functions/getErrors.js');
 
 module.exports = {
   name: 'quests',

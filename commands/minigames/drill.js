@@ -25,8 +25,11 @@ module.exports = {
     
       //Data Validation
       const data = await db.findOne({_id: author.id});
-      if(!data) return message.reply(getErrors('data', author));
-    
+      if(!data) {
+        let error = 'data';
+        let user = author;
+        message.reply(getErrors({error, user}));
+      }
       await db.findOneAndUpdate({_id: author.id}, { $set: { status: true} } );
     
       //Difficulty
@@ -73,7 +76,8 @@ module.exports = {
       return (result || [false, 0]);
     } catch(e) {
       console.log(e);
-      message.reply(getErrors('time'));
+      let error = 'time';
+      message.reply(getErrors({error}));
       return [false, 1];
     } finally {
       await db.findOneAndUpdate( { _id: author.id }, { $set: { status: false} });

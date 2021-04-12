@@ -6,7 +6,6 @@ const updateMulti = require('../../functions/updateMulti.js');
 const openBox = require('../../functions/openBox.js');
 const gain = require('../../functions/gainExp.js');
 const getEmoji = require('../../index.js');
-const getErrors = require('../../functions/getErrors.js');
 const getDecors = require('../../functions/getDecors.js');
 
 module.exports = {

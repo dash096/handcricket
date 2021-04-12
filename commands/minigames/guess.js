@@ -23,7 +23,8 @@ module.exports = {
     
       //Data Validation
       const data = await db.findOne({_id: author.id});
-      if(!data) return channel.reply(getErrors('data', author));
+      let user = author; let error = 'data';
+      if(!data) return channel.reply(getErrors({error , user}));
     
       await db.findOneAndUpdate({_id: author.id}, { $set: { status: true} } );
     
@@ -116,7 +117,8 @@ module.exports = {
       }
     } catch (e) {
       console.log(e);
-      channel.send(getErrors('time'));
+      let error = 'time';
+      channel.send(getErrors({error}));
       return [false, 0];
     } finally {
       await db.findOneAndUpdate( { _id: author.id }, { $set: { status: false} });

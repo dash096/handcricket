@@ -1,10 +1,7 @@
 const db = require('../schemas/player.js');
-const getErrors = require('./getErrors.js');
 
 module.exports = async function (name, data, msg) {
-
-
-//Change Coin Boost
+  //Change Coin Boost
   if (name === 'coinboost') {
     let oldCoinMulti = data.coinMulti || 0;
     

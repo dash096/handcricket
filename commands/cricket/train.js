@@ -1,6 +1,5 @@
 const fs = require('fs');
 const db = require('../../schemas/player.js');
-const getErrors = require('../../functions/getErrors.js');
 
 module.exports = {
   name: 'train',

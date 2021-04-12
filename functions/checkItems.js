@@ -2,13 +2,14 @@ const db = require("../schemas/items.js");
 const Discord = require("discord.js");
 const getErrors = require('./getErrors.js');
 
-module.exports = async function (message, file) {
+module.exports = async function (message, filePath) {
   
   const args = message.content.toLowerCase().trim().split(' ').slice(1);
   
   //Check args count
   if(file && args.length <= 1) {
-    message.reply(getErrors('syntax', 'e', 'e', file));
+    let error = 'syntax';
+    message.reply(getErrors({error, filePath}));
     return 'err';
   }
   
@@ -55,7 +56,8 @@ module.exports = async function (message, file) {
   const itemData = await db.findOne({name: itemName}).catch((e) => console.log(e));
   
   if(!itemData) {
-    message.reply(getErrors('item', 'e', itemName));
+    let error = 'item';
+    message.reply(getErrors({error, itemName}));
     return 'err';
   }
   

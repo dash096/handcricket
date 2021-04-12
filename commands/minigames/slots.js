@@ -26,7 +26,8 @@ module.exports = {
       const data = await db.findOne({_id: author.id});
       
       if(args.length === 0 || isNaN(args[0])) {
-        return message.reply(getErrors('syntax', 'e', 'e', 'minigames/slots.js'));
+        let error = 'syntax'; let filePath = 'minigames/slots.js';
+        return message.reply(getErrors({error, filePath}));
       }
     
       const bet = args[0];

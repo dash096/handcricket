@@ -32,12 +32,6 @@ module.exports = {
     const targetdata = await db.findOne({
       _id: target.id
     });
-
-    //Data Validation
-    if (!targetdata) {
-      message.reply(getErrors('data', target));
-      return;
-    }
     
     //Change status to avoid 2 matchs at same time
     await changeStatus(user, true);
@@ -96,7 +90,8 @@ module.exports = {
         }
       } catch(e) {
         console.log(e);
-        channel.send(getErrors('time'));
+        let error = 'time';
+        channel.send(getErrors({error}));
         await changeStatus(user, false);
         await changeStatus(target, false);
         return;
@@ -227,7 +222,8 @@ async function userWon(message, user, target, post) {
     start(message, batsman, bowler, post);
   } catch (e) {
     console.log(e);
-    channel.send(getErrors('time'));
+    let error = 'time';
+    channel.send(getErrors({error}));
   }
   
 }
@@ -257,7 +253,8 @@ async function targetWon(message, user, target, post) {
       start(message, batsman, bowler, post);
     } catch (e) {
       console.log(e);
-      channel.send(getErrors('time'));
+      let error = 'time';
+      channel.send(getErrors({error}));
     }
   }
   

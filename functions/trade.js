@@ -15,7 +15,8 @@ module.exports = async function (what, amount, user, target, msg) {
     const oldTargetCC = targetData.cc;
     
     if(oldUserCC < amount) {
-      msg.reply(getErrors('lessAssets', user, itemName));
+      let error = 'lessAssets';
+      msg.reply(getErrors({error, user, itemName}));
       return;
     } else {
       //Update Db 
