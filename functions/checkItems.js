@@ -7,7 +7,7 @@ module.exports = async function (message, filePath) {
   const args = message.content.toLowerCase().trim().split(' ').slice(1);
   
   //Check args count
-  if(filePath && args.length <= 1) {
+  if(filePath && args.length <= 1 && parseInt(args[0])) {
     let error = 'syntax';
     message.reply(getErrors({error, filePath}));
     return 'err';

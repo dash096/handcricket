@@ -1,5 +1,6 @@
 const db = require('../schemas/player.js');
 const getLevels = require('./getLevels.js');
+const udpateBag = require('./updateBag.js');
 
 module.exports = async function (nabData, amt, msg, user) {
   let data = nabData;
@@ -23,13 +24,7 @@ module.exports = async function (nabData, amt, msg, user) {
   if(pLevel != sLevel) {
     if(user) msg.send(`${user} CONGRATS!!! You leveled up to **${sLevel}**! You also got a lootbox!!!`);
     else msg.reply(`CONGRATS!!! You leveled up to **${sLevel}**! You also got a lootbox!!!`);
-    const bag = data.bag || {};
-    const amount = bag.lootbox || 0;
-    bag.lootbox = amount + 1;
-    await db.findOneAndUpdate({_id: data._id},
-    { $set: {
-      bag: bag
-    }});
+    await updateBag('lootbox', -1, data, message);
   }
   
   await db.findOneAndUpdate({_id: data._id},

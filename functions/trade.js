@@ -1,13 +1,14 @@
 const db = require('../schemas/player.js');
 const getEmoji = require('../index.js');
 const getErrors = require('./getErrors.js');
+const updateBag = require('./updateBag.js');
 
-module.exports = async function (what, amount, user, target, msg) {
+module.exports = async function (item, amount, user, target, msg) {
   const coinEmoji = await getEmoji('coin');
   
   const args = msg.content.trim().split(' ');
   
-  if(args.length == 4 && what === 'coins') {
+  if(args.length == 4 && item === 'coins') {
     const userData = await db.findOne({_id: user.id});
     const targetData = await db.findOne({_id: target.id});
     
@@ -26,43 +27,13 @@ module.exports = async function (what, amount, user, target, msg) {
     }
   }
   else {
-    const itemName = what[0];
+    const itemName = item[0];
     
     const userData = await db.findOne({_id: user.id});
     const targetData = await db.findOne({_id: target.id});
     
-    let userBag = userData.bag;
-    let targetBag = targetData.bag;
-    if(!userBag) {
-      userBag = {};
-    }
-    if(!targetBag) {
-      targetBag = {};
-    }
-    
-    let oldUserAmount = userBag[itemName];
-    let oldTargetAmount = targetBag[itemName];
-    
-    if(!oldUserAmount || oldUserAmount < amount) {
-      return msg.reply('You dont have that many ' + itemName);
-    }
-    if(!oldTargetAmount) {
-      oldTargetAmount = 0;
-    }
-    
-    const newAmount = oldUserAmount - parseInt(amount);
-    
-    if(newAmount === 0) {
-      delete userBag[itemName];
-      targetBag[itemName] = oldTargetAmount + parseInt(amount);
-    } else {
-      userBag[itemName] = newAmount;
-      targetBag[itemName] = oldTargetAmount + parseInt(amount);
-    }
-    
-    await db.findOneAndUpdate({_id: user.id}, { $set: { bag: userBag } });
-    await db.findOneAndUpdate({_id: target.id}, { $set: { bag: targetBag } });
-    
+    updateBag(itemName, parseInt(amount), userData, msg);
+    updateBag(itemName, -(parseInt(amount)), targetData, msg);
     await msg.channel.send('Successfully traded ' + amount + ' ' + itemName + ' with' + ' **' + target.tag + '**' );
   }
 };

@@ -1,6 +1,7 @@
 const db = require('../schemas/player.js');
 const gain = require('../functions/gainExp.js');
 const getDecors = require('./getDecors.js');
+const updateDecor = require('./updateDecor.js');
 
 module.exports = async function(winner, loser, coins, wS, wB, lS, lB, channel) {
   const winnerData = await db.findOne({
@@ -93,14 +94,10 @@ module.exports = async function(winner, loser, coins, wS, wB, lS, lB, channel) {
   }, loserSet);
   
   const rando = Math.random();
-  if(rando < 0.01) {
+  if(rando < 0.05) {
     const decors = getDecors();
     const decor = decors[Math.floor(Math.random() * decors.length)];
-    const userDecors = winnerData.decors || {};
-    const userDecor = userDecors[decor] || 0;
-    const newUserDecor = userDecor + 1;
-    userDecors[decor] = newUserDecor;
-    await db.findOneAndUpdate({_id: winner.id}, {$set: {decors: userDecors}});
+    updateDecor(decor, 1, winnerData);
     winner.send(`Oh Damm! You got a ${decor} too!`);
   }
   await gain(winnerData, 7, channel, winner);

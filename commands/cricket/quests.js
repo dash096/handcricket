@@ -2,6 +2,7 @@ const Discord = require('discord.js');
 const db = require('../../schemas/player.js');
 const questDB = require('../../schemas/quests.js');
 const getEmoji = require('../../index.js');
+const updateBag = require('../../functions/updateBag.js');
 
 module.exports = {
   name: 'quests',
@@ -123,17 +124,14 @@ async function checkIfCompleted(message, data, tick, cross) {
   } else if (completedOnes.length >= 2) {
     message.reply('You have completed your daily quests and you got a lootbox');
     
-    const bag = data.bag || {};
-    const oldLootbox = bag.lootbox || 0;
-    bag.lootbox = parseInt(oldLootbox) + 1;
-    
     const xp = parseInt(data.xp);
     
     const newTime = ((60 * 60) * 12) * 1000;
     const DateTime = Date.now() + (newTime);
     const resetDate = new Date(DateTime);
     quests.time = resetDate;
-    await db.findOneAndUpdate({_id: data._id}, { $set: {bag: bag, xp: xp + 6.9, quests: quests} });
+    await db.findOneAndUpdate({_id: data._id}, { $set: { xp: xp + 6.9, quests: quests } });
+    await updateBag('lootbox', -1, data, message);
     
     setTimeout(async () => {
       await db.findOneAndUpdate({_id: data._id}, { $unset: {quests: 'never mind'}});

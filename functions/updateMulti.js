@@ -1,8 +1,8 @@
 const db = require('../schemas/player.js');
 
-module.exports = async function (name, data, msg) {
+module.exports = async function (itemName, data, msg) {
   //Change Coin Boost
-  if (name === 'coinboost') {
+  if (itemName === 'coinboost') {
     let oldCoinMulti = data.coinMulti || 0;
     
     //Check if boost is 0, and change to 0.1
@@ -62,7 +62,7 @@ module.exports = async function (name, data, msg) {
 
 
 //Change Toss Boost
-  if (name === 'tossboost') {
+  if (itemName === 'tossboost') {
     let oldTossMulti = data.tossMulti;
     
     //Check if tossmulti is 0 and change to 0.1

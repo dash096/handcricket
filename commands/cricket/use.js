@@ -3,6 +3,8 @@ const Discord = require('discord.js');
 const checkItems = require('../../functions/checkItems.js');
 const updateBag = require('../../functions/updateBag.js');
 const updateMulti = require('../../functions/updateMulti.js');
+const updateDecor = require('../../functions/updateDecor.js');
+const updateCoins = require('../../functions/updateCoins.js');
 const openBox = require('../../functions/openBox.js');
 const gain = require('../../functions/gainExp.js');
 const getEmoji = require('../../index.js');
@@ -73,13 +75,13 @@ module.exports = {
           const decors = getDecors.type1;
           const decor = decors[Math.floor(Math.random() * decors.length)];
           await msg.edit(`Oh Damn, You got a ${decor}!`);
-          updateDecor(message, decor);
+          updateDecor(decor, 1, playerData, message);
         }
         
         else if(isNaN(e2)) {
           const emoji = await getEmoji(e2);
           await msg.edit(`You got a **${emoji} ${e2}**`);
-          updateItem(e2, 1, playerData, message);
+          updateBag(e2, -1, playerData, message);
         }
         
         else if(parseInt(e2)) {
@@ -97,29 +99,3 @@ module.exports = {
     await gain(playerData, 2, message);
   }
 };
-
-async function updateCoins(amount, data, msg) {
-  const oldBal = data.cc;
-  await db.findOneAndUpdate({_id: data._id}, { $set: {cc: oldBal + amount} });
-}
-
-async function updateItem(itemName, amount, data, message) {
-  let bag = data.bag || {};
-  
-  let oldAmount = bag[itemName] || 0;
-  
-  bag[itemName] = oldAmount + 1;
-  
-  await db.findOneAndUpdate({_id: data._id}, {$set: { bag: bag }});
-}
-
-async function updateDecor(message, name) {
-  const { author } = message
-  const data = await db.findOne({_id: author.id});
-  const userDecors = data.decors || {};
-  const oldBal = userDecors[name] || 0;
-  const newBal = oldBal + 1;
-  userDecors[name] = newBal;
-  
-  await db.findOneAndUpdate({_id: author.id}, {$set: { decors: userDecors }});
-}
