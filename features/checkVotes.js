@@ -1,10 +1,8 @@
-const votesDB = require('../schemas/votesAndUsers.js');
 const db = require('../schemas/player.js');
 const getEmoji = require('../index.js');
 
 module.exports = async ({client, topggapi}) => {
   let votes = await topggapi.getVotes();
-  await votesDB.findOneAndUpdate({name: 'votes'}, {$set: {array: votes}});
   
   setInterval(async () => {
     const newVotes = await topggapi.getVotes();
