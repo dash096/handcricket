@@ -69,7 +69,7 @@ module.exports = {
           msg.reply(`Type either \`y\`/\`n\``);
           return await checkWill();
         }
-      } catch(e) {'
+      } catch(e) {
         let error = 'time';
         channel.send(getErrors({error}));
         return console.log(e);
@@ -99,7 +99,7 @@ module.exports = {
             rolling.edit(`${user} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
           }, 3000);
           userWon(message, user, target, post);
-        } else if (roll >= user.tossMulti) {//Target wins with roll.
+        } else {//Target wins with roll.
           const rolling = await channel.send(`Rolling the ${tossEmoji} Lucky Coin....`);
           setTimeout( () => {
             rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
@@ -117,7 +117,7 @@ module.exports = {
             rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
           }, 3000);
           targetWon(message, user, target, post);
-        } else if (roll >= target.tossMulti) {//User wins with roll
+        } else {//User wins with roll
           const rolling = await channel.send(`Rolling the ${tossEmoji} Lucky Coin....`);
           setTimeout( () => {
             rolling.edit(`${user} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
@@ -136,7 +136,7 @@ module.exports = {
             rolling.edit(`${user} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
           }, 3000);
           userWon(message, user, target, post);
-        } else if (roll2 === 2) { //Target wins
+        } else { //Target wins
           const rolling = await channel.send(`Rolling the ${tossEmoji} Lucky Coin....`);
           setTimeout( () => {
             rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
@@ -158,12 +158,12 @@ async function start(message, batsman, bowler, post) {
   changeStatus(batsman, true, bowler);
   
   const firstInnings = require("../../functions/innings1.js");
-  firstInnings(batsman, bowler, message, post);'
+  firstInnings(batsman, bowler, message, post);
 }
 
 async function userWon(message, user, target, post) {
   const { content, author, channel, mentions } = message;
-    
+  
   try {
     const msgs = await channel.awaitMessages(
       m => m.author.id === user.id, { max: 1, time: 20000, errors: ['time'] }

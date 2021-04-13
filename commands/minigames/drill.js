@@ -8,7 +8,7 @@ let time = 7000;
     
 module.exports = {
   name: 'drill',
-  aliases: 'run',
+  aliases: ['run'],
   description: 'Coach coming! Run the Drill! Exercise!',
   category: 'Minigames',
   syntax: 'e.run',
