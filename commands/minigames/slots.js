@@ -34,7 +34,7 @@ module.exports = {
       if(bet < 100) {
         return message.reply('Bet amount should atleast be 100, however more money more luck.');
       } else if (data.cc < bet) {
-        return message.reply(`You only got ${await getEmoji('coin')} ${data.cc}, Go beg to bet that ${bet}`);
+        return message.reply(`You only got ${await getEmoji('coin')} ${data.cc}, Go beg to bet that much!`);
       }
     
       const text = await getText();
