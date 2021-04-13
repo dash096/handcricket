@@ -34,7 +34,7 @@ client.on("ready", async () => {
   
     await loadFiles();
   
-    let loadFunctions = ['brokenVotes.js', 'brokenQuests.js', 'brokenBoosts.js'];
+    let loadFunctions = fs.readdirSync('./functions').filter(file => file.startsWith('broke'));
     for(const loadFunction of loadFunctions) {
       const execute = require(`./functions/${loadFunction}`);
       execute({client, prefix, topggapi});
