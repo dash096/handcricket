@@ -1,6 +1,6 @@
 const db = require('../schemas/player.js');
 const getLevels = require('./getLevels.js');
-const udpateBag = require('./updateBag.js');
+const updateBag = require('./updateBag.js');
 
 module.exports = async function (nabData, amt, msg, user) {
   let data = nabData;
