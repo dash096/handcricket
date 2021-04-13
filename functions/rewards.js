@@ -21,7 +21,7 @@ module.exports = async function(winner, loser, coins, wS, wB, lS, lB, channel) {
   const winnerCoins = winnerData.cc;
   const winnerSTR = winnerData.strikeRate;
   const winnerXP = winnerData.xp;
-  const winnerQuests = winnerData.quests;
+  const winnerQuests = winnerData.quests || {};
   //Duck?
   const winnerDuck = winnerQuests.duck || 0;
   if(winnerDuck !== true && wB == 2) {
@@ -46,7 +46,7 @@ module.exports = async function(winner, loser, coins, wS, wB, lS, lB, channel) {
   const loserLoses = loserData.loses;
   const loserSTR = loserData.strikeRate;
   const loserXP = loserData.xp;
-  const loserQuests = loserData.quests;
+  const loserQuests = loserData.quests || {};
   //Duck?
   const loserDuck = loserQuests.duck || 0;
   if(loserDuck !== true && lB == 2) {
