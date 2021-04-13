@@ -25,6 +25,8 @@ module.exports = async function (nabData, amt, msg, user) {
     if(user) msg.send(`${user} CONGRATS!!! You leveled up to **${sLevel}**! You also got a lootbox!!!`);
     else msg.reply(`CONGRATS!!! You leveled up to **${sLevel}**! You also got a lootbox!!!`);
     await updateBag('lootbox', -1, data, message);
+    await db.findOneAndUpdate({_id: data._id}, {$set: {xp: sXP + 1}});
+    return;
   }
   
   await db.findOneAndUpdate({_id: data._id},
