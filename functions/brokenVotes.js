@@ -1,4 +1,3 @@
-const votesDB = require('../schemas/votesAndUsers.js');
 const db = require('../schemas/player.js');
 const getEmoji = require('../index.js');
 

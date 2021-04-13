@@ -1,11 +1,12 @@
 require('dotenv').config();
 const fs = require('fs');
+const mongoose = require("mongoose");
+const db = require('./schemas/player.js');
+const Topgg = require('@top-gg/sdk');
 const Discord = require("discord.js");
 const client = new Discord.Client({
   partials: ['USER', 'CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 'REACTION']
 });
-const mongoose = require("mongoose");
-const db = require('./schemas/player.js');
 const prefix = 'e.';
 const { commands, cooldowns } = client;
 client.commands = new Discord.Collection();
@@ -13,14 +14,18 @@ client.cooldowns = new Discord.Collection();
 
 module.exports = getEmojis;
 
-const Topgg = require('@top-gg/sdk');
-const api = new Topgg.Api(process.env.TOPGG_TOKEN);
-let topggapi = api;
+const topggapi = new Topgg.Api(process.env.TOPGG_TOKEN);
+
+setInterval(() => {
+  topggapi.postStats({
+    serverCount: client.guilds.cache.size,
+  });
+}, 60 * 30 * 1000); //30 minutes
 
 //Ready Event
 client.on("ready", async () => {
   console.log("Logged in!");
-  client.user.setActivity("Cricket");
+  client.user.setActivity(`Cheems Cricket with ${client.users.cache.size} users!`);
   
   const dbOptions = {
     useNewUrlParser: true,
