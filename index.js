@@ -25,7 +25,7 @@ setInterval(() => {
 //Ready Event
 client.on("ready", async () => {
   console.log("Logged in!");
-  client.user.setActivity(`Cheems Cricket with ${client.users.cache.size} users!`);
+  client.user.setActivity(`Cheems Cricket in ${client.guilds.cache.size} guilds!`);
   
   const dbOptions = {
     useNewUrlParser: true,
