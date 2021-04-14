@@ -7,7 +7,7 @@ module.exports = {
     syntax: 'e.invite',
     cooldown: 2,
     run: ({message}) => {
-      const { content, author, channel, mentions } = message;
+      /*const { content, author, channel, mentions } = message;
       const embed = new Discord.MessageEmbed()
         .setTitle('Links')
         .setDescription('Here are the links that you\'d ever need\n\n' +
@@ -15,5 +15,5 @@ module.exports = {
         .setFooter('Have a Good Day :)')
         .setColor('BLUE');
       channel.send(embed);
-    }
+    }*/
 };
