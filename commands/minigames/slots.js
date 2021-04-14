@@ -93,7 +93,7 @@ module.exports = {
     
         if(win[0] === true) {
           if(win[1] === 'decor') {
-            const decors = getDecors.type1;
+            const decors = getDecors('type1');
             const decor = decors[Math.floor(Math.random() * decors.length)];
             updateDecor(decor, author);
             return `${await getEmoji('sh')} ${await getEmoji('sh')} ${await getEmoji('sh')}`;

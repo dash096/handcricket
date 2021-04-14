@@ -162,17 +162,16 @@ function getWR(data) {
 
 async function getCharacter(target) {
   const userData = await db.findOne({_id: target.id});
-  const decorsData = getDecors;
   
   let type = 'type1';
-  const decorsData1 = decorsData[type];
+  const decorsData = getDecors(type);
   
   const userDecors = userData.decors || {};
   
   const images = [];
   
-  decorsData1.forEach(decorData => {
-    const userHas = Object.keys(userDecors).filter(key => key == decorData);
+  decorsData.forEach(decorData => {
+    const userHas = Object.keys(userDecors).filter(key => decorData == key);
     if(userHas.length !== 0) {
       userHas.forEach(decor => images.push(`./decors/${type}/${decorData}.png`));
     }
@@ -201,7 +200,8 @@ async function getImage(target, type, paths) {
   } else if (paths.length === 1) {
     const toComposite = await jimp.read(paths[0]);
     character
-    .composite(toComposite, 0, 0)
+    .resize(480, 270)
+    .composite(toComposite, 3, 3)
     .write(exportPath);
   } else {
     character.write(exportPath);

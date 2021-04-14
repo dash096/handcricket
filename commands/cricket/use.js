@@ -64,7 +64,7 @@ module.exports = {
       const e1 = await updateBag(itemName, itemAmount, playerData, message);
       if(e1 == 'err') return;
       
-      const e2 = await openBox(itemAmount, playerData, message);
+      let e2 = await openBox(itemAmount, playerData, message);
       if(e2 == 'err') return;
       
       const msg = await message.reply('Opening a lootBox!!!');
@@ -72,7 +72,7 @@ module.exports = {
       setTimeout( async () => {
         
         if(e2 == 'decor') {
-          const decors = getDecors.type1;
+          const decors = getDecors('type1');
           const decor = decors[Math.floor(Math.random() * decors.length)];
           await msg.edit(`Oh Damn, You got a ${decor}!`);
           updateDecor(decor, 1, playerData, message);

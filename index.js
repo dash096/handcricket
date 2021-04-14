@@ -36,7 +36,7 @@ client.on("ready", async () => {
   try {
     await mongoose.connect(process.env.MONGO, dbOptions);
     console.log('Mongo Connected');
-  
+    
     await loadFiles();
   
     let loadFunctions = fs.readdirSync('./functions').filter(file => file.startsWith('broke'));

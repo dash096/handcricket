@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-const playerDB = require("../../schemas/player.js");
+const db = require("../../schemas/player.js");
 const itemDB = require("../../schemas/items.js");
 const getEmoji = require('../../index.js');
 const checkItems = require("../../functions/checkItems.js");
@@ -23,6 +23,9 @@ module.exports = {
     //Item Info
     const name = itemsArray[0];
     const number = itemsArray[1];
+    
+    const data = await db.findOne({_id: author.id});
+    const item = await itemDB.findOne({name: name});
     
     const balance = data.cc;
     const cost = item._id * number;
