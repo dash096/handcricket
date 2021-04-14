@@ -143,9 +143,12 @@ module.exports = {
           }, 3000);
           targetWon(message, user, target, post);
         }
-      } else {
-        channel.send('Something went wrong, try again');
-        await changeStatus(user, false, target);
+      } else {//Target wins
+        const rolling = await channel.send(`Rolling the ${tossEmoji} Lucky Coin....`);
+        setTimeout( () => {
+          rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
+        }, 3000);
+        targetWon(message, user, target, post);
       }
     }
   }
