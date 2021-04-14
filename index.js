@@ -34,8 +34,6 @@ client.on("ready", async () => {
     useCreateIndex: true
   };
   try {
-      
-    console.log((await client.guilds.fetch('823608260166025217')).iconURL())
     await mongoose.connect(process.env.MONGO, dbOptions);
     console.log('Mongo Connected');
   
