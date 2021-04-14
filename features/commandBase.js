@@ -49,7 +49,7 @@ module.exports = ({client, prefix, topggapi}) => {
     'EMBED_LINKS',
     'ATTACH_FILES',
     'SEND_MESSAGES',
-    'VIEW_CHANNEL',
+    //'VIEW_CHANNEL',
     'READ_MESSAGE_HISTORY'
     ];
     for(const perm of perms) {
