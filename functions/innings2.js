@@ -5,11 +5,10 @@ const rewards = require('./rewards.js');
 const updateBag = require('./updateBag.js');
 
 //shuffled
-module.exports = async function(bowler, batsman, boS, baB, message, post) {
+module.exports = async function(bowler, batsman, boS, baB, mc, post) {
   const emoji = await getEmoji('coin');
   
   const target = boS;
-  const mc = message.channel;
   
   let batDots = 0;
   let useDot = false;
