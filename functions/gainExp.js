@@ -29,7 +29,7 @@ module.exports = async function (nabData, amt, msg, user) {
       const decors = user.decors || {};
       const tracks = decors.tracks || 0;
       decors.tracks = tracks + 1;
-      await db.findOneAndUpdate({_id: data._id}, {$set: {decors: decors}}});
+      await db.findOneAndUpdate({_id: data._id}, {$set: {decors: decors}});
     }
     await db.findOneAndUpdate({_id: data._id}, {$set: {xp: sXP + 1}});
     return;
