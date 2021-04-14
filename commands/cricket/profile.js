@@ -1,11 +1,11 @@
 const fs = require('fs');
 const Discord = require("discord.js");
 const db = require("../../schemas/player.js");
+const jimp = require('jimp');
 const getEmoji = require('../../index.js');
 const gain = require('../../functions/gainExp.js');
 const getLevels = require('../../functions/getLevels.js');
-
-const jimp = require('jimp');
+const getTarget = require('../../functions/getTarget.js');
 const getDecors = require('../../functions/getDecors.js');
 
 module.exports = {
@@ -15,13 +15,14 @@ module.exports = {
   category: 'Cricket',
   syntax: 'e.profile @user',
   cooldown: 6,
-  run: async ({message}) => {
+  run: async ({message, args, client}) => {
     const { content, author, channel, mentions } = message;
     
     const coinEmoji = await getEmoji('coin');
     
-    const target = mentions.users.first() || message.author;
-
+    let target = getTarget(message, args, client);
+    if(!target) return;
+    
     const data = await db.findOne({_id: target.id});
     
     let cb = '';

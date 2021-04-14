@@ -4,6 +4,7 @@ const checkItems = require("../../functions/checkItems.js");
 const trade = require('../../functions/trade.js');
 const gain = require('../../functions/gainExp.js');
 const getErrors = require('../../functions/getErrors.js');
+const getTarget = require('../../functions/getTarget.js');
 
 module.exports = {
   name: 'send',
@@ -12,17 +13,16 @@ module.exports = {
   category: 'Cricket',
   syntax: 'e.send @user <coins/itemName> <amount>',
   cooldown: 10,
-  run: async ({message}) => {
+  run: async ({message, args, client}) => {
     const { content, author, channel, mentions } = message;
-    
-    const args = content.toLowerCase().trim().split(' ').slice(1);
     
     //User
     const user = author;
     
     //Target
-    const target = mentions.users.first();
-    if(!target || target.bot || target.id === author.id) return message.reply('The target is not valid.');
+    let target = getTarget(message, args, client);
+    if(!target) return;
+    if(user.id === target.id) return message.reply('Trade yourself? Silly');
     
     //Data
     const userData = await db.findOne({_id: user.id});

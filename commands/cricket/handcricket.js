@@ -2,6 +2,7 @@ const db = require("../../schemas/player.js");
 const Discord = require("discord.js");
 const getErrors = require('../../functions/getErrors.js');
 const getEmoji = require('../../index.js');
+const getTarget = require('../../functions/getTarget.js');
 
 module.exports = {
   name: "handcricket",
@@ -11,19 +12,16 @@ module.exports = {
   syntax: 'e.handcricket @user --post (to post scores in channel)',
   status: true,
   cooldown: 10,
-  run: async ({message}) => {
+  run: async ({message, args, client}) => {
     const tossEmoji = await getEmoji('toss');
     const { content, author, channel, mentions } = message;
+    
     //Players
     const user = author;
-    const target = mentions.users.first();
-
-    //Target Validation
-    if (!target || target.bot || target.id === user.id) {
-      message.reply("Invalid opponent.");
-      return;
-    }
-
+    const target = getTarget(message, args, client);
+    if(!target) return;
+    if(user.id === target.id) return message.reply('Play with yourself? Silly');
+    
     const userdata = await db.findOne({
       _id: user.id
     });

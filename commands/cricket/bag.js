@@ -2,6 +2,7 @@ const Discord = require("discord.js");
 const db = require("../../schemas/player.js");
 const gain = require('../../functions/gainExp.js');
 const getEmoji = require('../../index.js');
+const getTarget = require('../../functions/getTarget.js');
 
 module.exports = {
   name: 'bag',
@@ -10,10 +11,11 @@ module.exports = {
   category: 'Cricket',
   syntax: 'e.bag',
   cooldown: 5,
-  run: async ({message}) => {
+  run: async ({message, args, client}) => {
     const { content, author, channel, mentions } = message;
     
-    const target = mentions.users.first() || author;
+    let target = getTarget(message, args, client);
+    if(!target) return;
     
     const data = await db.findOne({_id: target.id});
     
