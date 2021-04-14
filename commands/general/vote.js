@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const db = require('../../schemas/player.js');
 
 module.exports = {
   name: 'vote',
@@ -12,9 +13,10 @@ module.exports = {
     const voted = await topggapi.hasVoted(author.id);
     
     if(voted === true) {
+      const cooldown = await getCooldown(author);
       const embed = new Discord.MessageEmbed()
         .setTitle('Vote Command')
-        .setDescription('Thanks for Supporting me! You have already voted for me.')
+        .setDescription('Thanks for Supporting me! You have already voted for me.\n' + cooldown)
         .setColor('BLUE')
         .setThumbnail(author.displayAvatarURL());
       channel.send(embed);
@@ -29,3 +31,19 @@ module.exports = {
     }
   }
 };
+
+async function getCooldown(user) {
+  try {
+    const data = await db.findOne({_id: user.id});
+    const time = data.voteCooldown;
+    const ms = time.getTime() - Date.now();
+    const sec = ms/1000;
+    const min = sec/60;
+    const hour = (min/60).toString().split('.').shift();
+    const remainingMin = (min % 60).toFixed(0) || 0;
+    return `You can vote again in ${hour}hour(s) and ${remainingMin}min(s)`;
+  } catch (e) {
+    console.log(e);
+    return '';
+  }
+}
