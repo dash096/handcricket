@@ -42,7 +42,29 @@ module.exports = ({client, prefix, topggapi}) => {
       }
     }
     if (commandStatus === true && data.status) return message.reply('You are already engaged in a game, and you cant use the command - ' + command.name.charAt(0).toUpperCase() + command.name.slice(1));
-
+    
+    const perms = [
+    'ADD_REACTIONS',
+    'USE_EXTERNAL_EMOJIS',
+    'EMBED_LINKS',
+    'ATTACH_FILES',
+    'SEND_MESSAGES',
+    'VIEW_CHANNEL',
+    'READ_MESSAGE_HISTORY'
+    ];
+    for(const perm of perms) {
+      let hasPerm = message.guild.me.hasPermission(perm);
+      if(hasPerm === false && perm === 'SEND_MESSAGES') {
+        try {
+          author.send('I do not have send messages perms to execute that command in that channel. Ask a mod to gibe perms');
+        } catch(e) {
+          return;
+        }
+      } else if(hasPerm === false) {
+        return message.reply('I dont have all of my perms to do work, My required Permissions are:\n' + perms.join('\n'));8
+      }
+    }
+    
     //Cooldowns
     if (!cooldowns.has(command.name)) {
       cooldowns.set(command.name, new Discord.Collection());
