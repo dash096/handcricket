@@ -170,7 +170,7 @@ module.exports = async function(bowler, batsman, boS, baB, mc, post) {
         } else {
           bowler.send(`Wicket! The batsman hit ${c}${dot()}! You won a grand amount of ${emoji} ${coins}!`);
           batsman.send('Wicket! The bowler bowled ' + bowled + '! You lost... Sadge');
-          if(post === true) mc.send(`**${batsman.tag}** WICKET! He hit ${c}${dot()} and was bowled ${bowled} by **${bowler.tag}**`, {embed});
+          if(post === true) mc.send(`**${batsman.tag}** WICKET! He hit ${c}${dot()} and was bowled ${bowled} by **${bowler.tag}**`);
           rewards(bowler, batsman, coins, boS, boB, baS, baB, mc);
         }
 
