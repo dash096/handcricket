@@ -31,7 +31,7 @@ module.exports = {
     docs.forEach(async doc => {
       const title = doc.name.charAt(0).toUpperCase() + doc.name.slice(1);
       const itemEmoji = await getEmoji(doc.name);
-      text += `** ${itemEmoji} ${title}** - [${doc._id}](https://egal)`;
+      text += `** ${itemEmoji} ${title}** - [${doc.price}](https://egal)`;
       text += `\n${doc.description}\n\n`;
       embed.setDescription(text);
       meh += 1;

@@ -33,7 +33,7 @@ module.exports = {
     //Check Bal to buy.
     if(balance < cost) return message.reply('You arent rich enough to buy that much.');
     
-    await db.findOneAndUpdate({_id: data._id}, { $set: { cc: balance - cost } } );
+    await db.findOneAndUpdate({_id: data._id}, { $set: { cc: parseInt(balance) - parseInt(cost) } } );
     await updateBag(name, -(number), data, message);
     
     message.channel.send(`You bought **${number} ${item.name}** for ${coinEmoji} ${cost} coins`);
