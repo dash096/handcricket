@@ -121,7 +121,7 @@ async function checkIfCompleted(message, data, tick, cross) {
   
   if(time) {
     return `${tick} Claimed - **Lootbox**`;
-  } else if (completedOnes.length >= 2) {
+  } else if (completedOnes.length >= 3) {
     message.reply('You have completed your daily quests and you got a lootbox');
     
     const xp = parseInt(data.xp);

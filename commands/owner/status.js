@@ -2,7 +2,7 @@ const db = require('../../schemas/player.js');
 
 module.exports = {
   name: 'status',
-  aliases: ['cs'],
+  aliases: ['cs', 'fix'],
   description: 'Changes the status of the users mentioned',
   category: 'owner',
   syntax: 'e.status <user> <user>',
