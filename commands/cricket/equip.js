@@ -6,7 +6,7 @@ module.exports = {
   name: 'equip',
   aliases: ['wear'],
   description: 'Equip your fav decoration',
-  syntax: 'e.wear <the_item_name_in_your_bag>',
+  syntax: 'e.equip <the_item_name_in_your_bag>',
   category: 'Cricket',
   cooldown: 30,
   run: async ({message, args, client}) => {
@@ -28,7 +28,9 @@ module.exports = {
     
     const userDecors = data.decors || {};
     const equipped = userDecors.equipped || [];
-      
+    
+    console.log(decor);
+    
     if(decor.startsWith('shirt')) {
        let already = equipped.find(decor => decor.startsWith('shirt'));
        if(already && already[0]) {
@@ -40,16 +42,14 @@ module.exports = {
     } else if(decor.startsWith('pants') || decor.startsWith('tracks')) {
        let already = equipped.find(decor => decor.startsWith('pants') || decor.startsWith('tracks'));
        if(already && already[0]) {
-         equipped.splice(equipped.indexOf(already[0]), 1);
-         equipped.push(decor);
+         equipped.splice(equipped.indexOf(already[0]), 1, decor);
        } else {
          equipped.push(decor);
        }
     } else if(decor.startsWith('foot')) {
        let already = equipped.find(decor => decor.startsWith('foot'));
        if(already && already[0]) {
-         equipped.splice(equipped.indexOf(already[0]), 1);
-         equipped.push(decor);
+         equipped.splice(equipped.indexOf(already[0]), 1, decor);
        } else {
          equipped.push(decor);
        }
@@ -59,6 +59,6 @@ module.exports = {
     
     userDecors.equipped = equipped;
     await db.findOneAndUpdate({_id: data._id}, {$set: {decors: userDecors}});
-    await channel.send('Your character is now wearing ' + args.join(' '));
+    await channel.send('Your character is now wearing ' + args.reverse().join(' '));
   }
 }
