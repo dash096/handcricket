@@ -79,9 +79,9 @@ module.exports = {
         const random = Math.random();
         const decideWin = () => {
           if(bet/500 > 0.45) {
-            return 0.5;
+            return 0.6;
           } else {
-            return bet/2500;
+            return bet/500; //100/1250
           }
         };
         const decider = decideWin();

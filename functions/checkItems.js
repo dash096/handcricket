@@ -56,9 +56,15 @@ module.exports = async function (message, filePath) {
   const itemData = await db.findOne({name: itemName}).catch((e) => console.log(e));
   
   if(!itemData) {
-    let error = 'item';
-    message.reply(getErrors({error, itemName}));
-    return 'err';
+    if(parseInt(args[0])) {
+      let error = 'syntax';
+      message.reply(getErrors({error, filePath}));
+      return 'err';
+    } else {
+      let error = 'item';
+      message.reply(getErrors({error, itemName}));
+      return 'err';
+    }
   }
   
   return [itemName, itemAmount];

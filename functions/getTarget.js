@@ -6,7 +6,7 @@ module.exports = (message, args, client) => {
     client.users.cache.get(query) || 
     client.users.cache.find(user => user.tag == query);
     if(!target || target.bot) {
-      message.reply('Invalid Target, Silly. You should do one of these for a non-bot user. Either ping them, mention the id or type their @username#0000 and remove the @');
+      message.reply('**Invalid Target**, Either ping them, give their id or type their username#0000 without @');
       return;
     }
     return target;

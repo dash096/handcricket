@@ -21,8 +21,8 @@ module.exports = async function (itemName, itemAmount, user, target, msg) {
       msg.reply(getErrors({error, user, itemName}));
       return;
     } else {
-      updateCoins(-(itemAmount), userData);
-      updateCoins(itemAmount, targetData);
+      updateCoins(-(parseInt(itemAmount)), userData);
+      updateCoins(parseInt(itemAmount), targetData);
       msg.reply(`Successfully Traded ${coinEmoji} ${itemAmount} coins!`);
       await target.send(`**${user.tag}** sent you ${coinEmoji} ${itemAmount} coins.`);
     }

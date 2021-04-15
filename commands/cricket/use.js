@@ -21,7 +21,6 @@ module.exports = {
     const coinsEmoji = await getEmoji('coin');
     
     const itemArray = await checkItems(message);
-    console.log(itemArray);
     
     if(itemArray == 'err') return;
     let itemAmount = itemArray[1];
