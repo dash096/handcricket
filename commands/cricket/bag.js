@@ -45,7 +45,8 @@ module.exports = {
       for(const key of keys) {
         let color = key.split('_');
         let type = color.shift();
-        fieldText += `**${color} ${type}** - \`${userDecors[key]}\`\n`;
+        if(color.length !== 0) type = ` ${type}`; //To adjust spacing
+        fieldText += `**${color}${type}** - \`${userDecors[key]}\`\n`;
       }
     }
     

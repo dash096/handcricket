@@ -42,8 +42,6 @@ module.exports = {
     const STR = data.strikeRate;
     const WR = getWR(data);
     const charPath = await getCharacter(target);
-    let startDate = data.startedOn.toString().split(' ');startDate.pop();startDate.pop();startDate.pop();startDate.pop();startDate.pop();
-    startDate = startDate.join(' ');
     
     const embed = new Discord.MessageEmbed()
       .setTitle(`Profile of **${target.tag}**`)
@@ -56,14 +54,14 @@ module.exports = {
       .addField("Strike Rate", STR.toFixed(3), true)
       .addField("Toss Multi", data.tossMulti.toFixed(3) + tb, true)
       .addField("Coins Multi", data.coinMulti.toFixed(3) + cb, true)
-      .setFooter("Your Character looks cool! You started playing on " + startDate)
-      .attachFiles(`./${charPath}`)
-      .setImage(`attachment://${charPath}`)
+      .setFooter("Your Character looks cool! Use `e.equip <name>` to wear a decor for your character")
+      .attachFiles(`${charPath}`)
+      .setImage(`attachment://${charPath.split('/').pop()}`)
       .setColor('#2d61b5');
 
     await message.reply(embed);
     await gain(data, 1, message);
-    await fs.unlink(`./${charPath}`, (e) => {
+    await fs.unlink(`${charPath}`, (e) => {
       if(e) console.log(e);
     });
   }
@@ -169,23 +167,22 @@ async function getCharacter(target) {
   const decorsData = getDecors(type);
   
   const userDecors = userData.decors || {};
+  const equippedDecors = userDecors.equipped || [];
   
   const images = [];
   
-  decorsData.forEach(decorData => {
-    const userHas = Object.keys(userDecors).filter(key => decorData == key);
-    if(userHas.length !== 0) {
-      userHas.forEach(decor => images.push(`./decors/${type}/${decorData}.png`));
-    }
-  });
-  
+  if(equippedDecors.length > 0) {
+    equippedDecors.forEach(decor => {
+      images.push(`./decors/${type}/${decor}.png`);
+    });
+  }
   const image = await getImage(target, type, images);
   return image;
 }
 
 async function getImage(target, type, paths) {
   let character = await jimp.read(`./decors/${type}/character.png`);
-  let exportPath = `./${target.id}.png`;
+  let exportPath = `./temp/${target.id}.png`;
   let published = false;
   
   if(paths.length > 1) {
@@ -209,6 +206,6 @@ async function getImage(target, type, paths) {
     character.write(exportPath);
   }
   
-  return `${target.id}.png`;
+  return `${exportPath}`;
   
 }
