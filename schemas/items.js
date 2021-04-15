@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 
 const item = new mongoose.Schema({
-  _id: Number,//Cost
+  _id: Number,
   name: String,
+  price: Number,
   description: String
 });
 
