@@ -45,8 +45,20 @@ module.exports = {
       for(const key of keys) {
         let color = key.split('_');
         let type = color.shift();
+        let value = userDecors[key];
+        if(key == 'equipped') { //Chnage display if the array comes
+          value = '';
+          userDecors[key].forEach(decor => {
+            let arr = decor.split('_').reverse();
+            let name = arr[arr.length - 1];
+            name = name.charAt(0).toUpperCase() + name.slice(1);
+            arr.pop();
+            arr.push(name);
+            value += `${arr.join('')}, `;
+          });
+        }
         if(color.length !== 0) type = ` ${type}`; //To adjust spacing
-        fieldText += `**${color}${type}** - \`${userDecors[key]}\`\n`;
+        fieldText += `**${color}${type}** - \`${value}\`\n`;
       }
     }
     

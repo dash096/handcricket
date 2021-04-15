@@ -78,14 +78,14 @@ module.exports = ({client, prefix, topggapi}) => {
     if (timestamps.has(message.author.id)) {
       const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
       if (now < expirationTime) {
-        let timeLeft = (expirationTime - now) / 1000;
+        let timeLeft = parseInt((expirationTime - now) / 1000);
         let sec;
         let min;
         if (timeLeft >= 60) {
           min = (timeLeft/60).toFixed(0) + 'm';
-          sec = (timeLeft % 60) + 's';
-          if (sec == '0s') sec = '';
-        } else sec = timeLeft.toFixed(0) + 's';
+          sec = ` ${timeLeft % 60}s`;
+          if (sec == ' 0s') sec = '';
+        } else sec = ` ${timeLeft}s`;
         if (!min) min = '';
         return message.reply(`Wait for ${min}${sec} before spamming that command again.`);
       }
