@@ -19,8 +19,7 @@ module.exports = ({client, prefix, topggapi}) => {
     if (!command) return;
     
     //Status
-    let commandStatus = false;
-    if(command.status === true) commandStatus = true;
+    let commandStatus = command.status || false;
     
     //Check engagement
     const data = await db.findOne({ _id: author.id });
@@ -38,10 +37,14 @@ module.exports = ({client, prefix, topggapi}) => {
           let user = target;
           message.reply(getErrors({error, user}));
           return;
+        } else if(commandStatus === true && target.status === true) {
+          message.reply(`${target.tag} is already engaged in a game`);
         }
       }
     }
-    if (commandStatus === true && data.status) return message.reply('You are already engaged in a game, and you cant use the command - ' + command.name.charAt(0).toUpperCase() + command.name.slice(1));
+    if (commandStatus === true && data.status === true) {
+      message.reply('You are already engaged in a game');
+    }
     
     const perms = [
     'ADD_REACTIONS',
