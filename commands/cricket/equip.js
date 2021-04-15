@@ -27,7 +27,7 @@ module.exports = {
     if(!decor || decor.length === 0) {
       message.reply(`${args.join(' ')} is not a valid decor, it should be like \`e.equip <name_like_how_it_is_in_your_bag>\``);
       return;
-    } else if(!userHasDecor || userHasDecor.length === 0) {
+    } else if(!userHasDecor || userHasDecor.length === 0 || decor == 'equipped') {
       return message.reply('You dont own that kek');
     }
     
