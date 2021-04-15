@@ -28,7 +28,7 @@ module.exports = {
     const item = await itemDB.findOne({name: name});
     
     const balance = data.cc;
-    const cost = item._id * number;
+    const cost = item.price * number;
     
     //Check Bal to buy.
     if(balance < cost) return message.reply('You arent rich enough to buy that much.');
