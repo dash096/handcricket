@@ -20,8 +20,9 @@ module.exports = {
       message.reply(getErrors({error, filePath}));
       return;
     }
-    let decor = decorsData.find(decor => decor == args.reverse().join('_'));
-    if(!decor || !decor[0]) {
+    
+    let decor = decorsData.find(decor => decor == args.reverse().join('_').toLowerCase());
+    if(!decor || decor.length === 0) {
       message.reply(`${args.join(' ')} is not a valid decor, it should be like \`e.equip <name_like_how_it_is_in_your_bag>\``);
       return;
     }
