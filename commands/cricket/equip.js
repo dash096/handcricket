@@ -23,11 +23,13 @@ module.exports = {
     }
     
     let decor = decorsData.find(decor => decor == args.reverse().join('_').toLowerCase());
-    let userHasDecor = Object.keys(userDecors).filter(userDecor => userDecor == decor);
     if(!decor || decor.length === 0) {
       message.reply(`${args.join(' ')} is not a valid decor, it should be like \`e.equip <name_like_how_it_is_in_your_bag>\``);
       return;
-    } else if(!userHasDecor || userHasDecor.length === 0 || decor == 'equipped') {
+    } 
+    
+    let userHasDecor = Object.keys(userDecors).filter(userDecor => userDecor == decor[0]);
+    if(!userHasDecor || userHasDecor.length === 0 || decor == 'equipped') {
       message.reply('You dont own that kek');
       return;
     }
