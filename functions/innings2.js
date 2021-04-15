@@ -132,7 +132,7 @@ module.exports = async function(bowler, batsman, boS, baB, mc, post) {
         updateBagObj.channel = batsman;
         const bal = await updateBag('dots', 1, await db.findOneAndUpdate({_id: batsman.id}), updateBagObj);
         if(bal == 'err') return loopBatCollect();
-        else if(batDots == 3) {
+        else if(batDots === 3) {
           batsman.send(`You can only use Dot 3 times per match and you have 0 left!`);
           return loopBatCollect();
         } else if(parseInt(c) == bowled) {
@@ -215,6 +215,7 @@ module.exports = async function(bowler, batsman, boS, baB, mc, post) {
         return loopBatCollect();
       }
     } catch(e) {
+      console.log(e);
       if(timeoutDecider === true) {
         timeoutDecider = false;
         batsman.send('Match ended as you were inactive');

@@ -63,7 +63,7 @@ module.exports = {
         const msg = msgs.first();
         const c = msg.content.trim().toLowerCase();
         
-        if(content.toLowerCase().includes('--post') || c.toLowerCase().includes('--post')) post = true;
+        if(content.toLowerCase().includes('--post') || c.includes('--post')) post = true;
         
         if(c.startsWith('y')) {
           return true;

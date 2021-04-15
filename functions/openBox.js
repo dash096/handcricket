@@ -7,7 +7,9 @@ module.exports = async function (amount, data, msg) {
   const items = [];
   const getItemNames = () => {
     itemsData.forEach(data => {
-      items.push(data.name);
+      if(data != 'lootbox') {
+        items.push(data.name);
+      }
     });
   };
   getItemNames();
