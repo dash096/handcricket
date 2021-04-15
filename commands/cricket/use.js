@@ -42,7 +42,7 @@ module.exports = {
     }
 
     else if (itemName === 'coinboost') {
-      const e1 = await updateBag(itemName, itemAmount, playerData, message);
+      const e1 = await updateBag(itemName, 1, playerData, message);
       if (e1 == 'err') return;
       const e2 = await updateMulti(itemName, playerData, message);
       if(e2 == 'err') return;
@@ -51,7 +51,7 @@ module.exports = {
     }
 
     else if (itemName === 'tossboost') {
-      const e1 = await updateBag(itemName, itemAmount, playerData, message);
+      const e1 = await updateBag(itemName, 1, playerData, message);
       if (e1 == 'err') return;
       const e2 = await updateMulti(itemName, playerData, message);
       if(e2 == 'err') return;
@@ -60,37 +60,39 @@ module.exports = {
     } 
     
     else if (itemName === 'lootbox' ) {
-      itemAmount = 1;
       const e1 = await updateBag(itemName, itemAmount, playerData, message);
       if(e1 == 'err') return;
-      
-      let e2 = await openBox(itemAmount, playerData, message);
-      if(e2 == 'err') return;
-      
-      const msg = await message.reply('Opening a lootBox!!!');
+          
+      const msg = await message.reply(`Opening ${itemAmount || 1} lootBox!!!`);
       
       setTimeout( async () => {
+        let text = '';
+        for(var i = 0; i < itemAmount; i++) {
+          let e2 = await openBox(itemAmount, playerData, message);
+          if(e2 == 'err') return;
+          
+          if(e2 == 'decor') {
+            const decors = getDecors('type1');
+            const decor = decors[Math.floor(Math.random() * decors.length)];
+            text += `Oh Damn, You got a ${decor}!\n`;
+            updateDecor(decor, 1, playerData, message);
+          }
         
-        if(e2 == 'decor') {
-          const decors = getDecors('type1');
-          const decor = decors[Math.floor(Math.random() * decors.length)];
-          await msg.edit(`Oh Damn, You got a ${decor}!`);
-          updateDecor(decor, 1, playerData, message);
-        }
+          else if(isNaN(e2)) {
+            const emoji = await getEmoji(e2);
+            text += `You got a **${emoji} ${e2}**\n`;
+            updateBag(e2, -1, playerData, message);
+          }
         
-        else if(isNaN(e2)) {
-          const emoji = await getEmoji(e2);
-          await msg.edit(`You got a **${emoji} ${e2}**`);
-          updateBag(e2, -1, playerData, message);
+          else if(parseInt(e2)) {
+            text += 'You got a grand amount of ' + `**${coinsEmoji} ${e2} coins!**\n`;
+            updateCoins(parseInt(e2), playerData, message);
+          }
         }
-        
-        else if(parseInt(e2)) {
-          await msg.edit('You got a grand amount of **' + `${coinsEmoji} ${e2} coins!` + '**');
-          updateCoins(parseInt(e2), playerData, message);
-        }
+        await msg.edit(text);
       }, 5000);
-      
     }
+
     //Under Construction.
     if (itemName === 'magikball'){
       message.reply('Usage of magikBall items is still under development.');

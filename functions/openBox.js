@@ -3,15 +3,15 @@ const db = require("../schemas/items.js");
 module.exports = async function (amount, data, msg) {
   const random = Math.random();
   
-  const itemsData = db.find();
+  const itemsData = await db.find();
   const items = [];
-  const getItemNames= () => {
+  const getItemNames = () => {
     itemsData.forEach(data => {
       items.push(data.name);
     });
   };
+  getItemNames();
   items.push('decor');
-  items.push(163);
   items.push(363);
   const toReturn = choose();
   return toReturn;
@@ -21,9 +21,9 @@ module.exports = async function (amount, data, msg) {
     if(reward === 'decor') {
       const rando = Math.random();
       if(rando > 0.3) {
-        return 696;
+        return reward;
       }
-      return reward;
+      return 696;
     }
     return reward;
   }

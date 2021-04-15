@@ -45,7 +45,8 @@ client.on("ready", async () => {
       execute({client, prefix, topggapi});
     }
   } catch (e) {
-    return console.log(e);
+    console.log(e);
+    return;
   }
 });
 

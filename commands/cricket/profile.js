@@ -164,6 +164,7 @@ function getWR(data) {
 async function getCharacter(target) {
   const userData = await db.findOne({_id: target.id});
   
+  
   let type = 'type1';
   const decorsData = getDecors(type);
   

@@ -43,7 +43,9 @@ module.exports = {
     if(!keys || keys.length === 0) fieldText += 'None here hehehe';
     else {
       for(const key of keys) {
-        fieldText += `**${key}** - \`${userDecors[key]}\`\n`;
+        let color = key.split('_');
+        let type = color.shift();
+        fieldText += `**${color} ${type}** - \`${userDecors[key]}\`\n`;
       }
     }
     
