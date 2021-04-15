@@ -13,6 +13,7 @@ module.exports = {
     const { author, content, channel, mentions } = message;
     let type = 'type1';
     const data = await db.findOne({_id: author.id});
+    const userDecors = data.decors || {};
     const decorsData = getDecors(type);
     
     if(!args || args.length === 0) {
@@ -22,9 +23,12 @@ module.exports = {
     }
     
     let decor = decorsData.find(decor => decor == args.reverse().join('_').toLowerCase());
+    let userHasDecor = Object.keys(userDecors).filter(userDecor => userDecor == decor);
     if(!decor || decor.length === 0) {
       message.reply(`${args.join(' ')} is not a valid decor, it should be like \`e.equip <name_like_how_it_is_in_your_bag>\``);
       return;
+    } else if(!userHasDecor || userHasDecor.length === 0) {
+      return message.reply('You dont own that kek');
     }
     
     const userDecors = data.decors || {};
