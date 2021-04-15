@@ -34,7 +34,6 @@ module.exports = {
       return;
     }
     
-    const userDecors = data.decors || {};
     const equipped = userDecors.equipped || [];
     
     console.log(decor);
