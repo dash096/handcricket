@@ -37,6 +37,15 @@ client.on("ready", async () => {
     await mongoose.connect(process.env.MONGO, dbOptions);
     console.log('Mongo Connected');
     
+    const datas = await db.find();
+    datas.forEach(async data => {
+      const user = await client.users.fetch(data._id);
+      const decors = data.decors || {};
+      decors.tracks_black = 1;
+      await db.findOneAndUpdate({_id: data._id}, {$set: {decors: decors});
+      console.log(data._id);
+      await user.send('You are given a black tracks to save your dignity when someone sees your profile, Do e.equip `black tracks` to wear it');
+    })
     await loadFiles();
   
     let loadFunctions = fs.readdirSync('./functions').filter(file => file.startsWith('broke'));

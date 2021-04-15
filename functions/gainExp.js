@@ -26,10 +26,11 @@ module.exports = async function (nabData, amt, msg, user) {
     else msg.reply(`CONGRATS!!! You leveled up to **${sLevel}**! You also got a lootbox!!!`);
     await updateBag('lootbox', -1, data, msg);
     if(sLevel === 0) { //If the level is 0, gib tracks
-      const decors = user.decors || {};
+      const decors = data.decors || {};
       const tracks = decors.tracks_black || 0;
       decors.tracks_black = tracks + 1;
       await db.findOneAndUpdate({_id: data._id}, {$set: {decors: decors}});
+      await msg.reply('You also got a black tracks to save your dignity, do `e.equip black tracks` to wear it');
     }
     await db.findOneAndUpdate({_id: data._id}, {$set: {xp: sXP + 1}});
     return;
