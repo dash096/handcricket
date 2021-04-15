@@ -4,8 +4,9 @@ module.exports = {
     category: 'General',
     syntax: 'e.ping',
     cooldown: 2,
-    run: ({message}) => {
+    run: async ({message}) => {
       const { content, author, channel, mentions } = message;
-      message.reply(`Pong! ${Date.now() - message.createdTimestamp}ms.`);
+      const msg = await channel.send('Ponging');
+      msg.edit(`${author}, Pong! ${msg.createdTimestamp - message.createdTimestamp}ms`);
     }
 };
