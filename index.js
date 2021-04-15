@@ -16,17 +16,17 @@ module.exports = getEmojis;
 
 const topggapi = new Topgg.Api(process.env.TOPGG_TOKEN);
 
-setInterval(() => {
-  topggapi.postStats({
-    serverCount: client.guilds.cache.size,
-  });
-}, 60 * 30 * 1000); //30 minutes
-
 //Ready Event
 client.on("ready", async () => {
   console.log("Logged in!");
-  client.user.setActivity(`Cheems Cricket in ${client.guilds.cache.size} guilds!`);
   
+  setInterval(() => {
+    topggapi.postStats({
+      serverCount: client.guilds.cache.size,
+    });
+    client.user.setActivity(`Cheems Cricket in ${client.guilds.cache.size} guilds!`);
+  }, 60 * 30 * 1000); //30 minutes
+
   const dbOptions = {
     useNewUrlParser: true,
     useUnifiedTopology: true,

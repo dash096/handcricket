@@ -27,8 +27,8 @@ module.exports = async function (nabData, amt, msg, user) {
     await updateBag('lootbox', -1, data, msg);
     if(sLevel === 0) { //If the level is 0, gib tracks
       const decors = user.decors || {};
-      const tracks = decors.tracks || 0;
-      decors.tracks = tracks + 1;
+      const tracks = decors.tracks_black || 0;
+      decors.tracks_black = tracks + 1;
       await db.findOneAndUpdate({_id: data._id}, {$set: {decors: decors}});
     }
     await db.findOneAndUpdate({_id: data._id}, {$set: {xp: sXP + 1}});
