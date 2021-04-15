@@ -28,7 +28,8 @@ module.exports = {
       message.reply(`${args.join(' ')} is not a valid decor, it should be like \`e.equip <name_like_how_it_is_in_your_bag>\``);
       return;
     } else if(!userHasDecor || userHasDecor.length === 0 || decor == 'equipped') {
-      return message.reply('You dont own that kek');
+      message.reply('You dont own that kek');
+      return;
     }
     
     const userDecors = data.decors || {};
@@ -39,8 +40,7 @@ module.exports = {
     if(decor.startsWith('shirt')) {
        let already = equipped.find(decor => decor.startsWith('shirt'));
        if(already && already[0]) {
-         equipped.splice(equipped.indexOf(already[0]), 1);
-         equipped.push(decor);
+         equipped.splice(equipped.indexOf(already[0]), 1), decor;
        } else {
          equipped.push(decor);
        }
