@@ -39,22 +39,15 @@ module.exports = async function (itemName, data, msg) {
     
     //Set timeout
     setTimeout( async function () {
-      oldCoinMulti = data.coinMulti;
-      let newCoinMulti;
-      if(oldCoinMulti === 0.1) {
-        newCoinMulti = 0.2;
-      } else {
-        newCoinMulti = oldCoinMulti/2;
-      }
       await db.findOneAndUpdate( {_id: data._id},
         { $set: { 
-            coinMulti: newCoinMulti
+            coinMulti: newCoinMulti/2
           }, $unset: {
             coinBoost: 'no Matter'
           }
         }
       );
-    }, 60 * 1000);
+    }, 60 * 60 * 1000);
 
   }
 
@@ -100,22 +93,15 @@ module.exports = async function (itemName, data, msg) {
     
     //Set timeout
     setTimeout( async function () {
-      oldTossMulti = data.oldTossMulti;
-      let newTossMulti;
-      if(oldTossMulti === 0.2) {
-        newTossMulti = 0;
-      } else {
-        newTossMulti = oldTossMulti/2;
-      }
       await db.findOneAndUpdate( {_id: data._id},
         { $set: { 
-            tossMulti: newTossMulti
+            tossMulti: newTossMulti/1.4
           }, $unset: {
-            tossBoost: ''
+            tossBoost: 'doesnt matter'
           }
         }
       );
-    } ,  60 * 1000);
+    } ,  60 * 60 * 1000);
     
   }
 
