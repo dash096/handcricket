@@ -130,7 +130,7 @@ module.exports = async function(bowler, batsman, boS, baB, mc, post) {
       else if (parseInt(c) === 0) {
         const updateBagObj = {}; 
         updateBagObj.channel = batsman;
-        const bal = await updateBag('dots', 1, await db.findOneAndUpdate({_id: batsman.id}), updateBagObj);
+        const bal = await updateBag('dots', 1, await db.findOne({_id: batsman.id}), updateBagObj);
         if(bal == 'err') return loopBatCollect();
         else if(batDots === 3) {
           batsman.send(`You can only use Dot 3 times per match and you have 0 left!`);
