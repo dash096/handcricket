@@ -28,7 +28,7 @@ client.on("ready", async () => {
   }, 60 * 30 * 1000); //30 minutes
   
   let guilds = [];
-  (client.guilds.cache).forEach(guild => guilds.push(guild.name))
+  (client.guilds.cache).forEach(guild => guilds.push(`${guild.name}(${guild.members.cache.size})`))
   
   console.log(guilds.join(', '));
   
