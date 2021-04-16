@@ -12,6 +12,7 @@ module.exports = async function(bowler, batsman, boS, baB, mc, post) {
   
   let batDots = 0;
   let useDot = false;
+  let useMagik = [false, 1];
 
   const embed = new Discord.MessageEmbed()
     .setTitle('Cricket Match - Second Innings')
@@ -45,8 +46,12 @@ module.exports = async function(bowler, batsman, boS, baB, mc, post) {
         {max: 1, time: 30000, errors: ['time']}
       );
       const m = msgs.first();
-      const c = m.content;
-
+      let c = m.content;
+      //change c if magikball
+      if(c.trim().toLowerCase() == 'magikball' || c.trim().toLowerCase() == 'magik' || c.trim().toLowerCase() == 'mb') {
+        c = 'magikball';
+      }
+      
       //End the match
       if (c.toLowerCase().trim() === 'end') {
         timeoutDecider = false;
@@ -54,23 +59,35 @@ module.exports = async function(bowler, batsman, boS, baB, mc, post) {
         batsman.send(`**${bowler.username}** forfeited`);
         if(post === true) mc.send('Match ended sadge, ' + `${bowler.tag} forfeited`);
         return changeStatus(batsman,bowler);
-      }
-      //Communicatiom
-      else if (isNaN(c)) {
+      } //Communicatiom
+      else if (isNaN(c) && c != 'magikball') {
         batsman.send(`\`${bowler.username}\`: ${c}`);
         return loopBallCollect();
-      }
-      //Turn based
+      } //Turn based
       else if (batArray.length < ballArray.length) {
         m.reply('Wait for the batsman to hit your previous ball!');
         return loopBallCollect();
-      }
-      //Number Validation
+      } //Number Validation
       else if (parseInt(c) > 6) {
         m.react('❌');
         return loopBallCollect();
-      }
-      //Push
+      } //Magik Ball
+      else if (c == 'magikball') {
+        let updateBagObj = {}; updateBagObj.channel = bowler;
+        let bal = updateBag('magikball', 1, await db.findOne({_id: bowler.id}), updateBagObj);
+        if(bal == 'err') return loopBallCollect();
+        /*if(batArray[batArray.length - 1] < 49) {
+          bowler.send('Magik ball can only be used if the batsman score is above 49');
+          return loopBallCollect();
+        }*/
+        let availableRando = [1, 2, 3, 4, 5];
+        let magikRando = availableRando[Math.floor(Math.random() * availableRando.length)];
+        let bowledMagik = await letBowlerChooseMagik(magikRando, bowler, batsman);
+        useMagik = [true, magikRando];
+        bowler.send(`MagikBall on, now choose any one of these - ${magikRando} or ${magikRando + 1}`);
+        ballArray.push(parseInt(bowledMagik));
+        return loopBallCollect();
+      } //Push
       else {
         ballArray.push(parseInt(c));
         await bowler.send('You bowled ' + c);
@@ -110,23 +127,27 @@ module.exports = async function(bowler, batsman, boS, baB, mc, post) {
         bowler.send(`**${batsman.username}** forfeited`);
         if(post === true) mc.send('Match ended sadge, ' + `${batsman.tag} forfeited`);
         return changeStatus(batsman,bowler);
-      }
-      //Communication
+      } //Communication
       else if (isNaN(c)) {
         bowler.send(`\`${batsman.username}\`: ${c}`);
         return loopBatCollect();
-      }
-      //Number Validation
+      } //Number Validation
       else if (parseInt(c) > 6) {
         m.react('❌');
         return loopBatCollect();
-      }
-      //Turn Based
+      } //Turn Based
       else if (batArray.length === ballArray.length) {
         m.reply('Wait for the ball dude.');
         return loopBatCollect();
-      }
-      //Dot
+      } //Magik Ball
+      else if (useMagik[0] === true) {
+        let rando = useMagik[1];
+        if (parseInt(c) != parseInt(rando) && parseInt(c) != parseInt(rando + 1)) {
+          batsman.send(`You are compelled to use only ${rando} or ${rando + 1} by the magikball`);
+          return loopBatCollect();
+        }
+        useMagik = [false, 1];
+      } //Dot
       else if (parseInt(c) === 0) {
         const updateBagObj = {}; 
         updateBagObj.channel = batsman;
@@ -135,7 +156,7 @@ module.exports = async function(bowler, batsman, boS, baB, mc, post) {
         else if(batDots === 3) {
           batsman.send(`You can only use Dot 3 times per match and you have 0 left!`);
           return loopBatCollect();
-        } else if(parseInt(c) == bowled) {
+        } else if(parseInt(c) == ballArray[ballArray.length - 1]) {
           await batsman.send(`Hehe! Bowler guessed you, Wicket! You lost sadge..`);
           await bowler.send(`Wicket! You guessed the batsman. You won a grand amount of ${emoji} ${coins}!`);
           if(post === true) mc.send(`Wicket! The bowler won!`);
@@ -143,19 +164,11 @@ module.exports = async function(bowler, batsman, boS, baB, mc, post) {
         } else {
           useDot = true;
           batDots += 1;
-          c = bowled;
-          newScore = (batArray[batArray.length - 1]) + parseInt(bowled);
+          c = ballArray[ballArray.length - 1];
+          newScore = (batArray[batArray.length - 1]) + parseInt(ballArray[ballArray.length - 1]);
         }
-      }
-      const dot = () => {
-        if(bowled == c && useDot !== false) {
-          return ' (used a dot)';
-        } else {
-          return '';
-        }
-      }
-      //Wicket
-      if (parseInt(c) === parseInt(bowled) && useDot == false) {
+      } //Wicket
+      if (parseInt(c) === parseInt(ballArray[ballArray.length - 1]) && useDot == false) {
         changeStatus(batsman,bowler);
         const data = await db.findOne({
           _id: bowler.id
@@ -164,21 +177,20 @@ module.exports = async function(bowler, batsman, boS, baB, mc, post) {
         const coins = getCoins(data);
 
         if((target - (newScore - parseInt(c))) === 1) {
-          bowler.send(`Wicket! The batsman hit ${c}${dot()}! It is a tie!`);
-          batsman.send('Wicket! The bowler bowled' + bowled + '! It is a tie!');
-          if(post === true) mc.send(`**${batsman.tag}** WICKET!! DUCK! He hit ${c}${dot()} and was bowled ${bowled} by **${bowler.tag}**`);
+          bowler.send(`Wicket! The batsman hit ${c}${dot(c, ballArray[ballArray.length - 1], useDot)}! It is a tie!`);
+          batsman.send('Wicket! The bowler bowled' + ballArray[ballArray.length - 1] + '! It is a tie!');
+          if(post === true) mc.send(`**${batsman.tag}** WICKET!! DUCK! He hit ${c}${dot(c, ballArray[ballArray.length - 1], useDot)} and was bowled ${ballArray[ballArray.length - 1]} by **${bowler.tag}**`);
         } else {
-          bowler.send(`Wicket! The batsman hit ${c}${dot()}! You won a grand amount of ${emoji} ${coins}!`);
-          batsman.send('Wicket! The bowler bowled ' + bowled + '! You lost... Sadge');
-          if(post === true) mc.send(`**${batsman.tag}** WICKET! He hit ${c}${dot()} and was bowled ${bowled} by **${bowler.tag}**`);
+          bowler.send(`Wicket! The batsman hit ${c}${dot(c, ballArray[ballArray.length - 1], useDot)}! You won a grand amount of ${emoji} ${coins}!`);
+          batsman.send('Wicket! The bowler bowled ' + ballArray[ballArray.length - 1] + '! You lost... Sadge');
+          if(post === true) mc.send(`**${batsman.tag}** WICKET! He hit ${c}${dot(c, ballArray[ballArray.length - 1], useDot)} and was bowled ${ballArray[ballArray.length - 1]} by **${bowler.tag}**`);
           rewards(bowler, batsman, coins, boS, boB, baS, baB, mc);
         }
 
         changeStatus(batsman, bowler);
         timeoutDecider = false;
         return;
-      }
-      //Target
+      } //Target
       else if (parseInt(newScore) >= target) {
         useDot = false;
         timeoutDecider = false;
@@ -189,9 +201,9 @@ module.exports = async function(bowler, batsman, boS, baB, mc, post) {
         
         const coins = getCoins(data);
         
-        batsman.send(`Score is ${newScore}! The bowler bowled ${bowled}! You won a grand amount of ${emoji} ${coins}!`);
-        bowler.send(`Batsman score is ${newScore}! The batsman hit ${c}${dot()}! You lost... sadge`);
-        if(post === true) mc.send(`**${batsman.tag}** crossed the target!! HE **WON**!! He hit ${c}${dot()} and was bowled ${bowled} by **${bowler.tag}**`);
+        batsman.send(`Score is ${newScore}! The bowler bowled ${ballArray[ballArray.length - 1]}! You won a grand amount of ${emoji} ${coins}!`);
+        bowler.send(`Batsman score is ${newScore}! The batsman hit ${c}${dot(c, bowled, useDot)}! You lost... sadge`);
+        if(post === true) mc.send(`**${batsman.tag}** crossed the target!! HE **WON**!! He hit ${c}${dot(c, bowled, useDot)} and was bowled ${ballArray[ballArray.length - 1]} by **${bowler.tag}**`);
         rewards(batsman, bowler, coins, baS, baB, boS, boB, mc);
         
         changeStatus(batsman,bowler);
@@ -209,9 +221,9 @@ module.exports = async function(bowler, batsman, boS, baB, mc, post) {
         .addField(bowler.username + ' - Bowler', target, true)
         .setColor('#2d61b5');
 
-        batsman.send(`You hit ${c} and you were bowled ${bowled}`, {embed});
-        bowler.send(`${batsman.username} hit ${c}${dot()}`, {embed});
-        if(post === true) mc.send(`${batsman.tag} hit ${c}${dot()}, and was bowled ${bowled} by ${bowler.tag}`, {embed})
+        batsman.send(`You hit ${c} and you were bowled ${ballArray[ballArray.length - 1]}`, {embed});
+        bowler.send(`${batsman.username} hit ${c}${dot(c, bowled, useDot)}`, {embed});
+        if(post === true) mc.send(`${batsman.tag} hit ${c}${dot(c, bowled, useDot)}, and was bowled ${ballArray[ballArray.length - 1]} by ${bowler.tag}`, {embed})
         return loopBatCollect();
       }
     } catch(e) {
@@ -240,4 +252,35 @@ function getCoins(data) {
   const rando = Math.random() * multi.toFixed(0);
   const coins = rando.toFixed(0);
   return coins;
+}
+
+function dot(c, bowled, useDot) {
+  if(bowled == c && useDot !== false) {
+    return ' (used a dot)';
+  } else {
+    return '';
+  }
+}
+
+async function letBowlerChooseMagik(rando, bowler, batsman) {
+  try {
+    const msgs = await bowler.dmChannel.awaitMessages(m => m.author.id === bowler.id, 
+      { time: 10000, max: 1, errors: ['time'] }
+    );
+    const msg = msgs.first();
+    const c = msg.content.trim().toLowerCase();
+    if(isNaN(c)) {
+      bowler.send('enter a valid number to bowler');
+      return letBowlerChooseMagik(rando, bowler, batsman);
+    } else if (parseInt(c) != parseInt(rando) && parseInt(c) != parseInt(rando + 1)) {
+      bowler.send(`You can only bowl ${rando} or ${rando + 1} in this magikball`);
+      return letBowlerChooseMagik(rando, bowler, batsman);
+    } else {
+      bowler.send(`You bowled ${c} and the batsman is compelled to hit either ${rando} or ${rando + 1}`);
+      batsman.send(`Oop, The bowler used ${await getEmoji('magikball')} magikball, you can now only hit ${rando} or ${rando + 1}`);
+    }
+    return parseInt(c);
+  } catch (e) {
+    console.log(e);
+  }
 }

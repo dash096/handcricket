@@ -16,7 +16,9 @@ module.exports = {
       const cooldown = await getCooldown(author);
       const embed = new Discord.MessageEmbed()
         .setTitle('Vote Command')
-        .setDescription('Thanks for Supporting me! You have already voted for me.\n' + cooldown)
+        .setDescription('Thanks for Supporting me! You have already voted for me.\n' + cooldown +
+        '\n [Community Server](https://bit.ly/dispoGuild) - Join for additional fun and community only features.' +
+        '\n [Invite Bot to Your World](https://bit.ly/dispoBot) - Having fun in your palace is more fun')
         .setColor('BLUE')
         .setThumbnail(author.displayAvatarURL());
       channel.send(embed);
@@ -24,7 +26,9 @@ module.exports = {
       const embed = new Discord.MessageEmbed()
         .setTitle('Vote Command')
         .setDescription('You havent voted yet, Support us [here](https://top.gg/bot/804346878027235398/vote)' + 
-        '\n**Note:** It might take a maximum of 3 minutes for you to get the vote reward.')
+        '\n**Note:** It might take a maximum of 3 minutes for you to get the vote reward.' +
+        '\n [Community Server](https://bit.ly/dispoGuild) - Join for additional fun and community only features.' +
+        '\n [Invite Bot to Your World](https://bit.ly/dispoBot) - Having fun in your palace is more fun')
         .setColor('BLUE')
         .setThumbnail(author.displayAvatarURL());
       channel.send(embed);
