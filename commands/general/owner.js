@@ -1,8 +1,8 @@
 module.exports = {
-    name: 'ping',
-    description: 'Pong!',
+    name: 'owner',
+    description: 'see the owner!',
     category: 'General',
-    syntax: 'e.ping',
+    syntax: 'e.owner',
     cooldown: 2,
     run: async ({message, client}) => {
       const { content, author, channel, mentions } = message;
