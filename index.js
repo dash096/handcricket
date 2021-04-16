@@ -26,7 +26,12 @@ client.on("ready", async () => {
     });
     client.user.setActivity(`Cheems Cricket in ${client.guilds.cache.size} guilds!`);
   }, 60 * 30 * 1000); //30 minutes
-
+  
+  let guilds = [];
+  (client.guilds.cache).forEach(guild => guilds.push(guild.name))
+  
+  console.log(guilds.join(', '));
+  
   const dbOptions = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
