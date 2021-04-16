@@ -16,12 +16,12 @@ module.exports = {
   run: async ({message, client, getTrain}) => {
     const { content, author, channel, mentions } = message;
     
+    const randoCoins = (Math.random() * 269).toFixed(0);
+    
     try {
       const coinEmoji = await getEmoji('coin');
     
       const train = getTrain || false;
-    
-      const randoCoins = (Math.random() * 269).toFixed(0);
     
       //Data Validation
       const data = await db.findOne({_id: author.id});
@@ -56,14 +56,10 @@ module.exports = {
         if(answer == rando) {
           const coins = (Math.random() * 363).toFixed(0);
           msg.reply(`Nice, You are good at running.`);
-          if(train == true) msg.channel.send(`You got ${coinEmoji} ${coins} as Training rewards!`);
-          return [true, randoCoins];
         } else {
           msg.reply('Looks like you need to get quicker at running. sadge..');
-          return [false, randoCoins];
         }
         await gain(data, 2, message);
-        return [false, 0];
       }
       
       //Set Cooldown
@@ -75,12 +71,11 @@ module.exports = {
       
       return (result || [false, 0]);
     } catch(e) {
-      console.log(e);
       let error = 'time';
       message.reply(getErrors({error}));
-      return [false, 1];
     } finally {
       await db.findOneAndUpdate( { _id: author.id }, { $set: { status: false} });
+      return randoCoins;
     }
   }
 };

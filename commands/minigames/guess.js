@@ -14,6 +14,8 @@ module.exports = {
   run: async ({message, client, getTrain}) => {
     const { content, author, channel, mentions } = message;
     
+    const randoCoins = parseInt((Math.random() * 269).toFixed(0));
+        
     try {
       //Emojis
       const coinEmoji = await getEmoji('coin');
@@ -45,7 +47,6 @@ module.exports = {
       
       await channel.send(embed);
     
-      let returnThis = [];
       await play();
       
       //Set cooldown
@@ -55,15 +56,12 @@ module.exports = {
         setTimeout(() => timestamps.delete(author.id), 60 * 1000);
       }
       
-      return returnThis;
-      
       async function play() {
         const collected = await channel.awaitMessages(msg => msg.author.id === author.id, {
           max: 1,
           time: 30000,
           errors: ['time']
         });
-        const randoCoins = parseInt((Math.random() * 269).toFixed(0));
         const msg = collected.first();
         const guess = msg.content;
         
@@ -77,8 +75,6 @@ module.exports = {
           channel.send('Game Ended');
           await channel.send(`You got some experience.`);
           await gainExp(data, 0.5, message);
-          await returnThis.push(false);
-          await returnThis.push(0);
           return;
         } else if(isNaN(guess)) {
           lives -= 1;
@@ -87,8 +83,6 @@ module.exports = {
           if(lives === 0) {
             channel.send('You lost! I thought of ' + number);
             await gainExp(data, 2, message);
-            await returnThis.push(false);
-            await returnThis.push(randoCoins);
             return;
           } else {
             return play();
@@ -96,10 +90,7 @@ module.exports = {
         } else if (guess == number) {
           edit.setDescription('Correct Answer! You are good at guessing!');
           channel.send(edit);
-          if(train == true) channel.send(`You got ${coinEmoji} ${randoCoins} as Training rewards!`);
           await gainExp(data, 3, message);
-          await returnThis.push(true);
-          await returnThis.push(randoCoins);
           return;
         } else {
           lives -= 1;
@@ -108,20 +99,17 @@ module.exports = {
           if(lives == 0) {
             channel.send('You lost! I thought of ' + number);
             await gainExp(data, 2, message);
-            await returnThis.push(false);
-            await returnThis.push(randoCoins);
             return;
           }
           return play();
         }
       }
     } catch (e) {
-      console.log(e);
       let error = 'time';
       channel.send(getErrors({error}));
-      return [false, 0];
     } finally {
       await db.findOneAndUpdate( { _id: author.id }, { $set: { status: false} });
+      return randoCoins;
     }
   }
 };

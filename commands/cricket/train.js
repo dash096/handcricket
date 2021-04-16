@@ -1,6 +1,7 @@
 const fs = require('fs');
 const db = require('../../schemas/player.js');
 const updateCoins = require('../../functions/updateCoins.js');
+const getEmoji = require('../../index.js');
 
 module.exports = {
   name: 'train',
@@ -31,11 +32,10 @@ module.exports = {
     
       let getTrain = true;
       const execute = await randoGame({message, client, getTrain});
-    
-      const win = execute[0];
-      const amount = execute[1];
-    
-      updateCoins(amount, data);
+      const amount = execute;
+      await channel.send(`You got ${await getEmoji('coin')} ${amount} for your fitness`);
+      
+      updateCoins(parseInt(amount), data);
     
       const quests = data.quests || {};
       const trainings = quests.beFit || 0;
