@@ -30,10 +30,10 @@ module.exports = {
     });
     
     if(userdata.status === true) {
-      message.reply('${user.tag} is already engaged in a game');
+      message.reply(`${user.tag} is already engaged in a game`);
       return;
     } else if(targetdata.status === true) {
-      message.reply('${target.tag} is already engaged in a game');
+      message.reply(`${target.tag} is already engaged in a game`);
       return;
     }
     //Change status to avoid 2 matchs at same time
