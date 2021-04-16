@@ -14,7 +14,7 @@ module.exports = async function (amount, data, msg) {
   };
   getItemNames();
   items.push('decor');
-  items.push(363);
+  items.push(259);
   const toReturn = choose();
   return toReturn;
   
@@ -22,7 +22,7 @@ module.exports = async function (amount, data, msg) {
     const reward = items[Math.floor(Math.random() * items.length)];
     if(reward === 'decor') {
       const rando = Math.random();
-      if(rando > 0.3) {
+      if(rando > 0.5) {
         return reward;
       }
       return 696;

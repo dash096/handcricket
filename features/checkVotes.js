@@ -55,6 +55,9 @@ module.exports = async ({client, topggapi}) => {
 
 async function rewards(user) {
   const data = await db.findOne({_id: user.id});
-  await db.findOneAndUpdate({_id: user.id}, {$set: {cc: data.cc + 250}});
-  return `${await getEmoji('coin')} 250`;
+  const bag = data.bag || {};
+  const lootbox = bag.lootbox || 0;
+  bag.lootbox = lootbox + 1;
+  await db.findOneAndUpdate({_id: user.id}, {$set: {bag: bag}});
+  return `${await getEmoji('lootbox')} lootbox`;
 }
