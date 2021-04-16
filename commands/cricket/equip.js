@@ -22,10 +22,15 @@ module.exports = {
       return;
     }
     
-    let decor = decorsData.find(decor => decor == args.reverse().join('_').toLowerCase());
+    args = args.join(' ').trim().toLowerCase().split(/ +/);
+    
+    let decor = 
+    decorsData.find(decor => decor == args.reverse().join('_')) ||
+    decorsData.find(decor => decor == args.join('_'));
+    
     let userHasDecor = Object.keys(userDecors).filter(userDecor => userDecor == decor);
     if(!decor || decor.length === 0) {
-      message.reply(`${args.join(' ')} is not a valid decor, it should be like \`e.equip <name_like_how_it_is_in_your_bag>\``);
+      message.reply(`${args.reverse().join(' ')} is not a valid decor, it should be like \`e.equip <name_like_how_it_is_in_your_bag>\``);
       return;
     } else if(!userHasDecor || userHasDecor.length === 0 || decor == 'equipped') {
       message.reply('You dont own that kek');
@@ -34,31 +39,32 @@ module.exports = {
     
     const equipped = userDecors.equipped || [];
     
-    console.log(decor);
-    
     if(decor.startsWith('shirt')) {
-       let already = equipped.find(decor => decor.startsWith('shirt'));
-       if(already && already[0]) {
-         equipped.splice(equipped.indexOf(already[0]), 1), decor;
+       let already = equipped.filter(decor => decor.startsWith('shirt'));
+       if(already.length > 0) {
+         equipped.splice(equipped.indexOf(already[0]), 1, decor);
        } else {
          equipped.push(decor);
        }
-    } else if(decor.startsWith('pants') || decor.startsWith('tracks')) {
-       let already = equipped.find(decor => decor.startsWith('pants') || decor.startsWith('tracks'));
-       if(already && already[0]) {
+    } else if(decor.startsWith('pant') || decor.startsWith('track')) {
+       let already = equipped.filter(decor => decor.startsWith('pant') || decor.startsWith('track'));
+       if(already.length > 0) {
          equipped.splice(equipped.indexOf(already[0]), 1, decor);
        } else {
          equipped.push(decor);
        }
     } else if(decor.startsWith('foot')) {
-       let already = equipped.find(decor => decor.startsWith('foot'));
-       if(already && already[0]) {
-         equipped.splice(equipped.indexOf(already[0]), 1, decor);
+       let already = equipped.filter(decor => decor.startsWith('foot'));
+       if(already.length > 0) {
+         equipped.splice(equipped.indexOf(already[0]), 1, decor)
        } else {
          equipped.push(decor);
        }
     } else {
-      equipped.push(decor);
+      let already = equipped.filter(decorAdd => decorAdd == decor);
+      if(already.length === 0) {
+        equipped.splice(equipped.indexOf(already[0]), 1, decor);
+      } 
     }
     
     userDecors.equipped = equipped;
