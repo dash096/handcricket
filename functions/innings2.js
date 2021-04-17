@@ -247,14 +247,14 @@ async function changeStatus(a,b) {
 }
 
 async function getCoins(data) {
-  let multi = data.coinMulti || 0;
-  if (mutli < 0.05) multi = 0.2;
+  let coinMulti = data.coinMulti;
+  if (coinMulti === 0) coinMulti = 0.2;
   let officialGuild = await client.guilds.fetch(serverID)
   let channel = officialGuild.channels.find(channel => channel.id == mc.id);
   if(channel) {
-    multi = multi * 2;
+    coinMulti = coinMulti * 2;
   }
-  const rando = Math.random() * multi * 695;
+  const rando = Math.random() * coinMulti * 696;
   const coins = rando.toFixed(0);
   return coins;
 }
