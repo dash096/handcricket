@@ -95,7 +95,7 @@ module.exports = async function(winner, loser, coins, wS, wB, lS, lB, channel) {
   
   const rando = Math.random();
   if(rando < 0.05) {
-    const decors = getDecors();
+    const decors = getDecors('type1');
     const decor = decors[Math.floor(Math.random() * decors.length)];
     updateDecor(decor, 1, winnerData);
     winner.send(`Oh Damm! You got a ${decor} too!`);

@@ -1,6 +1,7 @@
 const fs = require('fs');
 
-module.exports = function pushType(type) {
+module.exports = type => {
+  if(!type) type = 'type1';
   const Object = {};
   
   const files = []
