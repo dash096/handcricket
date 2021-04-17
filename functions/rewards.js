@@ -3,7 +3,9 @@ const gain = require('../functions/gainExp.js');
 const getDecors = require('./getDecors.js');
 const updateDecor = require('./updateDecor.js');
 
-module.exports = async function(winner, loser, coins, wS, wB, lS, lB, channel) {
+module.exports = async function(winner, loser, coins, wS, wB, lS, lB, message) {
+  const { channel } = message;
+  
   const winnerData = await db.findOne({
     _id: winner.id
   });
