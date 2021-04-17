@@ -73,13 +73,13 @@ module.exports = async function(batsman, bowler, message, post) {
         const updateBagObj = {}; updateBagObj.channel = bowler;
         const bal = await updateBag('magikball', 1, await db.findOne({_id: bowler.id}), updateBagObj);
         if(bal == 'err') return loopBallCollect();
-        /*if(batArray[batArray.length - 1] < 49) {
+        if(batArray[batArray.length - 1] < 49) {
           bowler.send('Magik ball can only be used if the batsman score is above 49');
           return loopBallCollect();
-        }*/
+        }
+        bowler.send(`MagikBall on, now bowl any one of these: ${magikRando} or ${magikRando + 1}`);
         let availableRando = [1, 2, 3, 4, 5];
         let magikRando = availableRando[Math.floor(Math.random() * availableRando.length)];
-        bowler.send(`MagikBall on, now bowl any one of these: ${magikRando} or ${magikRando + 1}`);
         let bowledMagik = await letBowlerChooseMagik(magikRando, bowler, batsman);
         useMagik = [true, magikRando];
         ballArray.push(parseInt(bowledMagik));
