@@ -22,7 +22,7 @@ module.exports = async ({client, topggapi}) => {
     const user = await client.users.fetch(data._id);
     user.send(embed).catch(e => console.log('1 failed'));
     console.log('done')
-  }*/
+  }
   
   const greaterCooldown = await db.find({ voteCooldown: { $gte: Date.now() } });
   const lesserCooldown = await db.find({ voteCooldown: { $lte: Date.now() } });
