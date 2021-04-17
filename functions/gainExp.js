@@ -2,10 +2,11 @@ const db = require('../schemas/player.js');
 const getLevels = require('./getLevels.js');
 const updateBag = require('./updateBag.js');
 
-module.exports = async function (nabData, amt, msg, user) {
-  let data = nabData;
-  if(!data) data = await db.findOne({_id: msg.author.id});
-  
+module.exports = async (data, amt, msg, user) => {
+  if(!data) {
+    if(user && user.id) data = await db.findOne({_id: user.id});
+    else data = await db.findOne({_id: msg.author.id});
+  }
   const levels = getLevels();
   const amount = parseInt(amt);
   const oldxp = data.xp;
@@ -25,7 +26,7 @@ module.exports = async function (nabData, amt, msg, user) {
     if(user) msg.send(`${user} CONGRATS!!! You leveled up to **${sLevel}**! You also got a lootbox!!!`);
     else msg.reply(`CONGRATS!!! You leveled up to **${sLevel}**! You also got a lootbox!!!`);
     await updateBag('lootbox', -1, data, msg);
-    if(sLevel === 0) { //If the level is 0, gib tracks
+    if(sLevel == 0) { //If the level is 0, gib tracks
       const decors = data.decors || {};
       const tracks = decors.tracks_black || 0;
       decors.tracks_black = tracks + 1;

@@ -45,8 +45,10 @@ module.exports = {
     
     let batsman;
     let bowler;
+    
     let post = false; //Check if to post socres in the channel.
-
+    if(content.toLowerCase().includes('post')) post = true;
+    
     await channel.send(`<@${target.id}> Do you wanna play with **${user.username}**? Type \`y\`/\`n\` in 30s\n Append(add to the end) \`--post\` to the message to post the scores in this channel`);
     
     //Execute check will
@@ -63,7 +65,7 @@ module.exports = {
         const msg = msgs.first();
         const c = msg.content.trim().toLowerCase();
         
-        if(content.toLowerCase().includes('--post') || c.includes('--post')) post = true;
+        if(c.includes('--post')) post = true;
         
         if(c.startsWith('y')) {
           return true;
@@ -182,11 +184,11 @@ async function userWon(message, user, target, post) {
     const m = msgs.first();
     const c = m.content.toLowerCase().trim();
     
-    if (c == "batting") {
+    if (c.startsWith("bat")) {
       batsman = user;
       bowler = target;
     }
-    else if (c == "bowling") {
+    else if (c.startsWith("bowl")) {
       batsman = target;
       bowler = user;
     }

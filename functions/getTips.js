@@ -11,8 +11,5 @@ module.exports = (message) => {
   'Poor? Join the Community server(e.invite) for 2x Coin Boost and helmet decor and slots boost',
   'Want to challenge? Tournaments are held in the Community Server!',
   ]; //Last three Guild, Total index 8 
-  const tip = () => {
-    return `\n\n**tip:** ${tips[Math.floor(Math.random() * 9)]}`
-  }
-  return ` ${tip()}`;
+  return `\n\n**tip:** ${tips[Math.floor(Math.random() * 8)]}`;
 }
