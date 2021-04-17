@@ -37,7 +37,7 @@ module.exports = {
       if(!multi || multi < 0.05) {
         multi = 0.1;
       }
-      if(message.guild.id = serverID) {
+      if(message.guild.id == serverID) {
         multi = multi * 2;
       }
       let amount = multi * 696;
