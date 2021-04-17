@@ -3,6 +3,7 @@ const Discord = require("discord.js");
 const getEmoji = require('../index.js');
 const rewards = require('./rewards.js');
 const updateBag = require('./updateBag.js');
+const serverID = require('./getServerID.js');
 
 //shuffled
 module.exports = async function(bowler, batsman, boS, baB, mc, post) {
@@ -174,7 +175,7 @@ module.exports = async function(bowler, batsman, boS, baB, mc, post) {
           _id: bowler.id
         });
         
-        const coins = getCoins(data);
+        const coins = await getCoins(data);
 
         if((target - (newScore - parseInt(c))) === 1) {
           bowler.send(`Wicket! The batsman hit ${c}${dot(c, ballArray[ballArray.length - 1], useDot)}! It is a tie!`);
@@ -199,7 +200,7 @@ module.exports = async function(bowler, batsman, boS, baB, mc, post) {
           _id: batsman.id
         });
         
-        const coins = getCoins(data);
+        const coins = await getCoins(data);
         
         batsman.send(`Score is ${newScore}! The bowler bowled ${ballArray[ballArray.length - 1]}! You won a grand amount of ${emoji} ${coins}!`);
         bowler.send(`Batsman score is ${newScore}! The batsman hit ${c}${dot(c, bowled, useDot)}! You lost... sadge`);
@@ -245,11 +246,15 @@ async function changeStatus(a,b) {
   await db.findOneAndUpdate({_id: b.id}, { $set: { status: false } } );
 }
 
-function getCoins(data) {
-  let coinMulti = data.coinMulti;
-  if (coinMulti === 0) coinMulti = 0.2;
-  const multi = coinMulti * 696;
-  const rando = Math.random() * multi.toFixed(0);
+async function getCoins(data) {
+  const multi = data.coinMulti || 0;
+  if (mutli < 0.05) coinMulti = 0.2;
+  let guild = await client.guilds.fetch(serverID)
+  let channel = guild.channels.find(channel => channel.id == mc.id);
+  if(channel) {
+    multi = multi * 2;
+  }
+  const rando = Math.random() * multi * 695;
   const coins = rando.toFixed(0);
   return coins;
 }

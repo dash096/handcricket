@@ -1,4 +1,6 @@
-'module.exports = (message) => {
+const serverID = require('./getTips.js');
+
+module.exports = (message) => {
   const tips = [
   'Use e.equip <decor_name> to decorate your character',
   'You can decorate your profile with decorations',
@@ -10,11 +12,10 @@
   'Want to challenge? Tournaments are held in the Community Server!',
   ]; //Last three Guild, Total index 8 
   const tip = () => {
-    if(message.guild.id !== '823608260166025217') {
+    /*if(message.guild.id !== serverID) {
       return tips[Math.floor(Math.random() * 9)]
-    } else {
-      return tips[Math.floor(Math.random() * 6)]
-    }
+    }*/
+    return tips[Math.floor(Math.random() * 6)]
   }
-  return tip;
+  return `\n\n**Tip:** ${tip()}`;
 }

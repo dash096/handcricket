@@ -2,6 +2,7 @@ const fs = require('fs');
 const db = require('../../schemas/player.js');
 const updateCoins = require('../../functions/updateCoins.js');
 const getEmoji = require('../../index.js');
+const serverID = require('../../functions/getServerID.js');
 
 module.exports = {
   name: 'train',
@@ -32,7 +33,14 @@ module.exports = {
     
       let getTrain = true;
       const execute = await randoGame({message, client, getTrain});
-      const amount = execute;
+      let multi = data.coinMulti;
+      if(!multi || multi < 0.05) {
+        multi = 0.1;
+      }
+      if(message.guild.id = serverID) {
+        multi = multi * 2;
+      }
+      let amount = multi * 696;
       await channel.send(`You got ${await getEmoji('coin')} ${amount} for your fitness`);
       
       updateCoins(parseInt(amount), data);

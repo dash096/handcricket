@@ -22,7 +22,12 @@ module.exports = {
     //Target
     let target = getTarget(message, args, client);
     if(!target) return;
-    if(user.id === target.id) return message.reply('Trade yourself? Silly');
+    
+    if(user.id === target.id) {
+      let error = 'syntax'; let filePath = 'cricket/trade.js';
+      message.reply(getErrors({error, filePath}));
+      return;
+    }
     
     //Data
     const userData = await db.findOne({_id: user.id});

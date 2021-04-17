@@ -16,8 +16,6 @@ module.exports = {
   run: async ({message, client, getTrain}) => {
     const { content, author, channel, mentions } = message;
     
-    const randoCoins = (Math.random() * 269).toFixed(0);
-    
     try {
       const coinEmoji = await getEmoji('coin');
     
@@ -75,7 +73,7 @@ module.exports = {
       message.reply(getErrors({error}));
     } finally {
       await db.findOneAndUpdate( { _id: author.id }, { $set: { status: false} });
-      return randoCoins;
+      return;
     }
   }
 };

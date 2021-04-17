@@ -14,8 +14,6 @@ module.exports = {
   run: async ({message, client, getTrain}) => {
     const { content, author, channel, mentions } = message;
     
-    const randoCoins = parseInt((Math.random() * 269).toFixed(0));
-        
     try {
       //Emojis
       const coinEmoji = await getEmoji('coin');
@@ -109,7 +107,7 @@ module.exports = {
       channel.send(getErrors({error}));
     } finally {
       await db.findOneAndUpdate( { _id: author.id }, { $set: { status: false} });
-      return randoCoins;
+      return;
     }
   }
 };
