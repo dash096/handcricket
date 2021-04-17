@@ -12,7 +12,7 @@ module.exports = (message) => {
   'Want to challenge? Tournaments are held in the Community Server!',
   ]; //Last three Guild, Total index 8 
   const tip = () => {
-    return tips[Math.floor(Math.random() * 9)]
+    return `\n\n**tip:** ${tips[Math.floor(Math.random() * 9)]}`
   }
-  return `\n\n**Tip:** ${tip()}`;
+  return ` ${tip()}`;
 }

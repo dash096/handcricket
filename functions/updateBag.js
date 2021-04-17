@@ -26,6 +26,6 @@ module.exports = async function (itemName, amount, data, msg) {
     $set: {
       bag: oldBag
     }
-  });
+  }, { new: true, upsert: true });
 
 };

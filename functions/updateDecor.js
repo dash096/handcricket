@@ -7,5 +7,5 @@ module.exports = async (name, amount, data, message) => {
   
   userDecors[name] = newBal;
   
-  await db.findOneAndUpdate({_id: data._id}, {$set: { decors: userDecors }});
+  await db.findOneAndUpdate({_id: data._id}, {$set: { decors: userDecors }}, {new: true, upsert: true});
 };
