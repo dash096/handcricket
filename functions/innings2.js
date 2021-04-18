@@ -4,6 +4,7 @@ const getEmoji = require('../index.js');
 const rewards = require('./rewards.js');
 const updateBag = require('./updateBag.js');
 const serverID = require('./getServerID.js');
+const embedColor = require('./getEmbedColor.js');
 
 //shuffled
 module.exports = async function(bowler, batsman, boS, baB, message, post) {
@@ -13,7 +14,7 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
   
   const target = boS;
   
-  let batDots = 0;
+  let noOfUsedDots = 0;
   let useDot = false;
   let useMagik = [false, 1];
 
@@ -21,7 +22,7 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
     .setTitle('Cricket Match - Second Innings')
     .addField(batsman.username + ' - Batsman', 0, true)
     .addField(bowler.username + ' - Bowler', target, true)
-    .setColor('#2d61b5');
+    .setColor(embedColor);
 
   //Embeds
   const batEmbed = await batsman.send(embed);
@@ -156,7 +157,7 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
         updateBagObj.channel = batsman;
         const bal = await updateBag('dots', 1, await db.findOne({_id: batsman.id}), updateBagObj);
         if(bal == 'err') return loopBatCollect();
-        else if(batDots === 3) {
+        else if(noOfUsedDots === 3) {
           batsman.send(`You can only use Dot 3 times per match and you have 0 left!`);
           return loopBatCollect();
         } else if(parseInt(c) == ballArray[ballArray.length - 1]) {
@@ -166,7 +167,7 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
           return rewards(bowler, batsman, coins, boS, boB, baS, baB, message);
         } else {
           useDot = true;
-          batDots += 1;
+          noOfUsedDots += 1;
           c = ballArray[ballArray.length - 1];
           newScore = (batArray[batArray.length - 1]) + parseInt(ballArray[ballArray.length - 1]);
         }
@@ -187,7 +188,7 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
           bowler.send(`Wicket! The batsman hit ${c}${dot(c, ballArray[ballArray.length - 1], useDot)}! You won a grand amount of ${emoji} ${coins}!`);
           batsman.send('Wicket! The bowler bowled ' + ballArray[ballArray.length - 1] + '! You lost... Sadge');
           if(post === true) channel.send(`**${batsman.tag}** WICKET! He hit ${c}${dot(c, ballArray[ballArray.length - 1], useDot)} and was bowled ${ballArray[ballArray.length - 1]} by **${bowler.tag}**`);
-          rewards(bowler, batsman, coins, boS, boB, baS, baB, channel);
+          rewards(bowler, batsman, coins, boS, boB, baS, baB, message);
         }
 
         changeStatus(batsman, bowler);
@@ -207,7 +208,7 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
         batsman.send(`Score is ${newScore}! The bowler bowled ${ballArray[ballArray.length - 1]}! You won a grand amount of ${emoji} ${coins}!`);
         bowler.send(`Batsman score is ${newScore}! The batsman hit ${c}${dot(c, bowled, useDot)}! You lost... sadge`);
         if(post === true) channel.send(`**${batsman.tag}** crossed the target!! HE **WON**!! He hit ${c}${dot(c, bowled, useDot)} and was bowled ${ballArray[ballArray.length - 1]} by **${bowler.tag}**`);
-        rewards(batsman, bowler, coins, baS, baB, boS, boB, channel);
+        rewards(batsman, bowler, coins, baS, baB, boS, boB, message);
         
         changeStatus(batsman,bowler);
         timeoutDecider = false;
@@ -222,7 +223,7 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
         .setTitle('Cricket Match - Second Innings')
         .addField(batsman.username + ' - Batsman', parseInt(newScore), true)
         .addField(bowler.username + ' - Bowler', target, true)
-        .setColor('#2d61b5');
+        .setColor(embedColor);
 
         batsman.send(`You hit ${c} and you were bowled ${ballArray[ballArray.length - 1]}`, {embed});
         bowler.send(`${batsman.username} hit ${c}${dot(c, bowled, useDot)}`, {embed});

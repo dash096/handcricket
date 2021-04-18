@@ -7,6 +7,7 @@ const gain = require('../../functions/gainExp.js');
 const getLevels = require('../../functions/getLevels.js');
 const getTarget = require('../../functions/getTarget.js');
 const getDecors = require('../../functions/getDecors.js');
+const embedColor = require('../../functions/getEmbedColor.js');
 
 module.exports = {
   name: 'profile',
@@ -57,7 +58,7 @@ module.exports = {
       .setFooter("Your Character looks cool! Use `e.equip <name>` to wear a decor for your character")
       .attachFiles(`${charPath}`)
       .setImage(`attachment://${charPath.split('/').pop()}`)
-      .setColor('#2d61b5');
+      .setColor(embedColor);
 
     await message.reply(embed);
     await gain(data, 1, message);
@@ -199,8 +200,7 @@ async function getImage(target, type, paths) {
   } else if (paths.length === 1) {
     const toComposite = await jimp.read(paths[0]);
     character
-    .resize(480, 270)
-    .composite(toComposite, 3, 3)
+    .composite(toComposite, 0, 0)
     .write(exportPath);
   } else {
     character.write(exportPath);

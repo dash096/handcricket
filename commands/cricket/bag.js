@@ -3,6 +3,7 @@ const db = require("../../schemas/player.js");
 const gain = require('../../functions/gainExp.js');
 const getEmoji = require('../../index.js');
 const getTarget = require('../../functions/getTarget.js');
+const embedColor = require('../../functions/getEmbedColor.js');
 
 module.exports = {
   name: 'bag',
@@ -27,7 +28,7 @@ module.exports = {
     fieldText += `**__BackPack__**\n\n`;
     
     if(!items || items.length === 0) {
-      fieldText += `Nothing here! hehe`;
+      fieldText += `Nothing here NOOB`;
     } else {
       for(const item of items) {
         const text = item;
@@ -36,27 +37,28 @@ module.exports = {
       }
     }
     
-    const userDecors = data.decors || {};
-    const keys = Object.keys(userDecors);
     fieldText += `\n**__Decorations__**\n\n`;
     
-    if(!keys || keys.length === 0) fieldText += 'None here hehehe';
-    else {
+    const userDecors = data.decors || {};
+    const keys = Object.keys(userDecors).filter(key => key != 'equipped');
+    
+    //Add Equipped Decors at first;
+    let equipped = userDecors.equipped;
+    if(equipped.length === 0) equipped = ['none']
+    let equippedReversed = [];
+    equipped.forEach(decor => {
+      const reverse = decor.split('_').reverse().join(' ')
+      equippedReversed.push(reverse);
+    });
+    fieldText += '**Equipped:** ' + equippedReversed.join(', ') + '\n';
+    
+    if(!keys || keys.length === 0) {
+      fieldText += 'None here NOOB';
+    } else {
       for(const key of keys) {
         let color = key.split('_');
         let type = color.shift();
         let value = userDecors[key];
-        if(key == 'equipped') { //Chnage display if the array comes
-          value = '';
-          userDecors[key].forEach(decor => {
-            let arr = decor.split('_').reverse();
-            let name = arr[arr.length - 1];
-            name = name.charAt(0).toUpperCase() + name.slice(1);
-            arr.pop();
-            arr.push(name);
-            value += `${arr.join('')}, `;
-          });
-        }
         if(color.length !== 0) type = ` ${type}`; //To adjust spacing
         fieldText += `**${color}${type}** - \`${value}\`\n`;
       }
@@ -66,7 +68,7 @@ module.exports = {
       .setTitle(`${target.tag}'s bag`)
       .setDescription('Pretty nice Inventory\n\n' + fieldText)
       .setFooter('Show this to your frnds!')
-      .setColor('#2d61b5');
+      .setColor(embedColor);
       
     message.reply(embed);
     await gain(data, 1.2, message);

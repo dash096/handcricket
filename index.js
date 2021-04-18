@@ -30,7 +30,7 @@ client.on("ready", async () => {
   let guilds = [];
   (client.guilds.cache).forEach(guild => guilds.push(`${guild.name}(${guild.members.cache.size})`))
   
-  console.log(guilds.join(', '));
+  console.log(guilds.join(',\n'));
   
   const dbOptions = {
     useNewUrlParser: true,

@@ -55,14 +55,14 @@ module.exports = {
         .setDescription('Testing your luck')
         .addField('...', `${await getEmoji('slots')} ${await getEmoji('slots')} ${await getEmoji('slots')}`)
         .setFooter(`${author.tag}'s Slots`)
-        .setColor('BLUE');
+        .setColor(embedColor);
         
       const resultEmbed = new Discord.MessageEmbed()
         .setTitle('Slots')
         .setDescription('Here is what you got!!! ')
         .addField(what(), text, true)
         .setFooter(`${author.tag}'s Slots`)
-        .setColor('BLUE');
+        .setColor(embedColor);
       
       //Set cooldowm
       const timestamps = client.cooldowns.get('slots');

@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const db = require('../../schemas/player.js');
+const embedColor = require('../../functions/getEmbedColor.js');
 
 module.exports = {
   name: 'vote',
@@ -19,7 +20,7 @@ module.exports = {
         .setDescription('Thanks for Supporting me! You have already voted for me.\n' + cooldown +
         '\n [Community Server](https://bit.ly/dispoGuild) - Join for additional fun and community only features.' +
         '\n [Invite Bot to Your World](https://bit.ly/dispoBot) - Having fun in your palace is more fun')
-        .setColor('BLUE')
+        .setColor(embedColor)
         .setThumbnail(author.displayAvatarURL());
       channel.send(embed);
     } else {
@@ -29,7 +30,7 @@ module.exports = {
         '\n**Note:** It might take a maximum of 3 minutes for you to get the vote reward.' +
         '\n [Community Server](https://bit.ly/dispoGuild) - Join for additional fun and community only features.' +
         '\n [Invite Bot to Your World](https://bit.ly/dispoBot) - Having fun in your palace is more fun')
-        .setColor('BLUE')
+        .setColor(embedColor)
         .setThumbnail(author.displayAvatarURL());
       channel.send(embed);
     }

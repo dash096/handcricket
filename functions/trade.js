@@ -9,7 +9,7 @@ module.exports = async function (itemName, itemAmount, user, target, msg) {
   
   const args = msg.content.trim().split(' ');
   
-  if(args.length == 4 && itemName === 'coins') {
+  if(itemName == 'coins') {
     const userData = await db.findOne({_id: user.id});
     const targetData = await db.findOne({_id: target.id});
     
@@ -26,8 +26,7 @@ module.exports = async function (itemName, itemAmount, user, target, msg) {
       msg.reply(`Successfully Traded ${coinEmoji} ${itemAmount} coins!`);
       await target.send(`**${user.tag}** sent you ${coinEmoji} ${itemAmount} coins.`);
     }
-  }
-  else {
+  } else {
     const userData = await db.findOne({_id: user.id});
     const targetData = await db.findOne({_id: target.id});
     

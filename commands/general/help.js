@@ -1,6 +1,7 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const db = require('../../schemas/player.js');
+const embedColor = require('../../functions/getEmbedColor.js');
 
 module.exports = {
   name: 'help',
@@ -22,7 +23,7 @@ module.exports = {
           .setDescription('Here\'s an Interactive GUIDE for you!\n\n')
           .addField('Navigate via the pages of the guide by appending the number next to ' + `${prefix}help`, 
           '1) ❓ - **__About and Guide__**\n2) 👀 - **__General Conmands__**\n3) 🏏 - **__Cricket Commands__**\n4) 🏋️ - **__Minigames Commands__**')
-          .setColor('BLUE')
+          .setColor(embedColor)
           .setFooter('Requested by ' + author.tag);
         channel.send(send);
       } else if(args[0] == 1) {
@@ -33,28 +34,28 @@ module.exports = {
           'The bowler bowls a ball by typing a number , the batsman  hits the ball by typing a number. If both the numbers are same, it is a Wicket and the batsman changes else the batsman\'s number adds to his score, and after wicket, the next innings starts with a target that the previous batsman has hit in total\n\n' +
           'The batsman and bowler in first innings gets swapped their position. Now the batsman(i.e the bowler in innings 1) has to chase the bowler\'s(i.e. batsman in innings 1) score\n\n' +
           'If the batsman and the bowler type the same number before the score is reached, bolwer wins, else if the batsman crosses the target, batsman wins.')
-          .setColor('BLUE')
+          .setColor(embedColor)
           .setFooter('Requested by ' + author.tag);
         channel.send(aboutEmbed);
       } else if(args[0] == 2) { 
         const generalEmbed = new Discord.MessageEmbed()
           .setTitle('General Commands')
           .setDescription(general)
-          .setColor('BLUE')
+          .setColor(embedColor)
           .setFooter('Requested by ' + author.tag);
         channel.send(generalEmbed);
       } else if(args[0] == 3) {
         const cricketEmbed = new Discord.MessageEmbed()
           .setTitle('Cricket Commands')
           .setDescription(cricket)
-          .setColor('BLUE')
+          .setColor(embedColor)
           .setFooter('Requested by ' + author.tag);
         channel.send(cricketEmbed);
       } else if(args[0] == 4) {
         const minigamesEmbed = new Discord.MessageEmbed()
           .setTitle('Minigames Commands')
           .setDescription(minigames)
-          .setColor('BLUE')
+          .setColor(embedColor)
           .setFooter('Requested by ' + author.tag);
         channel.send(minigamesEmbed);
       } 

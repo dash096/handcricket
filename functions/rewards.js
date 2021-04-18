@@ -102,6 +102,7 @@ module.exports = async function(winner, loser, coins, wS, wB, lS, lB, message) {
     updateDecor(decor, 1, winnerData);
     winner.send(`Oh Damm! You got a ${decor} too!`);
   }
-  await gain(winnerData, 7, channel, winner);
-  await gain(loserData, 6, channel, loser);
+  
+  await gain(winnerData, 7, message, winner);
+  await gain(loserData, 6, message, loser);
 };

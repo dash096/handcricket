@@ -3,6 +3,7 @@ const db = require('../../schemas/player.js');
 const questDB = require('../../schemas/quests.js');
 const getEmoji = require('../../index.js');
 const updateBag = require('../../functions/updateBag.js');
+const embedColor = require('../../functions/getEmbedColor.js');
 
 module.exports = {
   name: 'quests',
@@ -88,7 +89,7 @@ module.exports = {
     const embed = new Discord.MessageEmbed()
       .setTitle(`**${author.tag}**'s Quests`)
       .setDescription(`Here is a status of your quests\n\n${text}\n\n`)
-      .setColor('BLUE')
+      .setColor(embedColor)
       .setFooter(footer);
       
     channel.send(embed);

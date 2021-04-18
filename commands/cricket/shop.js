@@ -3,6 +3,7 @@ const db = require('../../schemas/player.js');
 const itemDb = require('../../schemas/items.js');
 const gain = require('../../functions/gainExp.js');
 const getEmoji = require('../../index.js');
+const embedColor = require('../../functions/getEmbedColor.js');
 
 module.exports = {
   name: "shop",
@@ -26,7 +27,7 @@ module.exports = {
       .setTitle(`Shop Items`)
       .setDescription(text)
       .setFooter(`Requested by ${author.tag}`)
-      .setColor('#2d61b5');
+      .setColor(embedColor);
         
     docs.forEach(async doc => {
       const title = doc.name.charAt(0).toUpperCase() + doc.name.slice(1);

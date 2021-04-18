@@ -3,6 +3,7 @@ const db = require('../../schemas/player.js');
 const getEmoji = require('../../index.js');
 const gainExp = require('../../functions/gainExp.js');
 const getErrors = require('../../functions/getErrors.js');
+const embedColor = require('../../functions/getEmbedColor.js');
 
 module.exports = {
   name: 'guess',
@@ -39,7 +40,7 @@ module.exports = {
       //Send Embed
       const embed = new Discord.MessageEmbed()
         .setTitle(`Guess The Number! ${pixel} ${pixel} ${pixel}`)
-        .setColor('BLUE')
+        .setColor(embedColor)
         .setDescription(`**You got 3 lives to guess the number in my mind!**\n That number is between ${start} and ${end}.`)
         .setFooter('I am playing with ' + author.tag);
       
@@ -66,7 +67,7 @@ module.exports = {
         const edit = new Discord.MessageEmbed()
           .setTitle('Guess the Number ' + `${await getLives(lives)}`)
           .setDescription(`**You got ${lives} more  to guess the number in my mind!**\n That number is between ${start} and ${end}.`)
-          .setColor('BLUE')
+          .setColor(embedColor)
           .setFooter('Im playing with ' + author.tag);
      
         if(guess.toLowerCase() == 'end') {

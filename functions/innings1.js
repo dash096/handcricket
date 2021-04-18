@@ -3,6 +3,7 @@ const Discord = require("discord.js");
 const secondInnings = require("./innings2.js");
 const updateBag = require('./updateBag.js');
 const getEmoji = require('../index.js');
+const embedColor = require('./getEmbedColor.js');
 
 module.exports = async function(batsman, bowler, message, post) {
   const { channel, author, mentions, content } = message;
@@ -11,12 +12,11 @@ module.exports = async function(batsman, bowler, message, post) {
     .setTitle("Cricket Match - First Innings")
     .addField(batsman.username + " - Batsman", 0, true)
     .addField(bowler.username + " - Bowler", 0, true)
-    .setColor("#2d61b5");
-
-  const batEmbed = await batsman.send(embed);
-  const ballEmbed = await bowler.send(embed);
+    .setColor(embedColor);
+  await batsman.send(embed);
+  await bowler.send(embed);
   
-  let batDots = 0;
+  let noOfUsedDots = 0;
   let useDot = false;
   let useMagik = [false, 1];
   
@@ -151,7 +151,7 @@ module.exports = async function(batsman, bowler, message, post) {
         const bal = await updateBag('dots', 1, await db.findOne({_id: batsman.id}), updateBagObj);
         if(bal == 'err') {
           return loopBatCollect();
-        } else if(batDots === 3) {
+        } else if(noOfUsedDots === 3) {
           batsman.send('Only 3 dots can be used in a match and you are left with 0!');
           return loopBatCollect();
         } else if(parseInt(c) === parseInt(ballArray[ballArray.length - 1])) {
@@ -162,7 +162,7 @@ module.exports = async function(batsman, bowler, message, post) {
           return;
         } else {
           useDot = true;
-          batDots += 1;
+          noOfUsedDots += 1;
           c = ballArray[ballArray.length - 1];
           newScore = (await batArray[batArray.length - 1]) + parseInt(ballArray[ballArray.length - 1]);
         }
@@ -182,7 +182,7 @@ module.exports = async function(batsman, bowler, message, post) {
           .setTitle("Cricket Match - First Innings")
           .addField(batsman.username + " - Batsman", newScore, true)
           .addField(bowler.username + " - Bowler", 0, true)
-          .setColor("#2d61b5");
+          .setColor(embedColor);
 
         await batsman.send(`You hit ${c} and you were bowled ${bowled}, **Scoreboard**`, { embed });
         await bowler.send(`Batsman hit ${c}${dot(c, bowled, useDot)}, **Scoreboard**`, { embed });

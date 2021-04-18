@@ -36,7 +36,7 @@ module.exports = {
     const amount = args[args.length - 1];
       
     //send @ping c/coins 1
-    if(args[1].toLowerCase() == 'c' || args[1].toLowerCase() == 'coin') {
+    if(args[1].trim().toLowerCase() == 'c' || args[1].trim().toLowerCase().startsWith('coin')) {
       if(!amount || isNaN(amount)) {
         let error = 'syntax';
         let filePath = 'cricket/trade.js';
