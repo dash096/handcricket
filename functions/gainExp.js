@@ -23,7 +23,7 @@ module.exports = async (data, amt, msg, user) => {
   const sLevel = Object.keys(levels).find(key => levels[key] === sXP);
   
   if(pLevel != sLevel) {
-    if(user) msg.send(`${user} CONGRATS!!! You leveled up to **${sLevel}**! You also got a lootbox!!!`);
+    if(user) msg.channel.send(`${user}, CONGRATS!!! You leveled up to **${sLevel}**! You also got a lootbox!!!`);
     else msg.reply(`CONGRATS!!! You leveled up to **${sLevel}**! You also got a lootbox!!!`);
     await updateBag('lootbox', -1, data, msg);
     if(sLevel == 0) { //If the level is 0, gib tracks
