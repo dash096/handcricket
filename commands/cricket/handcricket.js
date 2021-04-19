@@ -2,9 +2,9 @@ const db = require("../../schemas/player.js");
 const Discord = require("discord.js");
 const getErrors = require('../../functions/getErrors.js');
 const getTarget = require('../../functions/getTarget.js');
-const firstInnings = require("../../functions/innings1.js");
+const firstInnings = require("../../functions/duoInnings1.js");
 const executeTeamMatch = require("../../functions/teamMatch.js");
-const executeSoloMatch = require("../../functions/soloMatch.js");
+const executeSoloMatch = require("../../functions/duoMatch.js");
 
 module.exports = {
   name: "handcricket",
@@ -17,28 +17,38 @@ module.exports = {
   run: async ({message, args, client}) => {
     const { content, author, channel, mentions } = message;
     
+    //Check Status of the user.
+    const user = author;
+    const userdata = await db.findOne({
+      _id: user.id
+    });
+    if(userdata.status === true) {
+      let error = 'engaged';
+      message.reply(getErrors({error, user}));
+      return;
+    }
+    
     try {
       //Team Match
       if(args.join(' ').trim().toLowerCase().includes('team')) {
         executeTeamMatch(message);
       } else { //Solo Match
-        const user = author;
+        
+        //Target Validation
         const target = getTarget(message, args, client);
-        if(!target) return;
-        if(user.id === target.id) return message.reply('Play with yourself? Silly');
-    
-        const userdata = await db.findOne({
-          _id: user.id
-        });
+        if(!target || user.id === target.id) {
+          let error = 'syntax'; let filePath = 'cricket/handcricket.js';
+          message.reply(getErrors({error, filePath}));
+          return;
+        }
+        
+        //Status Validation
         const targetdata = await db.findOne({
           _id: target.id
         });
-    
-        if(userdata.status === true) {
-          message.reply(`${user.tag} is already engaged in a game`);
-          return;
-        } else if(targetdata.status === true) {
-          message.reply(`${target.tag} is already engaged in a game`);
+        if(targetdata.status === true) {
+          let error = 'engaged';
+          message.reply(getErrors({error, user}));
           return;
         }
         //Change status to avoid 2 matchs at same time

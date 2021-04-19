@@ -4,7 +4,7 @@ module.exports = type => {
   if(!type) type = 'type1';
   const Object = {};
   
-  const files = []
+  const files = [];
   const filesWithPNG = fs.readdirSync(`./decors/${type}`).filter(file => !file.includes('character'));
   
   filesWithPNG.forEach(file => {
@@ -13,4 +13,4 @@ module.exports = type => {
   
   Object[type] = files;
   return Object[type];
-}
+};

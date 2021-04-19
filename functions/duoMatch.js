@@ -2,7 +2,7 @@ const db = require("../schemas/player.js");
 const Discord = require("discord.js");
 const getErrors = require('./getErrors.js');
 const getEmoji = require('../index.js');
-const firstInnings = require("./innings1.js");
+const firstInnings = require("./duoInnings1.js");
 
 module.exports = async (message, user, target) => {
   const tossEmoji = await getEmoji('toss');
@@ -13,7 +13,7 @@ module.exports = async (message, user, target) => {
     
   let batsman;
   let bowler;
-    
+  
   //Check if to post socres in the channel.
   let post = false;
   if(content.toLowerCase().includes('post')) post = true;

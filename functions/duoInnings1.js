@@ -1,6 +1,6 @@
 const db = require("../schemas/player.js");
 const Discord = require("discord.js");
-const secondInnings = require("./innings2.js");
+const secondInnings = require("./duoInnings2.js");
 const updateBag = require('./updateBag.js');
 const getEmoji = require('../index.js');
 const embedColor = require('./getEmbedColor.js');
