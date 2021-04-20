@@ -3,13 +3,11 @@ const db = require("../schemas/items.js");
 module.exports = async function (amount, data, msg) {
   const random = Math.random();
   
-  const itemsData = await db.find();
+  const itemsData = await db.find({name: {$ne: 'lootbox'}});
   const items = [];
   const getItemNames = () => {
     itemsData.forEach(data => {
-      if(data != 'lootbox') {
-        items.push(data.name);
-      }
+      items.push(data.name);
     });
   };
   getItemNames();
