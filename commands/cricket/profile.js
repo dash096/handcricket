@@ -36,13 +36,16 @@ module.exports = {
     }
     
     const levels = getLevels();
-    const XPLine = await getXPLine(data.xp);
     let level = (await getPreceedingPair(levels, data.xp))[0] || 'Nab (0)';
     let targetXP = levels[level + 1] || 10;
+    const XPLine = await getXPLine(data.xp);
     const xpFixed = data.xp.toFixed(0);
     const STR = data.strikeRate;
     const WR = getWR(data);
-    const charPath = await getCharacter(target);
+    
+    const waitMessage = await message.reply('Wearing yer clothes');
+    const characterPath = await getCharacter(target);
+    const characterAttachment = new Discord.MessageAttachment(characterPath);
     
     const embed = new Discord.MessageEmbed()
       .setTitle(`Profile of **${target.tag}**`)
@@ -56,15 +59,18 @@ module.exports = {
       .addField("Toss Multi", data.tossMulti.toFixed(3) + tb, true)
       .addField("Coins Multi", data.coinMulti.toFixed(3) + cb, true)
       .setFooter("Your Character looks cool! Use `e.equip <name>` to wear a decor for your character")
-      .attachFiles(`${charPath}`)
-      .setImage(`attachment://${charPath.split('/').pop()}`)
+      .attachFiles(characterAttachment)
+      .setImage(`attachment://${characterPath.split('/').pop()}`)
       .setColor(embedColor);
-
-    await message.reply(embed);
-    await gain(data, 1, message);
-    await fs.unlink(`${charPath}`, (e) => {
-      if(e) console.log(e);
-    });
+    
+    setTimeout(async () => {
+      await waitMessage.delete();
+      await channel.send(embed);
+      await gain(data, 1, message);
+      await fs.unlink(`${characterPath}`, (e) => {
+        if(e) console.log(e);
+      });
+    }, 1999);
   }
 };
 
@@ -184,28 +190,30 @@ async function getCharacter(target) {
 async function getImage(target, type, paths) {
   let character = await jimp.read(`./decors/${type}/character.png`);
   let exportPath = `./temp/${target.id}.png`;
-  let published = false;
   
-  if(paths.length > 1) {
-    for(const path of paths) {
-      if(published === true) {
-        character = await jimp.read(exportPath);
-      }
-      published = true;
-      const toComposite = await jimp.read(path);
+  try {
+    if(paths.length > 1) {
+      let i = 0;
+      paths.forEach(async (path) => {
+        i += 1;
+        if(i === paths.length) {
+          character
+            .composite(await jimp.read(path), 0, 0)
+            .write(exportPath);
+        } else {
+          character.composite(await jimp.read(path), 0, 0);
+        }
+      });
+    } else if (paths.length === 1) {
       character
-      .composite(toComposite, 0, 0)
-      .write(exportPath);
+        .composite(await jimp.read(paths[0]), 0, 0)
+        .write(exportPath);
+    } else {
+      character.write(exportPath);
     }
-  } else if (paths.length === 1) {
-    const toComposite = await jimp.read(paths[0]);
-    character
-    .composite(toComposite, 0, 0)
-    .write(exportPath);
-  } else {
-    character.write(exportPath);
+  } catch (e) {
+    console.log(e);
+  } finally {
+    return exportPath;
   }
-  
-  return `${exportPath}`;
-  
 }

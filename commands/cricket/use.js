@@ -12,13 +12,17 @@ const getDecors = require('../../functions/getDecors.js');
 
 module.exports = {
   name: 'use',
+  aliases: ['open'],
   description: 'Use an item in your bag',
   category: 'Cricket',
   syntax: 'e.use <itemName>',
   cooldown: 7,
-  run: async ({message}) => {
+  run: async ({message, args, prefix}) => {
     const { content, author, channel, mentions } = message;
     const coinsEmoji = await getEmoji('coin');
+    if((content.slice(prefix.length).trim().toLowerCase().split(/ +/))[0] === 'open') {
+      if(args[0] !== 'lb' && args[0] !== 'lootbox' && args[0] !== 'loot') return;
+    }
     
     const itemArray = await checkItems(message);
     

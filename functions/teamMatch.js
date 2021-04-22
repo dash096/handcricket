@@ -168,8 +168,7 @@ module.exports = async (message) => {
         }
       } catch (e) {
         console.log(e);
-        let error = 'time';
-        channel.send(`${cap1} ${getErrors({error})}`);
+        channel.send(`${cap1} ${getErrors({error: 'time'})}`);
         return 'err';
       }
     }
@@ -231,7 +230,7 @@ module.exports = async (message) => {
       let rando = Math.random();
       if(rando < 0.50) {
         batTeam = team2;
-        batTeam = team1;
+        bowlTeam = team1;
       } else {
         batTeam = team1;
         bowlTeam = team2;
@@ -244,21 +243,7 @@ module.exports = async (message) => {
       let bowlOrder = await pick(bowlTeam[0], bowlTeam, 'bowler');
       if(batOrder == 'err') return;
       
-      let batOrderTags = [];
-      let bowlOrderTags = [];
-      batOrder.forEach(player => batOrderTags.push(player.tag || 'ExtraWicket#0000'));
-      bowlOrder.forEach(player => bowlOrderTags.push(player.tag || 'ExtraWicket#0000'));
-      
-      const embed = new Discord.MessageEmbed()
-        .setTitle('TeamMatch')
-        .setDescription('Here is ye guys teams in order')
-        .addField('Batting', batOrderTags.join('\n'))
-        .addField('Bowling', bowlOrderTags.join('\n'))
-        .setColor(embedColor)
-      
-      await channel.send(`BattingTeam: ${batOrder.join(', ')}\nBowlingTeam: ${bowlOrder.join(', ')}`, {embed});
-      
-      await executeTeamMatch(batOrder, bowlOrder, channel);
+      await executeTeamMatch(batOrder, bowlOrder, batTeam[0], bowlTeam[0], channel);
       
       async function pick(cap, team, type) {
         try {

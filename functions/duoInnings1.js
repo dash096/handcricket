@@ -61,7 +61,7 @@ module.exports = async function(batsman, bowler, message, post) {
         batsman.send(`\`${bowler.username}\`: ${c}`);
         return loopBallCollect();
       } //Number Validation
-      else if (c > 6) {
+      else if (parseInt(c) > 6) {
         m.react("❌");
         bowler.send("Max number that can be bowled is 6");
         return loopBallCollect();
