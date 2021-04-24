@@ -27,7 +27,7 @@ client.on("ready", async () => {
     client.user.setActivity(`Cheems Cricket in ${client.guilds.cache.size} guilds!`);
   }, 60 * 30 * 1000); //30 minutes
   
-  console.log(`Total ${client.guilds.cache.size} Servers.`;
+  console.log(`Total ${client.guilds.cache.size} Servers.`);
   
   const dbOptions = {
     useNewUrlParser: true,

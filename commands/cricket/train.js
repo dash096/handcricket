@@ -40,10 +40,10 @@ module.exports = {
       if(message.guild.id == serverID) {
         multi = multi * 2;
       }
-      let amount = multi * 696;
+      let amount = parseInt(multi * 696);
       await channel.send(`You got ${await getEmoji('coin')} ${amount} for your fitness`);
       
-      updateCoins(parseInt(amount), data);
+      updateCoins(amount, data);
     
       const quests = data.quests || {};
       const trainings = quests.beFit || 0;

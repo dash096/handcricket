@@ -31,7 +31,7 @@ module.exports = {
     try {
       //Team Match
       if(args.join(' ').trim().toLowerCase().includes('team')) {
-        executeTeamMatch(message);
+        executeTeamMatch(message, client);
       } else { //Solo Match
         
         //Target Validation

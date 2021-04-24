@@ -43,7 +43,7 @@ module.exports = {
     const STR = data.strikeRate;
     const WR = getWR(data);
     
-    const waitMessage = await message.reply('Wearing yer clothes');
+    const waitMessage = await message.reply('Wearing your clothes... ' + `${await getEmoji('swag')}`);
     const characterPath = await getCharacter(target);
     const characterAttachment = new Discord.MessageAttachment(characterPath);
     

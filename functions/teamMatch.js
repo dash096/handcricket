@@ -6,7 +6,7 @@ const firstInnings = require("./duoInnings1.js");
 const embedColor = require('./getEmbedColor.js');
 const executeTeamMatch = require('./teamInnings1.js');
 
-module.exports = async (message) => {
+module.exports = async (message, client) => {
   const { channel, content, author, mentions } = message;
   
   await getReactors();
@@ -256,6 +256,7 @@ module.exports = async (message) => {
           content = content.trim().toLowerCase();
         
           const picks = Array.from(mentions.users.values()) || [];
+          let teamMembers = [];
           
           if(content.includes('extra')) {
             channel.send(`${cap}, extrawickets can only and will be added in the end, u just ping the members`);
@@ -270,13 +271,13 @@ module.exports = async (message) => {
             channel.send(`${cap}, ping all the members in your team in the order you desire`);
             return await pick(cap, team, type);
           } else {
-            if(team.find(player => player == 'ExtraWicket#0000')) {
+            if(team.find(player => player === 'ExtraWicket#0000')) {
               picks.push('ExtraWicket#0000');
               return picks;
             } else {
               return picks;
             }
-          }
+          };
         } catch (e) {
           console.log(e);
           channel.send(getErrors({error: 'time'}));
