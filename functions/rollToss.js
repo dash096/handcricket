@@ -5,7 +5,7 @@ const getEmoji = require('../index.js');
 const firstInnings = require("./duoInnings1.js");
 const rollToss = require('./rollToss.js');
 
-module.exports = async (message, user, target, post) => {
+module.exports = async (message, user, target) => {
   const { channel, mentions, content } = message;
   const tossEmoji = await getEmoji('toss');
   

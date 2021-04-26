@@ -4,7 +4,7 @@ const embedColor = require('./getEmbedColor.js');
 const getEmoji = require('../index.js');
 const getErrors = require('./getErrors.js');
 
-module.exports = async (battingTeam, bowlingTeam, battingCap, bowlingCap, channel) => {
+module.exports = async (battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel) => {
   let logs = {
     batting: {},
     bowling: {},
@@ -19,8 +19,9 @@ module.exports = async (battingTeam, bowlingTeam, battingCap, bowlingCap, channe
       if(player.id === cap.id) {
         playerAndLog.push(`${player.tag + ' (captain)'} ${ array[array.length - 1] }`);
       } else {
-        playerAndLog.push(`${player.tag || 'ExtraWicket#0000'} ${ array[array.length - 1] }`);
+        playerAndLog.push(`${player.tag || `ExtraWicket (${extraPlayer.username})`} ${ array[array.length - 1] }`);
       }
+      
     });
     return playerAndLog.join(`\n`);
   }
@@ -32,7 +33,7 @@ module.exports = async (battingTeam, bowlingTeam, battingCap, bowlingCap, channe
     if(player.id === battingCap.id) {
       battingTeamTags.push(player.tag + ' (captain)');
     } else {
-      battingTeamTags.push(player.tag || 'ExtraWicket#0000');
+      battingTeamTags.push(player.tag || `ExtraWicket (${extraPlayer.username})`);
     }
     logs.batting[player.id] = [0];
   });
@@ -40,7 +41,7 @@ module.exports = async (battingTeam, bowlingTeam, battingCap, bowlingCap, channe
     if(player.id === bowlingCap.id) {
       bowlingTeamTags.push(player.tag + ' (captain)');
     } else {
-      bowlingTeamTags.push(player.tag || 'ExtraWicket#0000');
+      bowlingTeamTags.push(player.tag || `ExtraWicket (${extraPlayer.username})`);
     }
     logs.bowling[player.id] = [0];
   });
@@ -78,7 +79,10 @@ module.exports = async (battingTeam, bowlingTeam, battingCap, bowlingCap, channe
     if(remainingBalls === 0) {
       let currentBowler = bowlingTeam.indexOf(bowler);
       let response = bowlingTeam[currentBowler + 1] || 'end';
-      if(response !== 'end' ) remainingBalls = 12;
+      if (response !== 'end' ) remainingBalls = 12;
+      else if (response.includes('Extra')) {
+        response = bowlingTeam.find(player => player.id === extraPlayer.id);
+      }
       respond(response, batsman, 'bowl');
       return;
     }
@@ -186,7 +190,10 @@ module.exports = async (battingTeam, bowlingTeam, battingCap, bowlingCap, channe
       if (parseInt(content) === bowled && useDot === false) {
         let currentBatsmanIndex = battingTeam.indexOf(bowler);
         let response = battingTeam[currentBatsmanIndex + 1] || 'end';
-         respond(response, bowler, 'bat');
+        if(response.includes('Extra')) {
+          response = extraPlayer;
+        }
+        respond(response, bowler, 'bat');
         return;
       } //Log
       else {

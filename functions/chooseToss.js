@@ -7,10 +7,6 @@ const firstInnings = require("./duoInnings1.js");
 module.exports = async function chooseToss(message, winner, loser) {
   const { content, author, channel, mentions } = message;
   
-  if(!winner[0].id) {
-    winner = winner[0];
-    loser = loser[0];
-  }
   let batsman;
   let bowler;
   
