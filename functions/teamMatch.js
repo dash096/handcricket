@@ -51,9 +51,12 @@ module.exports = async (message, client) => {
       
       if(players.length <= 2) {
         await channel.send('TeamMatch aborted due to insufficient members, the members required are minimum 3');
+        return;
       } else {
         const check = await checkDataAndStatus(players);
-        if(check === 'err') return;
+        if(check === 'err') {
+          return;
+        }
         await changeStatus(players, true);
         await channel.send('TeamMatch started, Players are\n' + playerTags.join('\n'));
         await chooseCaptains(players, playerTags);
@@ -105,7 +108,10 @@ module.exports = async (message, client) => {
     
     //Nested to captain2 in the function itself
     const chose = await ListenToCaptain1();
-    if(chose === 'err') return;
+    if(chose === 'err') {
+      await changeStatus(players, false);
+      return;
+    }
     
     //Get player tags
     let team1Tags = [];
@@ -118,7 +124,7 @@ module.exports = async (message, client) => {
       i -= 1;
       if (!player.tag) {
         if(team1.length > 2) {
-          extraPlayer = await askForTheExtraWicketBatsman(team1, channel);
+          extraPlayer = await askForTheExtraWicketBatsman(players, team1, channel);
         } else {
           extraPlayer = team1[0];
         }
@@ -128,25 +134,25 @@ module.exports = async (message, client) => {
       }
         
       if(i === 0) {
-        executeSchedule(team1, team2, team1Tags, team2Tags, extraPlayer, channel);
+        executeSchedule(players, team1, team2, team1Tags, team2Tags, extraPlayer, channel);
       }
     });
       
     await team2.forEach( async player => {
       i -= 1;
       if (!player.tag) {
-        //if(team2.length > 2) {
-          extraPlayer = await askForTheExtraWicketBatsman(team2, channel);
-        /*} else {
+        if(team2.length > 2) {
+          extraPlayer = await askForTheExtraWicketBatsman(players, team2, channel);
+        } else {
           extraPlayer = team2[0];
-        }*/
+        }
         await team2Tags.push(`ExtraWicket (${extraPlayer.username})`);
       } else {
         team2Tags.push(player.tag);
       }
-        
+      
       if(i === 0) {
-        executeSchedule(team1, team2, team1Tags, team2Tags, extraPlayer, channel);
+        executeSchedule(players, team1, team2, team1Tags, team2Tags, extraPlayer, channel);
       }
     });
     
@@ -244,13 +250,12 @@ module.exports = async (message, client) => {
         }
       } catch (e) {
         console.log(e);
-        let error = 'time';
-        channel.send(`${cap1} ${getErrors({error})}`);
+        channel.send(`${cap1} ${getErrors({error: 'time'})}`);
         return 'err';
       }
     }
     
-    async function executeSchedule(team1, team2, team1Tags, team2Tags, extraPlayer, channel) {
+    async function executeSchedule(players, team1, team2, team1Tags, team2Tags, extraPlayer, channel) {
       if(!extraPlayer) return;
       
       let winnerCap = await rollToss(message, team1[0], team2[0]);
@@ -259,6 +264,10 @@ module.exports = async (message, client) => {
       
       if(winnerCap.id === team1[0].id) {
         let toss = await chooseToss(message, team1[0], team2[0]);
+        if(chooseToss === 'err') {
+          await changeStatus(players, false);
+          return;
+        }
         if(toss[0].id === team1[0].id) {
           batTeam = team1;
           bowlTeam = team2;
@@ -268,6 +277,10 @@ module.exports = async (message, client) => {
         }
       } else {
         let toss = await chooseToss(message, team2[0], team1[0]);
+        if(chooseToss === 'err') {
+          await changeStatus(players, false);
+          return;
+        }
         if(toss[0].id === team1[0].id) {
           batTeam = team1;
           bowlTeam = team2;
@@ -277,17 +290,14 @@ module.exports = async (message, client) => {
         }
       }
       
-      await channel.send(`${batTeam[0]} ping your batsmen list in order you desire like \`@user1 @user2 @user3\``)
       let batOrder = await pick(batTeam[0], batTeam, 'batsman');
-      if(batOrder === 'err') return;
-      await channel.send(`${bowlTeam[0]} ping your bowlers list in order you desire like \`@user1 @user2 @user3\``)
       let bowlOrder = await pick(bowlTeam[0], bowlTeam, 'bowler');
-      if(batOrder === 'err') return;
+      if(batOrder === 'err' || bowlOrder === 'err') {
+        await changeStatus(players, false);
+        return;
+      }
       
-      executeTeamMatch(batOrder, bowlOrder, batTeam[0], bowlTeam[0], extraPlayer, channel).then( async () => {
-        await changeStatus(batOrder, false);
-        await changeStatus(bowlOrder, false);
-      });
+      executeTeamMatch(players, batOrder, bowlOrder, batTeam[0], bowlTeam[0], extraPlayer, channel);
       
       async function pick(cap, team, type) {
         try {
@@ -296,6 +306,13 @@ module.exports = async (message, client) => {
             autoPick.push('ExtraWicket#0000');
             return autoPick;
           }
+          
+          if(type === 'batsman') {
+            await channel.send(`${cap} ping your batsmen list in order you desire like \`@user1 @user2 @user3\``)
+          } else if(type === 'bowler') {
+            await channel.send(`${cap} ping your bowlers list in order you desire like \`@user1 @user2 @user3\``)
+          }
+          
           const messages = await channel.awaitMessages(
             m => m.author.id === cap.id,
             { max: 1, time: 30000, errors: ['time'] }
@@ -346,7 +363,7 @@ function checkAvailablity(picks, team) {
   return true;
 }
 
-async function askForTheExtraWicketBatsman(team, channel) {
+async function askForTheExtraWicketBatsman(players, team, channel) {
   try {
     const captain = team[0];
     await channel.send(`${captain} you have an extraWicket in your team. Ping a teamMember who is gonna play that extraWicket`);
@@ -370,6 +387,8 @@ async function askForTheExtraWicketBatsman(team, channel) {
     } 
   } catch (e) {
     console.log(e);
+    channel.send(`${cap1} ${getErrors({error: 'time'})}`);
+    return 'err';
   }
 }
 

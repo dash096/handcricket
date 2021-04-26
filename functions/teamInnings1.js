@@ -5,7 +5,7 @@ const getEmoji = require('../index.js');
 const getErrors = require('./getErrors.js');
 const updateBags = require('./updateBag.js');
 
-module.exports = async (battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel) => {
+module.exports = async (players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel) => {
   let logs = {
     batting: {},
     bowling: {},
@@ -137,9 +137,13 @@ module.exports = async (battingTeam, bowlingTeam, battingCap, bowlingCap, extraP
         await batsman.send('Ball is coming, hit it by typing a number');
         return bowlCollect(batsman, bowler, dm);
       }
-    }).catch(e => {
+    }).catch(async e => {
       //CPU auto bowl
-      console.log(e);
+      remainingBalls -= 1;
+      let random = ([1,2,3,4,5,6])[Math.floor([Math.random() * ([1,2,3,4,5,6]).length])];
+      await logs.bowling[bowler.id].push(parseInt(rando));
+      await bowler.send(`CPU bowled ${rando}`);
+      await batsman.send('Ball is coming, hit it by typing a number');
       return bowlCollect(batsman, bowler, dm);
     });
   }
@@ -213,8 +217,31 @@ module.exports = async (battingTeam, bowlingTeam, battingCap, bowlingCap, extraP
       }
     }).catch(e => {
       //CPU auto hit
-      console.log(e);
-      return batCollect(batsman, bowler, dm);
+      let rando = ([1,2,3,4,5,6])[Math.floor([Math.random() * ([1,2,3,4,5,6]).length])];
+      logs.batting[batsman.id].push(parseInt(rando));
+      //Wicket
+      let bowled = (logs.bowling[bowler.id])[(logs.bowling[bowler.id]).length - 1 ];
+      if(bowled === rando) {
+        let currentBatsmanIndex = battingTeam.indexOf(bowler);
+        let response = battingTeam[currentBatsmanIndex + 1] || 'end';
+        if(typeof response === 'string') {
+          response = extraPlayer;
+        }
+        respond(response, bowler, 'bat');
+        return;
+      }
+      
+      const embed = new Discord.MessageEmbed()
+        .setTitle('TeamMatch')
+        .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap))
+        .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap))
+        .setColor(embedColor)
+        .setFooter(`${remainingBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
+    
+      await batsman.send(embed);
+      await bowler.send(embed);
+      await channel.send(embed);
+      return bowlCollect(batsman, bowler, dm);
     });
   }
   
