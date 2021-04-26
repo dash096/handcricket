@@ -27,8 +27,6 @@ client.on("ready", async () => {
     client.user.setActivity(`Cheems Cricket in ${client.guilds.cache.size} guilds!`);
   }, 60 * 30 * 1000); //30 minutes
   
-  console.log(`Total ${client.guilds.cache.size} Servers.`);
-  
   const dbOptions = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -38,6 +36,8 @@ client.on("ready", async () => {
   try {
     await mongoose.connect(process.env.MONGO, dbOptions);
     console.log('Mongo Connected');
+    
+    console.log(`Total ${client.guilds.cache.size} Servers and ${(await db.find()).length} users have a profile.`);
     
     await loadFiles();
   

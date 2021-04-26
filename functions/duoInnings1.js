@@ -70,17 +70,16 @@ module.exports = async function(batsman, bowler, message, post) {
         bowler.send("Wait for the batsman to hit the previous ball.");
         return loopBallCollect();
       } //Magik Ball
-      else if (c == 'magikball') {
-        const updateBagObj = {}; updateBagObj.channel = bowler;
-        const bal = await updateBag('magikball', 1, await db.findOne({_id: bowler.id}), updateBagObj);
-        if(bal == 'err') return loopBallCollect();
+      else if (c === 'magikball') {
         if(batArray[batArray.length - 1] < 49) {
           bowler.send('Magik ball can only be used if the batsman score is above 49');
           return loopBallCollect();
         }
-        let availableRando = [1, 2, 3, 4, 5];
-        let magikRando = availableRando[Math.floor(Math.random() * availableRando.length)];
-        bowler.send(`MagikBall on, now bowl any one of these: ${magikRando} or ${magikRando + 1}`);
+        const bal = await updateBag('magikball', 1, await db.findOne({_id: bowler.id}), { channel: bowler });
+        if(bal == 'err') {
+          return loopBallCollect();
+        }
+        let magikRando = availableRando[Math.floor(Math.random() * ([1, 2, 3, 4, 5]).length)];
         let bowledMagik = await letBowlerChooseMagik(magikRando, bowler, batsman);
         useMagik = [true, magikRando];
         ballArray.push(parseInt(bowledMagik));
@@ -217,6 +216,7 @@ function dot(c, bowled, useDot) {
 
 async function letBowlerChooseMagik(rando, bowler, batsman) {
   try {
+    bowler.send(`MagikBall on, now bowl any one of these: ${magikRando} or ${magikRando + 1}`);
     const msgs = await bowler.dmChannel.awaitMessages(m => m.author.id === bowler.id, 
       { time: 10000, max: 1, errors: ['time'] }
     );

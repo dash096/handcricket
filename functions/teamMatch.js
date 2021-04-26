@@ -5,6 +5,8 @@ const getEmoji = require('../index.js');
 const firstInnings = require("./duoInnings1.js");
 const embedColor = require('./getEmbedColor.js');
 const executeTeamMatch = require('./teamInnings1.js');
+const chooseToss = require('./chooseToss.js');
+const rollToss = require('./rollToss.js');
 
 module.exports = async (message, client) => {
   const { channel, content, author, mentions } = message;
@@ -224,17 +226,19 @@ module.exports = async (message, client) => {
     }
     
     async function executeSchedule(team1, team2, team1Tags, team2Tags, channel) {
-      let batTeam;
-      let bowlTeam;
+      let winnerCap = await rollToss(message, team1[0], team2[0]);
+      let teams;
       
-      let rando = Math.random();
-      if(rando < 0.50) {
-        batTeam = team2;
-        bowlTeam = team1;
+      if(winnerCap.id === team1[0].id) {
+        teams = await chooseToss(message, team1, team2);
       } else {
-        batTeam = team1;
-        bowlTeam = team2;
+        teams = await chooseToss(message, team2, team1);
       }
+      
+      let batTeam = teams[0];
+      let bowlTeam = teams[1];
+      
+      console.log(teams, batTeam, bowlTeam)
       
       await channel.send(`${batTeam[0]} ping your batsmen list in order you desire like \`@user1 @user2 @user3\``)
       let batOrder = await pick(batTeam[0], batTeam, 'batsman');
