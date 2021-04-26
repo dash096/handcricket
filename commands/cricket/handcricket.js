@@ -22,18 +22,17 @@ module.exports = {
     const userdata = await db.findOne({
       _id: user.id
     });
-    if(userdata.status === true) {
+    /*if(userdata.status === true) {
       let error = 'engaged';
       message.reply(getErrors({error, user}));
       return;
-    }
+    }*/
     
     try {
       //Team Match
       if(args.join(' ').trim().toLowerCase().includes('team')) {
         executeTeamMatch(message, client);
       } else { //Solo Match
-        
         //Target Validation
         const target = getTarget(message, args, client);
         if(!target || user.id === target.id) {
@@ -41,7 +40,6 @@ module.exports = {
           message.reply(getErrors({error, filePath}));
           return;
         }
-        
         //Status Validation
         const targetdata = await db.findOne({
           _id: target.id
@@ -51,7 +49,7 @@ module.exports = {
           message.reply(getErrors({error, user}));
           return;
         }
-        //Change status to avoid 2 matchs at same time
+        //Change status
         await changeStatus(user, true);
         await changeStatus(target, true);
         executeSoloMatch(message, user, target);

@@ -13,6 +13,7 @@ module.exports = async (message, client) => {
   
   await getReactors();
   
+  //Collect reactions from sent Embed and next Choose Caps.
   async function getReactors() {
     const { channel, content, author, mentions } = message;
     const enterEmoji = await getEmoji('enter');
@@ -35,7 +36,6 @@ module.exports = async (message, client) => {
     
     //On end, check players.
     await reactionCollector.on('end', async (collectedReactions) => {
-      
       let reactors = [];
       
       collectedReactions.forEach(reactions => {
@@ -54,25 +54,23 @@ module.exports = async (message, client) => {
       } else {
         const check = await checkDataAndStatus(players);
         if(check === 'err') return;
+        await changeStatus(players, true);
         await channel.send('TeamMatch started, Players are\n' + playerTags.join('\n'));
         await chooseCaptains(players, playerTags);
       }
     });
     
     async function checkDataAndStatus(users) {
-      let error = '';
-      for (const user in users) {
-        const data = db.findOne({_id: user.id}).then((data) => {
-          if(!data) {
-            channel.send(getErrors({error: 'data', user}));
-            error = 'err';
-          } else if(data.status === true) {
-            channel.send(getErrors({error: 'engaged', user}));
-            error = 'err';
-          }
-        });
-      };
-      return error;
+      for(const user in users) {
+        const data = await db.findOne({_id: user.id});
+        if(!data) {
+          channel.send(getErrors({error: 'data', user}));
+          return 'err';
+        } else if (data.status === true) {
+          channel.send(getErrors({error: 'engaged', user}));
+          return 'err';
+        }
+      }
     }
   }
   
@@ -99,6 +97,8 @@ module.exports = async (message, client) => {
     await getTeams(cap1, cap2, players, availablePlayers);
   }
   
+  let extraPlayer;
+    
   async function getTeams(cap1, cap2, players, availablePlayers) {
     let team1 = [cap1];
     let team2 = [cap2];
@@ -107,13 +107,15 @@ module.exports = async (message, client) => {
     const chose = await ListenToCaptain1();
     if(chose === 'err') return;
     
-    let extraPlayer;
-    
     //Get player tags
     let team1Tags = [];
     let team2Tags = [];
     
+    let extraPlayer;
+    let i = team1.length + team2.length;
+      
     await team1.forEach( async player => {
+      i -= 1;
       if (!player.tag) {
         if(team1.length > 2) {
           extraPlayer = await askForTheExtraWicketBatsman(team1, channel);
@@ -122,23 +124,31 @@ module.exports = async (message, client) => {
         }
         await team1Tags.push(`ExtraWicket (${extraPlayer.username})`);
       } else {
-        team1Tags.push(player.tag)
+        team1Tags.push(player.tag);
+      }
+        
+      if(i === 0) {
+        executeSchedule(team1, team2, team1Tags, team2Tags, extraPlayer, channel);
       }
     });
+      
     await team2.forEach( async player => {
+      i -= 1;
       if (!player.tag) {
-        if(team2.length > 2) {
+        //if(team2.length > 2) {
           extraPlayer = await askForTheExtraWicketBatsman(team2, channel);
-        } else {
-          extraPlayer = team2[0]
-        }
-        team2Tags.push(`ExtraWicket (${extraPlayer.username})`);
+        /*} else {
+          extraPlayer = team2[0];
+        }*/
+        await team2Tags.push(`ExtraWicket (${extraPlayer.username})`);
       } else {
-       team2Tags.push(player.tag);
+        team2Tags.push(player.tag);
+      }
+        
+      if(i === 0) {
+        executeSchedule(team1, team2, team1Tags, team2Tags, extraPlayer, channel);
       }
     });
-    
-    await executeSchedule(team1, team2, team1Tags, team2Tags, extraPlayer, channel);
     
     async function ListenToCaptain1() {
       try {
@@ -241,39 +251,51 @@ module.exports = async (message, client) => {
     }
     
     async function executeSchedule(team1, team2, team1Tags, team2Tags, extraPlayer, channel) {
+      if(!extraPlayer) return;
+      
       let winnerCap = await rollToss(message, team1[0], team2[0]);
-      let teams;
+      let batTeam;
+      let bowlTeam;
       
       if(winnerCap.id === team1[0].id) {
         let toss = await chooseToss(message, team1[0], team2[0]);
         if(toss[0].id === team1[0].id) {
-          teams = [team1, team2];
+          batTeam = team1;
+          bowlTeam = team2;
         } else {
-          teams = [team2, team1];
+          batTeam = team2;
+          bowlTeam = team1;
         }
       } else {
         let toss = await chooseToss(message, team2[0], team1[0]);
         if(toss[0].id === team1[0].id) {
-          teams = [team1, team2];
+          batTeam = team1;
+          bowlTeam = team2;
         } else {
-          teams = [team2, team1];
+          batTeam = team2;
+          bowlTeam = team1;
         }
       }
       
-      let batTeam = teams[0];
-      let bowlTeam = teams[1];
-      
       await channel.send(`${batTeam[0]} ping your batsmen list in order you desire like \`@user1 @user2 @user3\``)
       let batOrder = await pick(batTeam[0], batTeam, 'batsman');
-      if(batOrder == 'err') return;
+      if(batOrder === 'err') return;
       await channel.send(`${bowlTeam[0]} ping your bowlers list in order you desire like \`@user1 @user2 @user3\``)
       let bowlOrder = await pick(bowlTeam[0], bowlTeam, 'bowler');
-      if(batOrder == 'err') return;
+      if(batOrder === 'err') return;
       
-      await executeTeamMatch(batOrder, bowlOrder, batTeam[0], bowlTeam[0], extraPlayer, channel);
+      executeTeamMatch(batOrder, bowlOrder, batTeam[0], bowlTeam[0], extraPlayer, channel).then( async () => {
+        await changeStatus(batOrder, false);
+        await changeStatus(bowlOrder, false);
+      });
       
       async function pick(cap, team, type) {
         try {
+          if(team.length === 2 && team.find(player => typeof player === 'string')) {
+            let autoPick = [team[0]];
+            autoPick.push('ExtraWicket#0000');
+            return autoPick;
+          }
           const messages = await channel.awaitMessages(
             m => m.author.id === cap.id,
             { max: 1, time: 30000, errors: ['time'] }
@@ -348,5 +370,17 @@ async function askForTheExtraWicketBatsman(team, channel) {
     } 
   } catch (e) {
     console.log(e);
+  }
+}
+
+async function changeStatus(a, boolean) {
+  if(boolean !== true && boolean !== false) return;
+  
+  if(Array.isArray(a)) {
+    for(const b of a) {
+      await db.findOneAndUpdate({_id: b.id}, { $set: {status: boolean}});
+    }
+  } else {
+    await db.findOneAndUpdate({_id: a.id}, { $set: {status: boolean}});
   }
 }

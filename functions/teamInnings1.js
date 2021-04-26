@@ -3,6 +3,7 @@ const Discord = require('discord.js');
 const embedColor = require('./getEmbedColor.js');
 const getEmoji = require('../index.js');
 const getErrors = require('./getErrors.js');
+const updateBags = require('./updateBag.js');
 
 module.exports = async (battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel) => {
   let logs = {
@@ -190,7 +191,7 @@ module.exports = async (battingTeam, bowlingTeam, battingCap, bowlingCap, extraP
       if (parseInt(content) === bowled && useDot === false) {
         let currentBatsmanIndex = battingTeam.indexOf(bowler);
         let response = battingTeam[currentBatsmanIndex + 1] || 'end';
-        if(response.includes('Extra')) {
+        if(typeof response === 'string') {
           response = extraPlayer;
         }
         respond(response, bowler, 'bat');

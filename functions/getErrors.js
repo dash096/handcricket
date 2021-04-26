@@ -16,7 +16,7 @@ module.exports = ({error, user, itemName, filePath}) => {
   } else if( error == 'lessAssets') {
     return `You dont have that many ${itemName}` + tip;
   } else if( error == 'engaged') {
-    return `**${user.tag}** is already engaged in another game. + tip`;
+    return `**${user.tag}** is already engaged in another game.` + tip;
   }
   return 'cant get the error, dm and report it to `Dash#7374` or `UltraMoonEagle#3876`';
 };
