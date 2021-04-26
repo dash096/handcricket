@@ -140,7 +140,7 @@ module.exports = async (players, battingTeam, bowlingTeam, battingCap, bowlingCa
     }).catch(async e => {
       //CPU auto bowl
       remainingBalls -= 1;
-      let random = ([1,2,3,4,5,6])[Math.floor([Math.random() * ([1,2,3,4,5,6]).length])];
+      let rando = ([1,2,3,4,5,6])[Math.floor([Math.random() * ([1,2,3,4,5,6]).length])];
       await logs.bowling[bowler.id].push(parseInt(rando));
       await bowler.send(`CPU bowled ${rando}`);
       await batsman.send('Ball is coming, hit it by typing a number');
