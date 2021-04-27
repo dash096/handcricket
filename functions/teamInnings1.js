@@ -245,6 +245,7 @@ module.exports = async (players, battingTeam, bowlingTeam, battingCap, bowlingCa
     console.log(response);
     if(response === 'end') {
       //Second Innings
+      console.log('Second Innings');
     } else {
       const embed = new Discord.MessageEmbed()
         .setTitle('TeamMatch')
