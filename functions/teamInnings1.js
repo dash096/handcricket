@@ -13,16 +13,13 @@ module.exports = async (players, battingTeam, bowlingTeam, battingCap, bowlingCa
   
   function getPlayerTagWithLogs(team, type, cap) {
     let playerAndLog = [];
-  
     team.forEach(player => {
-      let array = (logs[type])[player.id];
-      
+      let log = (logs[type])[player.id || '0000'];
       if(player.id === cap.id) {
-        playerAndLog.push(`${player.tag + ' (captain)'} ${ array[array.length - 1] }`);
+        playerAndLog.push(`${player.tag + ' (captain)'} ${ log[log.length - 1] }`);
       } else {
-        playerAndLog.push(`${player.tag || `ExtraWicket (${extraPlayer.username})`} ${ array[array.length - 1] }`);
+        playerAndLog.push(`${player.tag || `${extraPlayer.tag} (EW)`} ${ log[log.length - 1] }`);
       }
-      
     });
     return playerAndLog.join(`\n`);
   }
@@ -34,17 +31,17 @@ module.exports = async (players, battingTeam, bowlingTeam, battingCap, bowlingCa
     if(player.id === battingCap.id) {
       battingTeamTags.push(player.tag + ' (captain)');
     } else {
-      battingTeamTags.push(player.tag || `ExtraWicket (${extraPlayer.username})`);
+      battingTeamTags.push(player.tag || `${extraPlayer.tag} (EW)`);
     }
-    logs.batting[player.id] = [0];
+    logs.batting[player.id || '0000'] = [0];
   });
   bowlingTeam.forEach(player => {
     if(player.id === bowlingCap.id) {
       bowlingTeamTags.push(player.tag + ' (captain)');
     } else {
-      bowlingTeamTags.push(player.tag || `ExtraWicket (${extraPlayer.username})`);
+      bowlingTeamTags.push(player.tag || `${extraPlayer.tag} (EW)`);
     }
-    logs.bowling[player.id] = [0];
+    logs.bowling[player.id || '0000'] = [0];
   });
   
   let totalBalls = bowlingTeam.length * 2 * 6;
@@ -74,18 +71,25 @@ module.exports = async (players, battingTeam, bowlingTeam, battingCap, bowlingCa
   let useDot = false;
   let dotsUsed = 0;
   let useMagik = [false, 1];
-  
+  let bowlExtra = false;
+  let batExtra = false;
   
   function bowlCollect(batsman, bowler, dm) {
+    console.log('remainingBalls', remainingBalls);
     if(remainingBalls === 0) {
-      let currentBowler = bowlingTeam.indexOf(bowler);
-      let response = bowlingTeam[currentBowler + 1] || 'end';
-      if (response !== 'end' ) remainingBalls = 12;
-      else if (response.includes('Extra')) {
-        response = bowlingTeam.find(player => player.id === extraPlayer.id);
+      if(bowlExtra === true) {
+        return respond('end', batsman, 'bowl', dm);
+      } else {
+        let currentIndex = getIndex(bowlingTeam, bowler);
+        let response = bowlingTeam[currentIndex + 1] || 'end';
+        if (response !== 'end') {
+          remainingBalls = 12;
+        } else if (response === 'ExtraWicket#0000') {
+          response = extraPlayer;
+          bowlExtra = true;
+        }
       }
-      respond(response, batsman, 'bowl');
-      return;
+      return respond(response, batsman, 'bowl');
     }
     //Collector
     dm.awaitMessages(
@@ -97,7 +101,6 @@ module.exports = async (players, battingTeam, bowlingTeam, battingCap, bowlingCa
         
       //Check Powerup
       if (content.includes('magikball') || content.includes('magik') || content == 'mb') {
-        //Turn Based
         if(logs.bowler[bowler.id].length > logs.batting[batsman.id].length) {
           bowler.send('Wait for the batsman to hit your previous ball');
           return bowlCollect(batsman, bowler, dm);
@@ -121,7 +124,11 @@ module.exports = async (players, battingTeam, bowlingTeam, battingCap, bowlingCa
       else if (isNaN(content)) {
         batsman.send(content);
         return bowlCollect(batsman, bowler, dm);
-      } //Turn Based
+      } //End
+      else if(content === 'end' || content === 'cancel') {
+        channel.send('You cant exit a teamMatch, if you go afk, the CPU will bat/bowl.');
+        return bowlCollect(batsman, bowler, dm);
+      } //Turn based
       else if (logs.bowling[bowler.id].length > logs.batting[batsman.id].length) {
         bowler.send('Wait for the batsman to hit the previous ball');
         return bowlCollect(batsman, bowler, dm);
@@ -149,7 +156,6 @@ module.exports = async (players, battingTeam, bowlingTeam, battingCap, bowlingCa
   }
   
   
-  
   function batCollect(batsman, bowler, dm) {
     //Collector
     dm.awaitMessages(
@@ -159,9 +165,15 @@ module.exports = async (players, battingTeam, bowlingTeam, battingCap, bowlingCa
       let message = messages.first();
       let content = message.content.trim().toLowerCase();
       let bowled = (logs.bowling[bowler.id])[(logs.bowling[bowler.id]).length - 1 ];
+      let oldScore = (logs.batting[batsman.id])[(logs.batting[batsman.id]).length - 1];
+      if(batExtra === true) oldScore = (logs.batting['0000'])[(logs.batting['0000']).length - 1];
       
-      //Conversation
-      if (isNaN(content)) {
+      //End
+      if(content === 'end' || content === 'cancel') {
+        channel.send('You cant exit a teamMatch, if you go afk, the CPU will bat/bowl.');
+        return bowlCollect(batsman, bowler, dm);
+      } //Conversation
+      else if (isNaN(content)) {
         bowler.send(content);
         return batCollect(batsman, bowler, dm);
       } //Turn Based
@@ -193,16 +205,30 @@ module.exports = async (players, battingTeam, bowlingTeam, battingCap, bowlingCa
         useMagik = [true, -1];
       } //Wicket
       if (parseInt(content) === bowled && useDot === false) {
-        let currentBatsmanIndex = battingTeam.indexOf(bowler);
-        let response = battingTeam[currentBatsmanIndex + 1] || 'end';
-        if(typeof response === 'string') {
-          response = extraPlayer;
+        batsman.send('Wicket!!');
+        bowler.send('Wicket!!');
+        channel.send('Wicket!!');
+        
+        if(batExtra === true) {
+          return respond('end', bowler, 'bat', dm);
+        } else {
+          let currentIndex = getIndex(battingTeam, batsman);
+          let response = battingTeam[currentIndex + 1] || 'end';
+          if (batExtra === true) {
+            response = 'end'
+          } else if (response === 'ExtraWicket#0000') {
+            response = extraPlayer;
+            batExtra = true;
+          }
+          return respond(response, bowler, 'bat');
         }
-        respond(response, bowler, 'bat');
-        return;
       } //Log
       else {
-        logs.batting[batsman.id].push(parseInt(content));
+        if(batExtra === true) {
+          logs.batting['0000'].push(oldScore + parseInt(content));
+        } else {
+          logs.batting[batsman.id].push(oldScore + parseInt(content));
+        }
         const embed = new Discord.MessageEmbed()
           .setTitle('TeamMatch')
           .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap))
@@ -215,20 +241,37 @@ module.exports = async (players, battingTeam, bowlingTeam, battingCap, bowlingCa
         await channel.send(embed);
         return batCollect(batsman, bowler, dm);
       }
-    }).catch(e => {
+    }).catch(async e => {
       //CPU auto hit
       let rando = ([1,2,3,4,5,6])[Math.floor([Math.random() * ([1,2,3,4,5,6]).length])];
-      logs.batting[batsman.id].push(parseInt(rando));
+      let oldScore = (logs.batting[batsman.id])[(logs.batting[batsman.id]).length - 1];
+      if (batExtra === true) {
+        oldScore = (logs.batting['0000'])[(logs.batting['0000']).length - 1];
+        ((logs.batting)['0000']).push(oldScore + parseInt(content));
+      } else {
+        (logs.batting[batsman.id]).push(oldScore + parseInt(content));
+      }
+      
       //Wicket
       let bowled = (logs.bowling[bowler.id])[(logs.bowling[bowler.id]).length - 1 ];
       if(bowled === rando) {
-        let currentBatsmanIndex = battingTeam.indexOf(bowler);
-        let response = battingTeam[currentBatsmanIndex + 1] || 'end';
-        if(typeof response === 'string') {
-          response = extraPlayer;
+        batsman.send('Wicket!!');
+        bowler.send('Wicket!!');
+        channel.send('Wicket!!');
+        
+        if(batExtra === true) {
+          return respond('end', bowler, 'bat', dm);
+        } else {
+          let currentIndex = getIndex(battingTeam, batsman);
+          let response = battingTeam[currentIndex + 1] || 'end';
+          if(batExtra === true) {
+            response = 'end'
+          } else if (response === 'ExtraWicket#0000') {
+            response = extraPlayer;
+            batExtra = true;
+          }
+          return respond(response, bowler, 'bat');
         }
-        respond(response, bowler, 'bat');
-        return;
       }
       
       const embed = new Discord.MessageEmbed()
@@ -237,34 +280,43 @@ module.exports = async (players, battingTeam, bowlingTeam, battingCap, bowlingCa
         .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap))
         .setColor(embedColor)
         .setFooter(`${remainingBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
-    
+       
       await batsman.send(embed);
       await bowler.send(embed);
       await channel.send(embed);
-      return bowlCollect(batsman, bowler, dm);
+      return batCollect(batsman, bowler, dm);
     });
   }
   
   
-  function respond(response, responseX, type) {
+  async function respond(response, responseX, type) {
+    console.log(response);
     if(response === 'end') {
       //Second Innings
     } else {
+      const embed = new Discord.MessageEmbed()
+        .setTitle('TeamMatch')
+        .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap))
+        .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap))
+        .setColor(embedColor)
+        .setFooter(`${remainingBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
+      channel.send(embed);
       if(type === 'bat') {
-        //Swap the batsman
-        batsman = response;
-        bowler = responseX;
-        return batCollect(batsman, bowler, dm);
+        const dm = (await response.send(`Your turn to bat`, {embed})).channel;
+        return batCollect(response, responseX, dm);
       } else if(type === 'bowl') {
-        bowler = response;
-        batsman = responseX;
-        return bowlCollect(batsman, bowler, dm)
+        const dm = (await response.send(`Your turn to bowl`, {embed})).channel;
+        return bowlCollect(responseX, response, dm)
       }
     }
   }
-
 };
 
+async function getIndex(team, player) {
+  let index = team.indexOf(team.find(member => member.id === player.id));
+  console.log('index:', index);
+  return index;
+}
 
 async function letBowlerChooseMagik(rando, bowler, batsman) {
   bowler.send(`MagikBall on, now bowl any one of these: ${magikRando} or ${magikRando + 1}`).then( async message => {

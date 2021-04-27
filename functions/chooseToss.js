@@ -26,7 +26,8 @@ module.exports = async function chooseToss(message, winner, loser) {
     } else if (c == "end" || c == "cancel" || c == "exit") {
       await changeStatus(winner, false);
       await changeStatus(loser, false);
-      return channel.send('Aborted');
+      channel.send('Aborted');
+      return 'err';
     } else {
       m.reply("Type either `batting` or `bowling`");
       return chooseToss(message, winner, loser);

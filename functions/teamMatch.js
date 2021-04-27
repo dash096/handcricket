@@ -50,27 +50,25 @@ module.exports = async (message, client) => {
       });
       
       if(players.length <= 2) {
-        await channel.send('TeamMatch aborted due to insufficient members, the members required are minimum 3');
+        channel.send('TeamMatch aborted due to insufficient members, the members required are minimum 3');
         return;
       } else {
         const check = await checkDataAndStatus(players);
-        if(check === 'err') {
-          return;
-        }
+        if(check === 'err') return;
         await changeStatus(players, true);
         await channel.send('TeamMatch started, Players are\n' + playerTags.join('\n'));
         await chooseCaptains(players, playerTags);
       }
     });
     
-    async function checkDataAndStatus(users) {
-      for(const user in users) {
-        const data = await db.findOne({_id: user.id});
+    async function checkDataAndStatus(players) {
+      for(const player in players) {
+        const data = await db.findOne({_id: player.id});
         if(!data) {
-          channel.send(getErrors({error: 'data', user}));
+          channel.send(getErrors({error: 'data', player}));
           return 'err';
         } else if (data.status === true) {
-          channel.send(getErrors({error: 'engaged', user}));
+          channel.send(getErrors({error: 'engaged', player}));
           return 'err';
         }
       }
@@ -89,19 +87,16 @@ module.exports = async (message, client) => {
     //Send Embed
     const embed = new Discord.MessageEmbed()
       .setTitle('TeamMatch')
-      .setDescription('Leaders are asked to pick the members available for your team from\n' +
-        availablePlayers.join(`\n`)
-      )
+      .setDescription('Leaders are asked to pick the members available for your team from\n')
       .addField('Team #1', `Leader: ${cap1.tag}`)
       .addField('Team #2', `Leader: ${cap2.tag}`)
+      .addField('Available Players', availablePlayers.join('\n'))
       .setColor(embedColor);
-      
     await channel.send(embed);
     await getTeams(cap1, cap2, players, availablePlayers);
   }
   
   let extraPlayer;
-    
   async function getTeams(cap1, cap2, players, availablePlayers) {
     let team1 = [cap1];
     let team2 = [cap2];
@@ -188,6 +183,9 @@ module.exports = async (message, client) => {
             channel.send(`${author}, there's no Extra Wicket available`);
             return ListenToCaptain1();
           }
+        } else if(content === 'end' || content === 'cancel') {
+          channel.send('TeamMatch aborted');
+          return 'err'
         } else if(!pick) {
           return ListenToCaptain1();
         } else if(!availablePlayers.find(player => player.id == pick.id)) {
@@ -237,6 +235,9 @@ module.exports = async (message, client) => {
             channel.send(`${author}, there's no Extra Wicket available`);
             return ListenToCaptain2();
           }
+        } else if(content === 'end' || content === 'cancel') {
+          channel.send('TeamMatch aborted');
+          return 'err'
         } else if(!pick) {
           return ListenToCaptain2();
         } else if(!availablePlayers.find(player => player.id == pick.id)) {
@@ -327,6 +328,9 @@ module.exports = async (message, client) => {
           if(content.includes('extra')) {
             channel.send(`${cap}, extrawickets can only and will be added in the end, u just ping the members`);
             return await pick(cap, team, type);
+          } else if(content === 'end' || content === 'cancel') {
+            channel.send('TeamMatch aborted');
+            return 'err'
           } else if(picks.length === 0) {
             channel.send(`${cap}, ping all the members in the order you desire`);
             return await pick(cap, team, type);
@@ -334,13 +338,17 @@ module.exports = async (message, client) => {
             channel.send(`${cap}, ping all the members in the order you desire`);
             return await pick(cap, team, type);
           } else if (checkAvailablity(picks, team) === false) {
-            channel.send(`${cap}, ping all the members in your team in the order you desire`);
+            channel.send(`${cap}, ping all the members **in your team** in the order you desire`);
             return await pick(cap, team, type);
           } else {
-            if(team.find(player => player === 'ExtraWicket#0000')) {
+            if(team.find(player => typeof player === 'string')) {
               picks.push('ExtraWicket#0000');
               return picks;
             } else {
+              if(picks.length < team.length) {
+                channel.send(`${cap}, ping all the members in the order you desire`);
+                return await pick(cap, team, type);
+              }
               return picks;
             }
           };
@@ -379,6 +387,9 @@ async function askForTheExtraWicketBatsman(players, team, channel) {
     if (!ping) {
       channel.send(`${captain} ping a member`);
       return await askForTheExtraWicketBatsman(team, channel);
+    } else if(content === 'end' || content === 'cancel') {
+      channel.send('TeamMatch aborted');
+      return 'err';
     } else if (!team.find(player => player.id === ping.id)) {
       channel.send(`${captain} ping a member who is in your team`);
       return await askForTheExtraWicketBatsman(team, channel);
