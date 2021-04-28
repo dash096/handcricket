@@ -71,7 +71,10 @@ module.exports = async function(batsman, bowler, message, post) {
         return loopBallCollect();
       } //Magik Ball
       else if (c === 'magikball') {
-        if(batArray[batArray.length - 1] < 49) {
+        if(useMagik[0] === true) {
+          bowler.send('Magik ball can only be used once. sad.');
+          return loopBallCollect();
+        } else if(batArray[batArray.length - 1] < 49) {
           bowler.send('Magik ball can only be used if the batsman score is above 49');
           return loopBallCollect();
         }
