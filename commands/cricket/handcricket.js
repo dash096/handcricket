@@ -35,7 +35,8 @@ module.exports = {
       } else { //Solo Match
         //Target Validation
         const target = getTarget(message, args, client);
-        if(!target || user.id === target.id) {
+        if(!target) return;
+        if(user.id === target.id) {
           let error = 'syntax'; let filePath = 'cricket/handcricket.js';
           message.reply(getErrors({error, filePath}));
           return;
