@@ -33,7 +33,6 @@ module.exports = async function chooseToss(message, winner, loser) {
       return chooseToss(message, winner, loser);
     }
     await channel.send(`Batsman is ${batsman}, Bowler is ${bowler}`);
-    console.log(batsman, bowler);
     return [batsman, bowler];
   } catch (e) {
     await changeStatus(winner, false);

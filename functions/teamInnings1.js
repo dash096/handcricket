@@ -297,10 +297,8 @@ module.exports = async (players, battingTeam, bowlingTeam, battingCap, bowlingCa
   
   
   async function respond(response, responseX, type) {
-    console.log(response, logs);
     if(response === 'end') {
       //Second Innings
-      console.log('Second Innings');
     } else {
       if(type === 'bat') {
         const dm = (await response.send(`Your turn to bat`, {embed})).channel;
@@ -317,7 +315,6 @@ module.exports = async (players, battingTeam, bowlingTeam, battingCap, bowlingCa
 
 function getIndex(team, player) {
   let index = team.indexOf(team.find(member => member.id === player.id));
-  console.log('index:', index);
   return index;
 }
 
