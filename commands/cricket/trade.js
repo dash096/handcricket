@@ -20,7 +20,7 @@ module.exports = {
     const user = author;
     
     //Target
-    let target = getTarget(message, args, client);
+    let target = await getTarget(message, args, client);
     if(!target) return;
     
     if(user.id === target.id) {

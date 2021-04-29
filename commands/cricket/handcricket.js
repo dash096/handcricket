@@ -4,7 +4,7 @@ const getErrors = require('../../functions/getErrors.js');
 const getTarget = require('../../functions/getTarget.js');
 const firstInnings = require("../../functions/duoInnings1.js");
 const executeTeamMatch = require("../../functions/teamMatch.js");
-const executeSoloMatch = require("../../functions/duoMatch.js");
+const executeDuoMatch = require("../../functions/duoMatch.js");
 
 module.exports = {
   name: "handcricket",
@@ -22,11 +22,11 @@ module.exports = {
     const userdata = await db.findOne({
       _id: user.id
     });
-    /*if(userdata.status === true) {
+    if(userdata.status === true) {
       let error = 'engaged';
       message.reply(getErrors({error, user}));
       return;
-    }*/
+    }
     
     try {
       //Team Match
@@ -34,26 +34,23 @@ module.exports = {
         executeTeamMatch(message, client);
       } else { //Solo Match
         //Target Validation
-        const target = getTarget(message, args, client);
+        const target = await getTarget(message, args, client);
         if(!target) return;
         if(user.id === target.id) {
-          let error = 'syntax'; let filePath = 'cricket/handcricket.js';
-          message.reply(getErrors({error, filePath}));
-          return;
+          return message.reply(getErrors({error: 'syntax', filePath: 'cricket/handcricket.js'}));
         }
         //Status Validation
-        const targetdata = await db.findOne({
-          _id: target.id
-        });
+        const targetdata = await db.findOne({_id: target.id});
         if(targetdata.status === true) {
           let error = 'engaged';
-          message.reply(getErrors({error, user}));
+          message.reply(getErrors({error, target}));
           return;
         }
+        
         //Change status
         await changeStatus(user, true);
         await changeStatus(target, true);
-        executeSoloMatch(message, user, target);
+        executeDuoMatch(message, user, target);
       }
     } catch (e) {
       console.log(e);

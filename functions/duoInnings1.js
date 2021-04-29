@@ -115,7 +115,7 @@ module.exports = async function(batsman, bowler, message, post) {
       );
       const m = msgs.first();
       let c = m.content;
-      let newScore = (await batArray[batArray.length - 1]) + parseInt(c);
+      let newScore = parseInt(await batArray[batArray.length - 1]) + parseInt(c);
       let bowled = await ballArray[ballArray.length - 1];
 
       //End the match
@@ -188,7 +188,7 @@ module.exports = async function(batsman, bowler, message, post) {
 
         await batsman.send(`You hit ${c} and you were bowled ${bowled}, **Scoreboard**`, { embed });
         await bowler.send(`Batsman hit ${c}${dot(c, bowled, useDot)}, **Scoreboard**`, { embed });
-        if (post === true) await channel.send(`**${batsman.tag}** hit ${c}${dot(c, bowled, useDot)}, and was bowled ${c, bowled, useDot} by **${bowler.username}**`, { embed });
+        if (post === true) await channel.send(`**${batsman.tag}** hit ${c}${dot(c, bowled, useDot)}, and was bowled ${bowled} by **${bowler.username}**`, { embed });
         return loopBatCollect();
       }
     } catch (e) {

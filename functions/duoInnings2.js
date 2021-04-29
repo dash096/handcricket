@@ -164,6 +164,12 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
           batsman.send(`You can only use Dot 3 times per match and you have 0 left!`);
           return loopBatCollect();
         } else if(parseInt(c) == ballArray[ballArray.length - 1]) {
+          if(target - (newScore - parseInt(c)) === 1) {
+            await batsman.send(`Hehe! Bowler guessed you, Wicket! It is a tie..`);
+            await bowler.send(`Wicket! You guessed the batsman! It is a tie`);
+            if(post === true) channel.send(`Wicket! It is a tie.`);
+            return;
+          }
           await batsman.send(`Hehe! Bowler guessed you, Wicket! You lost sadge..`);
           await bowler.send(`Wicket! You guessed the batsman. You won a grand amount of ${emoji} ${coins}!`);
           if(post === true) channel.send(`Wicket! The bowler won!`);

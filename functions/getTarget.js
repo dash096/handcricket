@@ -1,7 +1,7 @@
 const db = require('../schemas/player.js');
 const getErrors = require('./getErrors.js');
 
-module.exports = (message, args, client) => {
+module.exports = async (message, args, client) => {
   let target;
   if(args.length > 0) {
     let query = args[0];
@@ -12,15 +12,18 @@ module.exports = (message, args, client) => {
       message.reply('Invalid Target, Either ping them, give their id or type their username#0000 without @');
       return;
     }
-    db.findOne({_id: user.id}).then((data) => {
+    target = await getData();
+    async function getData () {
+      const data = await db.findOne({_id: user.id});
       if(!data) {
         message.reply(getErrors({error: 'data', user}));
+        return;
       } else {
-        target = user;
+        return user;
       }
-    });
-    return target;
+    }
   } else {
-    return message.author;
+    target = message.author;
   }
+  return target;
 }

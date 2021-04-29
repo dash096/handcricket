@@ -15,7 +15,7 @@ module.exports = {
   run: async ({message, args, client}) => {
     const { content, author, channel, mentions } = message;
     
-    let target = getTarget(message, args, client);
+    let target = await getTarget(message, args, client);
     if(!target) return;
     
     const data = await db.findOne({_id: target.id});

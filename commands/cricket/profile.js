@@ -21,7 +21,7 @@ module.exports = {
     
     const coinEmoji = await getEmoji('coin');
     
-    let target = getTarget(message, args, client);
+    let target = await getTarget(message, args, client);
     if(!target) return;
     
     const data = await db.findOne({_id: target.id});

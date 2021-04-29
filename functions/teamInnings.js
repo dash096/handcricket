@@ -5,6 +5,7 @@ const getEmoji = require('../index.js');
 const getErrors = require('./getErrors.js');
 const updateBags = require('./updateBag.js');
 let isInnings2;
+let checkTimeup = [];
 
 module.exports = async function innings(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel, oldLogs) {
   let target;
@@ -32,10 +33,10 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         }
       } else {
         if(!oldLogs) {
-          playerAndLog.push(`${player.tag || `${extraPlayer.tag} (EW)`} 0`);
+          playerAndLog.push(`${player.tag} || ${extraPlayer.tag} (EW)} 0`);
         } else {
           let score = logs.batting[player.id || '0000']
-          playerAndLog.push(`${player.tag || `${extraPlayer.tag} ${score}`)
+          playerAndLog.push(`${player.tag} || ${extraPlayer.tag} ${score}`);
         }
       }
     });
@@ -168,6 +169,9 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         return bowlCollect(batsman, bowler, dm);
       } //Log
       else {
+        if(checkTimeup.find(a => a === bowler.id)) {
+          checkTimeup.splice(indexOf(bowler.id), 1);
+        }
         remainingBalls -= 1;
         totalBalls -= 1;
         await logs.bowling[bowler.id].push(parseInt(content));
@@ -176,6 +180,11 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         return bowlCollect(batsman, bowler, dm);
       }
     }).catch(async e => {
+      if(checkTimeup.length === 2) {
+        return respond('forceEnd');;
+      } else {
+        checkTimeup.push(bowler.id);
+      }
       console.log(e);
       //CPU auto bowl
       remainingBalls -= 1;
@@ -269,6 +278,9 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         return respond('win', batsman, 'bat', dm);
       } //Log
       else {
+        if(checkTimeup.find(a => a === batsman.id)) {
+          checkTimeup.splice(indexOf(batsman.id), 1);
+        }
         if(batExtra) {
           logs.batting['0000'].push(oldScore + parseInt(content));
         } else {
@@ -289,6 +301,11 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
       }
     }).catch(async e => {
       console.log(e);
+      if(checkTimeup.length === 2) {
+        return respond('forceEnd');;
+      } else {
+        checkTimeup.push(batsman.id);
+      }
       //CPU auto hit
       let rando = ([1,2,3,4,5,6])[Math.floor([Math.random() * ([1,2,3,4,5,6]).length])];
       let oldScore = (logs.batting[batsman.id])[(logs.batting[batsman.id]).length - 1];
@@ -347,7 +364,11 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
   
   
   async function respond(response, responseX, type) {
-    if(!oldLogs) {
+    checkTimeup = [];
+    if(response === 'forceEnd') {
+      isInnings2 = 'over';
+      return;
+    } else if(!oldLogs) {
       if(response === 'end') {
         isInnings2 = true;
         return innings(players, bowlingTeam, battingTeam, bowlingCap, battingCap, extraPlayer, channel, logs);
@@ -401,5 +422,17 @@ function whoIsNext(res, type) {
     } else {
       return ` Next bowler is ${res.tag}`;
     }
+  }
+}
+
+async function changeStatus(a, boolean) {
+  if(boolean !== true && boolean !== false) return;
+  
+  if(Array.isArray(a)) {
+    for(const b of a) {
+      await db.findOneAndUpdate({_id: b.id}, { $set: {status: boolean}});
+    }
+  } else {
+    await db.findOneAndUpdate({_id: a.id}, { $set: {status: boolean}});
   }
 }
