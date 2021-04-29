@@ -24,8 +24,8 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
   function getPlayerTagWithLogs(team, type, cap) {
     let playerAndLog = [];
     team.forEach(player => {
+      let log = (logs[type])[player.id || '0000'];
       if(type === 'batting') {
-        let log = (logs[type])[player.id || '0000'];
         if(player.id === cap.id) {
           playerAndLog.push(`${player.tag + ' (captain)'} ${ log[log.length - 1] }`);
         } else {
@@ -33,10 +33,10 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         }
       } else {
         if(!oldLogs) {
-          playerAndLog.push(`${player.tag} || ${extraPlayer.tag} (EW)} 0`);
+          playerAndLog.push(`${player.tag || `${extraPlayer.tag} (EW)`} 0`);
         } else {
-          let score = logs.batting[player.id || '0000']
-          playerAndLog.push(`${player.tag} || ${extraPlayer.tag} ${score}`);
+          let score = oldLogs.bowling[player.id || '0000'];
+          playerAndLog.push(`${player.tag || `${extraPlayer.tag} (EW)`} ${score}`);
         }
       }
     });
@@ -230,7 +230,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         batsman.send('Wait for the ball dude');
         return batCollect(batsman, bowler, dm);
       } //Turn Based on no batExtra
-      else if (!batExtra && !bowlExtra && logs.batting[batsman.id].length === logs.bowling[bowler.id].length) {
+      else if (!batExtra && logs.batting[batsman.id].length === logs.bowling[bowler.id].length) {
         batsman.send('Wait for the ball dude');
         return batCollect(batsman, bowler, dm);
       } //Limit to 6
@@ -367,6 +367,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
     checkTimeup = [];
     if(response === 'forceEnd') {
       isInnings2 = 'over';
+      channel.send('both the batsman and bowler are offline. Match ended.');
       return;
     } else if(!oldLogs) {
       if(response === 'end') {
