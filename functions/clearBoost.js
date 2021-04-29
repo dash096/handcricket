@@ -19,7 +19,7 @@ module.exports = async function (what, boost) {
             tossMulti: oldTossMulti/1.4
           },
           $unset: {
-            tossBoost
+            tossBoost: 'No matter'
           }
         }
       );

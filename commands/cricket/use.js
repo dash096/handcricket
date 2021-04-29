@@ -32,37 +32,34 @@ module.exports = {
     
     const playerData = await db.findOne({_id: author.id});
     
-    if (itemName === 'nuts') {
+    
+    //Under Dms only.
+    if (itemName === 'magikball' || itemName === 'dots'){
+      message.reply('It is a powerup and can only be used in duoMatches.');
+      return;
+    } else if (itemName === 'nuts') {
       const e = await updateBag(itemName, itemAmount, playerData, message);
       if(e != 'err') message.reply('You ate some nuts!');
       return;
-    }
-
-    else if (itemName === 'redbull') {
+    } else if (itemName === 'redbull') {
       const e = await updateBag(itemName, itemAmount, playerData, message);
       if(e != 'err') message.reply('You drank a redbull!');
       return;
-    }
-
-    else if (itemName === 'coinboost') {
+    } else if (itemName === 'coinboost') {
       const e1 = await updateBag(itemName, 1, playerData, message);
       if (e1 == 'err') return;
       const e2 = await updateMulti(itemName, playerData, message);
       if(e2 == 'err') return;
       if(e2 != 'err' && e1 != 'err') message.reply('Your Coin multiplier is now boosted twice!');
       return;
-    }
-
-    else if (itemName === 'tossboost') {
+    } else if (itemName === 'tossboost') {
       const e1 = await updateBag(itemName, 1, playerData, message);
       if (e1 == 'err') return;
       const e2 = await updateMulti(itemName, playerData, message);
       if(e2 == 'err') return;
       if(e2 != 'err' && e1 != 'err') message.reply('Your Toss multiplier is now boosted twice!');
       return;
-    } 
-    
-    else if (itemName === 'lootbox' ) {
+    } else if (itemName === 'lootbox' ) {
       const e1 = await updateBag(itemName, itemAmount, playerData, message);
       if(e1 == 'err') return;
           
@@ -94,12 +91,6 @@ module.exports = {
         }
         await msg.edit(text);
       }, 5000);
-    }
-
-    //Under Construction.
-    if (itemName === 'magikball'){
-      message.reply('Usage of magikBall items is still under development.');
-      return;
     }
     await gain(playerData, 2, message);
   }

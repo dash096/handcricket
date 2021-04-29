@@ -4,7 +4,7 @@ const getErrors = require('./getErrors.js');
 const getEmoji = require('../index.js');
 const firstInnings = require("./duoInnings1.js");
 const embedColor = require('./getEmbedColor.js');
-const executeTeamMatch = require('./teamInnings1.js');
+const executeTeamMatch = require('./teamInnings.js');
 const chooseToss = require('./chooseToss.js');
 const rollToss = require('./rollToss.js');
 
