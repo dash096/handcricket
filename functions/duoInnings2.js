@@ -3,7 +3,7 @@ const Discord = require("discord.js");
 const getEmoji = require('../index.js');
 const rewards = require('./rewards.js');
 const updateBag = require('./updateBag.js');
-const serverID = require('./getServerID.js');
+const serverID = process.env.SERVERID;
 const embedColor = require('./getEmbedColor.js');
 
 //shuffled
