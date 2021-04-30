@@ -43,7 +43,9 @@ module.exports = {
     const STR = data.strikeRate;
     const WR = getWR(data);
     
-    const waitMessage = await message.reply('Wearing your clothes... ' + `${await getEmoji('swag')}`);
+    let waitMessage;
+    if(target.id === author.id) waitMessage = await message.reply('Wearing your clothes... ' + `${await getEmoji('swag')}`);
+    else waitMessage = await message.reply(`Wearing ${target.tag}'s clothes`);
     const characterPath = await getCharacter(target);
     const characterAttachment = new Discord.MessageAttachment(characterPath);
     
@@ -191,29 +193,22 @@ async function getImage(target, type, paths) {
   let character = await jimp.read(`./decors/${type}/character.png`);
   let exportPath = `./temp/${target.id}.png`;
   
-  try {
-    if(paths.length > 1) {
-      let i = 0;
-      paths.forEach(async (path) => {
-        i += 1;
-        if(i === paths.length) {
-          character
-            .composite(await jimp.read(path), 0, 0)
-            .write(exportPath);
-        } else {
-          character.composite(await jimp.read(path), 0, 0);
-        }
-      });
-    } else if (paths.length === 1) {
-      character
-        .composite(await jimp.read(paths[0]), 0, 0)
-        .write(exportPath);
-    } else {
-      character.write(exportPath);
-    }
-  } catch (e) {
-    console.log(e);
-  } finally {
-    return exportPath;
+  if(paths.length > 0) {
+    let i = 0;
+    await paths.forEach(async path => {
+      i += 1;
+      if(i === paths.length) {
+        await character
+          .composite(await jimp.read(path),0, 0)
+          .write(exportPath);
+      } else {
+        await character
+          .composite(await jimp.read(path), 0, 0);
+      }
+    });
+  } else {
+    await character.write(exportPath);
   }
+  
+  return exportPath;
 }
