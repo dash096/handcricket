@@ -33,7 +33,7 @@ module.exports = {
       //Difficulty
       const opt = [1,1,2,2,3];
       const roll = opt[Math.floor(Math.random() * opt.length)];
-      const rando = getRando(roll); //Gets text
+      const rando = await getRando(roll); //Gets text
       
       await channel.send('The coach decided on running drill now . You will be running a 100m race . Type the upcoming message in the right order.');
       await channel.send('Ready');
@@ -78,37 +78,43 @@ module.exports = {
   }
 };
 
-function getRando(difficulty) {
+async function getRando(difficulty) {
   let rando = [];
   const chars = ['!', '#', '@'];
   const alphs = ['a', 'e', 'i', 'o', 'u'];
   const nums = [1,2,3,4,5,6,7,8,9,0];
   
+  await pushRando();
+  async function pushRando() {
     if(difficulty == 1) {
       let i;
-      for(i = 0; i < 8; i++) {
+      let arr = [0,1,2,3,4,5,6,7,8];
+      await arr.forEach(() => {
         const type = Math.floor(Math.random() * 4);
         if(type == 1 || type == 3) rando.push(alphs[Math.floor(Math.random() * alphs.length)]);
         if(type == 2) rando.push(nums[Math.floor(Math.random() * nums.length)]);
         time = 7000;
-      }
+      });
     } else if(difficulty == 2) {
       let i;
-      for(i = 0; i < 11; i++) {
+      let arr = [0,1,2,3,4,5,6,7,8,9,10];
+      await arr.forEach(() => {
         const type = Math.floor(Math.random() * 4);
         if(type == 1 || type == 3) rando.push(nums[Math.floor(Math.random() * nums.length)]);
         if(type == 2) rando.push(chars[Math.floor(Math.random() * chars.length)]);
         time = 8500;
-      }
+      });
     } else if(difficulty == 3) {
       let i;
-      for(i = 0; i < 12; i++) {
+      let arr = [0,1,2,3,4,5,6,7,8,9,10,11];
+      await arr.forEach(() => {
         const type = Math.floor(Math.random() * 4);
         if(type == 1 || type == 3) rando.push(chars[Math.floor(Math.random() * chars.length)]);
         if(type == 2) rando.push(nums[Math.floor(Math.random() * nums.length)]);
         time = 10000;
-      }
+      });
     }
+  }
   const number = rando.join('');
   return number;
 }

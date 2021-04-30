@@ -7,6 +7,7 @@ const getItems = require('../../schemas/items.js');
 const updateCoins = require('../cricket/train.js');
 const getErrors = require('../../functions/getErrors.js');
 const gainExp = require('../../functions/gainExp.js');
+const embedColor = require('../../functions/getEmbedColor.js');
 
 module.exports = {
   name: 'slots',
