@@ -103,34 +103,32 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
       batSwap = undefined;
       return bowlCollect(batsman, bowler, dm);
     }
+    
     if(remainingBalls <= 0) {
-      if(batExtra && logs.bowling[bowler.id].length > logs.batting['0000'].length) {
-        setTimeout( function() { return bowlCollect(batsman, bowler, dm) }, 1000);
-      } else if(!batExtra && logs.bowling[bowler.id].length > logs.batting[batsman.id].length) {
-        setTimeout( function() { return bowlCollect(batsman, bowler, dm) }, 1000);
-      } else if(bowlExtra || totalBalls === 0) {
+      if(totalBalls === 0) {
+        console.log('total ball is 0');
         return respond('end');
       } else {
+        remainingBalls += 12;
+        
         let currentIndex = getIndex(bowlingTeam, bowler);
         let response = bowlingTeam[currentIndex + 1] || 'end';
-      
+        const embed = new Discord.MessageEmbed()
+          .setTitle('TeamMatch')
+          .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap))
+          .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap))
+          .setColor(embedColor)
+          .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
+          
+        let next = '2 overs over.' + whoIsNext(response, 'bowl', extraPlayer);
+        batsman.send(next, {embed});
+        bowler.send(next, {embed});
+        channel.send(next, {embed});
+          
         if (response === 'ExtraWicket#0000') {
           response = extraPlayer;
           bowlExtra = true;
-        } else if (response !== 'end') {
-          remainingBalls += 12;
-          const embed = new Discord.MessageEmbed()
-            .setTitle('TeamMatch')
-            .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap))
-            .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap))
-            .setColor(embedColor)
-            .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
-          
-          let next = '2 overs over.' + whoIsNext(response, 'bowl');
-          batsman.send(next, {embed});
-          bowler.send(next, {embed});
-          channel.send(next, {embed});
-        }
+        } 
         return respond(response, batsman, bowler, 'bowl');
       }
     }
@@ -189,7 +187,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
       await bowler.send(`CPU bowled ${rando}`);
       await batsman.send('Ball is coming (CPU), hit it by typing a number');
       return bowlCollect(batsman, bowler, dm);
-    });
+    })
   }
   
   
@@ -249,7 +247,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap))
           .setColor(embedColor)
           .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
-        let next = 'Wicket!!' + whoIsNext(response, 'bat');
+        let next = 'Wicket!!' + whoIsNext(response, 'bat', extraPlayer);
         batsman.send(next, {embed});
         bowler.send(next, {embed});
         channel.send(next, {embed});
@@ -324,7 +322,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           response = extraPlayer;
           batExtra = true;
         }
-        let next = 'Wicket!!' + whoIsNext(response, 'bat');
+        let next = 'Wicket!!' + whoIsNext(response, 'bat', extraPlayer);
         batsman.send(next, {embed});
         bowler.send(next, {embed});
         channel.send(next, {embed});
@@ -418,7 +416,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           else logs.batting[responseX.id] = [(logs.batting[responseX.id])[(logs.batting[responseX.id]).length - 1]];
           
           bowlSwap = response
-          const dm = (await batSwap.send(`Your turn to bowl`, {embed})).channel;
+          const dm = await (await batSwap.send(`Your turn to bowl`, {embed})).channel;
           return bowlCollect(responseX, response, dm);
         }
       }
@@ -431,15 +429,15 @@ function getIndex(team, player) {
   return index;
 }
 
-function whoIsNext(res, type) {
+function whoIsNext(res, type, extraPlayer) {
   if(res === 'end') {
     if(isInnings2) return ' BowlingTeam Won'
     return ' Second Innings Starts';
   } else {
     if(type === 'bat') {
-      return ` Next batsman is ${res.tag}`;
+      return ` Next batsman is ${res.tag || extraPlayer.tag + ' (EW)'}`;
     } else {
-      return ` Next bowler is ${res.tag}`;
+      return ` Next bowler is ${res.tag || extraPlayer.tag + ' (EW)'}`;
     }
   }
 }
