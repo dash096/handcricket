@@ -15,7 +15,7 @@ module.exports = {
   syntax: 'e.handcricket @user --post (to post scores in channel)',
   status: true,
   cooldown: 10,
-  run: async ({message, args, client}) => {
+  run: async ({message, args, client, prefix}) => {
     const { content, author, guild, channel, mentions } = message;
     
     //Check Status of the user.
