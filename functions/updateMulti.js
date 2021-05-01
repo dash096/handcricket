@@ -84,7 +84,7 @@ module.exports = async function (itemName, data, msg) {
     await db.findOneAndUpdate({ _id: data._id }, {
         $set: {
           tossBoost: expireDate,
-          tossMulti: oldTossMulti * 1.4
+          tossMulti: newTossMulti
         }
       }, { upsert: true }
     ).catch((e) => {
@@ -95,7 +95,7 @@ module.exports = async function (itemName, data, msg) {
     setTimeout( async function () {
       await db.findOneAndUpdate( {_id: data._id},
         { $set: { 
-            tossMulti: newTossMulti/1.4
+            tossMulti: oldTossMulti
           }, $unset: {
             tossBoost: 'doesnt matter'
           }
