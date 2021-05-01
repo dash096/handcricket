@@ -35,7 +35,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         if(!oldLogs) {
           playerAndLog.push(`${player.tag || `${extraPlayer.tag} (EW)`} 0`);
         } else {
-          let score = oldLogs.bowling[player.id || '0000'];
+          let score = oldLogs.batting[player.id || '0000'];
           playerAndLog.push(`${player.tag || `${extraPlayer.tag} (EW)`} ${score}`);
         }
       }
@@ -64,7 +64,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
   });
   
   let totalBalls = bowlingTeam.length * 2 * 6;
-  let remainingBalls = 13;
+  let remainingBalls = 12;
   
   const embed = new Discord.MessageEmbed()
     .setTitle('TeamMatch')
@@ -137,8 +137,8 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         return bowlCollect(batsman, bowler, dm);
       } //Log
       else {
-        if(remainingBalls === 0) {
-          if(bowlExtra || totalBalls === 0) {
+        if(remainingBalls <= 0) {
+          if(bowlExtra || totalBalls <= 0) {
             return respond('end');
           } else {
             let currentIndex = getIndex(bowlingTeam, bowler);
@@ -183,14 +183,42 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
       } else if (!checkTimeup.find(a => a === bowler.id)) {
         checkTimeup.push(bowler.id);
       }
-      //CPU auto bowl
-      remainingBalls -= 1;
-      totalBalls -= 1;
-      let rando = ([1,2,3,4,5,6])[Math.floor([Math.random() * ([1,2,3,4,5,6]).length])];
-      await logs.bowling[bowler.id].push(parseInt(rando));
-      await bowler.send(`CPU bowled ${rando}`);
-      await batsman.send('Ball is coming (CPU), hit it by typing a number');
-      return bowlCollect(batsman, bowler, dm);
+      if(remainingBalls <= 0) {
+        if(bowlExtra || totalBalls <= 0) {
+          return respond('end');
+        } else {
+          let currentIndex = getIndex(bowlingTeam, bowler);
+          let response = bowlingTeam[currentIndex + 1] || 'end';
+        
+          if (response === 'ExtraWicket#0000') {
+            response = extraPlayer;
+            bowlExtra = true;
+          } else if (response !== 'end') {
+            remainingBalls += 12;
+            const embed = new Discord.MessageEmbed()
+              .setTitle('TeamMatch')
+              .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap))
+              .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap))
+              .setColor(embedColor)
+              .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
+        
+            let next = '2 overs over.' + whoIsNext(response, 'bowl');
+            batsman.send(next, {embed});
+            bowler.send(next, {embed});
+            channel.send(next, {embed});
+          }
+          return respond(response, batsman, bowler, 'bowl');
+        }
+      } else {
+        //CPU auto bowl
+        remainingBalls -= 1;
+        totalBalls -= 1;
+        let rando = ([1,2,3,4,5,6])[Math.floor([Math.random() * ([1,2,3,4,5,6]).length])];
+        await logs.bowling[bowler.id].push(parseInt(rando));
+        await bowler.send(`CPU bowled ${rando}`);
+        await batsman.send('Ball is coming (CPU), hit it by typing a number');
+        return bowlCollect(batsman, bowler, dm);
+      }
     })
   }
   
