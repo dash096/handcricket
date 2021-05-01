@@ -107,27 +107,28 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
       if(bowlExtra || totalBalls <= 0) {
         return respond('end');
       } else {
-      let currentIndex = getIndex(bowlingTeam, bowler);
-      let response = bowlingTeam[currentIndex + 1] || 'end';
+        let currentIndex = getIndex(bowlingTeam, bowler);
+        let response = bowlingTeam[currentIndex + 1] || 'end';
       
-      if (response === 'ExtraWicket#0000') {
-        response = extraPlayer;
-        bowlExtra = true;
-      } else if (response !== 'end') {
-        remainingBalls += 12;
-        const embed = new Discord.MessageEmbed()
-          .setTitle('TeamMatch')
-          .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap))
-          .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap))
-          .setColor(embedColor)
-          .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
+        if (response === 'ExtraWicket#0000') {
+          response = extraPlayer;
+          bowlExtra = true;
+        } else if (response !== 'end') {
+          remainingBalls += 12;
+          const embed = new Discord.MessageEmbed()
+            .setTitle('TeamMatch')
+            .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap))
+            .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap))
+            .setColor(embedColor)
+            .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
           
-        let next = '2 overs over.' + whoIsNext(response, 'bowl');
-        batsman.send(next, {embed});
-        bowler.send(next, {embed});
-        channel.send(next, {embed});
+          let next = '2 overs over.' + whoIsNext(response, 'bowl');
+          batsman.send(next, {embed});
+          bowler.send(next, {embed});
+          channel.send(next, {embed});
+        }
+        return respond(response, batsman, bowler, 'bowl');
       }
-      return respond(response, batsman, bowler, 'bowl');
     }
     //Collector
     dm.awaitMessages(
