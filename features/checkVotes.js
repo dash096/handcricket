@@ -27,16 +27,14 @@ module.exports = async ({client, topggapi}) => {
     let newVotesArray = Object.keys(count).filter(key => count[key] % 2 === 1);
     
     if(!newVotesArray || newVotesArray.length === 0) {
-      console.log('No votes');
       votes = newVotes;
       return;
     }
     
-    console.log(newVotesArray);
-    
     for (var i = 0; i < newVotesArray.length; i++) {
       try {
         const user = await client.users.fetch(newVotesArray[i]);
+        if((await topggapi.hasVoted(user.id)) === false) return;
         const cooldown = Date.now() + (60 * 60 * 12 * 1000);
         const data = await db.findOne({_id: user.id});
         user.send('Thanks for voting, you got ' + await rewards(user));
