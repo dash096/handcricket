@@ -257,8 +257,6 @@ module.exports = async (message, client) => {
     }
     
     async function executeSchedule(players, team1, team2, team1Tags, team2Tags, extraPlayer, channel) {
-      if(!extraPlayer) return;
-      
       let winnerCap = await rollToss(message, team1[0], team2[0]);
       let batTeam;
       let bowlTeam;
@@ -290,6 +288,21 @@ module.exports = async (message, client) => {
           bowlTeam = team1;
         }
       }
+      
+      //Send Embed
+      let batTags; let bowlTags;
+      await battingTeam.forEach(player => {
+        batTags.push(player.tag || 'ExtraWicket#0000');
+      });
+      await bowlingTeam.forEach(player => {
+        bowlTags.push(player.tag || 'ExtraWicket#0000');
+      });
+      const embed = new Discord.MessageEmbed()
+        .setTitle('TeamMatch')
+        .addField('Batting Team', batTags.join('\n'))
+        .addField('Bowling Team', bowlTags.join('\n'))
+        .setColor(embedColor);
+      await channel.send(embed);
       
       let batOrder = await pick(batTeam[0], batTeam, 'batsman');
       let bowlOrder = await pick(bowlTeam[0], bowlTeam, 'bowler');

@@ -137,6 +137,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         message => message.author.id === bowler.id,
         { max: 1, time: 20000, errors: ['time'] }
     ).then(async messages => {
+      if(isInnings2 && !oldLogs) return;
       let message = messages.first();
       let content = message.content.trim().toLowerCase();
       //End
@@ -205,6 +206,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         message => message.author.id === batsman.id,
         { max: 1, time: 20000, errors: ['time'] }
     ).then(async messages => {
+      if(isInnings2 && !oldLogs) return;
       let message = messages.first();
       let content = message.content.trim().toLowerCase();
       let bowled = (logs.bowling[bowler.id])[(logs.bowling[bowler.id]).length - 1 ];
@@ -267,6 +269,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         return respond('win');
       } //Log
       else {
+        if(isInnings2 === 'over') return;
         if(checkTimeup.find(a => a === batsman.id)) {
           checkTimeup.splice(checkTimeup.indexOf(batsman.id), 1);
         }
@@ -358,6 +361,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         
     if(response === 'forceEnd') {
       isInnings2 = 'over';
+      changeStatus(players, false)
       channel.send('both the batsman and bowler are offline. Match ended.');
       return;
     } else if(!oldLogs) {
@@ -395,10 +399,12 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
     } else {
       if(response === 'end') {
         isInnings2 = 'over';
+        changeStatus(players, false)
         console.log('bowlingTeam won')
         //rewards for bowlingTeam
       } else if (response === 'win') {
         isInnings2 = 'over';
+        changeStatus(players, false)
         console.log('battingTeam won')
         //rewards for battingTeam
       } else {
