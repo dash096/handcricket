@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-module.exports = type => {
+module.exports = (type) => {
   if(!type) type = 'type1';
   const Object = {};
   

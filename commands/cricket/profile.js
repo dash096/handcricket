@@ -181,8 +181,12 @@ async function getCharacter(target) {
   const images = [];
   
   if(equippedDecors.length > 0) {
-    equippedDecors.forEach(decor => {
-      images.push(`./decors/${type}/${decor}.png`);
+    await equippedDecors.forEach(decor => {
+      if(decor.startsWith('decor') || decor.startsWith('head')) {
+        images.push(`./decors/${type}/${decor}.png`);
+      } else {
+        images.unshift(`./decors/${type}/${decor}.png`);
+      }
     });
   }
   const image = await getImage(target, type, images);
@@ -198,11 +202,11 @@ async function getImage(target, type, paths) {
     await paths.forEach(async path => {
       i += 1;
       if(i === paths.length) {
-        await character
-          .composite(await jimp.read(path),0, 0)
+        character
+          .composite(await jimp.read(path), 0, 0)
           .write(exportPath);
       } else {
-        await character
+        character
           .composite(await jimp.read(path), 0, 0);
       }
     });

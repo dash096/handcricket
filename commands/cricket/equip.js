@@ -22,17 +22,19 @@ module.exports = {
       return;
     }
     
-    args = args.join(' ').trim().toLowerCase().split(/ +/);
-    
     let decor = 
-    decorsData.find(decor => decor == args.reverse().join('_')) ||
-    decorsData.find(decor => decor == args.join('_'));
+    decorsData.find(
+      decor => decor.toLowerCase() == args.reverse().join('_')
+    ) ||
+    decorsData.find(
+      decor => decor.toLowerCase() == args.reverse().join('_')
+    );
     
     let userHasDecor = Object.keys(userDecors).filter(userDecor => userDecor == decor);
-    if(!decor || decor.length === 0) {
-      message.reply(`${args.reverse().join(' ')} is not a valid decor, it should be like \`e.equip <name_like_how_it_is_in_your_bag>\``);
+    if(!decor || decor == 'equipped') {
+      message.reply(`${args.join(' ')} is not a valid decor, it should be like \`e.equip <name_like_how_it_is_in_your_bag>\``);
       return;
-    } else if(!userHasDecor || userHasDecor.length === 0 || decor == 'equipped') {
+    } else if(!userHasDecor || userHasDecor.length === 0) {
       message.reply('You dont own that kek');
       return;
     }
@@ -40,35 +42,64 @@ module.exports = {
     const equipped = userDecors.equipped || [];
     
     if(decor.startsWith('shirt')) {
-       let already = equipped.filter(decor => decor.startsWith('shirt'));
-       if(already.length > 0) {
-         equipped.splice(equipped.indexOf(already[0]), 1, decor);
+       let alreadies = equipped.filter(decor => decor.startsWith('shirt') || decor.startsWith('suit'));
+       if(alreadies.length > 0) {
+         await alreadies.forEach(already => {
+           equipped.splice(equipped.indexOf(already), 1);
+         });
+         equipped.push(decor);
        } else {
          equipped.push(decor);
        }
     } else if(decor.startsWith('pant') || decor.startsWith('track')) {
-       let already = equipped.filter(decor => decor.startsWith('pant') || decor.startsWith('track'));
-       if(already.length > 0) {
-         equipped.splice(equipped.indexOf(already[0]), 1, decor);
+       let alreadies = equipped.filter(decor => decor.startsWith('pant') || decor.startsWith('track') || decor.startsWith('suit'));
+       if(alreadies.length > 0) {
+         await alreadies.forEach(already => {
+           equipped.splice(equipped.indexOf(already), 1);
+         });
+         equipped.push(decor);
        } else {
          equipped.push(decor);
        }
     } else if(decor.startsWith('foot')) {
-       let already = equipped.filter(decor => decor.startsWith('foot'));
-       if(already.length > 0) {
-         equipped.splice(equipped.indexOf(already[0]), 1, decor)
+       let alreadies = equipped.filter(decor => decor.startsWith('foot'));
+       if(alreadies.length > 0) {
+         await alreadies.forEach(already => {
+           equipped.splice(equipped.indexOf(already), 1);
+         });
+         equipped.push(decor);
        } else {
          equipped.push(decor);
        }
+    } else if(decor.startsWith('suit')) {
+      let alreadies = equipped.filter(decor => decor.startsWith('suit') || decor.startsWith('shirt') || decor.startsWith('pant') || decor.startsWith('track'));
+       if(alreadies.length > 0) {
+         await alreadies.forEach(already => {
+           equipped.splice(equipped.indexOf(already), 1);
+         });
+         equipped.push(decor);
+       } else {
+         equipped.push(decor);
+       }
+    } else if (decor.startsWith('head')) {
+      let alreadies = equipped.filter(decor => decor.startsWith('head'));
+      if(alreadies.length === 0) {
+         await alreadies.forEach(already => {
+           equipped.splice(equipped.indexOf(already), 1);
+         });
+         equipped.push(decor);
+      } else {
+        equipped.push(decor);
+      }
     } else {
       let already = equipped.filter(decorAdd => decorAdd == decor);
       if(already.length === 0) {
-        equipped.splice(equipped.indexOf(already[0]), 1, decor);
-      } 
+        equipped.push(decor);
+      }
     }
     
     userDecors.equipped = equipped;
     await db.findOneAndUpdate({_id: data._id}, {$set: {decors: userDecors}}, {new: true, upsert: true});
     await channel.send('Your character is now wearing ' + args.reverse().join(' '));
   }
-}
+};
