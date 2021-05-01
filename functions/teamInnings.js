@@ -103,16 +103,37 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
       batSwap = undefined;
       return bowlCollect(batsman, bowler, dm);
     }
+    if(remainingBalls <= 0) {
+      if(bowlExtra || totalBalls <= 0) {
+        return respond('end');
+      } else {
+      let currentIndex = getIndex(bowlingTeam, bowler);
+      let response = bowlingTeam[currentIndex + 1] || 'end';
+      
+      if (response === 'ExtraWicket#0000') {
+        response = extraPlayer;
+        bowlExtra = true;
+      } else if (response !== 'end') {
+        remainingBalls += 12;
+        const embed = new Discord.MessageEmbed()
+          .setTitle('TeamMatch')
+          .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap))
+          .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap))
+          .setColor(embedColor)
+          .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
+          
+        let next = '2 overs over.' + whoIsNext(response, 'bowl');
+        batsman.send(next, {embed});
+        bowler.send(next, {embed});
+        channel.send(next, {embed});
+      }
+      return respond(response, batsman, bowler, 'bowl');
+    }
     //Collector
     dm.awaitMessages(
         message => message.author.id === bowler.id,
         { max: 1, time: 20000, errors: ['time'] }
     ).then(async messages => {
-      if(batSwap) {
-        batsman = batSwap;
-        batSwap = undefined;
-        return bowlCollect(batsman, bowler, dm);
-      }
       let message = messages.first();
       let content = message.content.trim().toLowerCase();
       //End
@@ -137,43 +158,15 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         return bowlCollect(batsman, bowler, dm);
       } //Log
       else {
-        if(remainingBalls <= 0) {
-          if(bowlExtra || totalBalls <= 0) {
-            return respond('end');
-          } else {
-            let currentIndex = getIndex(bowlingTeam, bowler);
-            let response = bowlingTeam[currentIndex + 1] || 'end';
-          
-            if (response === 'ExtraWicket#0000') {
-              response = extraPlayer;
-              bowlExtra = true;
-            } else if (response !== 'end') {
-              remainingBalls += 12;
-              const embed = new Discord.MessageEmbed()
-                .setTitle('TeamMatch')
-                .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap))
-                .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap))
-                .setColor(embedColor)
-                .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
-          
-              let next = '2 overs over.' + whoIsNext(response, 'bowl');
-              batsman.send(next, {embed});
-              bowler.send(next, {embed});
-              channel.send(next, {embed});
-            }
-            return respond(response, batsman, bowler, 'bowl');
-          }
-        } else {
-          if(checkTimeup.find(a => a === bowler.id)) {
-            checkTimeup.splice(checkTimeup.indexOf(bowler.id), 1);
-          }
-          remainingBalls -= 1;
-          totalBalls -= 1;
-          await logs.bowling[bowler.id].push(parseInt(content));
-          await bowler.send(`You bowled ${content}`);
-          await batsman.send('Ball is coming, hit it by typing a number');
-          return bowlCollect(batsman, bowler, dm);
+        if(checkTimeup.find(a => a === bowler.id)) {
+          checkTimeup.splice(checkTimeup.indexOf(bowler.id), 1);
         }
+        remainingBalls -= 1;
+        totalBalls -= 1;
+        await logs.bowling[bowler.id].push(parseInt(content));
+        await bowler.send(`You bowled ${content}`);
+        await batsman.send('Ball is coming, hit it by typing a number');
+        return bowlCollect(batsman, bowler, dm);
       }
     }).catch(async e => {
       console.log(e);
@@ -227,6 +220,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
     if(isInnings2 && !oldLogs) return;
     if(isInnings2 === 'over') return;
     if(bowlSwap) {
+      console.log('Bowler is swapping in batCollect');
       bowler = bowlSwap;
       bowlSwap = undefined;
       return batCollect(batsman, bowler, dm);
@@ -418,8 +412,8 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           if(batExtra) logs.batting['0000'] = [(logs.batting['0000'])[(logs.batting['0000']).length - 1]];
           else logs.batting[responseX.id] = [(logs.batting[responseX.id])[(logs.batting[responseX.id]).length - 1]];
           
-          const dm = (await response.send(`Your turn to bowl`, {embed})).channel;
           bowlSwap = response;
+          const dm = (await bowlSwap.send(`Your turn to bowl`, {embed})).channel;
           return bowlCollect(responseX, response, dm);
         }
       }
@@ -446,8 +440,8 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           if(batExtra) logs.batting['0000'] = [(logs.batting['0000'])[(logs.batting['0000']).length - 1]];
           else logs.batting[responseX.id] = [(logs.batting[responseX.id])[(logs.batting[responseX.id]).length - 1]];
           
-          const dm = (await response.send(`Your turn to bowl`, {embed})).channel;
           bowlSwap = response
+          const dm = (await batSwap.send(`Your turn to bowl`, {embed})).channel;
           return bowlCollect(responseX, response, dm);
         }
       }
