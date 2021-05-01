@@ -291,6 +291,23 @@ module.exports = async (message, client) => {
         }
       }
       
+      let batTags = [];
+      let bowlTags = [];
+      batTeam.forEach(player => {
+        batTags.push(player.tag || 'ExtraWicket#0000')
+      });
+      bowlTeam.forEach(player => {
+        bowlTags.push(player.tag || 'ExtraWicket#0000')
+      });
+      
+      const embed = new Discord.MessageEmbed()
+        .setTitle('TeamMatch')
+        .setDescription('Leaders are asked to pick the members available for your team from\n')
+        .addField('Batting Team', batTags.join('\n'))
+        .addField('Bowling Team', bowlTags.join('\n'))
+        .setColor(embedColor);
+      channel.send(embed);
+      
       let batOrder = await pick(batTeam[0], batTeam, 'batsman');
       let bowlOrder = await pick(bowlTeam[0], bowlTeam, 'bowler');
       if(batOrder === 'err' || bowlOrder === 'err') {
