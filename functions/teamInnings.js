@@ -40,6 +40,9 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         }
       }
     });
+    if(type === 'bowling' && oldLogs) {
+      playerAndLog.push(`${target} is the Target Score`);
+    }
     return playerAndLog.join(`\n`);
   }
 
@@ -75,8 +78,6 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
   
   await channel.send(embed);
   await startInnings();
-  
-  console.log(battingTeam, bowlingTeam);
   
   function startInnings() {
     let batsman = battingTeam[0];
@@ -162,7 +163,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         return bowlCollect(batsman, bowler, dm);
       } //Log
       else {
-        if(checkTimeup.find(a => a === bowler.id)) {
+        if(checkTimeup.find(player => player === bowler.id)) {
           checkTimeup.splice(checkTimeup.indexOf(bowler.id), 1);
         }
         remainingBalls -= 1;
@@ -177,7 +178,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
       //Push timeup and check timeups
       if(checkTimeup.length === 2) {
         return respond('forceEnd');
-      } else if (!checkTimeup.find(a => a === bowler.id)) {
+      } else if (!checkTimeup.find(player => player === bowler.id)) {
         checkTimeup.push(bowler.id);
       }
       //CPU auto bowl
@@ -270,7 +271,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
       } //Log
       else {
         if(isInnings2 === 'over') return;
-        if(checkTimeup.find(a => a === batsman.id)) {
+        if(checkTimeup.find(player => player === batsman.id)) {
           checkTimeup.splice(checkTimeup.indexOf(batsman.id), 1);
         }
         //Push the scores
@@ -294,7 +295,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
       console.log(e);
       if(checkTimeup.length === 2) {
         return respond('forceEnd');
-      } else if (!checkTimeup.find(a => a === bowler.id)) {
+      } else if (!checkTimeup.find(player => player === bowler.id)) {
         checkTimeup.push(bowler.id);
       }
       //CPU auto hit
@@ -375,7 +376,6 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           (logs.bowling)[bowler] = [0];
         });
         isInnings2 = true;
-        console.log(logs);
         return innings(players, bowlingTeam, battingTeam, bowlingCap, battingCap, extraPlayer, channel, logs);
       } else {
         if(type === 'bat') {
@@ -413,8 +413,8 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           if(batExtra) logs.batting['0000'] = [(logs.batting['0000'])[(logs.batting['0000']).length - 1]];
           else logs.batting[oldResponse.id] = [(logs.batting[oldResponse.id])[(logs.batting[oldResponse.id]).length - 1]];
           
-          const dm = (await response.send(`Your turn to bat`, {embed})).channel;
           batSwap = response
+          const dm = (await batSwap.send(`Your turn to bat`, {embed})).channel;
           return batCollect(response, responseX, dm);
         } else if(type === 'bowl') {
           logs.bowling[oldResponse.id] = [0];
