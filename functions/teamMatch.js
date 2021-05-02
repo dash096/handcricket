@@ -30,31 +30,48 @@ module.exports = async (message, client) => {
   
     //Create Collector
     const reactionCollector = await collectorMessage.createReactionCollector(
-      reaction => reaction.emoji.name == reaction.emoji.name,
+      reaction => reaction.emoji.name === 'enter',
       { time: 30 * 1000 }
     );
     
+    //On Collect, changeStatus
+    let collectedUsers = [];
+    reactionCollector.on('collect', async (reaction, user) => {
+      collectedUsers.push(user);
+      await db.findOneAndUpdate({_id: user.id}, {$set:{status: true}});
+    });
+    
     //On end, check players.
-    await reactionCollector.on('end', async (collectedReactions) => {
+    reactionCollector.on('end', async (collectedReactions) => {
       let reactors = [];
       
-      collectedReactions.forEach(reactions => {
+      await collectedReactions.forEach(reactions => {
         reactors = (Array.from(reactions.users.cache.values())).filter(user => user.bot === false);
       });
       
-      reactors.forEach(reactor => {
+      await reactors.forEach(reactor => {
         players.push(reactor);
       });
-      players.forEach(player => {
+      await players.forEach(player => {
         playerTags.push(player.tag);
       });
       
+      await collectedUsers.forEach(async user => {
+        if(!reactors.find(reactor => reactor.id === user.id)) {
+          await changeStatus(user, false);
+        }
+      })
+      
       if(players.length <= 2) {
+        changeStatus(players, false);
         channel.send('TeamMatch aborted due to insufficient members, the members required are minimum 3');
         return;
       } else {
         const check = await checkDataAndStatus(players);
-        if(check === 'err') return;
+        if(check === 'err') {
+          changeStatus(players, false);
+          return;
+        }
         await changeStatus(players, true);
         await channel.send('TeamMatch started, Players are\n' + playerTags.join('\n'));
         await chooseCaptains(players, playerTags);
@@ -199,6 +216,7 @@ module.exports = async (message, client) => {
         }
       } catch (e) {
         console.log(e);
+        changeStatus(players, false);
         channel.send(`${cap1} ${getErrors({error: 'time'})}`);
         return 'err';
       }
@@ -251,6 +269,7 @@ module.exports = async (message, client) => {
         }
       } catch (e) {
         console.log(e);
+        changeStatus(players, false);
         channel.send(`${cap1} ${getErrors({error: 'time'})}`);
         return 'err';
       }
@@ -375,6 +394,7 @@ module.exports = async (message, client) => {
           };
         } catch (e) {
           console.log(e);
+          changeStatus(players, false);
           channel.send(getErrors({error: 'time'}));
           return 'err';
         }
@@ -419,6 +439,7 @@ async function askForTheExtraWicketBatsman(players, team, channel) {
     } 
   } catch (e) {
     console.log(e);
+    changeStatus(players, false);
     channel.send(`${cap1} ${getErrors({error: 'time'})}`);
     return 'err';
   }
