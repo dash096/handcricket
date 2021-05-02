@@ -43,7 +43,7 @@ module.exports = {
     const keys = Object.keys(userDecors).filter(key => key != 'equipped');
     
     //Add Equipped Decors at first;
-    let equipped = userDecors.equipped;
+    let equipped = userDecors.equipped || [];
     if(equipped.length === 0) equipped = ['none']
     let equippedReversed = [];
     equipped.forEach(decor => {
