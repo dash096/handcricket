@@ -5,7 +5,6 @@ const getTarget = require('../../functions/getTarget.js');
 const firstInnings = require("../../functions/duoInnings1.js");
 const executeTeamMatch = require("../../functions/teamMatch.js");
 const executeDuoMatch = require("../../functions/duoMatch.js");
-const serverID = process.env.SERVERID;
 
 module.exports = {
   name: "handcricket",
@@ -32,11 +31,7 @@ module.exports = {
     try {
       //Team Match
       if(args.join(' ').trim().toLowerCase().includes('team')) {
-        if(guild.id !== serverID) {
-          message.reply(`teamMatches for a couple days, can only be used in official server (${prefix}invite) cause it would be easy for the developers to notice any bugs.`)
-        } else {
-          executeTeamMatch(message, client);
-        }
+        executeTeamMatch(message, client);
       } else { //Solo Match
         //Target Validation
         const target = await getTarget(message, args, client);
