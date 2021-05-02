@@ -257,6 +257,8 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         return respond(response, bowler, batsman, 'bat');
       } //Target++
       else if (oldLogs && (oldScore + parseInt(content)) >= target) {
+        if(batExtra) logs.batting['0000'].push(oldScore + parseInt(content));
+        else logs.batting[batsman.id].push(oldScore + parseInt(content));
         const embed = new Discord.MessageEmbed()
           .setTitle('TeamMatch')
           .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap))
@@ -333,6 +335,8 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         return respond(response, bowler, batsman, 'bat');
       } //Target++
       else if (oldLogs && (oldScore + parseInt(rando)) >= target) {
+        if(batExtra) logs.batting['0000'].push(oldScore + parseInt(content));
+        else logs.batting[batsman.id].push(oldScore + parseInt(content));
         const embed = new Discord.MessageEmbed()
         let next = 'Batting Team Won';
         batsman.send(next, {embed});
