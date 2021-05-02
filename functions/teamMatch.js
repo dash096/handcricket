@@ -290,12 +290,20 @@ module.exports = async (message, client) => {
       }
       
       //Send Embed
-      let batTags; let bowlTags;
-      await battingTeam.forEach(player => {
-        batTags.push(player.tag || 'ExtraWicket#0000');
+      let batTags = []; let bowlTags = [];
+      await batTeam.forEach(player => {
+        if(player.id === batTeam[0].id) {
+          batTags.push(player.tag + ' (captain)');
+        } else {
+          batTags.push(player.tag || 'ExtraWicket#0000');
+        }
       });
-      await bowlingTeam.forEach(player => {
-        bowlTags.push(player.tag || 'ExtraWicket#0000');
+      await bowlTeam.forEach(player => {
+        if(player.id === bowlTeam[0].id) {
+          bowlTags.push(player.tag + ' (captain)');
+        } else {
+          bowlTags.push(player.tag || 'ExtraWicket#0000');
+        }
       });
       const embed = new Discord.MessageEmbed()
         .setTitle('TeamMatch')
