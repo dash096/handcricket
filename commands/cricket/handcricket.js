@@ -42,8 +42,7 @@ module.exports = {
         //Status Validation
         const targetdata = await db.findOne({_id: target.id});
         if(targetdata.status === true) {
-          let error = 'engaged';
-          message.reply(getErrors({error, target}));
+          message.reply(getErrors({error: 'engaged', user: target}));
           return;
         }
         

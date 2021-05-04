@@ -10,7 +10,11 @@ module.exports = ({client, prefix, topggapi}) => {
     } = message;
     
     if (!content.toLowerCase().startsWith(prefix) || author.bot || channel.type === 'dm') return;
-
+    
+    //BlackLists
+    let blacklistedUsers = [];
+    if(blacklistedUsers.find(user => user.id === author.id)) return;
+    
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
     
@@ -53,7 +57,6 @@ module.exports = ({client, prefix, topggapi}) => {
     'EMBED_LINKS',
     'ATTACH_FILES',
     'SEND_MESSAGES',
-    //'VIEW_CHANNEL',
     'READ_MESSAGE_HISTORY'
     ];
     for(const perm of perms) {

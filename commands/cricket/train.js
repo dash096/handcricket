@@ -28,7 +28,11 @@ module.exports = {
     
       const names = Object.keys(exercises);
       let randoName = names[Math.floor(Math.random() * names.length)];
-      if(randoName === 'slots') randoName = 'drill';
+      if(randoName === 'slots') {
+        let random = Math.random();
+        if(random > 0.5) randoName = 'hangman';
+        else randoName = 'drill';
+      }
       const randoGame = exercises[randoName];
     
       let getTrain = true;

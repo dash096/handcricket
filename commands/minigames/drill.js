@@ -13,6 +13,7 @@ module.exports = {
   category: 'Minigames',
   syntax: 'e.run',
   status: true,
+  cooldown: 60,
   run: async ({message, client, getTrain}) => {
     const { content, author, channel, mentions } = message;
     
@@ -61,16 +62,15 @@ module.exports = {
       }
       
       //Set Cooldown
-      if(!train) {
+      if(!getTrain) {
         const timestamps = client.cooldowns.get('drill');
         timestamps.set(author.id, Date.now());
         setTimeout(() => timestamps.delete(author.id), 60 * 1000);
       }
       
-      return (result || [false, 0]);
+      return;
     } catch(e) {
-      let error = 'time';
-      message.reply(getErrors({error}));
+      message.reply(getErrors({error: 'time'}));
     } finally {
       await db.findOneAndUpdate( { _id: author.id }, { $set: { status: false} });
       return;
