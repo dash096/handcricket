@@ -95,265 +95,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
   let batSwap;
   let bowlSwap;
   
-  function bowlCollect(batsman, bowler, dm) {
-    if(isInnings2 && !oldLogs) return;
-    if(isInnings2 === 'over') return;
-    //Swap the batsman if wicket
-    if(batSwap) {
-      batsman = batSwap;
-      batSwap = undefined;
-      return bowlCollect(batsman, bowler, dm);
-    }
-    
-    if(remainingBalls <= 0) {
-      if(totalBalls === 0) {
-        console.log('total ball is 0');
-        return respond('end');
-      } else {
-        remainingBalls += 12;
-        
-        let currentIndex = getIndex(bowlingTeam, bowler);
-        let response = bowlingTeam[currentIndex + 1] || 'end';
-        const embed = new Discord.MessageEmbed()
-          .setTitle('TeamMatch')
-          .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap))
-          .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap))
-          .setColor(embedColor)
-          .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
-          
-        let next = '2 overs over.' + whoIsNext(response, 'bowl', extraPlayer);
-        batsman.send(next, {embed});
-        bowler.send(next, {embed});
-        channel.send(next, {embed});
-          
-        if (response === 'ExtraWicket#0000') {
-          response = extraPlayer;
-          bowlExtra = true;
-        } 
-        return respond(response, batsman, bowler, 'bowl');
-      }
-    }
-    //Collector
-    dm.awaitMessages(
-        message => message.author.id === bowler.id,
-        { max: 1, time: 20000, errors: ['time'] }
-    ).then(async messages => {
-      if(isInnings2 && !oldLogs) return;
-      let message = messages.first();
-      let content = message.content.trim().toLowerCase();
-      //End
-      if(content === 'end' || content === 'cancel') {
-        bowler.send('You cant exit a teamMatch, if you go afk, the CPU will bat/bowl.');
-        return bowlCollect(batsman, bowler, dm);
-      } //Conversation
-      else if (isNaN(content)) {
-        batsman.send(`\`${bowler.username}:\` ` + content);
-        return bowlCollect(batsman, bowler, dm);
-      } //Turn based on batExtra
-      else if (batExtra && logs.bowling[bowler.id].length > logs.batting['0000'].length) {
-        bowler.send('Wait for the batsman to hit the previous ball');
-        return bowlCollect(batsman, bowler, dm);
-      } //Turn based on no batExtra
-      else if (!batExtra && logs.bowling[bowler.id].length > logs.batting[batsman.id].length) {
-        bowler.send('Wait for the batsman to hit the previous ball');
-        return bowlCollect(batsman, bowler, dm);
-      } //Limited to 6
-      else if (parseInt(content) > 6) {
-        bowler.send('This match is limited to 6');
-        return bowlCollect(batsman, bowler, dm);
-      } //Log
-      else {
-        if(checkTimeup.find(player => player === bowler.id)) {
-          checkTimeup.splice(checkTimeup.indexOf(bowler.id), 1);
-        }
-        remainingBalls -= 1;
-        totalBalls -= 1;
-        await logs.bowling[bowler.id].push(parseInt(content));
-        await bowler.send(`You bowled ${content}`);
-        await batsman.send('Ball is coming, hit it by typing a number');
-        return bowlCollect(batsman, bowler, dm);
-      }
-    }).catch(async e => {
-      console.log(e);
-      //Push timeup and check timeups
-      if(checkTimeup.length === 2) {
-        return respond('forceEnd');
-      } else if (!checkTimeup.find(player => player === bowler.id)) {
-        checkTimeup.push(bowler.id);
-      }
-      //CPU auto bowl
-      remainingBalls -= 1;
-      totalBalls -= 1;
-      let rando = ([1,2,3,4,5,6])[Math.floor([Math.random() * ([1,2,3,4,5,6]).length])];
-      await logs.bowling[bowler.id].push(parseInt(rando));
-      await bowler.send(`CPU bowled ${rando}`);
-      await batsman.send('Ball is coming (CPU), hit it by typing a number');
-      return bowlCollect(batsman, bowler, dm);
-    })
-  }
-  
-  
-  function batCollect(batsman, bowler, dm) {
-    if(isInnings2 && !oldLogs) return;
-    if(isInnings2 === 'over') return;
-    if(bowlSwap) {
-      console.log('Bowler is swapping in batCollect');
-      bowler = bowlSwap;
-      bowlSwap = undefined;
-      return batCollect(batsman, bowler, dm);
-    }
-    //Collector
-    dm.awaitMessages(
-        message => message.author.id === batsman.id,
-        { max: 1, time: 20000, errors: ['time'] }
-    ).then(async messages => {
-      if(isInnings2 && !oldLogs) return;
-      let message = messages.first();
-      let content = message.content.trim().toLowerCase();
-      let bowled = (logs.bowling[bowler.id])[(logs.bowling[bowler.id]).length - 1 ];
-      let oldScore = (logs.batting[batsman.id])[(logs.batting[batsman.id]).length - 1];
-      if(batExtra === true) oldScore = (logs.batting['0000'])[(logs.batting['0000']).length - 1];
-      
-      //End
-      if(content === 'end' || content === 'cancel') {
-        batsman.send('You cant exit a teamMatch, if you go afk, the CPU will bat/bowl.');
-        return bowlCollect(batsman, bowler, dm);
-      } //Conversation
-      else if (isNaN(content)) {
-        bowler.send(`\`${batsman.username}:\` ` + content);
-        return batCollect(batsman, bowler, dm);
-      } //Turn Based on batExtra
-      else if (batExtra && logs.batting['0000'].length === logs.bowling[bowler.id].length) {
-        batsman.send('Wait for the ball dude');
-        return batCollect(batsman, bowler, dm);
-      } //Turn Based on no batExtra
-      else if (!batExtra && logs.batting[batsman.id].length === logs.bowling[bowler.id].length) {
-        batsman.send('Wait for the ball dude');
-        return batCollect(batsman, bowler, dm);
-      } //Limit to 6
-      else if (parseInt(content) > 6) {
-        batsman.send('This match is limited to 6');
-        return batCollect(batsman, bowler, dm);
-      } //Wicket
-      if (parseInt(content) === bowled) {
-        let currentIndex = getIndex(battingTeam, batsman);
-        let response = battingTeam[currentIndex + 1] || 'end';
-        if (batExtra) {
-          response = 'end'
-        } else if (response === 'ExtraWicket#0000') {
-          response = extraPlayer;
-          batExtra = true;
-        }
-        const embed = new Discord.MessageEmbed()
-          .setTitle('TeamMatch')
-          .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap))
-          .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap))
-          .setColor(embedColor)
-          .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
-        let next = 'Wicket!!' + whoIsNext(response, 'bat', extraPlayer);
-        batsman.send(next, {embed});
-        bowler.send(next, {embed});
-        channel.send(next, {embed});
-        return respond(response, bowler, batsman, 'bat');
-      } //Target++
-      else if (oldLogs && (oldScore + parseInt(content)) >= target) {
-        if(batExtra) logs.batting['0000'].push(oldScore + parseInt(content));
-        else logs.batting[batsman.id].push(oldScore + parseInt(content));
-        const embed = new Discord.MessageEmbed()
-          .setTitle('TeamMatch')
-          .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap))
-          .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap))
-          .setColor(embedColor)
-          .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
-        let next = 'Batting Team Won';
-        batsman.send(next, {embed});
-        bowler.send(next, {embed});
-        channel.send(next, {embed});
-        return respond('win');
-      } //Log
-      else {
-        if(isInnings2 === 'over') return;
-        if(checkTimeup.find(player => player === batsman.id)) {
-          checkTimeup.splice(checkTimeup.indexOf(batsman.id), 1);
-        }
-        //Push the scores
-        if(batExtra) logs.batting['0000'].push(oldScore + parseInt(content));
-        else logs.batting[batsman.id].push(oldScore + parseInt(content));
-        
-        const embed = new Discord.MessageEmbed()
-          .setTitle('TeamMatch')
-          .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap))
-          .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap))
-          .setColor(embedColor)
-          .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
-        
-        let send = `The batsman hit ${content}, was bowled ${bowled}.`
-        await batsman.send(send, {embed});
-        await bowler.send(send, {embed});
-        await channel.send(send, {embed});
-        return batCollect(batsman, bowler, dm);
-      }
-    }).catch(async e => {
-      console.log(e);
-      if(checkTimeup.length === 2) {
-        return respond('forceEnd');
-      } else if (!checkTimeup.find(player => player === bowler.id)) {
-        checkTimeup.push(bowler.id);
-      }
-      //CPU auto hit
-      let rando = ([1,2,3,4,5,6])[Math.floor([Math.random() * ([1,2,3,4,5,6]).length])];
-      let oldScore = (logs.batting[batsman.id])[(logs.batting[batsman.id]).length - 1];
-      if (batExtra) {
-        oldScore = (logs.batting['0000'])[(logs.batting['0000']).length - 1];
-        (logs.batting['0000']).push(oldScore + parseInt(rando));
-      } else {
-        (logs.batting[batsman.id]).push(oldScore + parseInt(rando));
-      }
-      
-      const embed = new Discord.MessageEmbed()
-        .setTitle('TeamMatch')
-        .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap))
-        .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap))
-        .setColor(embedColor)
-        .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
-        
-      //Wicket
-      let bowled = (logs.bowling[bowler.id])[(logs.bowling[bowler.id]).length - 1 ];
-      if(bowled === rando) {
-        let currentIndex = getIndex(battingTeam, batsman);
-        let response = battingTeam[currentIndex + 1] || 'end';
-        if(batExtra === true) {
-          response = 'end'
-        } else if (response === 'ExtraWicket#0000') {
-          response = extraPlayer;
-          batExtra = true;
-        }
-        let next = 'Wicket!!' + whoIsNext(response, 'bat', extraPlayer);
-        batsman.send(next, {embed});
-        bowler.send(next, {embed});
-        channel.send(next, {embed});
-        return respond(response, bowler, batsman, 'bat');
-      } //Target++
-      else if (oldLogs && (oldScore + parseInt(rando)) >= target) {
-        if(batExtra) logs.batting['0000'].push(oldScore + parseInt(content));
-        else logs.batting[batsman.id].push(oldScore + parseInt(content));
-        const embed = new Discord.MessageEmbed()
-        let next = 'Batting Team Won';
-        batsman.send(next, {embed});
-        bowler.send(next, {embed});
-        channel.send(next, {embed});
-        return respond('win');
-      } 
-      
-      let send = `The batsman hit ${rando} (cpu), was bowled ${bowled}.`
-      await batsman.send(send, {embed});
-      await bowler.send(send, {embed});
-      await channel.send(send, {embed});
-      return batCollect(batsman, bowler, dm);
-    });
-  }
-  
-  
+  //Core  
   async function respond(response, responseX, oldResponse, type) {
     checkTimeup = [];
     
@@ -431,6 +173,294 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         }
       }
     }
+  }
+  
+  function bowlCollect(batsman, bowler, dm) {
+    if(isInnings2 && !oldLogs) return;
+    if(isInnings2 === 'over') return;
+    //Swap the batsman if wicket
+    if(batSwap) {
+      batsman = batSwap;
+      batSwap = undefined;
+      return bowlCollect(batsman, bowler, dm);
+    }
+    
+    //Switch bowler when ball ends.
+    if(remainingBalls <= 0) {
+      if(batExtra && (logs.bowling[bowler.id]).length > (logs.batting['0000']).length) {
+        let interval = setInterval(async function () {
+          if((logs.bowling[bowler.id]).length === (logs.batting['0000']).length) {
+            await clearInterval(interval);
+            await switchBowler();
+          }
+        }, 1000);
+        return;
+      } else {
+        let interval = setInterval(async function () {
+          if((logs.bowling[bowler.id]).length === (logs.batting[batsman.id]).length) {
+            await clearInterval(interval);
+            await switchBowler();
+          }
+        }, 1000);
+        return;
+      }
+      
+      function switchBowler() {
+        if(totalBalls === 0) {
+          console.log('total ball is 0');
+          return respond('end');
+        } else {
+          remainingBalls += 12;
+        
+          let currentIndex = getIndex(bowlingTeam, bowler);
+          let response = bowlingTeam[currentIndex + 1] || 'end';
+          const embed = new Discord.MessageEmbed()
+            .setTitle('TeamMatch')
+            .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap))
+            .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap))
+            .setColor(embedColor)
+            .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
+            
+          let next = '2 overs over.' + whoIsNext(response, 'bowl', extraPlayer);
+          batsman.send(next, {embed});
+          bowler.send(next, {embed});
+          channel.send(next, {embed});
+          
+          if (response === 'ExtraWicket#0000') {
+            response = extraPlayer;
+            bowlExtra = true;
+          } 
+          return respond(response, batsman, bowler, 'bowl');
+        }
+      }
+    }
+    
+    //Collector
+    dm.awaitMessages(
+        message => message.author.id === bowler.id,
+        { max: 1, time: 20000, errors: ['time'] }
+    ).then(async messages => {
+      if(isInnings2 && !oldLogs) return;
+      if(isInnings2 === 'over') return;
+      
+      let message = messages.first();
+      let content = message.content.trim().toLowerCase();
+      //End
+      if(content === 'end' || content === 'cancel') {
+        bowler.send('You cant exit a teamMatch, if you go afk, the CPU will bat/bowl.');
+        return bowlCollect(batsman, bowler, dm);
+      } //Conversation
+      else if (isNaN(content)) {
+        batsman.send(`\`${bowler.username}:\` ` + content);
+        return bowlCollect(batsman, bowler, dm);
+      } //Turn based on batExtra
+      else if (batExtra && logs.bowling[bowler.id].length > logs.batting['0000'].length) {
+        bowler.send('Wait for the batsman to hit the previous ball');
+        return bowlCollect(batsman, bowler, dm);
+      } //Turn based on no batExtra
+      else if (!batExtra && logs.bowling[bowler.id].length > logs.batting[batsman.id].length) {
+        bowler.send('Wait for the batsman to hit the previous ball');
+        return bowlCollect(batsman, bowler, dm);
+      } //Limited to 6
+      else if (parseInt(content) > 6) {
+        bowler.send('This match is limited to 6');
+        return bowlCollect(batsman, bowler, dm);
+      } //Log
+      else {
+        if(checkTimeup.find(player => player === bowler.id)) {
+          checkTimeup.splice(checkTimeup.indexOf(bowler.id), 1);
+        }
+        remainingBalls -= 1;
+        totalBalls -= 1;
+        await logs.bowling[bowler.id].push(parseInt(content));
+        await bowler.send(`You bowled ${content}`);
+        await batsman.send('Ball is coming, hit it by typing a number');
+        return bowlCollect(batsman, bowler, dm);
+      }
+    }).catch(async e => {
+      console.log(e);
+      //Push timeup and check timeups
+      if(checkTimeup.length === 2) {
+        return respond('forceEnd');
+      } else if (!checkTimeup.find(player => player === bowler.id)) {
+        checkTimeup.push(bowler.id);
+      }
+      //CPU auto bowl
+      remainingBalls -= 1;
+      totalBalls -= 1;
+      let rando = ([1,2,3,4,5,6])[Math.floor([Math.random() * ([1,2,3,4,5,6]).length])];
+      await logs.bowling[bowler.id].push(parseInt(rando));
+      await bowler.send(`CPU bowled ${rando}`);
+      await batsman.send('Ball is coming (CPU), hit it by typing a number');
+      return bowlCollect(batsman, bowler, dm);
+    })
+  }
+  
+  
+  function batCollect(batsman, bowler, dm) {
+    if(isInnings2 && !oldLogs) return;
+    if(isInnings2 === 'over') return;
+    
+    if(bowlSwap) {
+      console.log('Bowler is swapping in batCollect');
+      bowler = bowlSwap;
+      bowlSwap = undefined;
+      return batCollect(batsman, bowler, dm);
+    }
+    //Collector
+    dm.awaitMessages(
+        message => message.author.id === batsman.id,
+        { max: 1, time: 20000, errors: ['time'] }
+    ).then(async messages => {
+      if(isInnings2 && !oldLogs) return;
+      if(isInnings2 === 'over') return;
+      
+      let message = messages.first();
+      let content = message.content.trim().toLowerCase();
+      let bowled = (logs.bowling[bowler.id])[(logs.bowling[bowler.id]).length - 1 ];
+      let oldScore = (logs.batting[batsman.id])[(logs.batting[batsman.id]).length - 1];
+      if(batExtra === true) oldScore = (logs.batting['0000'])[(logs.batting['0000']).length - 1];
+      
+      //End
+      if(content === 'end' || content === 'cancel') {
+        batsman.send('You cant exit a teamMatch, if you go afk, the CPU will bat/bowl.');
+        return bowlCollect(batsman, bowler, dm);
+      } //Conversation
+      else if (isNaN(content)) {
+        bowler.send(`\`${batsman.username}:\` ` + content);
+        return batCollect(batsman, bowler, dm);
+      } //Turn Based on batExtra
+      else if (batExtra && logs.batting['0000'].length === logs.bowling[bowler.id].length) {
+        batsman.send('Wait for the ball dude');
+        return batCollect(batsman, bowler, dm);
+      } //Turn Based on no batExtra
+      else if (!batExtra && logs.batting[batsman.id].length === logs.bowling[bowler.id].length) {
+        batsman.send('Wait for the ball dude');
+        return batCollect(batsman, bowler, dm);
+      } //Limit to 6
+      else if (parseInt(content) > 6) {
+        batsman.send('This match is limited to 6');
+        return batCollect(batsman, bowler, dm);
+      } //Wicket
+      if (parseInt(content) === bowled) {
+        let currentIndex = getIndex(battingTeam, batsman);
+        let response = battingTeam[currentIndex + 1] || 'end';
+        if (batExtra) {
+          response = 'end'
+        } else if (response === 'ExtraWicket#0000') {
+          response = extraPlayer;
+          batExtra = true;
+        }
+        const embed = new Discord.MessageEmbed()
+          .setTitle('TeamMatch')
+          .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap))
+          .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap))
+          .setColor(embedColor)
+          .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
+        let next = 'Wicket!!' + whoIsNext(response, 'bat', extraPlayer);
+        batsman.send(next, {embed});
+        bowler.send(next, {embed});
+        channel.send(next, {embed});
+        return respond(response, bowler, batsman, 'bat');
+      } //Target++
+      else if (oldLogs && (oldScore + parseInt(content)) >= target) {
+        if(batExtra) logs.batting['0000'].push(oldScore + parseInt(content));
+        else logs.batting[batsman.id].push(oldScore + parseInt(content));
+        const embed = new Discord.MessageEmbed()
+          .setTitle('TeamMatch')
+          .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap))
+          .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap))
+          .setColor(embedColor)
+          .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
+        let next = 'Batting Team Won';
+        batsman.send(next, {embed});
+        bowler.send(next, {embed});
+        channel.send(next, {embed});
+        return respond('win');
+      } //Log
+      else {
+        if(checkTimeup.find(player => player === batsman.id)) {
+          checkTimeup.splice(checkTimeup.indexOf(batsman.id), 1);
+        }
+        //Push the scores
+        if(batExtra) logs.batting['0000'].push(oldScore + parseInt(content));
+        else logs.batting[batsman.id].push(oldScore + parseInt(content));
+        
+        const embed = new Discord.MessageEmbed()
+          .setTitle('TeamMatch')
+          .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap))
+          .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap))
+          .setColor(embedColor)
+          .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
+        
+        let send = `The batsman hit ${content}, was bowled ${bowled}.`
+        await batsman.send(send, {embed});
+        await bowler.send(send, {embed});
+        await channel.send(send, {embed});
+        return batCollect(batsman, bowler, dm);
+      }
+    }).catch(async e => {
+      console.log(e);
+      if(checkTimeup.length === 2) {
+        return respond('forceEnd');
+      } else if (!checkTimeup.find(player => player === bowler.id)) {
+        checkTimeup.push(bowler.id);
+      }
+      
+      if(isInnings2 && !oldLogs) return;
+      if(isInnings2 === 'over') return;
+      
+      //CPU auto hit
+      let rando = ([1,2,3,4,5,6])[Math.floor([Math.random() * ([1,2,3,4,5,6]).length])];
+      let oldScore = (logs.batting[batsman.id])[(logs.batting[batsman.id]).length - 1];
+      if (batExtra) {
+        oldScore = (logs.batting['0000'])[(logs.batting['0000']).length - 1];
+        (logs.batting['0000']).push(oldScore + parseInt(rando));
+      } else {
+        (logs.batting[batsman.id]).push(oldScore + parseInt(rando));
+      }
+      
+      const embed = new Discord.MessageEmbed()
+        .setTitle('TeamMatch')
+        .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap))
+        .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap))
+        .setColor(embedColor)
+        .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
+        
+      //Wicket
+      let bowled = (logs.bowling[bowler.id])[(logs.bowling[bowler.id]).length - 1 ];
+      if(bowled === rando) {
+        let currentIndex = getIndex(battingTeam, batsman);
+        let response = battingTeam[currentIndex + 1] || 'end';
+        if(batExtra === true) {
+          response = 'end'
+        } else if (response === 'ExtraWicket#0000') {
+          response = extraPlayer;
+          batExtra = true;
+        }
+        let next = 'Wicket!!' + whoIsNext(response, 'bat', extraPlayer);
+        batsman.send(next, {embed});
+        bowler.send(next, {embed});
+        channel.send(next, {embed});
+        return respond(response, bowler, batsman, 'bat');
+      } //Target++
+      else if (oldLogs && (oldScore + parseInt(rando)) >= target) {
+        if(batExtra) logs.batting['0000'].push(oldScore + parseInt(content));
+        else logs.batting[batsman.id].push(oldScore + parseInt(content));
+        const embed = new Discord.MessageEmbed()
+        let next = 'Batting Team Won';
+        batsman.send(next, {embed});
+        bowler.send(next, {embed});
+        channel.send(next, {embed});
+        return respond('win');
+      } 
+      
+      let send = `The batsman hit ${rando} (cpu), was bowled ${bowled}.`
+      await batsman.send(send, {embed});
+      await bowler.send(send, {embed});
+      await channel.send(send, {embed});
+      return batCollect(batsman, bowler, dm);
+    });
   }
 }
 
