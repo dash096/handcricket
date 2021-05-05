@@ -20,7 +20,7 @@ module.exports = {
     
     const docs = await itemDb.find({}).sort({_id: 1});
     
-    let meh = 0;
+    let i = 0;
     let text = `You can buy an item by typing "!buy <name> <amount>", you have a total of ${coinsEmoji} ${data.cc}\n\n`;
     
     const embed = new Discord.MessageEmbed()
@@ -35,8 +35,8 @@ module.exports = {
       text += `** ${itemEmoji} ${title}** - [${doc.price}](https://egal)`;
       text += `\n${doc.description}\n\n`;
       embed.setDescription(text);
-      meh += 1;
-      if(meh === docs.length) {
+      i += 1;
+      if(i === docs.length) {
         await message.reply(embed);
         await gain(data, 1, message);
       }

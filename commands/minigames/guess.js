@@ -45,7 +45,7 @@ module.exports = {
         .setDescription(`**You got 3 lives to guess the number in my mind!**\n That number is between ${start} and ${end}.`)
         .setFooter('I am playing with ' + author.tag);
       
-      await channel.send(embed);
+      await message.reply(embed);
     
       await play();
       
@@ -72,16 +72,16 @@ module.exports = {
           .setFooter('Im playing with ' + author.tag);
      
         if(guess.toLowerCase() == 'end') {
-          channel.send('Game Ended');
-          await channel.send(`You got some experience.`);
+          msg.reply('Game Ended');
+          await msg.reply(`You got some experience.`);
           await gainExp(data, 0.5, message);
           return;
         } else if(isNaN(guess)) {
           lives -= 1;
           edit.setDescription('Wrong answer! ' + `\`${guess}\`` + ' is not even a number!');
-          channel.send(edit);
+          msg.reply(edit);
           if(lives === 0) {
-            channel.send('You lost! I thought of ' + number);
+            msg.reply('You lost! I thought of ' + number);
             await gainExp(data, 2, message);
             return;
           } else {
@@ -89,15 +89,15 @@ module.exports = {
           }
         } else if (guess == number) {
           edit.setDescription('Correct Answer! You are good at guessing!');
-          channel.send(edit);
+          msg.reply(edit);
           await gainExp(data, 3, message);
           return;
         } else {
           lives -= 1;
           edit.setDescription('Wrong answer! ' + guess + ` is ${getGteLte(guess,  number)} the number I thought!`);
-          channel.send(edit);
+          msg.reply(edit);
           if(lives == 0) {
-            channel.send('You lost! I thought of ' + number);
+            msg.reply('You lost! I thought of ' + number);
             await gainExp(data, 2, message);
             return;
           }
@@ -106,7 +106,7 @@ module.exports = {
       }
     } catch (e) {
       let error = 'time';
-      channel.send(getErrors({error}));
+      message.reply(getErrors({error}));
     } finally {
       await db.findOneAndUpdate( { _id: author.id }, { $set: { status: false} });
       return;

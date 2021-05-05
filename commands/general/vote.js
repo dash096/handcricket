@@ -22,7 +22,7 @@ module.exports = {
         '\n [Invite Bot to Your World](https://bit.ly/dispoBot) - Having fun in your palace is more fun')
         .setColor(embedColor)
         .setThumbnail(author.displayAvatarURL());
-      channel.send(embed);
+      message.reply(embed);
     } else {
       const embed = new Discord.MessageEmbed()
         .setTitle('Vote Command')
@@ -32,7 +32,7 @@ module.exports = {
         '\n [Invite Bot to Your World](https://bit.ly/dispoBot) - Having fun in your palace is more fun')
         .setColor(embedColor)
         .setThumbnail(author.displayAvatarURL());
-      channel.send(embed);
+      message.reply(embed);
     }
   }
 };

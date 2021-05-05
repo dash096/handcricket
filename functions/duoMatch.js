@@ -20,7 +20,7 @@ module.exports = async (message, user, target) => {
   let post = false;
   if(content.toLowerCase().includes('post')) post = true;
     
-  await channel.send(`<@${target.id}> Do you wanna play with **${user.username}**? Type \`y\`/\`n\` in 30s\n Append(add to the end) \`--post\` to the message to post the scores in this channel`);
+  await message.reply(`<@${target.id}> Do you wanna play with **${user.username}**? Type \`y\`/\`n\` in 30s\n Append(add to the end) \`--post\` to the message to post the scores in this channel`);
     
   //Execute check will
   const will = await checkWill();
@@ -50,7 +50,7 @@ module.exports = async (message, user, target) => {
       }
     } catch(e) {
       let error = 'time';
-      channel.send(getErrors({error}));
+      message.reply(getErrors({error}));
       return console.log(e);
     }
   }
@@ -84,7 +84,7 @@ module.exports = async (message, user, target) => {
 async function start(message, batsman, bowler, post) {
   const { content, author, channel, mentions } = message;
   
-  await channel.send(`${batsman} and ${bowler}, get to your dms to play!`);
+  await message.reply(`${batsman} and ${bowler}, get to your dms to play!`);
   await changeStatus(batsman, true);
   await changeStatus(bowler, true);
   firstInnings(batsman, bowler, message, post);

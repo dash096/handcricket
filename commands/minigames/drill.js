@@ -36,7 +36,7 @@ module.exports = {
       const roll = opt[Math.floor(Math.random() * opt.length)];
       const rando = await getRando(roll); //Gets text
       
-      await channel.send('The coach decided on running drill now . You will be running a 100m race . Type the upcoming message in the right order.');
+      await message.reply('The coach decided on running drill now . You will be running a 100m race . Type the upcoming message in the right order.');
       await channel.send('Ready');
       await channel.send('Go!');
       await channel.send(`Type this within ${time/1000} seconds.. \`${rando}\``);

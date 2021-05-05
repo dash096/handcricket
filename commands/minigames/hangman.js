@@ -49,42 +49,43 @@ module.exports = {
       revealed.splice(splitted.indexOf(letter), 1, letter);
     }
     
-    await channel.send('Guess the upcoming word with the revealled characters, you can type a character to see if it exists in the word.');
-    await channel.send(`\`${revealed.join(' ')}\``);
+    await message.reply('Guess the upcoming word with the revealled characters, you can type a character to see if it exists in the word.');
+    await message.reply(`\`${revealed.join(' ')}\``);
     await awaitAnswers();
     
     async function awaitAnswers() {
       try {
-        const answer = (await channel.awaitMessages(
+        const msg = (await channel.awaitMessages(
           message => message.author.id === author.id, {
             time: 30000,
             max: 1,
             errors: ['time']
-          })).first().content; 
+          })).first(); 
+        const answer = msg.content;
         
         if(answer.length === 1) letterLives -= 1;
         else wordLives -= 1;
           
         if(answer == splitted.join('')) {
           //rewards
-          channel.send('Correct Answer!');
+          msg.reply('Correct Answer!');
           return;
         } else if(splitted.find(char => char == answer)) {
           //reveal the char
           revealed.splice(splitted.indexOf(answer), 1, answer);
-          channel.send(`\`${revealed.join(' ')}\``);
+          msg.reply(`\`${revealed.join(' ')}\``);
           return awaitAnswers();
         } else {
           //try again
-          if(wordLives === 0 || letterLives === 0) return channel.send('Better luck next time :)');
-          channel.send(`\`${revealed.join(' ')}\`` + ' Try again');
+          if(wordLives === 0 || letterLives === 0) return msg.reply('Better luck next time :)');
+          msg.reply(`\`${revealed.join(' ')}\`` + ' Try again');
           return awaitAnswers();
         }
         
       } catch (e) {
         //timeup
         console.log(e);
-        channel.send(getErrors({error: 'time'}));
+        message.reply(getErrors({error: 'time'}));
         return;
       } finally {
         await db.findOneAndUpdate({_id: author.id}, {$set: {status: false}});

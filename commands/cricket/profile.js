@@ -67,7 +67,7 @@ module.exports = {
     
     setTimeout(async () => {
       await waitMessage.delete();
-      await channel.send(embed);
+      await message.reply(embed);
       await gain(data, 1, message);
       await fs.unlink(`${characterPath}`, (e) => {
         if(e) console.log(e);

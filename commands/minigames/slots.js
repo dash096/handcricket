@@ -70,7 +70,7 @@ module.exports = {
       timestamps.set(author.id, Date.now());
       setTimeout(() => timestamps.delete(author.id), 60 * 1000);
       
-      const slots = await channel.send(slotsEmbed);
+      const slots = await message.reply(slotsEmbed);
       setTimeout(() => slots.edit(resultEmbed), 3000);
       
       await calc(bet, author);

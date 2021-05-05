@@ -33,7 +33,7 @@ module.exports = async function (itemName, itemAmount, user, target, msg) {
     let e1 = await updateBag(itemName, parseInt(itemAmount), userData, msg);
     updateBag(itemName, -(parseInt(itemAmount)), targetData, msg);
     if(e1 != 'err') {
-      await msg.channel.send(`Successfully traded ${itemAmount} ${itemName} with **${target.tag}**`);
+      await msg.reply(`Successfully traded ${itemAmount} ${itemName} with **${target.tag}**`);
       await target.send(`**${user.tag}** sent you ${itemAmount} ${itemName}.`);
     }
   }

@@ -92,7 +92,7 @@ module.exports = {
       .setColor(embedColor)
       .setFooter(footer);
       
-    channel.send(embed);
+    message.reply(embed);
   }
 };
 

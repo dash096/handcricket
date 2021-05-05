@@ -25,7 +25,7 @@ module.exports = {
           '1) ❓ - **__About and Guide__**\n2) 👀 - **__General Conmands__**\n3) 🏏 - **__Cricket Commands__**\n4) 🏋️ - **__Minigames Commands__**')
           .setColor(embedColor)
           .setFooter('Requested by ' + author.tag);
-        channel.send(send);
+        message.reply(send);
       } else if(args[0] == 1) {
         const aboutEmbed = new Discord.MessageEmbed()
           .setTitle('About Cricket')
@@ -36,28 +36,28 @@ module.exports = {
           'If the batsman and the bowler type the same number before the score is reached, bolwer wins, else if the batsman crosses the target, batsman wins.')
           .setColor(embedColor)
           .setFooter('Requested by ' + author.tag);
-        channel.send(aboutEmbed);
+        message.reply(aboutEmbed);
       } else if(args[0] == 2) { 
         const generalEmbed = new Discord.MessageEmbed()
           .setTitle('General Commands')
           .setDescription(general)
           .setColor(embedColor)
           .setFooter('Requested by ' + author.tag);
-        channel.send(generalEmbed);
+        message.reply(generalEmbed);
       } else if(args[0] == 3) {
         const cricketEmbed = new Discord.MessageEmbed()
           .setTitle('Cricket Commands')
           .setDescription(cricket)
           .setColor(embedColor)
           .setFooter('Requested by ' + author.tag);
-        channel.send(cricketEmbed);
+        message.reply(cricketEmbed);
       } else if(args[0] == 4) {
         const minigamesEmbed = new Discord.MessageEmbed()
           .setTitle('Minigames Commands')
           .setDescription(minigames)
           .setColor(embedColor)
           .setFooter('Requested by ' + author.tag);
-        channel.send(minigamesEmbed);
+        message.reply(minigamesEmbed);
       } 
     } catch (e) {
       console.log(e);

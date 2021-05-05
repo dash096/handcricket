@@ -45,7 +45,7 @@ module.exports = {
         multi = multi * 2;
       }
       let amount = parseInt(multi * 696);
-      await channel.send(`You got ${await getEmoji('coin')} ${amount} for your fitness`);
+      await message.reply(`You got ${await getEmoji('coin')} ${amount} for your fitness`);
       
       updateCoins(amount, data);
     

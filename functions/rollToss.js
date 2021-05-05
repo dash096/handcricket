@@ -13,13 +13,13 @@ module.exports = async (message, user, target) => {
   if (user.tossMulti > target.tossMulti) {
     //Users with roll.
     if (roll < user.tossMulti) {
-      const rolling = await channel.send(`Rolling the ${tossEmoji} Lucky Coin....`);
+      const rolling = await message.reply(`Rolling the ${tossEmoji} Lucky Coin....`);
       setTimeout( () => {
         rolling.edit(`${user} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
       }, 3000);
       return user;
     } else {//Target wins with roll.
-      const rolling = await channel.send(`Rolling the ${tossEmoji} Lucky Coin....`);
+      const rolling = await message.reply(`Rolling the ${tossEmoji} Lucky Coin....`);
       setTimeout( () => {
         rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
       }, 3000);
@@ -31,13 +31,13 @@ module.exports = async (message, user, target) => {
   else if (user.tossMulti < target.tossMulti) {
     //Target wins with roll
     if (roll < target.tossMulti) {
-      const rolling = await channel.send(`Rolling the ${tossEmoji} Lucky Coin....`);
+      const rolling = await message.reply(`Rolling the ${tossEmoji} Lucky Coin....`);
       setTimeout( () => {
         rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
       }, 3000);
       return target;
     } else {//User wins with roll
-      const rolling = await channel.send(`Rolling the ${tossEmoji} Lucky Coin....`);
+      const rolling = await message.reply(`Rolling the ${tossEmoji} Lucky Coin....`);
       setTimeout( () => {
         rolling.edit(`${user} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
       }, 3000);
@@ -50,20 +50,20 @@ module.exports = async (message, user, target) => {
     const roll2 = Math.floor(Math.random() * 3);
 
     if (roll2 === 1) { //User wins
-      const rolling = await channel.send(`Rolling the ${tossEmoji} Lucky Coin....`);
+      const rolling = await message.reply(`Rolling the ${tossEmoji} Lucky Coin....`);
       setTimeout( () => {
         rolling.edit(`${user} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
       }, 3000);
       return user;
     } else { //Target wins
-      const rolling = await channel.send(`Rolling the ${tossEmoji} Lucky Coin....`);
+      const rolling = await message.reply(`Rolling the ${tossEmoji} Lucky Coin....`);
       setTimeout( () => {
         rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
       }, 3000);
       return target;
     }
   } else {//Target wins
-    const rolling = await channel.send(`Rolling the ${tossEmoji} Lucky Coin....`);
+    const rolling = await message.reply(`Rolling the ${tossEmoji} Lucky Coin....`);
     setTimeout( () => {
         rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
     }, 3000);

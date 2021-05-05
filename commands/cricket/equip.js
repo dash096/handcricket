@@ -100,6 +100,6 @@ module.exports = {
     
     userDecors.equipped = equipped;
     await db.findOneAndUpdate({_id: data._id}, {$set: {decors: userDecors}}, {new: true, upsert: true});
-    await channel.send('Your character is now wearing ' + args.reverse().join(' '));
+    await message.reply('Your character is now wearing ' + args.reverse().join(' '));
   }
 };

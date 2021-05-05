@@ -16,6 +16,6 @@ module.exports = {
       ' Official Guild - https://bit.ly/dispoGuild\n\n Invite Bot - https://bit.ly/dispoBot\n\n If you are looking for commands/docs, use the command `e.help` to know about it.')
       .setFooter('Have a Good Day :)')
       .setColor(embedColor);
-    channel.send(embed);
+    message.reply(embed);
   }
 };

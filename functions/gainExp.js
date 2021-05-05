@@ -25,16 +25,18 @@ module.exports = async (data, amt, msg, user) => {
   const sLevel = Object.keys(levels).find(key => levels[key] === sXP);
   
   if(pLevel != sLevel) {
-    if(user) msg.channel.send(`${user}, CONGRATS!!! You leveled up to **${sLevel}**! You also got a lootbox!!!`);
-    else msg.reply(`CONGRATS!!! You leveled up to **${sLevel}**! You also got a lootbox!!!`);
+    let text = '';
+    if(user) text += `${user}, CONGRATS!!! You leveled up to **${sLevel}**! You also got a lootbox!!!`;
+    else text += `CONGRATS!!! You leveled up to **${sLevel}**! You also got a lootbox!!!`;
     await updateBag('lootbox', -1, data, msg);
-    if(sLevel == 0) { //If the level is 0, gib tracks
+    if(sLevel === 0) { //If the level is 0, gib tracks
       const decors = data.decors || {};
       const tracks = decors.tracks_black || 0;
       decors.tracks_black = tracks + 1;
       await db.findOneAndUpdate({_id: data._id}, {$set: {decors: decors}});
-      await msg.reply('You also got a black tracks to save your dignity, do `e.equip black tracks` to wear it');
+      text += 'You also got a black tracks to save your dignity, do `e.equip black tracks` to wear it';
     }
+    msg.reply(text);
     await db.findOneAndUpdate({_id: data._id}, {$set: {xp: sXP + 1}});
     return;
   }

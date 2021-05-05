@@ -44,10 +44,10 @@ module.exports = {
     
     //Add Equipped Decors at first;
     let equipped = userDecors.equipped || [];
-    if(equipped.length === 0) equipped = ['none']
+    if(equipped.length === 0) equipped = ['none'];
     let equippedReversed = [];
     equipped.forEach(decor => {
-      const reverse = decor.split('_').reverse().join(' ')
+      const reverse = decor.split('_').reverse().join(' ');
       equippedReversed.push(reverse);
     });
     fieldText += '**Equipped:** ' + equippedReversed.join(', ') + '\n';

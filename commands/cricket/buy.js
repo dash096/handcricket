@@ -36,7 +36,7 @@ module.exports = {
     await db.findOneAndUpdate({_id: data._id}, { $set: { cc: parseInt(balance) - parseInt(cost) } } );
     await updateBag(name, -(number), data, message);
     
-    message.channel.send(`You bought **${number} ${item.name}** for ${coinEmoji} ${cost} coins`);
+    message.reply(`You bought **${number} ${item.name}** for ${coinEmoji} ${cost} coins`);
     await gain(data, 1.7, message);
   }
 };
