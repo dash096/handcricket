@@ -5,7 +5,7 @@ module.exports = (type) => {
   const Object = {};
   
   const files = [];
-  const filesWithPNG = fs.readdirSync(`./decors/${type}`).filter(file => !file.includes('character'));
+  const filesWithPNG = fs.readdirSync(`./assets/decors/${type}`).filter(file => !file.includes('character'));
   
   filesWithPNG.forEach(file => {
     files.push(file.toString().split('.').shift());

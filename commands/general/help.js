@@ -23,7 +23,10 @@ module.exports = {
           .setDescription('Here\'s an Interactive GUIDE for you!\n\n')
           .addField('Navigate via the pages of the guide by appending the number next to ' + `${prefix}help`, 
           '1) ❓ - **__About and Guide__**\n2) 👀 - **__General Conmands__**\n3) 🏏 - **__Cricket Commands__**\n4) 🏋️ - **__Minigames Commands__**')
+          .addField('Links', '[Add the bot](https://bit.ly/dispoBot)\n[Vote me](https://top.gg/bot/804346878027235398/vote)\n[Support Server](https://bit.ly/dispoGuild)')
           .setColor(embedColor)
+          .attachFiles('./assets/banner.jpg')
+          .setImage('attachment://banner.jpg')
           .setFooter('Requested by ' + author.tag);
         message.reply(send);
       } else if(args[0] == 1) {

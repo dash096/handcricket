@@ -183,9 +183,9 @@ async function getCharacter(target) {
   if(equippedDecors.length > 0) {
     await equippedDecors.forEach(decor => {
       if(decor.startsWith('decor') || decor.startsWith('head')) {
-        images.push(`./decors/${type}/${decor}.png`);
+        images.push(`./assets/decors/${type}/${decor}.png`);
       } else {
-        images.unshift(`./decors/${type}/${decor}.png`);
+        images.unshift(`./assets/decors/${type}/${decor}.png`);
       }
     });
   }
@@ -194,7 +194,7 @@ async function getCharacter(target) {
 }
 
 async function getImage(target, type, paths) {
-  let character = await jimp.read(`./decors/${type}/character.png`);
+  let character = await jimp.read(`./assets/decors/${type}/character.png`);
   let exportPath = `./temp/${target.id}.png`;
   
   if(paths.length > 0) {
