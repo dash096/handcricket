@@ -12,6 +12,7 @@ module.exports = {
     const { content, author, channel, mentions } = message;
     
     const voted = await topggapi.hasVoted(author.id);
+    const data = await db.findOne({_id: author.id});
     
     if(voted === true) {
       const cooldown = await getCooldown(author);
