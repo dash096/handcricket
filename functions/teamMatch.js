@@ -211,7 +211,7 @@ module.exports = async (message, client) => {
         } else {
           team1.push(pick);
           availablePlayers.splice(availablePlayers.indexOf(pick), 1);
-          message.reply(`${author}, ${pick.tag} is now in your party`);
+          message.reply(`${author}, ${pick.tag} is now in your team`);
           return ListenToCaptain2();
         }
       } catch (e) {
@@ -231,7 +231,7 @@ module.exports = async (message, client) => {
           return;
         }
         
-        channel.send(`${cap1}, choose your member by pinging them`);
+        channel.send(`${cap2}, choose your member by pinging them`);
         
         const messages = await channel.awaitMessages(
           m => m.author.id == cap2.id,
@@ -264,7 +264,7 @@ module.exports = async (message, client) => {
         } else {
           availablePlayers.splice(availablePlayers.indexOf(pick), 1);
           team2.push(pick);
-          message.reply(`${author}, ${pick.tag} is now in your party`);
+          message.reply(`${author}, ${pick.tag} is now in your team`);
           return ListenToCaptain1();
         }
       } catch (e) {
