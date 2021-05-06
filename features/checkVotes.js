@@ -39,8 +39,10 @@ module.exports = async ({client, topggapi}) => {
         const data = await db.findOne({_id: user.id});
         user.send('Thanks for voting, you got ' + await rewards(user));
         let quests = data.quests || {};
+        let streak = data.voteStreak || 0;
         quests.support = true;
-        await db.findOneAndUpdate({ _id: user.id }, { $set: {voteClaim: true, voteCooldown: cooldown, quests: quests }});
+        streak += 1;
+        await db.findOneAndUpdate({ _id: user.id }, { $set: { voteClaim: true, voteCooldown: cooldown, quests: quests, voteStreak: streak }});
       } catch (e) {
         votes = newVotes;
         return;

@@ -26,7 +26,7 @@ module.exports = {
     }
     await db.findOneAndUpdate({_id: author.id}, {status: true});
     
-    const words = ['cricket', 'msdhoni', 'eagle'];
+    const words = ['cricket', 'sports', 'cheems', 'googly', 'batsman', 'bowler', 'swing', 'playtime'];
     const word = words[Math.floor(Math.random() * words.length)];
     const splitted = word.split('');
     const revealed = [];

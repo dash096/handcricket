@@ -20,6 +20,7 @@ module.exports = {
         .setDescription('Thanks for Supporting me! You have already voted for me.\n' + cooldown +
         '\n [Community Server](https://bit.ly/dispoGuild) - Join for additional fun and community only features.' +
         '\n [Invite Bot to Your World](https://bit.ly/dispoBot) - Having fun in your palace is more fun')
+        .addField(`Vote Streak: ${data.voteStreak || 0}`, 'You will get a decor for each 10s after 30')
         .setColor(embedColor)
         .setThumbnail(author.displayAvatarURL());
       message.reply(embed);
@@ -27,9 +28,10 @@ module.exports = {
       const embed = new Discord.MessageEmbed()
         .setTitle('Vote Command')
         .setDescription('You havent voted yet, Support us [here](https://top.gg/bot/804346878027235398/vote)' + 
-        '\n**Note:** It might take a maximum of 3 minutes for you to get the vote reward.' +
+        '\n**PS:** It might take a maximum of 3 minutes for you to get the vote reward.' +
         '\n [Community Server](https://bit.ly/dispoGuild) - Join for additional fun and community only features.' +
         '\n [Invite Bot to Your World](https://bit.ly/dispoBot) - Having fun in your palace is more fun')
+        .addField(`Vote Streak: ${data.voteStreak || 0}`, 'You will get a decor for each 10s after 30')
         .setColor(embedColor)
         .setThumbnail(author.displayAvatarURL());
       message.reply(embed);

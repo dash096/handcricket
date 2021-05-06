@@ -40,6 +40,7 @@ const player = new mongoose.Schema({
     type: Boolean, default: false
   },
   voteCooldown: Date,
+  voteStreak: Number,
   notifs: {
     type: Boolean, default: true
   }
