@@ -403,8 +403,8 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
       console.log(e);
       if(checkTimeup.length === 2) {
         return respond('forceEnd');
-      } else if (!checkTimeup.find(player => player === bowler.id)) {
-        checkTimeup.push(bowler.id);
+      } else if (!checkTimeup.find(player => player === batsman.id)) {
+        checkTimeup.push(batsman.id);
       }
       
       if(isInnings2 && !oldLogs) return;
