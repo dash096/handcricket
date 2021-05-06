@@ -47,6 +47,7 @@ module.exports = {
     if(equipped.length === 0) equipped = ['none'];
     let equippedReversed = [];
     equipped.forEach(decor => {
+      if(decor.includes('suit')) return equippedReversed.push(`${(decor.split('_'))[1]} suit`);
       const reverse = decor.split('_').reverse().join(' ');
       equippedReversed.push(reverse);
     });
@@ -55,13 +56,14 @@ module.exports = {
     if(!keys || keys.length === 0) {
       fieldText += 'None here NOOB';
     } else {
-      for(const key of keys) {
+      keys.forEach(key => {
+        if(key.includes('suit')) return fieldText += `**${(key.split('_'))[1]} suit** - \`${userDecors[key]}\`\n`;
         let color = key.split('_');
         let type = color.shift();
         let value = userDecors[key];
         if(color.length !== 0) type = ` ${type}`; //To adjust spacing
         fieldText += `**${color}${type}** - \`${value}\`\n`;
-      }
+      });
     }
     
     const embed = await new Discord.MessageEmbed()

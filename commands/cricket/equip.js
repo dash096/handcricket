@@ -37,6 +37,15 @@ module.exports = {
       decor => decor.toLowerCase() == args[0]
     );
     
+    if(!decor && args.join('').includes('suit')) {
+      decor = 
+      decorsData.find(
+        decor => decor.split('_').pop() == args[1]
+      ) ||
+      decorsData.find(
+        decor => decor.split('_').pop() == args[0]
+      );
+    }
     if(!decor || decor == 'equipped') {
       message.reply(`${args.join(' ')} is not a valid decor, it should be like \`e.equip <name_in_your_bag>\``);
       return;
