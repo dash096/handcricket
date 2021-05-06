@@ -10,7 +10,7 @@ let checkTimeup = [];
 module.exports = async function innings(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel, oldLogs) {
   let target;
   if(oldLogs) {
-    target = 0;
+    target = 1;
     (Object.keys(oldLogs.batting)).forEach(batsman => {
       target += ((oldLogs.batting)[batsman])[(oldLogs.batting[batsman]).length - 1];
     });
@@ -146,7 +146,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
       if(response === 'end') {
         isInnings2 = 'over';
         changeStatus(players, false)
-        console.log('bowlingTeam won')
+        console.log('BowlingTeam Won')
         //rewards for bowlingTeam
       } else if (response === 'win') {
         isInnings2 = 'over';
@@ -358,9 +358,9 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           .setColor(embedColor)
           .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
         let next = 'Wicket!!' + whoIsNext(response, 'bat', extraPlayer);
-        batsman.send(next, {embed});
-        bowler.send(next, {embed});
-        channel.send(next, {embed});
+        await batsman.send(next, {embed});
+        await bowler.send(next, {embed});
+        await channel.send(next, {embed});
         return respond(response, bowler, batsman, 'bat');
       } //Target++
       else if (oldLogs && (oldScore + parseInt(content)) >= target) {
