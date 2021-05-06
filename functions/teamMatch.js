@@ -178,7 +178,7 @@ module.exports = async (message, client) => {
           return;
         } 
         
-        message.reply(`${cap1}, choose your member by pinging them`);
+        channel.send(`${cap1}, choose your member by pinging them`);
         
         const messages = await channel.awaitMessages(
           m => m.author.id === cap1.id, 
@@ -231,7 +231,7 @@ module.exports = async (message, client) => {
           return;
         }
         
-        message.reply(`${cap1}, choose your member by pinging them`);
+        channel.send(`${cap1}, choose your member by pinging them`);
         
         const messages = await channel.awaitMessages(
           m => m.author.id == cap2.id,
@@ -349,9 +349,9 @@ module.exports = async (message, client) => {
           }
           
           if(type === 'batsman') {
-            await message.reply(`${cap} ping your batsmen list in order you desire like \`@user1 @user2 @user3\``)
+            await channel.send(`${cap} ping your batsmen list in order you desire like \`@user1 @user2 @user3\``)
           } else if(type === 'bowler') {
-            await message.reply(`${cap} ping your bowlers list in order you desire like \`@user1 @user2 @user3\``)
+            await channel.send(`${cap} ping your bowlers list in order you desire like \`@user1 @user2 @user3\``)
           }
           
           const messages = await channel.awaitMessages(
