@@ -225,7 +225,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
             .setColor(embedColor)
             .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
             
-          let next = '2 overs over.' + whoIsNext(response, 'bowl', extraPlayer);
+          let next = '2 overs over.' + whoIsNext(response, 'bowl', extraPlayer, isInnings2);
           batsman.send(next, {embed});
           bowler.send(next, {embed});
           channel.send(next, {embed});
@@ -374,7 +374,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap))
           .setColor(embedColor)
           .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
-        let next = 'Wicket!!' + whoIsNext(response, 'bat', extraPlayer);
+        let next = 'Wicket!!' + whoIsNext(response, 'bat', extraPlayer, isInnings2);
         await batsman.send(next, {embed});
         await bowler.send(next, {embed});
         await channel.send(next, {embed});
@@ -466,7 +466,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           response = extraPlayer;
           batExtra = true;
         }
-        let next = 'Wicket!!' + whoIsNext(response, 'bat', extraPlayer);
+        let next = 'Wicket!!' + whoIsNext(response, 'bat', extraPlayer, isInnings2);
         batsman.send(next, {embed});
         bowler.send(next, {embed});
         channel.send(next, {embed});
@@ -517,7 +517,7 @@ function getIndex(team, player) {
   return index;
 }
 
-function whoIsNext(res, type, extraPlayer) {
+function whoIsNext(res, type, extraPlayer, isInnings2) {
   if(res === 'end') {
     if(isInnings2) return ' BowlingTeam Won'
     return ' Second Innings Starts';
