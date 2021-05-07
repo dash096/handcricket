@@ -38,6 +38,7 @@ module.exports = async (message, client) => {
     let collectedUsers = [];
     reactionCollector.on('collect', async (reaction, user) => {
       collectedUsers.push(user);
+      channel.send(`${enterEmoji} **${user.tag}** joined the teamMatch!`);
       await db.findOneAndUpdate({_id: user.id}, {$set:{status: true}});
     });
     

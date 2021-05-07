@@ -8,6 +8,7 @@ let isInnings2;
 let checkTimeup = [];
 
 module.exports = async function innings(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel, oldLogs) {
+  try {
   let target;
   if(oldLogs) {
     target = 1;
@@ -80,6 +81,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
   await startInnings();
   
   function startInnings() {
+    console.log('Innings2', isInnings2, 'oLogs', oldLogs);
     let batsman = battingTeam[0];
     let bowler = bowlingTeam[0];
     bowler.send(embed).then(message => {
@@ -176,7 +178,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
   }
   
   function bowlCollect(batsman, bowler, dm) {
-    if(isInnings2 && !oldLogs) return console.log('isInnings2 and !oldLog');
+    if(!oldLogs && isInnings2) return console.log('isInnings2 and !oldLog');
     if(isInnings2 === 'over') return console.log('over');
     
     //Swap the batsman if wicket
@@ -242,7 +244,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         message => message.author.id === bowler.id,
         { max: 1, time: 20000, errors: ['time'] }
     ).then(async messages => {
-      if(isInnings2 && !oldLogs) return;
+      if(!oldLogs && isInnings2) return;
       if(isInnings2 === 'over') return;
       
       let message = messages.first();
@@ -289,6 +291,13 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
       } else if ((checkTimeup.filter(player => player === bowler.id)).length !== 2) {
         checkTimeup.push(bowler.id);
       }
+      //Turn based on batExtra
+      if (batExtra && logs.bowling[bowler.id].length > logs.batting['0000'].length) {
+        return bowlCollect(batsman, bowler, dm);
+      } //Turn based on no batExtra
+      else if (!batExtra && logs.bowling[bowler.id].length > logs.batting[batsman.id].length) {
+        return bowlCollect(batsman, bowler, dm);
+      }
       //CPU auto bowl
       remainingBalls -= 1;
       totalBalls -= 1;
@@ -302,7 +311,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
   
   
   function batCollect(batsman, bowler, dm) {
-    if(isInnings2 && !oldLogs) return console.log('isInnings2 and !oldLog');
+    if(!oldLogs && isInnings2) return console.log('isInnings2 and !oldLog');
     if(isInnings2 === 'over') return console.log('over');
     
     if(bowlSwap) {
@@ -316,7 +325,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         message => message.author.id === batsman.id,
         { max: 1, time: 20000, errors: ['time'] }
     ).then(async messages => {
-      if(isInnings2 && !oldLogs) return;
+      if(!oldLogs && isInnings2) return;
       if(isInnings2 === 'over') return;
       
       let message = messages.first();
@@ -388,6 +397,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
             checkTimeup.splice(checkTimeup.indexOf(player), 1);
           });
         }
+        
         //Push the scores
         if(batExtra) logs.batting['0000'].push(oldScore + parseInt(content));
         else logs.batting[batsman.id].push(oldScore + parseInt(content));
@@ -413,6 +423,14 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         checkTimeup.push(batsman.id);
       }
       
+      //Turn Based on batExtra
+      if (batExtra && logs.batting['0000'].length === logs.bowling[bowler.id].length) {
+        return batCollect(batsman, bowler, dm);
+      } //Turn Based on no batExtra
+      else if (!batExtra && logs.batting[batsman.id].length === logs.bowling[bowler.id].length) {
+        return batCollect(batsman, bowler, dm);
+      }
+        
       if(isInnings2 && !oldLogs) return;
       if(isInnings2 === 'over') return;
       
@@ -467,6 +485,9 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
       await channel.send(send, {embed});
       return batCollect(batsman, bowler, dm);
     });
+  }
+  } catch (e) {
+    console.log(e);
   }
 }
 
