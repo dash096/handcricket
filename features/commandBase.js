@@ -47,8 +47,7 @@ module.exports = ({client, prefix, topggapi}) => {
       }
     }
     if (commandStatus === true && data.status === true) {
-      message.reply('You are already engaged in a game');
-      return;
+      if(args[0] !== 'end' || args[0] !== 'x') return message.reply('You are already engaged in a game');
     }
     
     const perms = [

@@ -22,6 +22,14 @@ module.exports = {
     const userdata = await db.findOne({
       _id: user.id
     });
+    
+    if(content.toLowerCase() == 'e.hc end' || content.toLowerCase() == 'e.hc x') {
+      if(userdata.status === false) {
+        message.reply('You aint on a match');
+      }
+      return;
+    }
+    
     if(userdata.status === true) {
       let error = 'engaged';
       message.reply(getErrors({error, user}));

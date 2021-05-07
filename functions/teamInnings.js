@@ -4,11 +4,10 @@ const embedColor = require('./getEmbedColor.js');
 const getEmoji = require('../index.js');
 const getErrors = require('./getErrors.js');
 const updateBags = require('./updateBag.js');
-let isInnings2;
-let checkTimeup = [];
 
-module.exports = async function innings(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel, oldLogs) {
-  try {
+module.exports = async function innings(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel, oldLogs, isInnings2) {
+  let checkTimeup = [];
+  
   let target;
   if(oldLogs) {
     target = 1;
@@ -21,6 +20,8 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
     batting: {},
     bowling: {},
   };
+  
+  lookForEndMessages(players, battingCap, bowlingCap, channel);
   
   function getPlayerTagWithLogs(team, type, cap) {
     let playerAndLog = [];
@@ -108,10 +109,10 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
       .setColor(embedColor)
       .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
         
-    if(response === 'forceEnd') {
+    if(response.startsWith('forceEnd')) {
       isInnings2 = 'over';
       changeStatus(players, false)
-      channel.send('both the batsman and bowler are offline. Match ended.');
+      channel.send(response);
       return;
     } else if(!oldLogs) {
       if(response === 'end') {
@@ -123,8 +124,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         bowlers.forEach(bowler => {
           (logs.bowling)[bowler] = [0];
         });
-        isInnings2 = true;
-        return innings(players, bowlingTeam, battingTeam, bowlingCap, battingCap, extraPlayer, channel, logs);
+        return innings(players, bowlingTeam, battingTeam, bowlingCap, battingCap, extraPlayer, channel, logs, true);
       } else {
         if(type === 'bat') {
           logs.bowling[responseX.id] = [0];
@@ -178,8 +178,8 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
   }
   
   function bowlCollect(batsman, bowler, dm) {
-    if(!oldLogs && isInnings2) return console.log('isInnings2 and !oldLog');
     if(isInnings2 === 'over') return console.log('over');
+    if(!oldLogs && isInnings2) return console.log('isInnings2 and !oldLog');
     
     //Swap the batsman if wicket
     if(batSwap) {
@@ -244,8 +244,8 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         message => message.author.id === bowler.id,
         { max: 1, time: 20000, errors: ['time'] }
     ).then(async messages => {
-      if(!oldLogs && isInnings2) return;
       if(isInnings2 === 'over') return;
+      if(!oldLogs && isInnings2) return;
       
       let message = messages.first();
       let content = message.content.trim().toLowerCase();
@@ -287,10 +287,14 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
       console.log(e);
       //Push timeup and check timeups
       if(checkTimeup.length === 4) {
-        return respond('forceEnd');
+        return respond(`forceEnd: Both ${batsman.tag} and ${bowler.tag} were afk.`);
       } else if ((checkTimeup.filter(player => player === bowler.id)).length !== 2) {
         checkTimeup.push(bowler.id);
       }
+      
+      if(isInnings2 === 'over') return console.log('over');
+      if(!oldLogs && isInnings2) return console.log('isInnings2 and !oldLog');
+      
       //Turn based on batExtra
       if (batExtra && logs.bowling[bowler.id].length > logs.batting['0000'].length) {
         return bowlCollect(batsman, bowler, dm);
@@ -311,8 +315,8 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
   
   
   function batCollect(batsman, bowler, dm) {
-    if(!oldLogs && isInnings2) return console.log('isInnings2 and !oldLog');
     if(isInnings2 === 'over') return console.log('over');
+    if(!oldLogs && isInnings2) return console.log('isInnings2 and !oldLog');
     
     if(bowlSwap) {
       console.log('Bowler is swapping in batCollect');
@@ -325,8 +329,8 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         message => message.author.id === batsman.id,
         { max: 1, time: 20000, errors: ['time'] }
     ).then(async messages => {
-      if(!oldLogs && isInnings2) return;
       if(isInnings2 === 'over') return;
+      if(!oldLogs && isInnings2) return;
       
       let message = messages.first();
       let content = message.content.trim().toLowerCase();
@@ -418,7 +422,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
     }).catch(async e => {
       console.log(e);
       if(checkTimeup.length === 4) {
-        return respond('forceEnd');
+        return respond(`forceEnd: Both ${batsman.tag} and ${bowler.tag} were afk.`);
       } else if ((checkTimeup.filter(player => player === batsman.id)).length !== 2) {
         checkTimeup.push(batsman.id);
       }
@@ -486,8 +490,25 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
       return batCollect(batsman, bowler, dm);
     });
   }
-  } catch (e) {
-    console.log(e);
+  
+  async function lookForEndMessages(players, cap1, cap2, channel) {
+    const messageCollector = channel.createMessageCollector(
+      message => {
+        let author = message;
+        let c = message.content.toLowerCase().trim();
+        if(c == 'e.hc x' || c == 'e.hc end') return true;
+      }
+    )
+  
+    messageCollector.on('collect', (message) => {
+      if(message.author.id === cap1.id || message.author.id === cap2.id) {
+        respond(`forceEnd: ${message.author.tag} ended.`);
+        message.reply('TeamMatch has ended');
+        messageCollector.stop();
+      } else if (players.find(player => player.id == message.author.id)) {
+        message.reply('Only captains can!');
+      } 
+    });
   }
 }
 
