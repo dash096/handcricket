@@ -415,7 +415,7 @@ function checkAvailablity(picks, team) {
 async function askForTheExtraWicketBatsman(players, team, channel) {
   try {
     const captain = team[0];
-    await message.reply(`${captain} you have an extraWicket in your team. Ping a teamMember who is gonna play that extraWicket`);
+    await channel.send(`${captain} you have an extraWicket in your team. Ping a teamMember who is gonna play that extraWicket`);
     const msgs = await channel.awaitMessages(m => m.author.id === captain.id, {
       time: 30000,
       max: 1,
