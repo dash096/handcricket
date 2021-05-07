@@ -109,7 +109,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
       .setColor(embedColor)
       .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
         
-    if(response.startsWith('forceEnd')) {
+    if(typeof response === 'string' && response.startsWith('forceEnd')) {
       isInnings2 = 'over';
       changeStatus(players, false)
       channel.send(response);

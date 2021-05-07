@@ -31,6 +31,11 @@ module.exports = ({client, prefix, topggapi}) => {
       let user = author; let error = 'data';
       return message.reply(getErrors({error, user}));
     }
+    
+    if(commandStatus === true && data.status === true) {
+      if(args[0] !== 'end' || args[0] !== 'x') return message.reply('You are already engaged in a game');
+    }
+    
     let targets = mentions.users;
     targets = targets.values();
     if(targets || targets.length !== 0) {
@@ -39,15 +44,11 @@ module.exports = ({client, prefix, topggapi}) => {
         if(!targetData) {
           let error = 'data';
           let user = target;
-          message.reply(getErrors({error, user}));
-          return;
+          return message.reply(getErrors({error, user}));
         } else if(commandStatus === true && target.status === true) {
-          message.reply(`${target.tag} is already engaged in a game`);
+          return message.reply(`${target.tag} is already engaged in a game`);
         }
       }
-    }
-    if (commandStatus === true && data.status === true) {
-      if(args[0] !== 'end' || args[0] !== 'x') return message.reply('You are already engaged in a game');
     }
     
     const perms = [
