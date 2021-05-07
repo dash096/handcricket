@@ -269,8 +269,10 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         return bowlCollect(batsman, bowler, dm);
       } //Log
       else {
-        if(checkTimeup.find(player => player === bowler.id)) {
-          checkTimeup.splice(checkTimeup.indexOf(bowler.id), 1);
+        if((checkTimeup.filter(player => player === bowler.id)).length !== 0) {
+          (checkTimeup.filter(player => player === bowler.id)).forEach((player) => {
+            checkTimeup.splice(checkTimeup.indexOf(player), 1);
+          });
         }
         remainingBalls -= 1;
         totalBalls -= 1;
@@ -282,9 +284,9 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
     }).catch(async e => {
       console.log(e);
       //Push timeup and check timeups
-      if(checkTimeup.length === 2) {
+      if(checkTimeup.length === 4) {
         return respond('forceEnd');
-      } else if (!checkTimeup.find(player => player === bowler.id)) {
+      } else if ((checkTimeup.filter(player => player === bowler.id)).length !== 2) {
         checkTimeup.push(bowler.id);
       }
       //CPU auto bowl
@@ -381,8 +383,10 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         return respond('win');
       } //Log
       else {
-        if(checkTimeup.find(player => player === batsman.id)) {
-          checkTimeup.splice(checkTimeup.indexOf(batsman.id), 1);
+        if((checkTimeup.filter(player => player === batsman.id)).length !== 0) {
+          (checkTimeup.filter(player => player === bowler.id)).forEach((player) => {
+            checkTimeup.splice(checkTimeup.indexOf(player), 1);
+          });
         }
         //Push the scores
         if(batExtra) logs.batting['0000'].push(oldScore + parseInt(content));
@@ -403,9 +407,9 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
       }
     }).catch(async e => {
       console.log(e);
-      if(checkTimeup.length === 2) {
+      if(checkTimeup.length === 4) {
         return respond('forceEnd');
-      } else if (!checkTimeup.find(player => player === batsman.id)) {
+      } else if ((checkTimeup.filter(player => player === batsman.id)).length !== 2) {
         checkTimeup.push(batsman.id);
       }
       
