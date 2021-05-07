@@ -68,7 +68,6 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
   
   let totalBalls = (bowlingTeam.length) * 2 * 6;
   let remainingBalls = 12;
-  console.log(totalBalls, remainingBalls);
   
   const embed = new Discord.MessageEmbed()
     .setTitle('TeamMatch')
@@ -177,10 +176,12 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
   }
   
   function bowlCollect(batsman, bowler, dm) {
-    if(isInnings2 && !oldLogs) return;
-    if(isInnings2 === 'over') return;
+    if(isInnings2 && !oldLogs) return console.log('isInnings2 and !oldLog');
+    if(isInnings2 === 'over') return console.log('over');
+    
     //Swap the batsman if wicket
     if(batSwap) {
+      console.log('Batsman is swapping in bowlCollect');
       batsman = batSwap;
       batSwap = undefined;
       return bowlCollect(batsman, bowler, dm);
@@ -188,6 +189,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
     
     //Switch bowler when 2 overs ends.
     if(remainingBalls === 0) {
+      console.log('remaining Balls 0');
       if(batExtra && (logs.bowling[bowler.id]).length > (logs.batting['0000']).length) {
         let interval = setInterval(async function () {
           if((logs.bowling[bowler.id]).length === (logs.batting['0000']).length) {
@@ -298,8 +300,8 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
   
   
   function batCollect(batsman, bowler, dm) {
-    if(isInnings2 && !oldLogs) return;
-    if(isInnings2 === 'over') return;
+    if(isInnings2 && !oldLogs) return console.log('isInnings2 and !oldLog');
+    if(isInnings2 === 'over') return console.log('over');
     
     if(bowlSwap) {
       console.log('Bowler is swapping in batCollect');
