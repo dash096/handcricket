@@ -66,8 +66,9 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
     logs.bowling[player.id || '0000'] = [0];
   });
   
-  let totalBalls = bowlingTeam.length * 2 * 6;
+  let totalBalls = (bowlingTeam.length) * 2 * 6;
   let remainingBalls = 12;
+  console.log(totalBalls, remainingBalls);
   
   const embed = new Discord.MessageEmbed()
     .setTitle('TeamMatch')
@@ -98,7 +99,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
   //Core  
   async function respond(response, responseX, oldResponse, type) {
     checkTimeup = [];
-    
+    console.log('responding');
     const embed = new Discord.MessageEmbed()
       .setTitle('TeamMatch')
       .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap))
@@ -168,7 +169,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           else logs.batting[responseX.id] = [(logs.batting[responseX.id])[(logs.batting[responseX.id]).length - 1]];
           
           bowlSwap = response
-          const dm = await (await batSwap.send(`Your turn to bowl`, {embed})).channel;
+          const dm = await (await bowlSwap.send(`Your turn to bowl`, {embed})).channel;
           return bowlCollect(responseX, response, dm);
         }
       }
@@ -185,8 +186,8 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
       return bowlCollect(batsman, bowler, dm);
     }
     
-    //Switch bowler when ball ends.
-    if(remainingBalls <= 0) {
+    //Switch bowler when 2 overs ends.
+    if(remainingBalls === 0) {
       if(batExtra && (logs.bowling[bowler.id]).length > (logs.batting['0000']).length) {
         let interval = setInterval(async function () {
           if((logs.bowling[bowler.id]).length === (logs.batting['0000']).length) {
@@ -194,7 +195,6 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
             await switchBowler();
           }
         }, 1000);
-        return;
       } else {
         let interval = setInterval(async function () {
           if((logs.bowling[bowler.id]).length === (logs.batting[batsman.id]).length) {
@@ -204,7 +204,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         }, 1000);
         return;
       }
-      
+      return;
       function switchBowler() {
         if(totalBalls === 0) {
           console.log('total ball is 0');
