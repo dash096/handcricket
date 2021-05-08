@@ -5,11 +5,11 @@ const getEmoji = require('../index.js');
 const getErrors = require('./getErrors.js');
 const updateBags = require('./updateBag.js');
 
-module.exports = async function innings(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel, oldLogs) {
+module.exports = async function innings(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel) {
   let isInnings2;
   
-  start();
-  function start() {
+  start(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel, oldLogs);
+  function start(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel, oldLogs) {
     let checkTimeup = [];
     
     let target;
@@ -26,48 +26,6 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
     };
     
     lookForEndMessages(players, battingCap, bowlingCap, channel);
-    
-    function getPlayerTagWithLogs(team, type, cap, current) {
-      let playerAndLog = [];
-      team.forEach(player => {
-        let log = (logs[type])[player.id || '0000'];
-        if (type === 'batting') {
-          if (player.id === cap.id) {
-            if(current.id === player.id) playerAndLog.push(`*__${player.tag}__* (cap) ${ log[log.length - 1] }`);
-            else playerAndLog.push(`${player.tag} (captain) ${log[log.length - 1]}`)
-          } else if (player.id === current.id) {
-            playerAndLog.push(`*__${player.tag}__* ${ log[log.length - 1] }`);
-          } else {
-            playerAndLog.push(`${player.tag || `${extraPlayer.tag} (EW)`} ${ log[log.length - 1] }`);
-          }
-        }
-        else {
-          if(!oldLogs) {
-            if(player.id === cap.id) {
-              if(current.id === player.id) playerAndLog.push(`*__${player.tag}__* (cap) 0`);
-              else playerAndLog.push(`${player.tag} (captain) 0`)
-            } else if (player.id === current.id) {
-              playerAndLog.push(`*__${player.tag || `${extraPlayer.tag} (EW)`}__* 0`);
-            } else {
-              playerAndLog.push(`${player.tag || `${extraPlayer.tag} (EW)`} 0`);
-            }
-          } else {
-            if(player.id === cap.id) {
-              if(current.id === player.id) playerAndLog.push(`*__${player.tag}__* (cap) ${ log[log.length - 1] }`);
-              else playerAndLog.push(`${player.tag} (captain) ${log[log.length - 1]}`)
-            } else if (player.id === current.id) {
-              playerAndLog.push(`*__${player.tag || `${extraPlayer.tag} (EW)`}__* ${ log[log.length - 1] }`);
-            } else {
-              playerAndLog.push(`${player.tag || `${extraPlayer.tag} (EW)`} ${ log[log.length - 1] }`);
-            }
-          }
-        }
-      });
-      if (type === 'batting' && oldLogs) {
-        playerAndLog.push(`${target} is the Target Score`);
-      }
-      return playerAndLog.join(`\n`);
-    }
     
     //Push to Logs and get Tags
     let battingTeamTags = [];
@@ -140,7 +98,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
             (logs.bowling)[bowler] = [0];
           });
           isInnings2 = true;
-          return innings(players, bowlingTeam, battingTeam, bowlingCap, battingCap, extraPlayer, channel, logs);
+          return start(players, bowlingTeam, battingTeam, bowlingCap, battingCap, extraPlayer, channel, logs);
         }
         else {
           if (type === 'bat') {
@@ -608,6 +566,49 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         }
       });
     }
+    
+    function getPlayerTagWithLogs(team, type, cap, current) {
+      let playerAndLog = [];
+      team.forEach(player => {
+        let log = (logs[type])[player.id || '0000'];
+        if (type === 'batting') {
+          if (player.id === cap.id) {
+            if(batExtra && current.id === player.id) playerAndLog.push(`*__${player.tag}__* (EW) ${ log[log.length - 1] }`);
+            else if(current.id === player.id) playerAndLog.push(`*__${player.tag}__* (cap) ${ log[log.length - 1] }`);
+            else playerAndLog.push(`${player.tag} (captain) ${log[log.length - 1]}`)
+          } else if (player.id === current.id) {
+            playerAndLog.push(`*__${player.tag}__* ${ log[log.length - 1] }`);
+          } else {
+            playerAndLog.push(`${player.tag || `${extraPlayer.tag} (EW)`} ${ log[log.length - 1] }`);
+          }
+        }
+        else {
+          if(!oldLogs) {
+            if(player.id === cap.id) {
+              if(current.id === player.id) playerAndLog.push(`*__${player.tag}__* (cap) 0`);
+              else playerAndLog.push(`${player.tag} (captain) 0`)
+            } else if (player.id === current.id) {
+              playerAndLog.push(`*__${player.tag || `${extraPlayer.tag} (EW)`}__* 0`);
+            } else {
+              playerAndLog.push(`${player.tag || `${extraPlayer.tag} (EW)`} 0`);
+            }
+          } else {
+            if(player.id === cap.id) {
+              if(current.id === player.id) playerAndLog.push(`*__${player.tag}__* (cap) ${ log[log.length - 1] }`);
+              else playerAndLog.push(`${player.tag} (captain) ${log[log.length - 1]}`)
+            } else if (player.id === current.id) {
+              playerAndLog.push(`*__${player.tag || `${extraPlayer.tag} (EW)`}__* ${ log[log.length - 1] }`);
+            } else {
+              playerAndLog.push(`${player.tag || `${extraPlayer.tag} (EW)`} ${ log[log.length - 1] }`);
+            }
+          }
+        }
+      });
+      if (type === 'batting' && oldLogs) {
+        playerAndLog.push(`${target} is the Target Score`);
+      }
+      return playerAndLog.join(`\n`);
+    }
   }
 }
 
@@ -619,14 +620,14 @@ function getIndex(team, player) {
 function whoIsNext(res, type, extraPlayer, isInnings2) {
   if (res === 'end') {
     if (isInnings2) return ' BowlingTeam Won'
-    return ' Second Innings Starts';
+    else return ' Second Innings Starts';
   }
   else {
     if (type === 'bat') {
-      return ` Next batsman is ${res.tag || extraPlayer.tag + ' (EW)'}`;
+      return ` Next batsman is ${res.tag}`;
     }
     else {
-      return ` Next bowler is ${res.tag || extraPlayer.tag + ' (EW)'}`;
+      return ` Next bowler is ${res.tag}`;
     }
   }
 }
