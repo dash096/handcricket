@@ -5,7 +5,7 @@ const getEmoji = require('../index.js');
 const getErrors = require('./getErrors.js');
 const updateBags = require('./updateBag.js');
 
-module.exports = async function innings(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel) {
+module.exports = async function innings(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel, oldLogs) {
   let isInnings2;
   
   start(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel, oldLogs);
