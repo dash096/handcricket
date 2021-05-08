@@ -51,10 +51,6 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
     let remainingBalls = 12;
 
     function startInnings() {
-      console.log('Innings2',
-        isInnings2,
-        'oLogs',
-        oldLogs);
       let batsman = battingTeam[0];
       let bowler = bowlingTeam[0];
       bowler.send(embed).then(message => {
@@ -71,13 +67,13 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
     let bowlSwap;
 
     const embed = new Discord.MessageEmbed()
-    .setTitle('TeamMatch')
-    .addField('Batting Team',
-      getPlayerTagWithLogs(battingTeam, 'batting', battingCap, battingTeam[0]))
-    .addField('Bowling Team',
-      getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, bowlingTeam[0]))
-    .setColor(embedColor)
-    .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
+      .setTitle('TeamMatch')
+      .addField('Batting Team',
+        getPlayerTagWithLogs(battingTeam, 'batting', battingCap, battingTeam[0]))
+      .addField('Bowling Team',
+        getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, bowlingTeam[0]))
+      .setColor(embedColor)
+      .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
     channel.send(embed);
     startInnings();
 

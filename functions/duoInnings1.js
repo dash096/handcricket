@@ -33,7 +33,6 @@ module.exports = async function(batsman, bowler, message, post) {
   loopBatCollect();
 
   async function loopBallCollect() {
-    //Return if timeout.
     if (timeoutDecider === false) return;
     
     try {
@@ -41,6 +40,7 @@ module.exports = async function(batsman, bowler, message, post) {
         m => m.author.id === bowler.id,
         { max: 1, time: 30000, errors: ["time"] }
       );
+      if(timeoutDecider === false) return;
       const m = msgs.first();
       let c = m.content;
       //change c if magikball
@@ -113,6 +113,7 @@ module.exports = async function(batsman, bowler, message, post) {
         m => m.author.id === batsman.id,
         { max: 1, time: 30000, errors: ["time"] }
       );
+      if(timeoutDecider === false) return;
       const m = msgs.first();
       let c = m.content;
       let newScore = parseInt(await batArray[batArray.length - 1]) + parseInt(c);

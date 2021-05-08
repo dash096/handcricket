@@ -49,6 +49,7 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
       const msgs = await bowler.dmChannel.awaitMessages( m => m.author.id === bowler.id,
         {max: 1, time: 30000, errors: ['time']}
       );
+      if(timeoutDecider === false) return;
       const m = msgs.first();
       let c = m.content;
       //change c if magikball
@@ -119,6 +120,7 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
       const msgs = await batsman.dmChannel.awaitMessages( m => m.author.id === batsman.id,
           {max: 1, time: 30000, errors: ['time']}
       );
+      if(timeoutDecider === false) return;
       const m = msgs.first();
       let c = m.content;
       let bowled = await ballArray[ballArray.length - 1];
