@@ -40,6 +40,8 @@ module.exports = {
     //Reveal some letters
     reveal(); 
     reveal();
+    reveal();
+    reveal();
     if(Math.random() < 0.1) {
       reveal();
     }
