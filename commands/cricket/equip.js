@@ -28,10 +28,10 @@ module.exports = {
     
     let decor = 
     decorsData.find(
-      decor => decor.toLowerCase() == args.sort(a => -1).join('_')
-    ) || 
-    decorsData.find(
       decor => decor.toLowerCase() == `${args.join('_')}`
+    ) ||
+    decorsData.find(
+      decor => decor.toLowerCase() == args.sort(a => -1).join('_')
     ) ||
     decorsData.find(
       decor => decor.toLowerCase() == args[0]
