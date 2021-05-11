@@ -265,10 +265,4 @@ async function random() {
   });
   
   rando = rando.join('');
-  
-  if(fs.readdirSync('./temp').find(file => file == rando)) {
-    return 'si8z8zizxp';
-  } else {
-    return rando;
-  }
 }
