@@ -83,10 +83,10 @@ module.exports = async (message, client) => {
       for(const player in players) {
         const data = await db.findOne({_id: player.id});
         if(!data) {
-          message.reply(getErrors({error: 'data', player}));
+          message.reply(getErrors({error: 'data', user: player}));
           return 'err';
         } else if (data.status === true) {
-          message.reply(getErrors({error: 'engaged', player}));
+          message.reply(getErrors({error: 'engaged', user: player}));
           return 'err';
         }
       }

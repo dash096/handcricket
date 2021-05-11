@@ -1,22 +1,17 @@
-const fs = require('fs');
 const db = require("../schemas/player.js");
 const Discord = require("discord.js");
 const secondInnings = require("./duoInnings2.js");
 const updateBag = require('./updateBag.js');
 const getEmoji = require('../index.js');
 const embedColor = require('./getEmbedColor.js');
-const getField = require('./getField.js');
 
 module.exports = async function(batsman, bowler, message, post) {
   const { channel, author, mentions, content } = message;
   
-  const fieldImagePath = `./temp/${await random()}.png`;
   const embed = new Discord.MessageEmbed()
     .setTitle("Cricket Match - First Innings")
     .addField(batsman.username + " - Batsman", 0, true)
     .addField(bowler.username + " - Bowler", 0, true)
-    .attachFiles('./assets/field/field.png')
-    .setImage('attachment://field.png')
     .setColor(embedColor);
   await batsman.send(embed);
   await bowler.send(embed);
@@ -107,7 +102,6 @@ module.exports = async function(batsman, bowler, message, post) {
         bowler.send("Match ended as you were inactive");
         batsman.send("Match ended as the bowler was inactive");
         if (post === true) channel.send(`Match ended due to inactivity.. Sadge`);
-        await fs.unlink(fieldImagePath, (e) => { if(e) console.log('error on deleting', e) });
       }
       return changeStatus(batsman, bowler);
     }
@@ -133,7 +127,6 @@ module.exports = async function(batsman, bowler, message, post) {
         batsman.send(`**${batsman.username}(You)** forfeited`);
         bowler.send(`**${batsman.username}** forfeited`);
         if (post == true) channel.send(`${batsman.tag} forfeited..`);
-        await fs.unlink(fieldImagePath, (e) => { if(e) console.log('error on deleting', e) });
         return;
       } //Communication
       else if (isNaN(c)) {
@@ -195,8 +188,6 @@ module.exports = async function(batsman, bowler, message, post) {
           .setTitle("Cricket Match - First Innings")
           .addField(batsman.username + " - Batsman", newScore, true)
           .addField(bowler.username + " - Bowler", 0, true)
-          .attachFiles(fieldImagePath)
-          .setImage(`attachment://${(fieldImagePath.split('/')).pop()}`)
           .setColor(embedColor);
 
         await batsman.send(`You hit ${c} and you were bowled ${bowled}, **Scoreboard**`, { embed });
@@ -211,7 +202,6 @@ module.exports = async function(batsman, bowler, message, post) {
         batsman.send("Match ended as you were inactive.");
         bowler.send("Match ended as the batsman was inactive.");
         if (post === true) channel.send(`Match ended due to inactivity.. Sadge`);
-        await fs.unlink(fieldImagePath, (e) => { if(e) console.log('error on deleting', e) });
       }
       return changeStatus(batsman, bowler);
     }
@@ -254,15 +244,4 @@ async function letBowlerChooseMagik(rando, bowler, batsman) {
     console.log(e);
     return 'err'
   }
-}
-
-async function random() {
-  let rando = [];
-  let possible = [1, 'a', 2, 'e', 3, 'i', 4, 'o', 5, 'u', 6, 7, 8, 'q', 9, 'z', '_'];
-  
-  await possible.forEach(async () => {
-    await rando.push(possible[Math.floor(Math.random() * possible.length)]);
-  });
-  
-  rando = rando.join('');
 }

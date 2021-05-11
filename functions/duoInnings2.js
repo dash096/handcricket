@@ -5,10 +5,9 @@ const rewards = require('./rewards.js');
 const updateBag = require('./updateBag.js');
 const serverID = process.env.SERVERID;
 const embedColor = require('./getEmbedColor.js');
-const getField = require('./getField.js');
 
 //shuffled
-module.exports = async function(bowler, batsman, boS, baB, message, post, fieldImagePath) {
+module.exports = async function(bowler, batsman, boS, baB, message, post) {
   const emoji = await getEmoji('coin');
   
   const { channel } = message;
@@ -23,8 +22,6 @@ module.exports = async function(bowler, batsman, boS, baB, message, post, fieldI
     .setTitle('Cricket Match - Second Innings')
     .addField(batsman.username + ' - Batsman', 0, true)
     .addField(bowler.username + ' - Bowler', target, true)
-    .attachFiles('./assets/field/field.png')
-    .setImage('attachment://field.png')
     .setColor(embedColor);
 
   //Embeds
@@ -66,7 +63,6 @@ module.exports = async function(bowler, batsman, boS, baB, message, post, fieldI
         bowler.send('You forfeited');
         batsman.send(`**${bowler.username}** forfeited`);
         if(post === true) channel.send('Match ended sadge, ' + `${bowler.tag} forfeited`);
-        await fs.unlink(fieldImagePath, (e) => { if(e) console.log('error while deleting field', e) });
         return changeStatus(batsman,bowler);
       } //Communicatiom
       else if (isNaN(c) && c != 'magikball') {
@@ -113,7 +109,6 @@ module.exports = async function(bowler, batsman, boS, baB, message, post, fieldI
         bowler.send('Match ended as u were unactive for a long time');
         batsman.send('Match ended as the batsman was inactive.');
         if(post === true) channel.send('Match ended sadge');
-        await fs.unlink(fieldImagePath, (e) => { if(e) console.log('error on deleting', e) });
       }
       return changeStatus(batsman,bowler);
     }
@@ -141,7 +136,6 @@ module.exports = async function(bowler, batsman, boS, baB, message, post, fieldI
         batsman.send('You forfeited');
         bowler.send(`**${batsman.username}** forfeited`);
         if(post === true) channel.send('Match ended sadge, ' + `${batsman.tag} forfeited`);
-        await fs.unlink(fieldImagePath, (e) => { if(e) console.log('error while deleting field', e) });
         return changeStatus(batsman,bowler);
       } //Communication
       else if (isNaN(c)) {
@@ -182,7 +176,6 @@ module.exports = async function(bowler, batsman, boS, baB, message, post, fieldI
           await batsman.send(`Hehe! Bowler guessed you, Wicket! You lost sadge..`);
           await bowler.send(`Wicket! You guessed the batsman. You won a grand amount of ${emoji} ${coins}!`);
           if(post === true) channel.send(`Wicket! The bowler won!`);
-          await fs.unlink(fieldImagePath, (e) => { if(e) console.log('error while deleting field', e) });
           return rewards(bowler, batsman, coins, boS, boB, baS, baB, message);
         } else {
           useDot = true;
@@ -212,7 +205,6 @@ module.exports = async function(bowler, batsman, boS, baB, message, post, fieldI
 
         changeStatus(batsman, bowler);
         timeoutDecider = false;
-        await fs.unlink(fieldImagePath, (e) => { if(e) console.log('error on deleting', e) });
         return;
       } //Target
       else if (parseInt(newScore) >= target) {
@@ -232,7 +224,6 @@ module.exports = async function(bowler, batsman, boS, baB, message, post, fieldI
         
         changeStatus(batsman,bowler);
         timeoutDecider = false;
-        await fs.unlink(fieldImagePath, (e) => { if(e) console.log('error on deleting', e) });
         return;
       }
       //Push
@@ -245,8 +236,6 @@ module.exports = async function(bowler, batsman, boS, baB, message, post, fieldI
           .setTitle('Cricket Match - Second Innings')
           .addField(batsman.username + ' - Batsman', parseInt(newScore), true)
           .addField(bowler.username + ' - Bowler', target, true)
-          .attachFiles(fieldImagePath)
-          .setImage(`attachment://${(fieldImagePath.split('/')).pop()}`)
           .setColor(embedColor);
 
         batsman.send(`You hit ${c} and you were bowled ${ballArray[ballArray.length - 1]}`, {embed});
@@ -261,7 +250,6 @@ module.exports = async function(bowler, batsman, boS, baB, message, post, fieldI
         batsman.send('Match ended as you were inactive');
         bowler.send('Match ended as the batsmam was inactive');
         if(post === true) channel.send('Match ended sadge');
-        await fs.unlink(fieldImagePath, (e) => { if(e) console.log('error on deleting', e) });
       }
       return changeStatus(batsman,bowler);
     }

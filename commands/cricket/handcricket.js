@@ -5,7 +5,6 @@ const getTarget = require("../../functions/getTarget.js");
 const firstInnings = require("../../functions/duoInnings1.js");
 const executeTeamMatch = require("../../functions/teamMatch.js");
 const executeDuoMatch = require("../../functions/duoMatch.js");
-const getFieldImage = require("../../functions/getField.js");
 
 module.exports = {
   name: "handcricket",
