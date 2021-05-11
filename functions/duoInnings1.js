@@ -176,7 +176,7 @@ module.exports = async function(batsman, bowler, message, post) {
         await batsman.send("Wicket! The bowler bowled " + ballArray[ballArray.length - 1]);
         await bowler.send(`Wicket! The batsman hit ${c}${dot(c, bowled, useDot)}`);
         if (post === true) await channel.send(`**${batsman.tag}** wicket!!! He hit ${c}${dot(c, bowled, useDot)}, and was bowled ${ballArray[ballArray.length - 1]} by **${bowler.username}**`);
-        await secondInnings( batsman, bowler, batArray[batArray.length - 1] + 1, await ballArray.length, message, post, fieldImagePath);
+        await secondInnings( batsman, bowler, batArray[batArray.length - 1] + 1, await ballArray.length, message, post);
         return;
       } //Push
       else {
