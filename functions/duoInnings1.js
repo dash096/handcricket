@@ -1,17 +1,22 @@
+const fs = require('fs');
 const db = require("../schemas/player.js");
 const Discord = require("discord.js");
 const secondInnings = require("./duoInnings2.js");
 const updateBag = require('./updateBag.js');
 const getEmoji = require('../index.js');
 const embedColor = require('./getEmbedColor.js');
+const getField = require('./getField.js');
 
 module.exports = async function(batsman, bowler, message, post) {
   const { channel, author, mentions, content } = message;
   
+  const fieldImagePath = `./temp/${await random()}.png`;
   const embed = new Discord.MessageEmbed()
     .setTitle("Cricket Match - First Innings")
     .addField(batsman.username + " - Batsman", 0, true)
     .addField(bowler.username + " - Bowler", 0, true)
+    .attachFiles('./assets/field/field.png')
+    .setImage('attachment://field.png')
     .setColor(embedColor);
   await batsman.send(embed);
   await bowler.send(embed);
@@ -84,6 +89,7 @@ module.exports = async function(batsman, bowler, message, post) {
         }
         let magikRando = availableRando[Math.floor(Math.random() * ([1, 2, 3, 4, 5]).length)];
         let bowledMagik = await letBowlerChooseMagik(magikRando, bowler, batsman);
+        if(bowledMagik == 'err') throw 'Timeup';
         useMagik = [true, magikRando];
         ballArray.push(parseInt(bowledMagik));
         return loopBallCollect();
@@ -101,6 +107,7 @@ module.exports = async function(batsman, bowler, message, post) {
         bowler.send("Match ended as you were inactive");
         batsman.send("Match ended as the bowler was inactive");
         if (post === true) channel.send(`Match ended due to inactivity.. Sadge`);
+        await fs.unlink(fieldImagePath, (e) => { if(e) console.log('error on deleting', e) });
       }
       return changeStatus(batsman, bowler);
     }
@@ -126,6 +133,7 @@ module.exports = async function(batsman, bowler, message, post) {
         batsman.send(`**${batsman.username}(You)** forfeited`);
         bowler.send(`**${batsman.username}** forfeited`);
         if (post == true) channel.send(`${batsman.tag} forfeited..`);
+        await fs.unlink(fieldImagePath, (e) => { if(e) console.log('error on deleting', e) });
         return;
       } //Communication
       else if (isNaN(c)) {
@@ -175,16 +183,20 @@ module.exports = async function(batsman, bowler, message, post) {
         await batsman.send("Wicket! The bowler bowled " + ballArray[ballArray.length - 1]);
         await bowler.send(`Wicket! The batsman hit ${c}${dot(c, bowled, useDot)}`);
         if (post === true) await channel.send(`**${batsman.tag}** wicket!!! He hit ${c}${dot(c, bowled, useDot)}, and was bowled ${ballArray[ballArray.length - 1]} by **${bowler.username}**`);
-        await secondInnings( batsman, bowler, batArray[batArray.length - 1] + 1, await ballArray.length, message, post );
+        await secondInnings( batsman, bowler, batArray[batArray.length - 1] + 1, await ballArray.length, message, post, fieldImagePath);
         return;
       } //Push
       else {
         useDot = false;
         batArray.push(newScore);
+        
+        await getField(parseInt(c), fieldImagePath); //updateImage
         const embed = new Discord.MessageEmbed()
           .setTitle("Cricket Match - First Innings")
           .addField(batsman.username + " - Batsman", newScore, true)
           .addField(bowler.username + " - Bowler", 0, true)
+          .attachFiles(fieldImagePath)
+          .setImage(`attachment://${(fieldImagePath.split('/')).pop()}`)
           .setColor(embedColor);
 
         await batsman.send(`You hit ${c} and you were bowled ${bowled}, **Scoreboard**`, { embed });
@@ -199,6 +211,7 @@ module.exports = async function(batsman, bowler, message, post) {
         batsman.send("Match ended as you were inactive.");
         bowler.send("Match ended as the batsman was inactive.");
         if (post === true) channel.send(`Match ended due to inactivity.. Sadge`);
+        await fs.unlink(fieldImagePath, (e) => { if(e) console.log('error on deleting', e) });
       }
       return changeStatus(batsman, bowler);
     }
@@ -239,5 +252,23 @@ async function letBowlerChooseMagik(rando, bowler, batsman) {
     return parseInt(c);
   } catch (e) {
     console.log(e);
+    return 'err'
+  }
+}
+
+async function random() {
+  let rando = [];
+  let possible = [1, 'a', 2, 'e', 3, 'i', 4, 'o', 5, 'u', 6, 7, 8, 'q', 9, 'z', '_'];
+  
+  await possible.forEach(async () => {
+    await rando.push(possible[Math.floor(Math.random() * possible.length)]);
+  });
+  
+  rando = rando.join('');
+  
+  if(fs.readdirSync('./temp').find(file => file == rando)) {
+    return 'si8z8zizxp';
+  } else {
+    return rando;
   }
 }

@@ -17,11 +17,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/deadfool09/handcricket.git"
+    "url": "git+https://github.com/dash096/handcricket.git"
   },
   "keywords": [
     "discord",
-    "heroku"
+    "dispo"
   ],
   "author": "dash",
   "license": "ISC",

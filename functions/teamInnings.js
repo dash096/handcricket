@@ -558,34 +558,35 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
       let playerAndLog = [];
       team.forEach(player => {
         let log = (logs[type])[player.id || '0000'];
+        let { id, username } = player;
         if (type === 'batting') {
-          if (player.id === cap.id) {
-            if (batExtra && current.id === player.id) playerAndLog.push(`*__${player.tag}__* (EW) ${ log[log.length - 1] }`);
-            else if (current.id === player.id) playerAndLog.push(`*__${player.tag}__* (cap) ${ log[log.length - 1] }`);
-            else playerAndLog.push(`${player.tag} (captain) ${log[log.length - 1]}`)
-          } else if (player.id === current.id) {
-            playerAndLog.push(`*__${player.tag}__* ${ log[log.length - 1] }`);
+          if (id === cap.id) {
+            if (batExtra && current.id === id) playerAndLog.push(`*__${username}__* (EW)     ${ log[log.length - 1] }`);
+            else if (current.id === id) playerAndLog.push(`*__${username}__* (cap)     ${ log[log.length - 1] }`);
+            else playerAndLog.push(`${username} (cap)     ${log[log.length - 1]}`)
+          } else if (id === current.id) {
+            playerAndLog.push(`*__${username}__*     ${ log[log.length - 1] }`);
           } else {
-            playerAndLog.push(`${player.tag || `${extraPlayer.tag} (EW)`} ${ log[log.length - 1] }`);
+            playerAndLog.push(`${username || `${extraPlayer.username} (EW)`}     ${ log[log.length - 1] }`);
           }
         } else {
           if (!oldLogs) {
-            if (player.id === cap.id) {
-              if (current.id === player.id) playerAndLog.push(`*__${player.tag}__* (cap) 0`);
-              else playerAndLog.push(`${player.tag} (captain) 0`)
-            } else if (player.id === current.id) {
-              playerAndLog.push(`*__${player.tag || `${extraPlayer.tag} (EW)`}__* 0`);
+            if (id === cap.id) {
+              if (current.id === id) playerAndLog.push(`*__${username}__* (cap)     0`);
+              else playerAndLog.push(`${username} (cap)     0`)
+            } else if (id === current.id) {
+              playerAndLog.push(`*__${username || `${extraPlayer.username} (EW)`}__*     0`);
             } else {
-              playerAndLog.push(`${player.tag || `${extraPlayer.tag} (EW)`} 0`);
+              playerAndLog.push(`${username || `${extraPlayer.username} (EW)`}     0`);
             }
           } else {
-            if (player.id === cap.id) {
-              if (current.id === player.id) playerAndLog.push(`*__${player.tag}__* (cap) ${ log[log.length - 1] }`);
-              else playerAndLog.push(`${player.tag} (captain) ${log[log.length - 1]}`)
-            } else if (player.id === current.id) {
-              playerAndLog.push(`*__${player.tag || `${extraPlayer.tag} (EW)`}__* ${ log[log.length - 1] }`);
+            if (id === cap.id) {
+              if (current.id === id) playerAndLog.push(`*__${username}__* (cap)     ${ log[log.length - 1] }`);
+              else playerAndLog.push(`${username} (cap)     ${log[log.length - 1]}`)
+            } else if (id === current.id) {
+              playerAndLog.push(`*__${username || `${extraPlayer.username} (EW)`}__*     ${ log[log.length - 1] }`);
             } else {
-              playerAndLog.push(`${player.tag || `${extraPlayer.tag} (EW)`} ${ log[log.length - 1] }`);
+              playerAndLog.push(`${username || `${extraPlayer.username} (EW)`}     ${ log[log.length - 1] }`);
             }
           }
         }

@@ -402,58 +402,58 @@ module.exports = async (message, client) => {
       }
     }
   }
-};
-
-function checkAvailablity(picks, team) {
-  for(const pick of picks) {
-    if(!team.find(player => player.id == pick.id)) {
-      return false;
-    }
-  }
-  return true;
-}
-
-async function askForTheExtraWicketBatsman(players, team, channel) {
-  try {
-    const captain = team[0];
-    await channel.send(`${captain} you have an extraWicket in your team. Ping a teamMember who is gonna play that extraWicket`);
-    const msgs = await channel.awaitMessages(m => m.author.id === captain.id, {
-      time: 30000,
-      max: 1,
-      errors: ['time'],
-    });
-    const message = msgs.first();
-    const content = message.content.trim().toLowerCase();
-    const ping = message.mentions.users.first();
-    
-    if (!ping) {
-      message.reply(`${captain} ping a member`);
-      return await askForTheExtraWicketBatsman(team, channel);
-    } else if(content === 'end' || content === 'cancel') {
-      message.reply('TeamMatch aborted');
-      return 'err';
-    } else if (!team.find(player => player.id === ping.id)) {
-      message.reply(`${captain} ping a member who is in your team`);
-      return await askForTheExtraWicketBatsman(team, channel);
-    } else {
-      return ping;
-    } 
-  } catch (e) {
-    console.log(e);
-    changeStatus(players, false);
-    message.reply(`${cap1} ${getErrors({error: 'time'})}`);
-    return 'err';
-  }
-}
-
-async function changeStatus(a, boolean) {
-  if(boolean !== true && boolean !== false) return;
   
-  if(Array.isArray(a)) {
-    for(const b of a) {
-      await db.findOneAndUpdate({_id: b.id}, { $set: {status: boolean}});
+  function checkAvailablity(picks, team) {
+    for(const pick of picks) {
+      if(!team.find(player => player.id == pick.id)) {
+        return false;
+      }
     }
-  } else {
-    await db.findOneAndUpdate({_id: a.id}, { $set: {status: boolean}});
+    return true;
   }
-}
+
+  async function askForTheExtraWicketBatsman(players, team, channel) {
+    try {
+      const captain = team[0];
+      await channel.send(`${captain} you have an extraWicket in your team. Ping a teamMember who is gonna play that extraWicket`);
+      const msgs = await channel.awaitMessages(m => m.author.id === captain.id, {
+        time: 30000,
+        max: 1,
+        errors: ['time'],
+      });
+      const message = msgs.first();
+      const content = message.content.trim().toLowerCase();
+      const ping = message.mentions.users.first();
+    
+      if (!ping) {
+        message.reply(`${captain} ping a member`);
+        return await askForTheExtraWicketBatsman(team, channel);
+      } else if(content === 'end' || content === 'cancel') {
+        message.reply('TeamMatch aborted');
+        return 'err';
+      } else if (!team.find(player => player.id === ping.id)) {
+        message.reply(`${captain} ping a member who is in your team`);
+        return await askForTheExtraWicketBatsman(team, channel);
+      } else {
+        return ping;
+      } 
+    } catch (e) {
+      console.log(e);
+      changeStatus(players, false);
+      channel.send(`${cap1} ${getErrors({error: 'time'})}`);
+      return 'err';
+    }
+  }
+
+  async function changeStatus(a, boolean) {
+    if(boolean !== true && boolean !== false) return;
+    
+    if(Array.isArray(a)) {
+      for(const b of a) {
+        await db.findOneAndUpdate({_id: b.id}, { $set: {status: boolean}});
+      }
+    } else {
+      await db.findOneAndUpdate({_id: a.id}, { $set: {status: boolean}});
+    }
+  }
+};

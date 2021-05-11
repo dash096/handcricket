@@ -5,9 +5,10 @@ const rewards = require('./rewards.js');
 const updateBag = require('./updateBag.js');
 const serverID = process.env.SERVERID;
 const embedColor = require('./getEmbedColor.js');
+const getField = require('./getField.js');
 
 //shuffled
-module.exports = async function(bowler, batsman, boS, baB, message, post) {
+module.exports = async function(bowler, batsman, boS, baB, message, post, fieldImagePath) {
   const emoji = await getEmoji('coin');
   
   const { channel } = message;
@@ -22,6 +23,8 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
     .setTitle('Cricket Match - Second Innings')
     .addField(batsman.username + ' - Batsman', 0, true)
     .addField(bowler.username + ' - Bowler', target, true)
+    .attachFiles('./assets/field/field.png')
+    .setImage('attachment://field.png')
     .setColor(embedColor);
 
   //Embeds
@@ -63,6 +66,7 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
         bowler.send('You forfeited');
         batsman.send(`**${bowler.username}** forfeited`);
         if(post === true) channel.send('Match ended sadge, ' + `${bowler.tag} forfeited`);
+        await fs.unlink(fieldImagePath, (e) => { if(e) console.log('error while deleting field', e) });
         return changeStatus(batsman,bowler);
       } //Communicatiom
       else if (isNaN(c) && c != 'magikball') {
@@ -92,6 +96,7 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
         let magikRando = availableRando[Math.floor(Math.random() * availableRando.length)];
         bowler.send(`MagikBall on, now choose any one of these - ${magikRando} or ${magikRando + 1}`);
         let bowledMagik = await letBowlerChooseMagik(magikRando, bowler, batsman);
+        if(bowledMagik == 'err') throw 'Timeup';
         useMagik = [true, magikRando];
         ballArray.push(parseInt(bowledMagik));
         return loopBallCollect();
@@ -108,6 +113,7 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
         bowler.send('Match ended as u were unactive for a long time');
         batsman.send('Match ended as the batsman was inactive.');
         if(post === true) channel.send('Match ended sadge');
+        await fs.unlink(fieldImagePath, (e) => { if(e) console.log('error on deleting', e) });
       }
       return changeStatus(batsman,bowler);
     }
@@ -135,6 +141,7 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
         batsman.send('You forfeited');
         bowler.send(`**${batsman.username}** forfeited`);
         if(post === true) channel.send('Match ended sadge, ' + `${batsman.tag} forfeited`);
+        await fs.unlink(fieldImagePath, (e) => { if(e) console.log('error while deleting field', e) });
         return changeStatus(batsman,bowler);
       } //Communication
       else if (isNaN(c)) {
@@ -175,6 +182,7 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
           await batsman.send(`Hehe! Bowler guessed you, Wicket! You lost sadge..`);
           await bowler.send(`Wicket! You guessed the batsman. You won a grand amount of ${emoji} ${coins}!`);
           if(post === true) channel.send(`Wicket! The bowler won!`);
+          await fs.unlink(fieldImagePath, (e) => { if(e) console.log('error while deleting field', e) });
           return rewards(bowler, batsman, coins, boS, boB, baS, baB, message);
         } else {
           useDot = true;
@@ -204,6 +212,7 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
 
         changeStatus(batsman, bowler);
         timeoutDecider = false;
+        await fs.unlink(fieldImagePath, (e) => { if(e) console.log('error on deleting', e) });
         return;
       } //Target
       else if (parseInt(newScore) >= target) {
@@ -223,18 +232,22 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
         
         changeStatus(batsman,bowler);
         timeoutDecider = false;
+        await fs.unlink(fieldImagePath, (e) => { if(e) console.log('error on deleting', e) });
         return;
       }
       //Push
       else {
         useDot = false;
         batArray.push(parseInt(newScore));
-
+        
+        await getField(parseInt(c), fieldImagePath);
         const embed = new Discord.MessageEmbed()
-        .setTitle('Cricket Match - Second Innings')
-        .addField(batsman.username + ' - Batsman', parseInt(newScore), true)
-        .addField(bowler.username + ' - Bowler', target, true)
-        .setColor(embedColor);
+          .setTitle('Cricket Match - Second Innings')
+          .addField(batsman.username + ' - Batsman', parseInt(newScore), true)
+          .addField(bowler.username + ' - Bowler', target, true)
+          .attachFiles(fieldImagePath)
+          .setImage(`attachment://${(fieldImagePath.split('/')).pop()}`)
+          .setColor(embedColor);
 
         batsman.send(`You hit ${c} and you were bowled ${ballArray[ballArray.length - 1]}`, {embed});
         bowler.send(`${batsman.username} hit ${c}${dot(c, bowled, useDot)}`, {embed});
@@ -248,6 +261,7 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
         batsman.send('Match ended as you were inactive');
         bowler.send('Match ended as the batsmam was inactive');
         if(post === true) channel.send('Match ended sadge');
+        await fs.unlink(fieldImagePath, (e) => { if(e) console.log('error on deleting', e) });
       }
       return changeStatus(batsman,bowler);
     }
@@ -299,5 +313,6 @@ async function letBowlerChooseMagik(rando, bowler, batsman) {
     return parseInt(c);
   } catch (e) {
     console.log(e);
+    return 'err';
   }
 }
