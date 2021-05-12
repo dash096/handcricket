@@ -13,13 +13,26 @@ module.exports = async function(batsman, bowler, message, post) {
     .addField(batsman.username + " - Batsman", 0, true)
     .addField(bowler.username + " - Bowler", 0, true)
     .setColor(embedColor);
-  await batsman.send(embed);
-  await bowler.send(embed);
+  
+  try {
+    await batsman.send(embed);
+  } catch (e) {
+    console.log(e);
+    message.reply(`Cant send message to ${batsman}`);
+    return;
+  }
+  try {
+    await bowler.send(embed);
+  } catch (e) {
+    console.log(e);
+    message.reply(`Cant send message to ${bowler}`);
+    return;
+  }
   
   let noOfUsedDots = 0;
   let useDot = false;
   let useMagik = [false, 1];
-  
+  7
   const batArray = [0];
   const ballArray = [0];
 
@@ -38,7 +51,7 @@ module.exports = async function(batsman, bowler, message, post) {
     try {
       const msgs = await bowler.dmChannel.awaitMessages(
         m => m.author.id === bowler.id,
-        { max: 1, time: 30000, errors: ["time"] }
+        { max: 1, time: 60000, errors: ["time"] }
       );
       if(timeoutDecider === false) return;
       const m = msgs.first();
@@ -112,7 +125,7 @@ module.exports = async function(batsman, bowler, message, post) {
     try {
       const msgs = await batsman.dmChannel.awaitMessages(
         m => m.author.id === batsman.id,
-        { max: 1, time: 30000, errors: ["time"] }
+        { max: 1, time: 60000, errors: ["time"] }
       );
       if(timeoutDecider === false) return;
       const m = msgs.first();
