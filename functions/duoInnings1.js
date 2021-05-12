@@ -32,7 +32,7 @@ module.exports = async function(batsman, bowler, message, post) {
   let noOfUsedDots = 0;
   let useDot = false;
   let useMagik = [false, 1];
-  7
+  
   const batArray = [0];
   const ballArray = [0];
 
