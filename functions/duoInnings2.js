@@ -231,7 +231,6 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
         useDot = false;
         batArray.push(parseInt(newScore));
         
-        await getField(parseInt(c), fieldImagePath);
         const embed = new Discord.MessageEmbed()
           .setTitle('Cricket Match - Second Innings')
           .addField(batsman.username + ' - Batsman', parseInt(newScore), true)
