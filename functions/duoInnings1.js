@@ -18,6 +18,7 @@ module.exports = async function(batsman, bowler, message, post) {
     await batsman.send(embed);
   } catch (e) {
     console.log(e);
+    changeStatus(batsman, bowler);
     message.reply(`Cant send message to ${batsman}`);
     return;
   }
@@ -25,6 +26,7 @@ module.exports = async function(batsman, bowler, message, post) {
     await bowler.send(embed);
   } catch (e) {
     console.log(e);
+    changeStatus(batsman, bowler);
     message.reply(`Cant send message to ${bowler}`);
     return;
   }

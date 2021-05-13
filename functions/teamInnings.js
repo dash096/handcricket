@@ -246,7 +246,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
       dm.awaitMessages(
         message => message.author.id === bowler.id, {
           max: 1,
-          time: 20000,
+          time: 45000,
           errors: ['time']
         }
       ).then(async messages => {
@@ -333,7 +333,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
       dm.awaitMessages(
         message => message.author.id === batsman.id, {
           max: 1,
-          time: 20000,
+          time: 45000,
           errors: ['time']
         }
       ).then(async messages => {
@@ -344,8 +344,22 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           let content = message.content.trim().toLowerCase();
           let bowled = (logs.bowling[bowler.id])[(logs.bowling[bowler.id]).length - 1];
           let oldScore = (logs.batting[batsman.id])[(logs.batting[batsman.id]).length - 1];
-          if (batExtra === true) oldScore = (logs.batting['0000'])[(logs.batting['0000']).length - 1];
-
+          let teamScore = await getTeamScore(logs.batting);
+          if (batExtra) oldScore = (logs.batting['0000'])[(logs.batting['0000']).length - 1];
+          
+          
+          //teamScores
+          async function getTeamScore(scores) {
+            let score;
+            let players = Object.keys(scores);
+            await players.forEach(player => {
+              let playerScore = (scores[player]) [(scores[player]).length - 1];
+              score += playerScore;
+            });
+            console.log(score);
+            return score;
+          }
+          
           //End
           if (content === 'end' || content === 'cancel') {
             batsman.send('You cant exit a teamMatch, if you go afk, the CPU will bat/bowl.');
@@ -394,7 +408,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
             });
             return respond(response, bowler, batsman, 'bat');
           } //Target++
-          else if (oldLogs && (parseInt(oldScore) + parseInt(content)) >= parseInt(target)) {
+          else if (oldLogs && (oldScore + parseInt(content)) >= target) {
             if (batExtra) logs.batting['0000'].push(oldScore + parseInt(content));
             else logs.batting[batsman.id].push(oldScore + parseInt(content));
 
@@ -580,6 +594,8 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
               playerAndLog.push(`${username || `${extraPlayer.username} (EW)`}     0`);
             }
           } else {
+            log = (oldLogs.batting[id]) [(oldLogs.batting[id]).length - 1];
+            if(bowlExtra) log = (oldLogs.batting['0000']) [(oldLogs.batting['0000']).length - 1];
             if (id === cap.id) {
               if (current.id === id) playerAndLog.push(`*__${username}__* (cap)     ${ log[log.length - 1] }`);
               else playerAndLog.push(`${username} (cap)     ${log[log.length - 1]}`)
@@ -610,9 +626,9 @@ function whoIsNext(res, type, extraPlayer, isInnings2) {
     else return ' Second Innings Starts';
   } else {
     if (type === 'bat') {
-      return ` Next batsman is ${res.tag}`;
+      return ` Next batsman is ${res.username || extraPlayer.username}`;
     } else {
-      return ` Next bowler is ${res.tag}`;
+      return ` Next bowler is ${res.username || extraPlayer.username}`;
     }
   }
 }
