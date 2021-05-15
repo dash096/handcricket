@@ -87,6 +87,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         return;
       } else if (!oldLogs) {
         if (response === 'end') {
+          if(isInnings) return;
           let batsmen = Object.keys(logs.batting);
           let bowlers = Object.keys(logs.bowling);
           batsmen.forEach(batsman => {
