@@ -54,7 +54,7 @@ module.exports = {
     let equipped = userDecors.equipped || [];
     if(!userHasDecor || userHasDecor.length === 0 || !equipped.find(userDecor => userDecor == decor)) {
       userHasDecor = Object.keys(userDecors).filter(userDecor => userDecor == decor.split('_').reverse().join('_'));
-      if(!userHasDecor) {
+      if(!userHasDecor || userHasDecor.length === 0) {
         message.reply('Do you even own that?');
         return;
       }
