@@ -594,8 +594,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
               playerAndLog.push(`${username || `${extraPlayer.username} (EW)`}     0`);
             }
           } else {
-            log = (oldLogs.batting[id]) [(oldLogs.batting[id]).length - 1];
-            if(bowlExtra) log = (oldLogs.batting['0000']) [(oldLogs.batting['0000']).length - 1];
+            if(type === 'bowling') log = (  (  oldLogs  [  'batting'  ]  )  [  id || '0000'  ]  ) [  0  ];
             if (id === cap.id) {
               if (current.id === id) playerAndLog.push(`*__${username}__* (cap)     ${ log[log.length - 1] }`);
               else playerAndLog.push(`${username} (cap)     ${log[log.length - 1]}`)
