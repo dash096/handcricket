@@ -87,7 +87,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         return;
       } else if (!oldLogs) {
         if (response === 'end') {
-          if(isInnings) return;
+          if(isInnings2) return;
           let batsmen = Object.keys(logs.batting);
           let bowlers = Object.keys(logs.bowling);
           batsmen.forEach(batsman => {
@@ -253,7 +253,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
       ).then(async messages => {
           if (isInnings2 === 'over') return;
           if (!oldLogs && isInnings2) return;
-
+          
           let message = messages.first();
           let content = message.content.trim().toLowerCase();
           //End
@@ -467,6 +467,9 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
             checkTimeup.push(batsman.id);
           }
 
+          if (isInnings2 && !oldLogs) return;
+          if (isInnings2 === 'over') return;
+
           //Turn Based on batExtra
           if (batExtra && logs.batting['0000'].length === logs.bowling[bowler.id].length) {
             return batCollect(batsman, bowler, dm);
@@ -474,9 +477,6 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           else if (!batExtra && logs.batting[batsman.id].length === logs.bowling[bowler.id].length) {
             return batCollect(batsman, bowler, dm);
           }
-
-          if (isInnings2 && !oldLogs) return;
-          if (isInnings2 === 'over') return;
 
           //CPU auto hit
           let rando = ([1, 2, 3, 4, 5, 6])[Math.floor([Math.random() * ([1, 2, 3, 4, 5, 6]).length])];
