@@ -427,7 +427,6 @@ module.exports = async (message, client) => {
       const ping = message.mentions.users.first();
     
       if (!ping) {
-        message.reply(`${captain} ping a member`);
         return await askForTheExtraWicketBatsman(players, team, channel);
       } else if(content === 'end' || content === 'cancel') {
         message.reply('TeamMatch aborted');
