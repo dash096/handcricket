@@ -64,11 +64,13 @@ module.exports = async (message, user, target) => {
       let tossWinner = await rollToss(message, user, target, post, batsman, bowler);
       if(tossWinner.id === user.id) {
         let chosen = await chooseToss(message, user, target);
+        if(chosen == 'err') return;
         let batsman = chosen[0];
         let bowler = chosen[1];
         start(message, batsman, bowler, post, max);
       } else {
         let chosen = await chooseToss(message, target, user);
+        if(chosen == 'err') return;
         let batsman = chosen[0];
         let bowler = chosen[1];
         start(message, batsman, bowler, post, max);

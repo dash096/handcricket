@@ -38,7 +38,8 @@ module.exports = async function chooseToss(message, winner, loser) {
     await changeStatus(winner, false);
     await changeStatus(loser, false);
     channel.send(getErrors({error: 'time'}));
-    return console.log(e);
+    console.log(e);
+    return 'err'
   }
 }
 

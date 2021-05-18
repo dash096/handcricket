@@ -24,14 +24,14 @@ module.exports = {
       return;
     }
     
-    let command = args.shift().slice(prefix.length);
+    let command = (args.shift()).slice(prefix.length);
     
     let decor = 
     decorsData.find(
-      decor => decor.toLowerCase() == `${args.join('_')}`
-    ) ||
+      decor => decor.toLowerCase() == args.join('_')
+    ) || 
     decorsData.find(
-      decor => decor.toLowerCase() == args.sort(a => -1).join('_')
+      decor => decor.toLowerCase() == (args[1] + '_' + args[0])
     ) ||
     decorsData.find(
       decor => decor.toLowerCase() == args[0]
@@ -50,9 +50,10 @@ module.exports = {
       message.reply(`${args.join(' ')} is not a valid decor, it should be like \`e.equip <name_in_your_bag>\``);
       return;
     }
+    
     let userHasDecor = Object.keys(userDecors).filter(userDecor => userDecor == decor);
     let equipped = userDecors.equipped || [];
-    if(!userHasDecor || userHasDecor.length === 0 || !equipped.find(userDecor => userDecor == decor)) {
+    if(!userHasDecor || userHasDecor.length === 0) {
       userHasDecor = Object.keys(userDecors).filter(userDecor => userDecor == decor.split('_').reverse().join('_'));
       if(!userHasDecor || userHasDecor.length === 0) {
         message.reply('Do you even own that?');

@@ -509,7 +509,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
             return respond(response, bowler, batsman, 'bat');
           } //Target++
           else if (oldLogs && (oldScore + parseInt(rando)) >= target) {
-            if (batExtra) logs.batting['0000'].push(oldScore + parseInt(content));
+            if (batExtra) logs.batting['0000'].push(oldScore + parseInt(rando));
             else logs.batting[batsman.id].push(oldScore + parseInt(content));
             const embed = new Discord.MessageEmbed()
             let next = 'Batting Team Won';
