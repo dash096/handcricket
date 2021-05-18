@@ -5,7 +5,7 @@ const updateBag = require('./updateBag.js');
 const getEmoji = require('../index.js');
 const embedColor = require('./getEmbedColor.js');
 
-module.exports = async function(batsman, bowler, message, post) {
+module.exports = async function(batsman, bowler, message, post, max) {
   const { channel, author, mentions, content } = message;
   
   const embed = new Discord.MessageEmbed()
@@ -76,7 +76,7 @@ module.exports = async function(batsman, bowler, message, post) {
         batsman.send(`\`${bowler.username}\`: ${c}`);
         return loopBallCollect();
       } //Number Validation
-      else if (parseInt(c) > 6) {
+      else if (parseInt(c) > max) {
         m.react("❌");
         bowler.send("Max number that can be bowled is 6");
         return loopBallCollect();
@@ -97,7 +97,7 @@ module.exports = async function(batsman, bowler, message, post) {
         if(bal == 'err') {
           return loopBallCollect();
         }
-        let magikRando = availableRando[Math.floor(Math.random() * ([1, 2, 3, 4, 5]).length)];
+        let magikRando = ([1, 2, 3, 4, 5, 6]) [Math.floor(Math.random() * ([1, 2, 3, 4, 5, 6]).length)];
         let bowledMagik = await letBowlerChooseMagik(magikRando, bowler, batsman);
         if(bowledMagik == 'err') throw 'Timeup';
         useMagik = [true, magikRando];
@@ -152,7 +152,7 @@ module.exports = async function(batsman, bowler, message, post) {
         batsman.send("Wait for the ball dude");
         return loopBatCollect();
       } //Number validation
-      else if (c > 6) {
+      else if (parseInt(c) > max) {
         batsman.send("Max number that can be hit is 6");
         return loopBatCollect();
       } //Magik Ball
@@ -165,9 +165,7 @@ module.exports = async function(batsman, bowler, message, post) {
         useMagik = [false, 1];
       } //Dot
       else if (parseInt(c) === 0) {
-        const updateBagObj = {}; 
-        updateBagObj.channel = batsman;
-        const bal = await updateBag('dots', 1, await db.findOne({_id: batsman.id}), updateBagObj);
+        const bal = await updateBag('dots', 1, await db.findOne({_id: batsman.id}), { channel: batsman });
         if(bal == 'err') {
           return loopBatCollect();
         } else if(noOfUsedDots === 3) {
@@ -191,7 +189,7 @@ module.exports = async function(batsman, bowler, message, post) {
         await batsman.send("Wicket! The bowler bowled " + ballArray[ballArray.length - 1]);
         await bowler.send(`Wicket! The batsman hit ${c}${dot(c, bowled, useDot)}`);
         if (post === true) await channel.send(`**${batsman.tag}** wicket!!! He hit ${c}${dot(c, bowled, useDot)}, and was bowled ${ballArray[ballArray.length - 1]} by **${bowler.username}**`);
-        await secondInnings( batsman, bowler, batArray[batArray.length - 1] + 1, await ballArray.length, message, post);
+        await secondInnings( batsman, bowler, batArray[batArray.length - 1] + 1, await ballArray.length, message, post, max);
         return;
       } //Push
       else {

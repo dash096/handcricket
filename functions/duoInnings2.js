@@ -7,7 +7,7 @@ const serverID = process.env.SERVERID;
 const embedColor = require('./getEmbedColor.js');
 
 //shuffled
-module.exports = async function(bowler, batsman, boS, baB, message, post) {
+module.exports = async function(bowler, batsman, boS, baB, message, post, max) {
   const emoji = await getEmoji('coin');
   
   const { channel } = message;
@@ -73,7 +73,7 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
         m.reply('Wait for the batsman to hit your previous ball!');
         return loopBallCollect();
       } //Number Validation
-      else if (parseInt(c) > 6) {
+      else if (parseInt(c) > max) {
         m.react('❌');
         return loopBallCollect();
       } //Magik Ball
@@ -88,7 +88,7 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
           bowler.send('Magik ball can only be used once. sad.');
           return loopBallCollect();
         } 
-        let availableRando = [1, 2, 3, 4, 5];
+        let availableRando = [1, 2, 3, 4, 5, 6];
         let magikRando = availableRando[Math.floor(Math.random() * availableRando.length)];
         bowler.send(`MagikBall on, now choose any one of these - ${magikRando} or ${magikRando + 1}`);
         let bowledMagik = await letBowlerChooseMagik(magikRando, bowler, batsman);
@@ -142,7 +142,7 @@ module.exports = async function(bowler, batsman, boS, baB, message, post) {
         bowler.send(`\`${batsman.username}\`: ${c}`);
         return loopBatCollect();
       } //Number Validation
-      else if (parseInt(c) > 6) {
+      else if (parseInt(c) > max) {
         m.react('❌');
         return loopBatCollect();
       } //Turn Based
