@@ -11,6 +11,9 @@ const rollToss = require('./rollToss.js');
 module.exports = async (message, client) => {
   const { channel, content, author, mentions } = message;
   
+  let max = 6;
+  if(content.toLowerCase().includes('--ten')) max = 10;
+  
   await getReactors();
   
   //Collect reactions from sent Embed and next Choose Caps.
@@ -347,7 +350,7 @@ module.exports = async (message, client) => {
         return;
       }
       
-      executeTeamMatch(players, batOrder, bowlOrder, batTeam[0], bowlTeam[0], extraPlayer, channel);
+      executeTeamMatch(players, batOrder, bowlOrder, batTeam[0], bowlTeam[0], extraPlayer, channel, max);
       
       async function pick(cap, team, type) {
         try {

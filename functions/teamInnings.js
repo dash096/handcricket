@@ -5,7 +5,7 @@ const getEmoji = require('../index.js');
 const getErrors = require('./getErrors.js');
 const updateBags = require('./updateBag.js');
 
-module.exports = async function innings(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel, oldLogs) {
+module.exports = async function innings(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel, max, oldLogs) {
   let isInnings2;
 
   start(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel, oldLogs);
@@ -273,8 +273,8 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           else if (!batExtra && logs.bowling[bowler.id].length > logs.batting[batsman.id].length) {
             bowler.send('Wait for the batsman to hit the previous ball');
             return bowlCollect(batsman, bowler, dm);
-          } //Limited to 6
-          else if (parseInt(content) > 6 || parseInt(content) < 0) {
+          } //Limited to max
+          else if (parseInt(content) > max || parseInt(content) < 0) {
             bowler.send('This match is limited to 6');
             return bowlCollect(batsman, bowler, dm);
           } //Log
@@ -364,8 +364,8 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           else if (!batExtra && logs.batting[batsman.id].length === logs.bowling[bowler.id].length) {
             batsman.send('Wait for the ball dude');
             return batCollect(batsman, bowler, dm);
-          } //Limit to 6
-          else if (parseInt(content) > 6 || parseInt(content) < 0) {
+          } //Limit to max
+          else if (parseInt(content) > max || parseInt(content) < 0) {
             batsman.send('This match is limited to 6');
             return batCollect(batsman, bowler, dm);
           } //Wicket
