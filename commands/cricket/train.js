@@ -63,7 +63,7 @@ module.exports = {
       //Set cooldown
       const timestamps = client.cooldowns.get('train');
       timestamps.set(author.id, Date.now());
-      setTimeout(() => timestamps.delete(author.id), 60 * 1000);
+      setTimeout(() => timestamps.delete(author.id), 60 * 10 * 1000);
     } catch (e) {
       console.log(e);
     } finally {
