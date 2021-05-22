@@ -128,7 +128,6 @@ module.exports = async (message, client) => {
     let i = team1.length + team2.length;
       
     await team1.forEach( async player => {
-      i -= 1;
       if (!player.tag) {
         if(team1.length > 2) {
           channel.send(`${team1[0]}, you have an extraWicket in your team, whos gonna play with that?`);
@@ -142,13 +141,13 @@ module.exports = async (message, client) => {
         team1Tags.push(player.tag);
       }
         
+      i -= 1;
       if(i === 0) {
         executeSchedule(players, team1, team2, team1Tags, team2Tags, extraPlayer, channel);
       }
     });
       
     await team2.forEach( async player => {
-      i -= 1;
       if (!player.tag) {
         if(team2.length > 2) {
           extraPlayer = await askForTheExtraWicketBatsman(players, team2, channel);
@@ -160,6 +159,7 @@ module.exports = async (message, client) => {
         team2Tags.push(player.tag);
       }
       
+      i -= 1;
       if(i === 0) {
         executeSchedule(players, team1, team2, team1Tags, team2Tags, extraPlayer, channel);
       }
