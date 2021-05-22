@@ -32,7 +32,7 @@ module.exports = ({client, prefix, topggapi}) => {
       return message.reply(getErrors({error, user}));
     }
     
-    if(commandStatus === true && data.status === true) {
+    if(commandStatus === true && data.status === true && command.name != 'hc' ) {
       if(args[0] !== 'end' || args[0] !== 'x') return message.reply('You are already engaged in a game');
     }
     

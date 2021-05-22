@@ -24,7 +24,7 @@ module.exports = async ({client, topggapi}) => {
     }
   }
   
-  let voteReminder = 'Your vote timer has refreshed, you can vote here: https://top.gg/bot/804346878027235398/vote, join the community server for 2x Coin Boost, A Helmet and more! Do `e.invite` for the link'
+  let voteReminder = 'Your vote timer has refreshed, you can vote here: https://top.gg/bot/804346878027235398/vote,\nJoin the community server for 2x Coin Boost, A Helmet and more!\nDo `e.invite` for the link'
   async function joinVote(data) {
     const user = await client.users.fetch(data._id);
     user.send(voteReminder);

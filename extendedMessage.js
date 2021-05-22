@@ -10,10 +10,10 @@ class ExtAPIMessage extends APIMessage {
         this.data.allowed_mentions.replied_user = false;
         delete this.options.allowedMentions.repliedUser;
       } //Ping off
-      /*else {
+      else {
         if(this.data.allowed_mentions === undefined) this.data.allowed_mentions = {};
         this.data.allowed_mentions.replied_user = false;
-      }*/
+      }
       
       if (this.options.replyTo !== undefined) {
         Object.assign(this.data, { message_reference: { message_id: this.options.replyTo.id } });

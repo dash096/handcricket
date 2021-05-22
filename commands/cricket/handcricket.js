@@ -35,8 +35,7 @@ module.exports = {
     }
 
     if (userdata.status === true) {
-      let error = "engaged";
-      message.reply(getErrors({ error, user }));
+      message.reply(getErrors({ error: 'engaged', user }));
       return;
     }
 

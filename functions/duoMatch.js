@@ -22,7 +22,7 @@ module.exports = async (message, user, target) => {
   if(content.toLowerCase().includes('post')) post = true;
   if(content.toLowerCase().includes('ten')) max = 10;
   
-  await message.reply(`<@${target.id}> Do you wanna play with **${user.username}**? Type \`y\`/\`n\` in 30s\n Append(add to the end) \`--post\` to the message to post the scores in this channel`);
+  await channel.send(`<@${target.id}> Do you wanna play with **${user.username}**? Type \`y\`/\`n\` in 30s\n Append(add to the end) \`--post\` to the message to post the scores in this channel`);
     
   //Execute check will
   const will = await checkWill();
@@ -89,7 +89,7 @@ module.exports = async (message, user, target) => {
 async function start(message, batsman, bowler, post, max) {
   const { content, author, channel, mentions } = message;
   
-  await message.reply(`${batsman} and ${bowler}, get to your dms to play!`);
+  await channel.send(`${batsman} and ${bowler}, get to your dms to play!`);
   await changeStatus(batsman, true);
   await changeStatus(bowler, true);
   firstInnings(batsman, bowler, message, post, max);

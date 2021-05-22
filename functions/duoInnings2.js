@@ -267,7 +267,7 @@ function getCoins(data, message) {
   if(message.guild.id == serverID) {
     coinMulti = coinMulti * 2;
   }
-  const rando = Math.random() * coinMulti * 696;
+  const rando = Math.random() * coinMulti * 3636;
   const coins = rando.toFixed(0);
   return coins;
 }
