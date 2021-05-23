@@ -12,6 +12,7 @@ module.exports = (message) => {
   'Want to challenge? Tournaments are held in the Community Server!',
   'You can play with a group of peeps. \`e.hc team\`!',
   'Noticed any bug? Report it to the official server for a neat reward!',
+  'There is a daily decor market in official server',
   ]; //Last three Guild, Total index 8 
   return `\n**Tip:** ${tips[Math.floor(Math.random() * 8)]}`;
 };

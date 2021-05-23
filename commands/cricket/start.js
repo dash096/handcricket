@@ -18,7 +18,7 @@ module.exports = {
 
     player.save(e => {
       if (e) {
-        message.reply("You are already a player nab.");
+        message.reply("No u.");
         return;
       } else {
         message.reply("Get the party started");

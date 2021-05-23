@@ -1,7 +1,7 @@
 const { APIMessage, Structures } = require("discord.js");
 
 class ExtAPIMessage extends APIMessage {
-    resolveData() {
+    resolveData(pingOn) {
       if (this.data) return this;
       super.resolveData();
       
@@ -9,9 +9,9 @@ class ExtAPIMessage extends APIMessage {
         if(this.data.allowed_mentions === undefined) this.data.allowed_mentions = {};
         this.data.allowed_mentions.replied_user = false;
         delete this.options.allowedMentions.repliedUser;
-      } //Ping off
-      else {
-        if(this.data.allowed_mentions === undefined) this.data.allowed_mentions = {};
+      }
+      else if (!pingOn) {
+        this.data.allowed_mentions = {};
         this.data.allowed_mentions.replied_user = false;
       }
       
@@ -28,7 +28,7 @@ class Message extends Structures.get("Message") {
     }
 
     edit(content, options) {
-      return super.edit(ExtAPIMessage.create(this, content, options).resolveData());
+      return super.edit(ExtAPIMessage.create(this, content, options, { replyTo: this }).resolveData(true));
     }
 }
 

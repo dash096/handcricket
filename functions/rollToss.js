@@ -9,12 +9,15 @@ module.exports = async (message, user, target) => {
   const { channel, mentions, content } = message;
   const tossEmoji = await getEmoji('toss');
   
+  const userData = await db.findOne({ _id: user.id });
+  const targetData = await db.findOne({ _id: target.id });
+  
   const rolling = await channel.send(`Rolling the ${tossEmoji} Lucky Coin....`);
   
   //User High Toss
-  if (user.tossMulti > target.tossMulti) {
+  if (userData.tossMulti > targetData.tossMulti) {
     //Users with roll.
-    if (roll < user.tossMulti) {
+    if (roll < userData.tossMulti) {
       setTimeout( () => {
         rolling.edit(`${user} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
       }, 3000);
@@ -28,9 +31,9 @@ module.exports = async (message, user, target) => {
   }
 
   //Target High Toss
-  else if (user.tossMulti < target.tossMulti) {
+  else if (userData.tossMulti < targetData.tossMulti) {
     //Target wins with roll
-    if (roll < target.tossMulti) {
+    if (roll < targetData.tossMulti) {
       setTimeout( () => {
         rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
       }, 3000);
@@ -44,7 +47,7 @@ module.exports = async (message, user, target) => {
   }
 
   //Equal Multi Toss
-  else if (target.tossMulti === user.tossMulti) {
+  else if (targetData.tossMulti === userData.tossMulti) {
     const roll2 = Math.floor(Math.random() * 3);
 
     if (roll2 === 1) { //User wins
@@ -63,6 +66,6 @@ module.exports = async (message, user, target) => {
     setTimeout( () => {
         rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
     }, 3000);
-    return user;
+    return target;
   }
 };

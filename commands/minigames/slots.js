@@ -86,7 +86,7 @@ module.exports = {
           }
         };
         const decider = decideWin();
-        if(random < decider/3) {
+        if(random < decider/4) {
           win = [true, 'decor'];
         } else if (random < decider) {
           win = [true, 'item'];

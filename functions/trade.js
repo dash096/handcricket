@@ -18,13 +18,13 @@ module.exports = async function (itemName, itemAmount, user, target, msg) {
     
     if(oldUserCC < itemAmount) {
       let error = 'lessAssets';
-      msg.reply(getErrors({error, user, itemName}));
+      msg.reply(getErrors({ error, user, itemName }));
       return;
     } else {
       updateCoins(-(parseInt(itemAmount)), userData);
       updateCoins(parseInt(itemAmount), targetData);
       msg.reply(`Successfully Traded ${coinEmoji} ${itemAmount} coins!`);
-      await target.send(`**${user.tag}** sent you ${coinEmoji} ${itemAmount} coins.`);
+      if(targetData.notifs) await target.send(`**${user.username}** sent you ${coinEmoji} ${itemAmount} coins.`);
     }
   } else {
     const userData = await db.findOne({_id: user.id});
@@ -33,8 +33,8 @@ module.exports = async function (itemName, itemAmount, user, target, msg) {
     let e1 = await updateBag(itemName, parseInt(itemAmount), userData, msg);
     updateBag(itemName, -(parseInt(itemAmount)), targetData, msg);
     if(e1 != 'err') {
-      await msg.reply(`Successfully traded ${itemAmount} ${itemName} with **${target.tag}**`);
-      await target.send(`**${user.tag}** sent you ${itemAmount} ${itemName}.`);
+      await msg.reply(`Successfully traded ${itemAmount} ${itemName} with **${target.username}**`);
+      if(targetData.notifs) await target.send(`**${user.username}** sent you ${itemAmount} ${itemName}.`);
     }
   }
 };

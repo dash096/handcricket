@@ -19,7 +19,7 @@ module.exports = {
     
     const data = await db.findOne({_id: target.id});
     
-    message.reply(`**${target.tag}** has ${coinEmoji} ${data.cc} coins.`);
+    message.reply(`**${target.username}** has ${coinEmoji} ${data.cc} coins.`);
     await gain(data, 1, message);
   }
 };

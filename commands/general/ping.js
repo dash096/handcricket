@@ -7,7 +7,7 @@ module.exports = {
     run: async ({message}) => {
       const { content, author, channel, mentions } = message;
       message.reply('Ponging..').then(msg => {
-        msg.edit(`${author}, Pong! ${msg.createdTimestamp - message.createdTimestamp}ms`);
+        msg.edit(`Pong! ${msg.createdTimestamp - message.createdTimestamp}ms`);
       }).catch(e => console.log(e));
     }
 };

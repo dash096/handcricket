@@ -11,7 +11,7 @@ module.exports = {
   description: 'Your daily tasks and to keep you interested',
   category: 'Cricket',
   syntax: 'e.quests',
-  run: async ({message}) => {
+  run: async ({ message }) => {
     const { channel, author, content } = message;
     
     const tickEmoji = await getEmoji('ok');
@@ -21,55 +21,26 @@ module.exports = {
     
     const userQuests = data.quests || {};
     
-    //Status
-    function beFit(name) {
+    function getStat(name, max) {
       let stat;
-      if(!userQuests || !userQuests.beFit) stat = 0;
-      else stat = userQuests.beFit;
-      if(stat === true) {
-        return `${tickEmoji} **${name}** (5/5)`;
-      } else {
-        return `${crossEmoji} **${name}** (${stat}/5)`;
+      if(!userQuests || !userQuests[name]) stat = 0;
+      else stat = userQuests[name];
+      if(Array.isArray(stat)) stat = stat[0];
+      if(stat == true) {
+        return `${tickEmoji} **${name.charAt(0).toUpperCase() + name.slice(1)}** (${max}/${max})`;
       }
-    }
-    function support(name) {
-      let stat;
-      if(!userQuests || !userQuests.support) stat = 0;
-      else stat = userQuests.support;
-      if(userQuests.support == true) {
-        return `${tickEmoji} **${name}** (1/1)`;
-      }
-      return `${crossEmoji} **${name}** (${stat}/1)`;
-    }
-    function tripWin(name) {
-      let stat;
-      if(!userQuests || !userQuests.tripWin) stat = [0];
-      else stat = userQuests.tripWin || [0];
-      if(stat[0] === true) {
-        return `${tickEmoji} **${name}** (3/3)`;
-      }
-      return `${crossEmoji} **${name}** (${stat[0]}/3)`;
-    }
-    function duck(name) {
-      let stat;
-      if(!userQuests || !userQuests.duck) stat = 0;
-      else stat = userQuests.duck;
-      if(userQuests.duck == true) {
-        return `${tickEmoji} **${name}** (1/1)`;
-      }
-      return `${crossEmoji} **${name}** (${stat}/1)`;
+      return `${crossEmoji} **${name.charAt(0).toUpperCase() + name.slice(1)}** (${stat}/${max})`;
     }
     
-    function whatQuest(Name) {
-      let name = Name.charAt(0).toUpperCase() + Name.slice(1);
-      if(name == 'BeFit') {
-        return beFit(name);
-      } else if(name == 'TripWin') {
-        return tripWin(name);
-      } else if(name == 'Support') {
-         return support(name);
-      } else if(name == 'Duck') {
-         return duck(name);
+    function whatQuest(name) {
+      if(name == 'beFit') {
+        return getStat(name, 5);
+      } else if(name == 'tripWin') {
+        return getStat(name, 3);
+      } else if(name == 'support') {
+         return getStat(name, 1);
+      } else if(name == 'duck') {
+         return getStat(name, 1);
       }
     }
     
