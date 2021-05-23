@@ -151,7 +151,9 @@ module.exports = async (message, client) => {
     await team2.forEach( async player => {
       if (!player.tag) {
         if(team2.length > 2) {
+          channel.send(`${team2[0]}, you have an extraWicket in your team, whos gonna play with that?`);
           extraPlayer = await askForTheExtraWicketBatsman(players, team2, channel);
+          if(extraPlayer === 'err') return changeStatus(players, false);
         } else {
           extraPlayer = team2[0];
         }
