@@ -14,6 +14,8 @@ module.exports = async (message, user, target) => {
   
   const rolling = await channel.send(`Rolling the ${tossEmoji} Lucky Coin....`);
   
+  const roll = Math.random();
+  
   //User High Toss
   if (userData.tossMulti > targetData.tossMulti) {
     //Users with roll.
