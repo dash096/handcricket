@@ -232,7 +232,6 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
 
       //Switch bowler when 2 overs ends.
       if (remainingBalls === 0) {
-        console.log('remaining Balls 0');
         if (batExtra && (logs.bowling[bowler.id]).length > (logs.batting['0000']).length) {
           let interval = setInterval(async function () {
             if ((logs.bowling[bowler.id]).length === (logs.batting['0000']).length) {
@@ -256,17 +255,17 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         function switchBowler() {
           if (totalBalls === 0) {
             console.log('total ball is 0');
-            return respond('end');
+            return respond('end', batsman, bowler, 'bowl');
           } else {
             remainingBalls += 12;
 
             let currentIndex = getIndex(bowlingTeam, bowler);
             let response = bowlingTeam[currentIndex + 1] || 'end';
             const embed = new Discord.MessageEmbed()
-            .setTitle('TeamMatch')
-            .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap, batsman))
-            .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, bowler))
-            .setColor(embedColor)
+              .setTitle('TeamMatch')
+              .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap, batsman))
+              .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, bowler))
+              .setColor(embedColor)
             .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
 
             let next = '2 overs over.' + whoIsNext(response, 'bowl', extraPlayer, isInnings2);
