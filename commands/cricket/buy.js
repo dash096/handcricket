@@ -17,7 +17,7 @@ module.exports = {
     const coinEmoji = await getEmoji('coin');
     
     //Get items
-    const itemsArray = await checkItems(message);
+    const itemsArray = await checkItems(message, 'cricket/buy.js');
     if(itemsArray == 'err') return;
     
     //Item Info

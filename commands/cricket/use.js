@@ -24,7 +24,7 @@ module.exports = {
       if(args[0] !== 'lb' && args[0] !== 'lootbox' && args[0] !== 'loot') return;
     }
     
-    const itemArray = await checkItems(message);
+    const itemArray = await checkItems(message, 'cricket/use.js');
     
     if(itemArray == 'err') return;
     let itemAmount = itemArray[1];

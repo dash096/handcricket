@@ -303,7 +303,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           let content = message.content.trim().toLowerCase();
           //End
           if (content === 'end' || content === 'cancel') {
-            bowler.send('You cant exit a teamMatch, if you go afk, the CPU will bat/bowl.');
+            bowler.send('Only team captains should type `e.hc x` in the channel to end.');
             return bowlCollect(batsman, bowler, dm);
           } //Conversation
           else if (isNaN(content)) {
@@ -393,7 +393,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           
           //End
           if (content === 'end' || content === 'cancel') {
-            batsman.send('You cant exit a teamMatch, if you go afk, the CPU will bat/bowl.');
+            batsman.send('Only team captains should type `e.hc x` in the channel to end.');
             return bowlCollect(batsman, bowler, dm);
           } //Conversation
           else if (isNaN(content)) {

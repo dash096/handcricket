@@ -77,7 +77,7 @@ module.exports = async function(batsman, bowler, message, post, max) {
         batsman.send(`\`${bowler.username}\`: ${c}`);
         return loopBallCollect();
       } //Number Validation
-      else if (parseInt(c) > max) {
+      else if (parseInt(c) > max || parseInt(c) < 0) {
         m.react("❌");
         bowler.send("Max number that can be bowled is 6");
         return loopBallCollect();
@@ -152,7 +152,7 @@ module.exports = async function(batsman, bowler, message, post, max) {
         batsman.send("Wait for the ball dude");
         return loopBatCollect();
       } //Number validation
-      else if (parseInt(c) > max) {
+      else if (parseInt(c) > max || parseInt(c) < 0) {
         batsman.send("Max number that can be hit is 6");
         return loopBatCollect();
       } //Magik Ball
@@ -204,7 +204,7 @@ module.exports = async function(batsman, bowler, message, post, max) {
           .addField(bowler.username + " - Bowler", 0, true)
           .setColor(embedColor);
 
-        await batsman.send(`You hit ${c} and you were bowled ${bowled}, **Scoreboard**`, { embed });
+        await batsman.send(`You hit ${c}${dot(c, bowled, useDot)} and you were bowled ${bowled}, **Scoreboard**`, { embed });
         await bowler.send(`Batsman hit ${c}${dot(c, bowled, useDot)}, **Scoreboard**`, { embed });
         if (post === true) await channel.send(`**${batsman.username}** hit ${c}${dot(c, bowled, useDot)}, and was bowled ${bowled} by **${bowler.username}**`, { embed });
         return loopBatCollect();

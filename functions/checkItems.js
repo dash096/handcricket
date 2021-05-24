@@ -6,10 +6,14 @@ module.exports = async function (message, filePath) {
   
   const args = message.content.toLowerCase().trim().split(' ').slice(1);
   
+  if(args.length === 0 && filePath) {
+    message.reply(getErrors({error: 'syntax', filePath}));
+    return 'err';
+  }
+  
   //Check args count
   if(filePath && args.length <= 1 && parseInt(args[0])) {
-    let error = 'syntax';
-    message.reply(getErrors({error, filePath}));
+    message.reply(getErrors({error: 'syntax', filePath}));
     return 'err';
   }
   
