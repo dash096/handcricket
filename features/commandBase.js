@@ -9,6 +9,11 @@ module.exports = ({client, prefix, topggapi}) => {
       content, author, channel, mentions
     } = message;
     
+    if(content.trim().startsWith(`<@${client.user.id}>`)) {
+      message.reply('Oi! My prefix is `e.` Use `e.help` if you want to know more about me :)');
+      return;
+    }
+    
     if (!content.toLowerCase().startsWith(prefix) || author.bot || channel.type === 'dm') return;
     
     //BlackLists
@@ -32,7 +37,12 @@ module.exports = ({client, prefix, topggapi}) => {
       return message.reply(getErrors({error, user}));
     }
     
-    if(commandStatus === true && data.status === true && command.name != 'hc' ) {
+    if(
+      commandStatus === true &&
+      data.status === true &&
+      command.name != 'handcricket' &&
+      command.name != 'help'
+    ) {
       if(args[0] !== 'end' || args[0] !== 'x') return message.reply('You are already engaged in a game');
     }
     

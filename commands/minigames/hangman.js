@@ -68,7 +68,7 @@ module.exports = {
         if(answer.length === 1) letterLives -= 1;
         else wordLives -= 1;
           
-        if(answer == splitted.join('')) {
+        if(answer.toLowerCase().trim() == splitted.join('')) {
           //rewards
           msg.reply('Correct Answer!');
           return;

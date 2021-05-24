@@ -26,7 +26,7 @@ module.exports = async (message, client) => {
     
     //Send and React the Embed
     const embed = new Discord.MessageEmbed()
-      .setTitle(`Join ${author.tag} team match`)
+      .setTitle(`Join ${author.username} team match`)
       .setDescription(`React ${enterEmoji} to join`)
       .setColor(embedColor);
     const collectorMessage = await message.reply(embed);

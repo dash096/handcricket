@@ -4,6 +4,7 @@ const embedColor = require('./getEmbedColor.js');
 const getEmoji = require('../index.js');
 const getErrors = require('./getErrors.js');
 const updateBags = require('./updateBag.js');
+const commentry = require('./getCommentry.js');
 
 module.exports = async function innings(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel, max, oldLogs, target) {
   let isInnings2;
@@ -318,7 +319,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
             bowler.send('Wait for the batsman to hit the previous ball');
             return bowlCollect(batsman, bowler, dm);
           } //Limited to max
-          else if (parseInt(content) > max || parseInt(content) < 0) {
+          else if (parseInt(content) > max || parseInt(content) <= 0) {
             bowler.send('This match is limited to 6');
             return bowlCollect(batsman, bowler, dm);
           } //Log
@@ -408,7 +409,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
             batsman.send('Wait for the ball dude');
             return batCollect(batsman, bowler, dm);
           } //Limit to max
-          else if (parseInt(content) > max || parseInt(content) < 0) {
+          else if (parseInt(content) > max || parseInt(content) <= 0) {
             batsman.send('This match is limited to 6');
             return batCollect(batsman, bowler, dm);
           } //Wicket
@@ -423,6 +424,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
             }
             const embed = new Discord.MessageEmbed()
               .setTitle('TeamMatch')
+              .setDescription(await commentry(bowled, 'W'))
               .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap, batsman))
               .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, bowler))
               .setColor(embedColor)
@@ -446,6 +448,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
             teamScore += parseInt(content);
             const embed = new Discord.MessageEmbed()
               .setTitle('TeamMatch')
+              .setDescription(await commentry(bowled, parseInt(content)))
               .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap, batsman))
               .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, bowler))
               .setColor(embedColor)
@@ -475,6 +478,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
             teamScore += parseInt(content);
             const embed = new Discord.MessageEmbed()
               .setTitle('TeamMatch')
+              .setDescription(await commentry(bowled, parseInt(content)))
               .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap, batsman))
               .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, bowler))
               .setColor(embedColor)
@@ -498,7 +502,9 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           } else if ((checkTimeup.filter(player => player === batsman.id)).length !== 2) {
             checkTimeup.push(batsman.id);
           }
-
+          
+          let bowled = (logs.bowling[bowler.id])[(logs.bowling[bowler.id]).length - 1];
+          
           if (isInnings2 && !oldLogs) return;
           if (isInnings2 === 'over') return;
 
@@ -523,13 +529,13 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           teamScore += parseInt(rando);
           const embed = new Discord.MessageEmbed()
             .setTitle('TeamMatch')
+            .setDescriptiona(await commentry(bowled, rando))
             .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap, batsman))
             .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, bowler))
             .setColor(embedColor)
             .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
 
           //Wicket
-          let bowled = (logs.bowling[bowler.id])[(logs.bowling[bowler.id]).length - 1];
           if (bowled === rando) {
             let currentIndex = getIndex(battingTeam, batsman);
             let response = battingTeam[currentIndex + 1] || 'end';

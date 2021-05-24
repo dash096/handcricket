@@ -77,16 +77,7 @@ module.exports = {
           await gainExp(data, 0.5, message);
           return;
         } else if(isNaN(guess)) {
-          lives -= 1;
-          edit.setDescription('Wrong answer! ' + `\`${guess}\`` + ' is not even a number!');
-          msg.reply(edit);
-          if(lives === 0) {
-            msg.reply('You lost! I thought of ' + number);
-            await gainExp(data, 2, message);
-            return;
-          } else {
-            return play();
-          }
+          return play();
         } else if (guess == number) {
           edit.setDescription('Correct Answer! You are good at guessing!');
           msg.reply(edit);

@@ -4,6 +4,7 @@ const secondInnings = require("./duoInnings2.js");
 const updateBag = require('./updateBag.js');
 const getEmoji = require('../index.js');
 const embedColor = require('./getEmbedColor.js');
+const commentry = require('./getCommentry.js');
 
 module.exports = async function(batsman, bowler, message, post, max) {
   const { channel, author, mentions, content } = message;
@@ -94,9 +95,8 @@ module.exports = async function(batsman, bowler, message, post, max) {
           return loopBallCollect();
         }
         const bal = await updateBag('magikball', 1, await db.findOne({_id: bowler.id}), { channel: bowler });
-        if(bal == 'err') {
-          return loopBallCollect();
-        }
+        if(bal === 'err') return loopBallCollect();
+        
         let magikRando = ([1, 2, 3, 4, 5, 6]) [Math.floor(Math.random() * ([1, 2, 3, 4, 5, 6]).length)];
         let bowledMagik = await letBowlerChooseMagik(magikRando, bowler, batsman);
         if(bowledMagik == 'err') throw 'Timeup';
@@ -188,7 +188,7 @@ module.exports = async function(batsman, bowler, message, post, max) {
         timeoutDecider = false;
         await batsman.send("Wicket! The bowler bowled " + ballArray[ballArray.length - 1]);
         await bowler.send(`Wicket! The batsman hit ${c}${dot(c, bowled, useDot)}`);
-        if (post === true) await channel.send(`**${batsman.tag}** wicket!!! He hit ${c}${dot(c, bowled, useDot)}, and was bowled ${ballArray[ballArray.length - 1]} by **${bowler.username}**`);
+        if (post === true) await channel.send(`**${batsman.username}** wicket!!! He hit ${c}${dot(c, bowled, useDot)}, and was bowled ${ballArray[ballArray.length - 1]} by **${bowler.username}**`);
         await secondInnings( batsman, bowler, batArray[batArray.length - 1] + 1, await ballArray.length, message, post, max);
         return;
       } //Push
@@ -196,15 +196,17 @@ module.exports = async function(batsman, bowler, message, post, max) {
         useDot = false;
         batArray.push(newScore);
         
+        const comment = await commentry(bowled, parseInt(c));
         const embed = new Discord.MessageEmbed()
           .setTitle("Cricket Match - First Innings")
+          .setDescription(comment)
           .addField(batsman.username + " - Batsman", newScore, true)
           .addField(bowler.username + " - Bowler", 0, true)
           .setColor(embedColor);
 
         await batsman.send(`You hit ${c} and you were bowled ${bowled}, **Scoreboard**`, { embed });
         await bowler.send(`Batsman hit ${c}${dot(c, bowled, useDot)}, **Scoreboard**`, { embed });
-        if (post === true) await channel.send(`**${batsman.tag}** hit ${c}${dot(c, bowled, useDot)}, and was bowled ${bowled} by **${bowler.username}**`, { embed });
+        if (post === true) await channel.send(`**${batsman.username}** hit ${c}${dot(c, bowled, useDot)}, and was bowled ${bowled} by **${bowler.username}**`, { embed });
         return loopBatCollect();
       }
     } catch (e) {
