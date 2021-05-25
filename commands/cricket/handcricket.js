@@ -23,11 +23,6 @@ module.exports = {
       _id: user.id,
     });
 
-    if (
-      content.toLowerCase().trim() == "e.hc end" ||
-      content.toLowerCase().trim() == "e.hc x"
-    ) return;
-
     if (userdata.status === true) {
       message.reply(getErrors({ error: 'engaged', user }));
       return;

@@ -27,6 +27,10 @@ module.exports = ({client, prefix, topggapi}) => {
     const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
     if (!command) return;
     
+    if(command.name == 'handcricket' && args[0] === 'x' || args[0] === 'end') {
+      return;
+    }
+    
     //Status
     let commandStatus = command.status || false;
     
@@ -40,10 +44,9 @@ module.exports = ({client, prefix, topggapi}) => {
     if(
       commandStatus === true &&
       data.status === true &&
-      command.name != 'handcricket' &&
       command.name != 'help'
     ) {
-      if(args[0] !== 'end' || args[0] !== 'x') return message.reply('You are already engaged in a game');
+      return message.reply('You are already engaged in a game');
     }
     
     let targets = mentions.users;

@@ -19,6 +19,9 @@ const player = new mongoose.Schema({
   loses: {
     type: Number, default: 0
   },
+  purpleCaps: {
+    type: Number, default: 0
+  },
   coinMulti: {
     type: Number, default: 0.2
   },

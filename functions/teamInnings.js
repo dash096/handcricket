@@ -178,14 +178,14 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           //rewards for bowlingTeam
           const randoCoins = Math.floor(Math.random() * 696);
           channel.send(`BowlingTeam recieved ${await getEmoji('coin')} ${randoCoins} each.`);
-          return rewards(bowlingTeam, battingTeam, randoCoins, ducks, STRs);
+          return rewards(channel, bowlingTeam, battingTeam, oldLogs, logs, randoCoins, ducks, STRs);
         } else if (response === 'win') {
           isInnings2 = 'over';
           changeStatus(players, false)
           //rewards for battingTeam
           const randoCoins = Math.floor(Math.random() * 696);
-          rewards(battingTeam, bowlingTeam, randoCoins, ducks, STRs);
           channel.send(`BattingTeam recieved ${await getEmoji('coin')} ${randoCoins} each.`);
+          return rewards(channel, battingTeam, bowlingTeam, oldLogs, logs, randoCoins, ducks, STRs);
         } else {
           if (type === 'bat') {
             if (batExtra) {
@@ -424,7 +424,6 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
             batsman.send('This match is limited to 6');
             return batCollect(batsman, bowler, dm);
           } 
-          
           logs.currentBalls += 1;
           //Wicket
           if (parseInt(content) === bowled) {
@@ -611,18 +610,18 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
     async function lookForEndMessages(players, cap1, cap2, channel) {
       const messageCollector = channel.createMessageCollector(
         message => {
-          let c = message.content.toLowerCase().trim();
           if (message.author.bot === true) return;
+          let c = message.content.toLowerCase().trim();
           if (c == 'e.hc x' || c == 'e.hc end') return true;
         }
       )
-
+      
       messageCollector.on('collect', (message) => {
         if (message.author.id === cap1.id || message.author.id === cap2.id) {
           respond(`forceEnd: ${message.author.tag} ended.`);
           messageCollector.stop();
         } else if (players.find(player => player.id == message.author.id)) {
-          message.reply('Only captains can!');
+          message.reply('Only captains can end a match!');
         }
       });
     }
@@ -715,8 +714,44 @@ async function changeStatus(a, boolean) {
   }
 }
 
-async function rewards(wonTeam, lostTeam, randoCoins, ducks, STRs) {
+async function rewards(channel, wonTeam, lostTeam, i1Logs, i2Logs, randoCoins, ducks, STRs) {
   console.log(STRs);
+  
+  //PurpleCaps
+  let purpleCapHolder = await getPurpleCapHolder();
+  let purpleCapHolderData = await db.findOne({ _id: purpleCapHolder });
+  if(purpleCapHolderData._id) {
+    let oldCaps = purpleCapHolderData.purpleCaps || 0;
+    await db.findOneAndUpdate({ _id: purpleCapHolder }, {
+      $set: {
+        purpleCaps: oldCaps + 1
+      }
+    });
+    console.log('purple', purpleCapHolder);
+  }
+  
+  async function getPurpleCapHolder() {
+    let inningsOne = await getInningsHighestScore(i1Logs.batting);
+    let inningsTwo = await getInningsHighestScore(i2Logs.batting);
+    if(inningsOne[1] > inningsTwo[1]) {
+      return inningsOne[0];
+    } else {
+      return inningsTwo[0];
+    }
+    async function getInningsHighestScore(iLogs) {
+      let logs = [];
+      let scores = [];
+      await Object.values(iLogs).forEach(log => {
+        logs.push(log);
+      });
+      await logs.forEach(log => {
+        scores.push(log[log.length - 1]);
+      });
+      let highScore = Math.max(...scores);
+      let capHolderId = Object.keys(iLogs).find(key => (iLogs[key]) [iLogs[key].length - 1] == highScore);
+      return [capHolderId, highScore];
+    }
+  }
   
   await ducks.forEach(async player => {
     let data = await db.findOne({ _id: player.id });
@@ -752,7 +787,7 @@ async function rewards(wonTeam, lostTeam, randoCoins, ducks, STRs) {
       });
       return;
     } else {
-      const STR = ( data.strikeRate + ( STRs[player.id] [0] ) / ( STRs[player.id] [1] ) ) / 2;
+      const STR = ( data.strikeRate + STRs[player.id] [0] / STRs[player.id] [1] ) / 2;
       
       console.log(bal, wins, STR);
       
@@ -782,7 +817,7 @@ async function rewards(wonTeam, lostTeam, randoCoins, ducks, STRs) {
       });
       return;
     } else {
-      const STR = ( data.strikeRate + ( STRs[player.id] [0] ) / ( STRs[player.id] [1] ) ) / 2;
+      const STR = ( data.strikeRate + STRs[player.id] [0] / STRs[player.id] [1] ) / 2;
       
       console.log(loses, STR);
       

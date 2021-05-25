@@ -36,14 +36,22 @@ module.exports = async ({client, topggapi}) => {
         const user = await client.users.fetch(newVotesArray[i]);
         if((await topggapi.hasVoted(user.id)) === false) return;
         const cooldown = Date.now() + (60 * 60 * 12 * 1000);
-        const data = await db.findOne({_id: user.id});
-        user.send('Thanks for voting, you got ' + await rewards(user));
+        const data = await db.findOne({ _id: user.id });
+        await user.send('Thanks for voting, you got ' + await rewards(user));
         let quests = data.quests || {};
         let streak = data.voteStreak || 0;
         quests.support = true;
         streak += 1;
-        await db.findOneAndUpdate({ _id: user.id }, { $set: { voteClaim: true, voteCooldown: cooldown, quests: quests, voteStreak: streak }});
+        await db.findOneAndUpdate({ _id: user.id }, {
+          $set: {
+            voteClaim: true,
+            voteCooldown: cooldown,
+            quests: quests,
+            voteStreak: streak
+          }
+        });
       } catch (e) {
+        console.log(e);
         votes = newVotes;
         return;
       }

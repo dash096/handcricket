@@ -8,12 +8,12 @@ module.exports = {
   aliases: ['lb', 'rank'],
   description: 'Check the leaderboard of StrikeRate, Wins, Xp and Balance',
   category: 'Cricket',
-  syntax: 'e.leaderboard <strike/wins/coins>',
-  cooldown: 10,
+  syntax: 'e.leaderboard <strike/wins/coin/xp/purples>',
+  cooldown: 20,
   run: async ({ message, args, client }) => {
     const { guild, content, mentions, channel, author } = message;
     
-    let availableTypes = ['strike', 'wins', 'coins', 'xp'];
+    let availableTypes = ['strike', 'wins', 'coins', 'xp', 'purple'];
     let type = args[0];
     
     if(!availableTypes.find(type => type == args[0])) {
@@ -34,8 +34,11 @@ module.exports = {
     } else if (type == 'xp') {
       type = 'xp';
       datas = (await db.find().sort({ xp: -1 })).slice(0, 10);
+    } else if (type == 'purple') {
+      type = 'purpleCaps';
+      datas = (await db.find().sort({ purpleCaps: -1 })).slice(0, 10);
     }
-    
+
     let leaderboardText = await getLeaderboardText(datas, type, args[0]);
     
     let embed = new Discord.MessageEmbed()
