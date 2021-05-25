@@ -246,7 +246,7 @@ module.exports = async (message, client) => {
         if(team1.length <= team2.length) {
           return ListenToCaptain2();
         } else if(content.startsWith('extra')) {
-          if(availabePlayers.find(player => player == 'ExtraWicket#0000')) {
+          if(availablePlayers.find(player => player == 'ExtraWicket#0000')) {
             availablePlayers.splice(availablePlayers.indexOf('ExtraWicket#0000'), 1);
             team2.push('ExtraWicket#0000');
             if(availablePlayers.length !== 1) channel.send(`${cap1}, Choose your team member, available players are:\n ${availablePlayersUsernames().join(',\n')}`);

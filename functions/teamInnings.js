@@ -230,8 +230,8 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
     }
 
     function bowlCollect(batsman, bowler, dm) {
-      if (isInnings2 === 'over') return console.log('over');
-      if (!oldLogs && isInnings2) return console.log('isInnings2 and !oldLog');
+      if (isInnings2 === 'over') return;
+      if (!oldLogs && isInnings2) return;
 
       //Swap the batsman if wicket
       if (batSwap) {
@@ -262,7 +262,6 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
 
         function switchBowler() {
           if (totalBalls === 0) {
-            console.log('total ball is 0');
             return respond('end', batsman, bowler, 'bowl');
           } else {
             remainingBalls += 12;
@@ -357,8 +356,8 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
             checkTimeup.push(bowler.id);
           }
 
-          if (isInnings2 === 'over') return console.log('over');
-          if (!oldLogs && isInnings2) return console.log('isInnings2 and !oldLog');
+          if (isInnings2 === 'over') return;
+          if (!oldLogs && isInnings2) return;
 
           //Turn based on batExtra
           if (batExtra && logs.bowling[bowler.id].length > logs.batting['0000'].length) {
@@ -379,8 +378,8 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
     }
 
     function batCollect(batsman, bowler, dm) {
-      if (isInnings2 === 'over') return console.log('over');
-      if (!oldLogs && isInnings2) return console.log('isInnings2 and !oldLog');
+      if (isInnings2 === 'over') return;
+      if (!oldLogs && isInnings2) return;
 
       if (bowlSwap) {
         bowler = bowlSwap;
@@ -608,6 +607,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           return batCollect(batsman, bowler, dm);
         });
     }
+    
     async function lookForEndMessages(players, cap1, cap2, channel) {
       const messageCollector = channel.createMessageCollector(
         message => {
@@ -730,7 +730,6 @@ async function rewards(wonTeam, lostTeam, randoCoins, ducks, STRs) {
         quests: quests,
       }
     });
-    console.log('done duck for', player.username);
   });
   
   await wonTeam.forEach(async player => {
