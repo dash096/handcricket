@@ -718,19 +718,19 @@ async function rewards(channel, wonTeam, lostTeam, i1Logs, i2Logs, randoCoins, d
   console.log(STRs);
   
   //PurpleCaps
-  let purpleCapHolder = await getPurpleCapHolder();
-  let purpleCapHolderData = await db.findOne({ _id: purpleCapHolder });
-  if(purpleCapHolderData._id) {
-    let oldCaps = purpleCapHolderData.purpleCaps || 0;
-    await db.findOneAndUpdate({ _id: purpleCapHolder }, {
+  let orangeCapHolder = await getOrangeCapHolder();
+  let orangeCapHolderData = await db.findOne({ _id: orangeCapHolder });
+  if(orangeCapHolderData._id) {
+    let oldCaps = orangeCapHolderData.orangeCaps || 0;
+    await db.findOneAndUpdate({ _id: orangeCapHolder }, {
       $set: {
-        purpleCaps: oldCaps + 1
+        orangeCaps: oldCaps + 1
       }
     });
-    console.log('purple', purpleCapHolder);
+    console.log('orange', orangeCapHolder);
   }
   
-  async function getPurpleCapHolder() {
+  async function getOrangeCapHolder() {
     let inningsOne = await getInningsHighestScore(i1Logs.batting);
     let inningsTwo = await getInningsHighestScore(i2Logs.batting);
     if(inningsOne[1] > inningsTwo[1]) {

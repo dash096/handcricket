@@ -19,7 +19,7 @@ const player = new mongoose.Schema({
   loses: {
     type: Number, default: 0
   },
-  purpleCaps: {
+  orangeCaps: {
     type: Number, default: 0
   },
   coinMulti: {
