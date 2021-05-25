@@ -26,13 +26,7 @@ module.exports = {
     if (
       content.toLowerCase().trim() == "e.hc end" ||
       content.toLowerCase().trim() == "e.hc x"
-    ) {
-      if (userdata.status === false) {
-        return message.reply("You aint on a match");
-      } else {
-        return;
-      }
-    }
+    ) return;
 
     if (userdata.status === true) {
       message.reply(getErrors({ error: 'engaged', user }));

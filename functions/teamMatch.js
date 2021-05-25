@@ -35,7 +35,9 @@ module.exports = async (message, client) => {
     //Create Collector
     const reactionCollector = await collectorMessage.createReactionCollector(
       reaction => reaction.emoji.name === 'enter',
-      { time: 30 * 1000 }
+      {
+        time: 40 * 1000
+      }
     );
     
     //On Collect, changeStatus

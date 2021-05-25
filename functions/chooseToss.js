@@ -17,10 +17,10 @@ module.exports = async function chooseToss(message, winner, loser) {
     const m = msgs.first();
     const c = m.content.toLowerCase().trim();
       
-    if (c.startsWith("batting")) {
+    if (c.startsWith("bat")) {
       batsman = winner;
       bowler = loser;
-    } else if (c.startsWith("bowling")) {
+    } else if (c.startsWith("bowl")) {
       batsman = loser;
       bowler = winner;
     } else if (c == "end" || c == "cancel" || c == "exit") {
@@ -29,7 +29,6 @@ module.exports = async function chooseToss(message, winner, loser) {
       channel.send('Aborted');
       return 'err';
     } else {
-      m.reply("Type either `batting` or `bowling`");
       return chooseToss(message, winner, loser);
     }
     await channel.send(`Batsman is ${batsman}, Bowler is ${bowler}`);

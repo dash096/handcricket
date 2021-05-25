@@ -53,8 +53,8 @@ module.exports = (ball, bat) => {
     ],
     'W': [
       `The ball hit directly the ${(['left', 'right', 'middle'])[Math.floor(Math.random() * 3)]} stump!`,
-      'The fielder caught the ball!',
-      'The ball edged the bat, and the wicket keeper caught it...',
+      'The fielder dives catches the ball and yea he caught!',
+      'The ball edged the bat, and the wicket keeper catches it...',
     ],
   }
   

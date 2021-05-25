@@ -18,6 +18,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
     let logs = {
       batting: {},
       bowling: {},
+      currentBalls: 0,
     };
 
     lookForEndMessages(players, battingCap, bowlingCap, channel);
@@ -76,23 +77,26 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
     //Core
     async function respond(response, responseX, oldResponse, type) {
       checkTimeup = [];
+      
       if (typeof response === 'string' && response.startsWith('forceEnd')) {
         isInnings2 = 'over';
         changeStatus(players, false)
         channel.send(response);
         return;
-      } else if (!oldLogs) {
+      } 
+      //Innings One
+      else if (!oldLogs) {
         if (response === 'end') {
           if(isInnings2) return;
           if (batExtra) {
             if((logs.batting['0000']).length === 1 && !ducks.find(player => player.id == responseX.id)) ducks.push(responseX);
             let finalScore = (logs.batting['0000'])[(logs.batting['0000']).length - 1];
-            STRs[oldResponse.id] = [finalScore, (logs.bowling[responseX.id]).length];
+            if(type === 'bat' && logs.batting['0000'].length === 1) STRs[oldResponse.id] = [finalScore, logs.currentBalls];
             logs.batting['0000'] = [finalScore];
           } else {
             if((logs.batting[oldResponse.id]).length === 1 && !ducks.find(player => player.id == responseX.id)) ducks.push(responseX);
             let finalScore = (logs.batting[oldResponse.id])[(logs.batting[oldResponse.id]).length - 1];
-            STRs[oldResponse.id] = [finalScore, (logs.bowling[responseX.id]).length];
+            if(type === 'bat') STRs[oldResponse.id] = [finalScore, logs.currentBalls];
             logs.batting[oldResponse.id] = [finalScore];
           }
           let batsmen = Object.keys(logs.batting);
@@ -104,18 +108,19 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
             (logs.bowling)[bowler] = [0];
           });
           isInnings2 = true;
+          logs.currentBalls = 0;
           return start(players, bowlingTeam, battingTeam, bowlingCap, battingCap, extraPlayer, channel, logs, teamScore);
         } else {
           if (type === 'bat') {
             if (batExtra) {
               if((logs.batting['0000']).length === 1 && !ducks.find(player => player.id == responseX.id)) ducks.push(responseX);
               let finalScore = (logs.batting['0000'])[(logs.batting['0000']).length - 1];
-              STRs[oldResponse.id] = [finalScore, (logs.bowling[responseX.id]).length];
+              if(logs.batting['0000'].length === 1) STRs[oldResponse.id] = [finalScore, logs.currentBalls];
               logs.batting['0000'] = [finalScore];
             } else {
               if((logs.batting[oldResponse.id]).length === 1 && !ducks.find(player => player.id == responseX.id)) ducks.push(responseX);
               let finalScore = (logs.batting[oldResponse.id])[(logs.batting[oldResponse.id]).length - 1];
-              STRs[oldResponse.id] = [finalScore, (logs.bowling[responseX.id]).length];
+              STRs[oldResponse.id] = [finalScore, logs.currentBalls];
               logs.batting[oldResponse.id] = [finalScore];
             }
 
@@ -131,6 +136,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
               embed
             })).channel;
             batSwap = response;
+            logs.currentBalls = 0;
             return batCollect(response, responseX, dm);
           } else if (type === 'bowl') {
             logs.bowling[oldResponse.id] = [0];
@@ -151,25 +157,28 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
             return bowlCollect(responseX, response, dm);
           }
         }
-      } else {
+      }
+      //Innings Two
+      else {
         if (response === 'end') {
           isInnings2 = 'over';
           if (batExtra) {
             if((logs.batting['0000']).length === 1 && !ducks.find(player => player.id == responseX.id)) ducks.push(responseX);
             let finalScore = (logs.batting['0000'])[(logs.batting['0000']).length - 1];
-            STRs[oldResponse.id] = [finalScore, (logs.bowling[responseX.id]).length];
+            if(type === 'bat' && logs.batting['0000'].length === 1) STRs[oldResponse.id] = [finalScore, logs.currentBalls];
             logs.batting['0000'] = [finalScore];
           } else {
             if((logs.batting[oldResponse.id]).length === 1 && !ducks.find(player => player.id == responseX.id)) ducks.push(responseX);
             let finalScore = (logs.batting[oldResponse.id])[(logs.batting[oldResponse.id]).length - 1];
-            STRs[oldResponse.id] = [finalScore, (logs.bowling[responseX.id]).length];
+            if(type === 'bat') STRs[oldResponse.id] = [finalScore, logs.currentBalls];
             logs.batting[oldResponse.id] = [finalScore];
           }
           changeStatus(players, false)
+          logs.currentBalls = 0;
           //rewards for bowlingTeam
           const randoCoins = Math.floor(Math.random() * 696);
-          rewards(bowlingTeam, battingTeam, randoCoins, ducks, STRs);
           channel.send(`BowlingTeam recieved ${await getEmoji('coin')} ${randoCoins} each.`);
+          return rewards(bowlingTeam, battingTeam, randoCoins, ducks, STRs);
         } else if (response === 'win') {
           isInnings2 = 'over';
           changeStatus(players, false)
@@ -182,12 +191,12 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
             if (batExtra) {
               if((logs.batting['0000']).length === 1 && !ducks.find(player => player.id == responseX.id)) ducks.push(responseX);
               let finalScore = (logs.batting['0000'])[(logs.batting['0000']).length - 1];
-              STRs[oldResponse.id] = [finalScore, (logs.bowling[responseX.id]).length];
+              if(logs.batting['0000'].length === 1) STRs[oldResponse.id] = [finalScore, logs.currentBalls];
               logs.batting['0000'] = [finalScore];
             } else {
               if((logs.batting[oldResponse.id]).length === 1 && !ducks.find(player => player.id == responseX.id)) ducks.push(responseX);
               let finalScore = (logs.batting[oldResponse.id])[(logs.batting[oldResponse.id]).length - 1];
-              STRs[oldResponse.id] = [finalScore, (logs.bowling[responseX.id]).length];
+              STRs[oldResponse.id] = [finalScore, logs.currentBalls];
               logs.batting[oldResponse.id] = [(logs.batting[oldResponse.id])[(logs.batting[oldResponse.id]).length - 1]];
             }
             
@@ -203,6 +212,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
             const dm = (await batSwap.send(`Your turn to bat`, {
               embed
             })).channel;
+            logs.currentBalls = 0;
             return batCollect(response, responseX, dm);
           } else if (type === 'bowl') {
             logs.bowling[oldResponse.id] = [0];
@@ -238,16 +248,14 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
               await clearInterval(interval);
               await switchBowler();
             }
-          },
-            1000);
+          }, 1000);
         } else {
           let interval = setInterval(async function () {
             if ((logs.bowling[bowler.id]).length === (logs.batting[batsman.id]).length) {
               await clearInterval(interval);
               await switchBowler();
             }
-          },
-            1000);
+          }, 1000);
           return;
         }
         return;
@@ -266,7 +274,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
               .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap, batsman))
               .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, bowler))
               .setColor(embedColor)
-            .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
+              .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
 
             let next = '2 overs over.' + whoIsNext(response, 'bowl', extraPlayer, isInnings2);
             batsman.send(next, {
@@ -282,6 +290,11 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
             if (response === 'ExtraWicket#0000') {
               response = extraPlayer;
               bowlExtra = true;
+            }
+            
+            if(batSwap) {
+              batsman = batSwap;
+              batSwap = undefined;
             }
             return respond(response, batsman, bowler, 'bowl');
           }
@@ -411,7 +424,10 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           else if (parseInt(content) > max || parseInt(content) <= 0) {
             batsman.send('This match is limited to 6');
             return batCollect(batsman, bowler, dm);
-          } //Wicket
+          } 
+          
+          logs.currentBalls += 1;
+          //Wicket
           if (parseInt(content) === bowled) {
             let currentIndex = getIndex(battingTeam, batsman);
             let response = battingTeam[currentIndex + 1] || 'end';
@@ -421,6 +437,11 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
               response = extraPlayer;
               batExtra = true;
             }
+            if(bowlSwap) {
+              bowler = bowlSwap;
+              bowlSwap = undefined;
+            }
+            
             const embed = new Discord.MessageEmbed()
               .setTitle('TeamMatch')
               .setDescription(await commentry(bowled, 'W'))
@@ -514,7 +535,8 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           else if (!batExtra && logs.batting[batsman.id].length === logs.bowling[bowler.id].length) {
             return batCollect(batsman, bowler, dm);
           }
-
+          
+          logs.currentBalls += 1;
           //CPU auto hit
           let rando = ([1, 2, 3, 4, 5, 6])[Math.floor([Math.random() * ([1, 2, 3, 4, 5, 6]).length])];
           let oldScore = (logs.batting[batsman.id])[(logs.batting[batsman.id]).length - 1];
@@ -589,22 +611,20 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
     async function lookForEndMessages(players, cap1, cap2, channel) {
       const messageCollector = channel.createMessageCollector(
         message => {
-          let author = message;
           let c = message.content.toLowerCase().trim();
+          if (message.author.bot === true) return;
           if (c == 'e.hc x' || c == 'e.hc end') return true;
         }
       )
 
-      messageCollector.on('collect',
-        (message) => {
-          if (message.author.id === cap1.id || message.author.id === cap2.id) {
-            respond(`forceEnd: ${message.author.tag} ended.`);
-            message.reply('TeamMatch has ended');
-            messageCollector.stop();
-          } else if (players.find(player => player.id == message.author.id)) {
-            message.reply('Only captains can!');
-          }
-        });
+      messageCollector.on('collect', (message) => {
+        if (message.author.id === cap1.id || message.author.id === cap2.id) {
+          respond(`forceEnd: ${message.author.tag} ended.`);
+          messageCollector.stop();
+        } else if (players.find(player => player.id == message.author.id)) {
+          message.reply('Only captains can!');
+        }
+      });
     }
 
     function getPlayerTagWithLogs(team, type, cap, current) {
@@ -696,7 +716,7 @@ async function changeStatus(a, boolean) {
 }
 
 async function rewards(wonTeam, lostTeam, randoCoins, ducks, STRs) {
-  console.log(STRs, ducks);
+  console.log(STRs);
   
   await ducks.forEach(async player => {
     let data = await db.findOne({ _id: player.id });
@@ -710,7 +730,7 @@ async function rewards(wonTeam, lostTeam, randoCoins, ducks, STRs) {
         quests: quests,
       }
     });
-    console.log('done duck');
+    console.log('done duck for', player.username);
   });
   
   await wonTeam.forEach(async player => {
