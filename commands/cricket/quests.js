@@ -26,10 +26,11 @@ module.exports = {
       if(!userQuests || !userQuests[name]) stat = 0;
       else stat = userQuests[name];
       if(Array.isArray(stat)) stat = stat[0];
-      if(stat == true) {
+      if(stat === true) {
         return `${tickEmoji} **${name.charAt(0).toUpperCase() + name.slice(1)}** (${max}/${max})`;
+      } else {
+        return `${crossEmoji} **${name.charAt(0).toUpperCase() + name.slice(1)}** (${stat}/${max})`;
       }
-      return `${crossEmoji} **${name.charAt(0).toUpperCase() + name.slice(1)}** (${stat}/${max})`;
     }
     
     function whatQuest(name) {

@@ -19,8 +19,8 @@ module.exports = {
       const embed = new Discord.MessageEmbed()
         .setTitle('Vote Command')
         .setDescription('Thanks for Supporting me! You have already voted for me.\n' + cooldown +
-        '\n [Community Server](https://bit.ly/dispoGuild) - Join for additional fun and community only features.' +
-        '\n [Invite Bot to Your World](https://bit.ly/dispoBot) - Having fun in your palace is more fun')
+        '\n [Community Server](https://bit.ly/dispoGuild)' +
+        '\n [Invite Bot to Your World](https://bit.ly/dispoBot)')
         .addField(`Vote Streak: ${data.voteStreak || 0}`, 'You will get a decor for each 10s after 30')
         .setColor(embedColor)
         .setThumbnail(author.displayAvatarURL());
@@ -42,7 +42,7 @@ module.exports = {
 
 async function getCooldown(user) {
   try {
-    const data = await db.findOne({_id: user.id});
+    const data = await db.findOne({ _id: user.id });
     const time = data.voteCooldown;
     const ms = time.getTime() - Date.now();
     const sec = ms/1000;
