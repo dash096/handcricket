@@ -346,7 +346,8 @@ module.exports = async (message, client) => {
         .setColor(embedColor);
       await message.reply(embed);
       
-      if(batTeam.length === 2 && typeof batTeam[1] !== 'string') await channel.send(`${batTeam[0]} ping your batsmen list in order you desire like \`@user1 @user2 @user3\``)
+      if(batTeam.length === 2 && typeof batTeam[1] === 'string') {}
+      else await channel.send(`${batTeam[0]} ping your batsmen list in order you desire like \`@user1 @user2 @user3\``)
       
       let batOrder = await pick(batTeam[0], batTeam, 'batsman');
       
