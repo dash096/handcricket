@@ -4,9 +4,6 @@ module.exports = async function (what, boost) {
 
   if(what === 'toss') {
     let oldTossMulti = boost.tossMulti;
-    if(oldTossMulti === 0.2) {
-      oldTossMulti = 0;
-    }
     let time;
     if(boost.tossBoost) {
       time = boost.tossBoost.getTime() - Date.now();
@@ -29,9 +26,6 @@ module.exports = async function (what, boost) {
   if(what === 'coin') {
     let oldCoinMulti = boost.coinMulti;
     
-    if(oldCoinMulti === 0.1) {
-      oldCoinMulti = 0.2;
-    }
     let time;
     if(boost.coinBoost) {
       time = boost.coinBoost.getTime() - Date.now();
@@ -42,7 +36,7 @@ module.exports = async function (what, boost) {
     setTimeout( async function clearBoost() {
       await db.findOneAndUpdate( {_id: boost._id},
         { $set: { 
-            coinMulti: oldCoinMulti/2
+            coinMulti: oldCoinMulti/1.4
           },
           $unset: {
             coinBoost: 'no matter'

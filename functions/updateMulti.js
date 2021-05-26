@@ -1,6 +1,8 @@
 const db = require('../schemas/player.js');
 
 module.exports = async function (itemName, data, msg) {
+  
+  
   //Change Coin Boost
   if (itemName === 'coinboost') {
     let oldCoinMulti = data.coinMulti || 0;
@@ -21,10 +23,10 @@ module.exports = async function (itemName, data, msg) {
       }
 
     //Expiry Date of Boost
-    const expireDate = Date.now() + 60 * 1000;
+    const expireDate = Date.now() + 60 * 60 * 1000;
     
     //Validate 1+ Boost
-    let newCoinMulti = oldCoinMulti * 2;
+    let newCoinMulti = oldCoinMulti * 1.5;
 
     //Update Database
     await db.findOneAndUpdate({ _id: data._id }, {
@@ -54,8 +56,8 @@ module.exports = async function (itemName, data, msg) {
 
 
 
-//Change Toss Boost
-  if (itemName === 'tossboost') {
+  //Change Toss Boost
+  else if (itemName === 'tossboost') {
     let oldTossMulti = data.tossMulti;
     
     //Check if tossmulti is 0 and change to 0.1
@@ -74,9 +76,9 @@ module.exports = async function (itemName, data, msg) {
       }
     
     //Const Expiry Date of Boost 
-    const expireDate = Date.now() + 60 * 1000;
+    const expireDate = Date.now() + 60 * 60 * 1000;
     
-    let newTossMulti = oldTossMulti * 1.4;
+    let newTossMulti = oldTossMulti * 1.5;
     if(newTossMulti > 0.9) {
       newTossMulti = 0.9;
     }
@@ -88,7 +90,7 @@ module.exports = async function (itemName, data, msg) {
         }
       }, { upsert: true }
     ).catch((e) => {
-          console.log(e);
+      console.log(e);
     });
     
     //Set timeout
