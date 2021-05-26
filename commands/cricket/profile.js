@@ -42,6 +42,7 @@ module.exports = {
     const xpFixed = data.xp.toFixed(0);
     const STR = data.strikeRate;
     const WR = getWR(data);
+    const orangeCaps = data.orangeCaps || 0;
     
     let waitMessage;
     if(target.id === author.id) waitMessage = await message.reply('Wearing your clothes... ' + `${await getEmoji('swag')}`);
@@ -54,12 +55,13 @@ module.exports = {
       .setThumbnail(target.displayAvatarURL({size: 64}))
       .addField("Level - " + `${level} \`${xpFixed}xp\``,
       `**Next level:** ${XPLine} \`${targetXP}xp\` `)
-      .addField("Balance", ` ${coinEmoji} ${data.cc}`, true)
-      .addField("Wins", data.wins, true)
-      .addField("Win Rate", WR.toFixed(3), true)
-      .addField("Strike Rate", STR.toFixed(3), true)
-      .addField("Toss Multi", data.tossMulti.toFixed(3) + tb, true)
-      .addField("Coins Multi", data.coinMulti.toFixed(3) + cb, true)
+      .addField("Balance", ` ${coinEmoji} ${data.cc}`)
+      .addField("Wins", data.wins)
+      .addField("Win Rate", WR.toFixed(3))
+      .addField("Strike Rate", STR.toFixed(3))
+      .addField("Orange Caps Earned", orangeCaps)
+      .addField("Toss Multi", data.tossMulti.toFixed(3) + tb)
+      .addField("Coins Multi", data.coinMulti.toFixed(3) + cb)
       .setFooter("Your Character looks cool! Use `e.equip <name>` to wear a decor for your character")
       .attachFiles(characterAttachment)
       .setImage(`attachment://${characterPath.split('/').pop()}`)

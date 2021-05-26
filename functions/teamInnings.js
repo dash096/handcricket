@@ -265,14 +265,16 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           let interval = setInterval(async function () {
             if ((logs.bowling[bowler.id]).length === (logs.batting['0000']).length) {
               await clearInterval(interval);
-              await switchBowler();
+              if(isInnings2 && !oldLogs) {}
+              else await switchBowler();
             }
           }, 1000);
         } else {
           let interval = setInterval(async function () {
             if ((logs.bowling[bowler.id]).length === (logs.batting[batsman.id]).length) {
               await clearInterval(interval);
-              await switchBowler();
+              if(isInnings2 && !oldLogs) {}
+              else await switchBowler();
             }
           }, 1000);
           return;
@@ -567,7 +569,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           teamScore += parseInt(rando);
           const embed = new Discord.MessageEmbed()
             .setTitle('TeamMatch')
-            .setDescriptiona(await commentry(bowled, rando))
+            .setDescription(await commentry(bowled, rando))
             .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap, batsman))
             .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, bowler))
             .setColor(embedColor)
@@ -695,7 +697,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
     //PurpleCaps
     let orangeCapHolder = await getOrangeCapHolder();
     let orangeCapHolderData = await db.findOne({ _id: orangeCapHolder });
-    if(orangeCapHolderData._id) {
+    if(orangeCapHolderData && orangeCapHolderData._id) {
       let oldCaps = orangeCapHolderData.orangeCaps || 0;
       await db.findOneAndUpdate({ _id: orangeCapHolder }, {
         $set: {

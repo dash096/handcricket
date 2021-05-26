@@ -50,7 +50,7 @@ module.exports = {
     await message.reply(embed);
     
     async function getLeaderboardText(datas, type, typeArgs) {
-      let text = '\n**__💥  Top 3  💥__**\n\n';
+      let text = '\n**__💥  Top 10  💥__**\n\n';
       let i = 0;
 
       while(i < datas.length) {
@@ -58,12 +58,12 @@ module.exports = {
           const user = await client.users.fetch(datas[i]._id);
           
           if (i > 2) {
-            text += `${getSerialNo(i + 1)}   \`${fixDecimal((datas[i])[type], type)} ${typeArgs.charAt(0).toUpperCase() + typeArgs.slice(1).toLowerCase()}\`  **${user.username}**\n`;
+            text += `${getSerialNo(i + 1)}   \`${fixDecimal((datas[i])[type], type)} ${getType(typeArgs)}\`  **${user.username}**\n`;
           } else {
             if(i === 2) {
-              text += `${getSerialNo(i + 1)}    **${user.username}**\n         ${fixDecimal((datas[i])[type], type)} ${typeArgs.charAt(0).toUpperCase() + typeArgs.slice(1).toLowerCase()}\n\n`;
+              text += `${getSerialNo(i + 1)}    **${user.username}**\n         ${fixDecimal((datas[i])[type], type)} ${getType(typeArgs)}\n\n`;
             } else {
-              text += `${getSerialNo(i + 1)}    **${user.username}**\n         ${fixDecimal((datas[i])[type], type)} ${typeArgs.charAt(0).toUpperCase() + typeArgs.slice(1).toLowerCase()}\n`;
+              text += `${getSerialNo(i + 1)}    **${user.username}**\n         ${fixDecimal((datas[i])[type], type)} ${getType(typeArgs)}\n`;
             }
           }
           
@@ -74,7 +74,13 @@ module.exports = {
         }
       }
     }
-
+    
+    function getType(type) {
+      if (type == 'orange') return 'OrangeCaps'
+      else if (type == 'strike') return 'StrikeRate'
+      else return type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
+    }
+    
     function fixDecimal(n, type) {
       let split = n.toString().split('.')
       let max = 30;
