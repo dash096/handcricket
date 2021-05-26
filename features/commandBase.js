@@ -6,7 +6,7 @@ module.exports = ({client, prefix, topggapi}) => {
   client.on('message', async message => {
     const { cooldowns, commands } = client;
     const {
-      content, author, channel, mentions
+      content, author, channel, mentions, guild
     } = message;
     
     if(content.trim().startsWith(`<@${client.user.id}>`)) {
@@ -19,6 +19,42 @@ module.exports = ({client, prefix, topggapi}) => {
     //BlackLists
     let blacklistedUsers = [];
     if(blacklistedUsers.find(user => user.id === author.id)) return;
+    
+    const perms = [
+    'ADD_REACTIONS',
+    'USE_EXTERNAL_EMOJIS',
+    'EMBED_LINKS',
+    'ATTACH_FILES',
+    'SEND_MESSAGES',
+    'READ_MESSAGE_HISTORY'
+    ];
+    for(const perm of perms) {
+      let hasPerm = guild.me.permissionsIn(channel).has(perm);
+      if(hasPerm === false && perm === 'SEND_MESSAGES') {
+        try {
+          author.send('I do not have send messages perms to execute that command in that channel.');
+        } catch(e) {
+          return;
+        }
+      } else if(hasPerm === false) {
+        function getPerms() {
+          let text = '';
+          perms.forEach(perm => {
+            let arr = perm.split('_');
+            let word1 = arr[0].charAt(0) + arr[0].slice(1).toLowerCase();
+            let word2 = arr[1].charAt(0) + arr[1].slice(1).toLowerCase();
+            if(arr[2]) word2 += ` ${arr[2].charAt(0)}${arr[2].slice(1).toLowerCase()}`;
+            if(perms.indexOf(perm) === perm.length - 1) {
+              text += `\`${word1} ${word2}\``;
+            } else {
+              text += `\`${word1} ${word2}\`, `;
+            }
+          });
+          return text;
+        }
+        return message.reply('I dont have all of my perms in that channel, My required Permissions are:\n' + getPerms());8
+      }
+    }
     
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
@@ -61,27 +97,6 @@ module.exports = ({client, prefix, topggapi}) => {
         } else if(commandStatus === true && target.status === true) {
           return message.reply(`${target.tag} is already engaged in a game`);
         }
-      }
-    }
-    
-    const perms = [
-    'ADD_REACTIONS',
-    'USE_EXTERNAL_EMOJIS',
-    'EMBED_LINKS',
-    'ATTACH_FILES',
-    'SEND_MESSAGES',
-    'READ_MESSAGE_HISTORY'
-    ];
-    for(const perm of perms) {
-      let hasPerm = message.guild.me.hasPermission(perm);
-      if(hasPerm === false && perm === 'SEND_MESSAGES') {
-        try {
-          author.send('I do not have send messages perms to execute that command in that channel. Ask a mod to gibe perms');
-        } catch(e) {
-          return;
-        }
-      } else if(hasPerm === false) {
-        return message.reply('I dont have all of my perms to do work, My required Permissions are:\n' + perms.join('\n'));8
       }
     }
     

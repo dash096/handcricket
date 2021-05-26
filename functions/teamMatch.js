@@ -292,6 +292,7 @@ module.exports = async (message, client) => {
     
     async function executeSchedule(players, team1, team2, team1Tags, team2Tags, extraPlayer, channel) {
       let winnerCap = await rollToss(message, team1[0], team2[0]);
+      
       let batTeam;
       let bowlTeam;
       
@@ -350,11 +351,13 @@ module.exports = async (message, client) => {
       else await channel.send(`${batTeam[0]} ping your batsmen list in order you desire like \`@user1 @user2 @user3\``)
       
       let batOrder = await pick(batTeam[0], batTeam, 'batsman');
+      if(batOrder == 'err') return;
       
       if(availablePlayers.length === 1 && availablePlayers.find(player => typeof player === 'string')) {} 
       else await channel.send(`${bowlTeam[0]} ping your bowlers list in order you desire like \`@user1 @user2 @user3\``);
       
       let bowlOrder = await pick(bowlTeam[0], bowlTeam, 'bowler');
+      if(bowlOrder == 'err') return;
       
       if(batOrder === 'err' || bowlOrder === 'err') {
         await changeStatus(players, false);
