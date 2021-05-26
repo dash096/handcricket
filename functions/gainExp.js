@@ -40,11 +40,13 @@ module.exports = async (data, amt, msg, user) => {
       });
       text += '\nYou also got a black tracks to save your dignity, do `e.equip black tracks` to wear it';
       await updateBag('lootbox', -1, data, msg);
-      await msg.reply(text);
+      if(!user) await msg.reply(text);
+      else msg.channel.send(text);
       await db.findOneAndUpdate({_id: data._id}, {$set: {xp: sXP + 1}});
     } else {
       await updateBag('lootbox', -1, data, msg);
-      await msg.reply(text);
+      if(!user) await msg.reply(text);
+      else msg.channel.send(text);
       await db.findOneAndUpdate({_id: data._id}, {$set: {xp: sXP + 1}});
     }
     return;

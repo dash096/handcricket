@@ -5,6 +5,7 @@ const getEmoji = require('../../index.js');
 const checkItems = require("../../functions/checkItems.js");
 const gain = require('../../functions/gainExp.js');
 const updateBag = require('../../functions/updateBag.js');
+const updateCoins = require('../../functions/updateCoins.js');
 
 module.exports = {
   name: 'sell',
@@ -31,10 +32,8 @@ module.exports = {
       return;
     }
     
-    const newBalance = data.cc + (itemPrice * 69/100) * itemAmount;
-    
     await updateBag(itemName, itemAmount, data, message);
-    await db.findOneAndUpdate({ _id: author.id }, { $set: { cc: parseInt(newBalance) } } );
+    await updateCoins(itemPrice * 0.69 * itemAmount, data);
     
     message.reply(`You sold ${itemAmount} ${itemEmoji} ${itemName} for ${await getEmoji('coin')} ${parseInt((itemPrice * 69/100) * itemAmount)} coins`);
     return;

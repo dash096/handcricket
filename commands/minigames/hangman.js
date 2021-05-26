@@ -91,6 +91,7 @@ module.exports = {
         return;
       } finally {
         await db.findOneAndUpdate({_id: author.id}, {$set: {status: false}});
+        await gainExp(data, 1, message);
         //Set Cooldown
         if(!getTrain) {
           const timestamps = client.cooldowns.get('hangman');

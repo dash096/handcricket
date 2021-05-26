@@ -5,8 +5,10 @@ const getEmoji = require('../index.js');
 const getErrors = require('./getErrors.js');
 const updateBags = require('./updateBag.js');
 const commentry = require('./getCommentry.js');
+const gainExp = require('./gainExp.js');
 
-module.exports = async function innings(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel, max, oldLogs, target) {
+module.exports = async function innings(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, message, max, oldLogs, target) {
+  let { channel } = message;
   let isInnings2;
   let ducks = [];
   let STRs = {};
@@ -91,7 +93,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           if (batExtra) {
             if((logs.batting['0000']).length === 1 && !ducks.find(player => player.id == responseX.id)) ducks.push(responseX);
             let finalScore = (logs.batting['0000'])[(logs.batting['0000']).length - 1];
-            if(type === 'bat' && logs.batting['0000'].length === 1) STRs[oldResponse.id] = [finalScore, logs.currentBalls];
+            if(type === 'bat' && logs.batting['0000'].length === 1) STRs[oldResponse.id] = [(logs.batting[oldResponse.id])[(logs.batting[oldResponse.id]).length - 1], logs.currentBalls];
             logs.batting['0000'] = [finalScore];
           } else {
             if((logs.batting[oldResponse.id]).length === 1 && !ducks.find(player => player.id == responseX.id)) ducks.push(responseX);
@@ -115,7 +117,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
             if (batExtra) {
               if((logs.batting['0000']).length === 1 && !ducks.find(player => player.id == responseX.id)) ducks.push(responseX);
               let finalScore = (logs.batting['0000'])[(logs.batting['0000']).length - 1];
-              if(logs.batting['0000'].length === 1) STRs[oldResponse.id] = [finalScore, logs.currentBalls];
+              if(logs.batting['0000'].length === 1) STRs[oldResponse.id] = [(logs.batting[oldResponse.id])[(logs.batting[oldResponse.id]).length - 1], logs.currentBalls];
               logs.batting['0000'] = [finalScore];
             } else {
               if((logs.batting[oldResponse.id]).length === 1 && !ducks.find(player => player.id == responseX.id)) ducks.push(responseX);
@@ -165,13 +167,19 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           if (batExtra) {
             if((logs.batting['0000']).length === 1 && !ducks.find(player => player.id == responseX.id)) ducks.push(responseX);
             let finalScore = (logs.batting['0000'])[(logs.batting['0000']).length - 1];
-            if(type === 'bat' && logs.batting['0000'].length === 1) STRs[oldResponse.id] = [finalScore, logs.currentBalls];
             logs.batting['0000'] = [finalScore];
           } else {
-            if((logs.batting[oldResponse.id]).length === 1 && !ducks.find(player => player.id == responseX.id)) ducks.push(responseX);
-            let finalScore = (logs.batting[oldResponse.id])[(logs.batting[oldResponse.id]).length - 1];
-            if(type === 'bat') STRs[oldResponse.id] = [finalScore, logs.currentBalls];
-            logs.batting[oldResponse.id] = [finalScore];
+            if(type === 'bowl') {
+              if((logs.batting[responseX.id]).length === 1 && !ducks.find(player => player.id == oldResponse.id)) ducks.push(oldResponse);
+              let finalScore = (logs.batting[responseX.id])[(logs.batting[responseX.id]).length - 1];
+              STRs[responseX.id] = [finalScore, logs.currentBalls];
+              logs.batting[responseX.id] = [finalScore];
+            } else {
+              if((logs.batting[oldResponse.id]).length === 1 && !ducks.find(player => player.id == responseX.id)) ducks.push(responseX);
+              let finalScore = (logs.batting[oldResponse.id])[(logs.batting[oldResponse.id]).length - 1];
+              STRs[oldResponse.id] = [finalScore, logs.currentBalls];
+              logs.batting[oldResponse.id] = [finalScore];
+            }
           }
           changeStatus(players, false)
           logs.currentBalls = 0;
@@ -180,6 +188,17 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           channel.send(`BowlingTeam recieved ${await getEmoji('coin')} ${randoCoins} each.`);
           return rewards(channel, bowlingTeam, battingTeam, oldLogs, logs, randoCoins, ducks, STRs);
         } else if (response === 'win') {
+          if (batExtra) {
+            if((logs.batting['0000']).length === 1 && !ducks.find(player => player.id == responseX.id)) ducks.push(responseX);
+            let finalScore = (logs.batting['0000'])[(logs.batting['0000']).length - 1];
+            if(logs.batting['0000'].length === 1) STRs[oldResponse.id] = [(logs.batting[oldResponse.id])[(logs.batting[oldResponse.id]).length - 1], logs.currentBalls];
+            logs.batting['0000'] = [finalScore];
+          } else {
+            if((logs.batting[oldResponse.id]).length === 1 && !ducks.find(player => player.id == responseX.id)) ducks.push(responseX);
+            let finalScore = (logs.batting[oldResponse.id])[(logs.batting[oldResponse.id]).length - 1];
+            STRs[oldResponse.id] = [finalScore, logs.currentBalls];
+            logs.batting[oldResponse.id] = [(logs.batting[oldResponse.id])[(logs.batting[oldResponse.id]).length - 1]];
+          }
           isInnings2 = 'over';
           changeStatus(players, false)
           //rewards for battingTeam
@@ -191,7 +210,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
             if (batExtra) {
               if((logs.batting['0000']).length === 1 && !ducks.find(player => player.id == responseX.id)) ducks.push(responseX);
               let finalScore = (logs.batting['0000'])[(logs.batting['0000']).length - 1];
-              if(logs.batting['0000'].length === 1) STRs[oldResponse.id] = [finalScore, logs.currentBalls];
+              if(logs.batting['0000'].length === 1) STRs[oldResponse.id] = [(logs.batting[oldResponse.id])[(logs.batting[oldResponse.id]).length - 1], logs.currentBalls];
               logs.batting['0000'] = [finalScore];
             } else {
               if((logs.batting[oldResponse.id]).length === 1 && !ducks.find(player => player.id == responseX.id)) ducks.push(responseX);
@@ -481,7 +500,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
             channel.send(next, {
               embed
             });
-            return respond('win');
+            return respond('win', bowler, batsman, 'bat');
           } //Log
           else {
             if ((checkTimeup.filter(player => player === batsman.id)).length !== 0) {
@@ -590,7 +609,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
             channel.send(next, {
               embed
             });
-            return respond('win');
+            return respond('win', bowler, batsman, 'bat');
           }
 
           let send = `The batsman hit ${rando} (cpu), was bowled ${bowled}.`
@@ -670,6 +689,126 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
       return playerAndLog.join(`\n`);
     }
   }
+  
+  async function rewards(channel, wonTeam, lostTeam, i1Logs, i2Logs, randoCoins, ducks, STRs) {
+  
+    //PurpleCaps
+    let orangeCapHolder = await getOrangeCapHolder();
+    let orangeCapHolderData = await db.findOne({ _id: orangeCapHolder });
+    if(orangeCapHolderData._id) {
+      let oldCaps = orangeCapHolderData.orangeCaps || 0;
+      await db.findOneAndUpdate({ _id: orangeCapHolder }, {
+        $set: {
+          orangeCaps: oldCaps + 1
+        }
+      });
+      console.log('orange', orangeCapHolder);
+    }
+    
+    async function getOrangeCapHolder() {
+      let inningsOne = await getInningsHighestScore(i1Logs.batting);
+      let inningsTwo = await getInningsHighestScore(i2Logs.batting);
+      
+      if(inningsOne[1] > inningsTwo[1]) {
+        return inningsOne[0];
+      } else {
+        return inningsTwo[0];
+      }
+      async function getInningsHighestScore(iLogs) {
+        let logs = [];
+        let scores = [];
+        await Object.values(iLogs).forEach(log => {
+          logs.push(log);
+        });
+        await logs.forEach(log => {
+          scores.push(log[log.length - 1]);
+        });
+        let highScore = Math.max(...scores);
+        let capHolderId = Object.keys(iLogs).find(key => (iLogs[key]) [iLogs[key].length - 1] == highScore);
+        return [capHolderId, highScore];
+      }
+    }
+    
+    await ducks.forEach(async player => {
+      let data = await db.findOne({ _id: player.id });
+      if(!data) return console.log('no data for ducks');
+      
+      const quests = data.quests || {};
+      quests.duck = true;
+      
+      await db.findOneAndUpdate({ _id: player.id }, {
+        $set: {
+          quests: quests,
+        }
+      });
+    });
+    
+    await wonTeam.forEach(async player => {
+      if(typeof player !== 'object') return;
+      
+      const data = await db.findOne({ _id: player.id });
+      const bal = data.cc + randoCoins;
+      const wins = (data.wins || 0) + 1;
+      const quests = data.quests || {};
+      quests.tripWin = [(quests.tripWin || [0, '123'])[0] + 1, '123'];
+      if(quests.tripWin[0] === 3) quests.tripWin = [true, '123'];
+      
+      if(!STRs[player.id]) {
+        await db.findOneAndUpdate({ _id: player.id }, {
+          $set: {
+            cc: bal,
+            wins: wins,
+            quests: quests,
+          }
+        });
+        return;
+      } else {
+        const STR = ( data.strikeRate + STRs[player.id] [0] / STRs[player.id] [1] ) / 2;
+        
+        console.log(bal, wins, STR);
+        
+        await db.findOneAndUpdate({ _id: player.id }, {
+          $set: {
+            cc: bal,
+            wins: wins,
+            strikeRate: STR,
+            quests: quests,
+          }
+        });
+      }
+      await gainExp(data, 7, message);
+    });
+  
+    await lostTeam.forEach(async player => {
+      if(typeof player !== 'object') return;
+      
+      const data = await db.findOne({ _id: player.id });
+      const loses = data.loses + 1;
+      const quests = data.quests || {};
+      quests.tripWin = [0, '123'];
+      
+      if(!STRs[player.id]) {
+        await db.findOneAndUpdate({ _id: player.id }, {
+          loses: loses,
+          quests: quests,
+        });
+        return;
+      } else {
+        const STR = ( data.strikeRate + STRs[player.id] [0] / STRs[player.id] [1] ) / 2;
+        
+        console.log(loses, STR);
+        
+        await db.findOneAndUpdate({ _id: player.id }, {
+          $set: {
+            loses: loses,
+            strikeRate: STR,
+            quests: quests,
+          }
+        });
+      }
+      await gainExp(data, 7, message);
+    });
+  }
 }
 
 function getIndex(team, player) {
@@ -712,122 +851,4 @@ async function changeStatus(a, boolean) {
       }
     });
   }
-}
-
-async function rewards(channel, wonTeam, lostTeam, i1Logs, i2Logs, randoCoins, ducks, STRs) {
-  console.log(STRs);
-  
-  //PurpleCaps
-  let orangeCapHolder = await getOrangeCapHolder();
-  let orangeCapHolderData = await db.findOne({ _id: orangeCapHolder });
-  if(orangeCapHolderData._id) {
-    let oldCaps = orangeCapHolderData.orangeCaps || 0;
-    await db.findOneAndUpdate({ _id: orangeCapHolder }, {
-      $set: {
-        orangeCaps: oldCaps + 1
-      }
-    });
-    console.log('orange', orangeCapHolder);
-  }
-  
-  async function getOrangeCapHolder() {
-    let inningsOne = await getInningsHighestScore(i1Logs.batting);
-    let inningsTwo = await getInningsHighestScore(i2Logs.batting);
-    if(inningsOne[1] > inningsTwo[1]) {
-      return inningsOne[0];
-    } else {
-      return inningsTwo[0];
-    }
-    async function getInningsHighestScore(iLogs) {
-      let logs = [];
-      let scores = [];
-      await Object.values(iLogs).forEach(log => {
-        logs.push(log);
-      });
-      await logs.forEach(log => {
-        scores.push(log[log.length - 1]);
-      });
-      let highScore = Math.max(...scores);
-      let capHolderId = Object.keys(iLogs).find(key => (iLogs[key]) [iLogs[key].length - 1] == highScore);
-      return [capHolderId, highScore];
-    }
-  }
-  
-  await ducks.forEach(async player => {
-    let data = await db.findOne({ _id: player.id });
-    if(!data) return console.log('no data for ducks');
-    
-    const quests = data.quests || {};
-    quests.duck = true;
-    
-    await db.findOneAndUpdate({ _id: player.id }, {
-      $set: {
-        quests: quests,
-      }
-    });
-  });
-  
-  await wonTeam.forEach(async player => {
-    if(typeof player !== 'object') return;
-    
-    const data = await db.findOne({ _id: player.id });
-    const bal = data.cc + randoCoins;
-    const wins = (data.wins || 0) + 1;
-    const quests = data.quests || {};
-    quests.tripWin = [(quests.tripWin || [0, '123'])[0] + 1, '123'];
-    if(quests.tripWin[0] === 3) quests.tripWin = [true, '123'];
-    
-    if(!STRs[player.id]) {
-      await db.findOneAndUpdate({ _id: player.id }, {
-        $set: {
-          cc: bal,
-          wins: wins,
-          quests: quests,
-        }
-      });
-      return;
-    } else {
-      const STR = ( data.strikeRate + STRs[player.id] [0] / STRs[player.id] [1] ) / 2;
-      
-      console.log(bal, wins, STR);
-      
-      await db.findOneAndUpdate({ _id: player.id }, {
-        $set: {
-          cc: bal,
-          wins: wins,
-          strikeRate: STR,
-          quests: quests,
-        }
-      });
-    }
-  });
-  
-  await lostTeam.forEach(async player => {
-    if(typeof player !== 'object') return;
-    
-    const data = await db.findOne({ _id: player.id });
-    const loses = data.loses + 1;
-    const quests = data.quests || {};
-    quests.tripWin = [0, '123'];
-    
-    if(!STRs[player.id]) {
-      await db.findOneAndUpdate({ _id: player.id }, {
-        loses: loses,
-        quests: quests,
-      });
-      return;
-    } else {
-      const STR = ( data.strikeRate + STRs[player.id] [0] / STRs[player.id] [1] ) / 2;
-      
-      console.log(loses, STR);
-      
-      await db.findOneAndUpdate({ _id: player.id }, {
-        $set: {
-          loses: loses,
-          strikeRate: STR,
-          quests: quests,
-        }
-      });
-    }
-  });
 }

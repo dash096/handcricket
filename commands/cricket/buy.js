@@ -5,6 +5,7 @@ const getEmoji = require('../../index.js');
 const checkItems = require("../../functions/checkItems.js");
 const gain = require('../../functions/gainExp.js');
 const updateBag = require('../../functions/updateBag.js');
+const updateCoins = require('../../functions/updateCoins.js');
 
 module.exports = {
   name: 'buy',
@@ -33,7 +34,7 @@ module.exports = {
     //Check Bal to buy.
     if(balance < cost) return message.reply('You arent rich enough to buy that much.');
     
-    await db.findOneAndUpdate({_id: data._id}, { $set: { cc: parseInt(balance) - parseInt(cost) } } );
+    await updateCoins(-parseInt(cost), data);
     await updateBag(name, -(number), data, message);
     
     message.reply(`You bought **${number} ${item.name}** for ${coinEmoji} ${cost} coins`);

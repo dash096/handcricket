@@ -31,7 +31,7 @@ module.exports = async (message, client) => {
       .setColor(embedColor);
     const collectorMessage = await message.reply(embed);
     await collectorMessage.react(enterEmoji);
-  
+    
     //Create Collector
     const reactionCollector = await collectorMessage.createReactionCollector(
       reaction => reaction.emoji.name === 'enter',
@@ -361,7 +361,7 @@ module.exports = async (message, client) => {
         return;
       }
       
-      executeTeamMatch(players, batOrder, bowlOrder, batTeam[0], bowlTeam[0], extraPlayer, channel, max);
+      executeTeamMatch(players, batOrder, bowlOrder, batTeam[0], bowlTeam[0], extraPlayer, message, max);
       
       async function pick(cap, team, type) {
         try {
