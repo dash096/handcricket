@@ -8,7 +8,6 @@ const Discord = require("discord.js");
 const client = new Discord.Client({
   partials: ['USER', 'CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 'REACTION']
 });
-require('discord-buttons')(client);
 
 const prefix = 'e.';
 const { commands, cooldowns } = client;

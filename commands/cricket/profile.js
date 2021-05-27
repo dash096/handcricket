@@ -50,18 +50,12 @@ module.exports = {
     const characterPath = await getCharacter(target);
     const characterAttachment = new Discord.MessageAttachment(characterPath);
     
+    let description = userInfo();
+    
     const embed = new Discord.MessageEmbed()
       .setTitle(`Profile of **${target.tag}**`)
       .setThumbnail(target.displayAvatarURL({size: 64}))
-      .addField("Level - " + `${level} \`${xpFixed}xp\``,
-      `**Next level:** ${XPLine} \`${targetXP}xp\` `)
-      .addField("Balance", ` ${coinEmoji} ${data.cc}`)
-      .addField("Wins", data.wins)
-      .addField("Win Rate", WR.toFixed(3))
-      .addField("Strike Rate", STR.toFixed(3))
-      .addField("Orange Caps Earned", orangeCaps)
-      .addField("Toss Multi", data.tossMulti.toFixed(3) + tb)
-      .addField("Coins Multi", data.coinMulti.toFixed(3) + cb)
+      .setDescription(description)
       .setFooter("Your Character looks cool! Use `e.equip <name>` to wear a decor for your character")
       .attachFiles(characterAttachment)
       .setImage(`attachment://${characterPath.split('/').pop()}`)
@@ -75,6 +69,18 @@ module.exports = {
         if(e) console.log(e);
       });
     }, 1999);
+    
+    function userInfo() {
+      let text =
+      `**Level ${level}** \`${xpFixed}xp\`\n    **Next level:** ${XPLine} \`${targetXP}xp\`\n\n` +
+      `**Balance**             ${coinEmoji} ${data.cc}\n` +
+      `**Wins**                    ${data.wins}\n` +
+      `**Strike Rate**        ${data.strikeRate.toFixed(3)}\n` +
+      `**OrangeCaps**     ${data.orangeCaps}\n` +
+      `**Toss Multi**        ${data.tossMulti.toFixed(3)}${tb}\n` +
+      `**Coin Multi**         ${data.coinMulti.toFixed(3)}${cb}`
+      return text;
+    }
   }
 };
 
