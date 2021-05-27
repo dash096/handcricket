@@ -1,5 +1,6 @@
 const db = require('../schemas/player.js');
 const getEmoji = require('../index.js');
+const getDecors = require('../functions/getDecors.js');
 
 module.exports = async ({client, topggapi}) => {
   let votes = await topggapi.getVotes();
@@ -37,7 +38,7 @@ module.exports = async ({client, topggapi}) => {
         if((await topggapi.hasVoted(user.id)) === false) return;
         const cooldown = Date.now() + (60 * 60 * 12 * 1000);
         const data = await db.findOne({ _id: user.id });
-        await user.send('Thanks for voting, you got ' + await rewards(user));
+        await user.send('Thanks for voting, you got ' + await rewards(data, user));
         let quests = data.quests || {};
         let streak = data.voteStreak || 0;
         quests.support = true;
@@ -47,9 +48,20 @@ module.exports = async ({client, topggapi}) => {
             voteClaim: true,
             voteCooldown: cooldown,
             quests: quests,
-            voteStreak: streak
+            voteStreak: streak,
+            lastVoted: Date.now()
           }
         });
+        setTimeout(async () => {
+          await db.findOneAndUpdate({ _id: user.id }, {
+            $set: {
+              voteClaim: false,
+            },
+            $unset: {
+              voteCooldown: false,
+            }
+          });
+        }, 60 * 60 * 12 * 1000);
       } catch (e) {
         console.log(e);
         votes = newVotes;
@@ -61,11 +73,48 @@ module.exports = async ({client, topggapi}) => {
   
 };
 
-async function rewards(user) {
-  const data = await db.findOne({_id: user.id});
+async function rewards(data, user) {
+  let reward;
+  let name;
+  if (data.voteStreak < 10) {
+    reward = 'coin';
+    name = 'coin';
+  } else if (data.voteStreak % 25 !== 0) {
+    reward = 'lootbox';
+    name = 'lootbox';
+  } else {
+    reward = 'decor';
+    name = 'sh';
+  }
+  
   const bag = data.bag || {};
-  const lootbox = bag.lootbox || 0;
-  bag.lootbox = lootbox + 1;
-  await db.findOneAndUpdate({_id: user.id}, {$set: {bag: bag}});
-  return `${await getEmoji('lootbox')} lootbox`;
+  const decorsData = await getDecors();
+  
+  let newValue;
+  if (reward == 'lootbox') {
+    newValue = bag;
+    newValue.lootbox = (bag.lootbox || 0) + 1;
+  } else if (reward == 'decor') {
+    let decor = decorsData[Math.floor(Math.random() * decorsData.length)];
+    newValue = bag;
+    newValue[decor] = (bag[decor] || 0) + 1;
+  } else {
+    reward = Math.random() * 696;
+    newValue = data.cc + reward;
+  }
+  
+  if(parseInt(reward)) {
+    await db.findOneAndUpdate({ _id: user.id }, {
+      $set: {
+        cc: newValue
+      }
+    });
+  } else {
+    await db.findOneAndUpdate({ _id: user.id }, {
+      $set: {
+        bag: bag
+      }
+    });
+  }
+  return `${await getEmoji(name)} ${reward}`;
 }

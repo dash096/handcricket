@@ -14,6 +14,8 @@ module.exports = {
     const voted = await topggapi.hasVoted(author.id);
     const data = await db.findOne({_id: author.id});
     
+    checkLastVoted(data, message);
+    
     if(voted === true) {
       const cooldown = await getCooldown(author);
       const embed = new Discord.MessageEmbed()
@@ -30,8 +32,8 @@ module.exports = {
         .setTitle('Vote Command')
         .setDescription('You havent voted yet, Support us [here](https://top.gg/bot/804346878027235398/vote)' + 
         '\n**PS:** It might take a maximum of 3 minutes for you to get the vote reward.' +
-        '\n [Community Server](https://bit.ly/dispoGuild) - Join for additional fun and community only features.' +
-        '\n [Invite Bot to Your World](https://bit.ly/dispoBot) - Having fun in your palace is more fun')
+        '\n [Community Server](https://bit.ly/dispoGuild)' +
+        '\n [Invite Bot to Your World](https://bit.ly/dispoBot)')
         .addField(`Vote Streak: ${data.voteStreak || 0}`, 'You will get a decor for each 10s after 30')
         .setColor(embedColor)
         .setThumbnail(author.displayAvatarURL());
@@ -53,5 +55,19 @@ async function getCooldown(user) {
   } catch (e) {
     console.log(e);
     return '';
+  }
+}
+
+async function checkLastVoted(data, message) {
+  const { content, author, channel, mentions } = message;
+  
+  if(data.lastVoted && (Date.now - data.lastVoted.getTime()) > (24 * 60 * 60 * 1000)) {
+    message.reply('You didnt vote in the last 24 hours and sadly you lost your streak!')
+    await db.findOneAndUpdate({ _id: data._id }, {
+      $set: {
+        voteStreak: 0,
+      }
+    });
+    return;
   }
 }

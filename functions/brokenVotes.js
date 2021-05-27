@@ -28,14 +28,28 @@ module.exports = async ({client, topggapi}) => {
   async function joinVote(data) {
     const user = await client.users.fetch(data._id);
     user.send(voteReminder);
-    await db.findOneAndUpdate( { _id: user.id }, { $set: { voteClaim: false }, $unset: { voteCooldown: false } } );
+    await db.findOneAndUpdate( { _id: user.id }, {
+      $set: {
+        voteClaim: false,
+       }, 
+       $unset: {
+         voteCooldown: false 
+       } 
+     });
   }
   async function fixVote(data) {
     const user = await client.users.fetch(data._id);
     const time = data.voteCooldown.getTime() - Date.now();
     setTimeout( async () => {
       user.send(voteReminder);
-      await db.findOneAndUpdate( { _id: user.id }, { $set: { voteClaim: false }, $unset: { voteCooldown: false } } );
+      await db.findOneAndUpdate( { _id: user.id }, {
+        $set: {
+          voteClaim: false
+        }, 
+        $unset: {
+          voteCooldown: false
+        }
+      });
     }, time);
   }
 };
