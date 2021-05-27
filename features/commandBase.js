@@ -52,7 +52,7 @@ module.exports = ({client, prefix, topggapi}) => {
           });
           return text;
         }
-        return message.reply('I dont have all of my perms in that channel, My required Permissions are:\n' + getPerms());8
+        return message.reply('I dont have all of my perms in that channel, My required Permissions are:\n' + getPerms());
       }
     }
     
