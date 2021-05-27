@@ -73,8 +73,9 @@ module.exports = {
           
           if(e2 == 'decor') {
             const decors = getDecors('type1');
-            const decor = decors[Math.floor(Math.random() * decors.length)];
-            text += `Oh Damn, You got a ${decor}!\n`;
+            let decor = decors[Math.floor(Math.random() * decors.length)];
+            if(decor.includes('suit')) decor = decors[Math.floor(Math.random() * decors.length)];
+            text += `Oh Damn, You got a ${decor.split('_').join(' ')}!\n`;
             updateDecor(decor, 1, playerData, message);
           }
         

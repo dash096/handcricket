@@ -82,11 +82,11 @@ module.exports = {
           if(bet/500 > 0.45) {
             return 0.6;
           } else {
-            return bet/500; //100/1250
+            return bet/500;
           }
         };
         const decider = decideWin();
-        if(random < decider/4) {
+        if(random < decider/5) {
           win = [true, 'decor'];
         } else if (random < decider) {
           win = [true, 'item'];
@@ -95,7 +95,8 @@ module.exports = {
         if(win[0] === true) {
           if(win[1] === 'decor') {
             const decors = getDecors('type1');
-            const decor = decors[Math.floor(Math.random() * decors.length)];
+            let decor = decors[Math.floor(Math.random() * decors.length)];
+            if(decor.includes('suit')) decor = decors[Math.floor(Math.random() * decors.length)];
             updateDecor(decor, author);
             return `${await getEmoji('sh')} ${await getEmoji('sh')} ${await getEmoji('sh')}`;
           } else if ( win[1] === 'item') {

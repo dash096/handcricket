@@ -7,7 +7,7 @@ module.exports = async function (itemName, data, msg) {
   if (itemName === 'coinboost') {
     let oldCoinMulti = data.coinMulti || 0;
     
-    //Check if boost is 0, and change to 0.1
+    //Check if boost is 0, and change to 0.05
     if (oldCoinMulti === 0) {
       oldCoinMulti = 0.05;
     }
@@ -26,7 +26,7 @@ module.exports = async function (itemName, data, msg) {
     const expireDate = Date.now() + 60 * 60 * 1000;
     
     //Validate 1+ Boost
-    let newCoinMulti = oldCoinMulti * 1.5;
+    let newCoinMulti = oldCoinMulti * 1.35;
 
     //Update Database
     await db.findOneAndUpdate({ _id: data._id }, {
@@ -43,7 +43,7 @@ module.exports = async function (itemName, data, msg) {
     setTimeout( async function () {
       await db.findOneAndUpdate( {_id: data._id},
         { $set: { 
-            coinMulti: newCoinMulti/2
+            coinMulti: newCoinMulti/1.36
           }, $unset: {
             coinBoost: 'no Matter'
           }
@@ -67,21 +67,22 @@ module.exports = async function (itemName, data, msg) {
     
     //Check if already its boosted
     const oldBoost = data.tossBoost;
-      if(oldBoost) {
-        const oldBoostTime = oldBoost.getTime();
-        if(Date.now() < oldBoostTime) {
-          msg.reply('There\'s a boost active already!');
-          return 'err';
-        }
+    if(oldBoost) {
+      const oldBoostTime = oldBoost.getTime();
+      if(Date.now() < oldBoostTime) {
+        msg.reply('There\'s a boost active already!');
+        return 'err';
       }
+    }
     
     //Const Expiry Date of Boost 
     const expireDate = Date.now() + 60 * 60 * 1000;
     
-    let newTossMulti = oldTossMulti * 1.5;
+    let newTossMulti = oldTossMulti * 1.35;
     if(newTossMulti > 0.9) {
       newTossMulti = 0.9;
     }
+    
     //Update Database
     await db.findOneAndUpdate({ _id: data._id }, {
         $set: {
@@ -97,7 +98,7 @@ module.exports = async function (itemName, data, msg) {
     setTimeout( async function () {
       await db.findOneAndUpdate( {_id: data._id},
         { $set: { 
-            tossMulti: oldTossMulti
+            tossMulti: newTossMulti/1.36
           }, $unset: {
             tossBoost: 'doesnt matter'
           }

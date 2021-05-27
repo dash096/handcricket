@@ -265,11 +265,11 @@ async function changeStatus(a,b) {
 
 function getCoins(data, message) {
   let coinMulti = data.coinMulti;
-  if (coinMulti === 0) coinMulti = 0.2;
+  if (coinMulti === 0) coinMulti = 0.09;
   if(message.guild.id == serverID) {
     coinMulti = coinMulti * 2;
   }
-  const rando = Math.random() * coinMulti * 3636;
+  const rando = Math.random() * coinMulti * 696;
   const coins = rando.toFixed(0);
   return coins;
 }

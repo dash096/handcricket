@@ -10,10 +10,11 @@ module.exports = async function (what, boost) {
     }
     if(time < 0) time = 10;
       
-    setTimeout( async function clearBoost() {
+    setTimeout( async function () {
       await db.findOneAndUpdate( {_id: boost._id},
-        { $set: { 
-            tossMulti: oldTossMulti/1.4
+        { 
+          $set: { 
+            tossMulti: oldTossMulti/1.36
           },
           $unset: {
             tossBoost: 'No matter'
@@ -33,10 +34,10 @@ module.exports = async function (what, boost) {
     if(time < 0) time = 1;
     console.log(time/1000);
       
-    setTimeout( async function clearBoost() {
+    setTimeout( async function () {
       await db.findOneAndUpdate( {_id: boost._id},
         { $set: { 
-            coinMulti: oldCoinMulti/1.4
+            coinMulti: oldCoinMulti/1.36
           },
           $unset: {
             coinBoost: 'no matter'
