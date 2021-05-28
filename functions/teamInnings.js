@@ -7,7 +7,7 @@ const updateBags = require('./updateBag.js');
 const commentry = require('./getCommentry.js');
 const gainExp = require('./gainExp.js');
 
-module.exports = async function innings(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, message, max, oldLogs, target) {
+module.exports = async function innings(client, players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, message, max, oldLogs, target) {
   let { channel } = message;
   let isInnings2;
   let ducks = [];

@@ -364,7 +364,7 @@ module.exports = async (message, client) => {
         return;
       }
       
-      executeTeamMatch(players, batOrder, bowlOrder, batTeam[0], bowlTeam[0], extraPlayer, message, max);
+      executeTeamMatch(client, players, batOrder, bowlOrder, batTeam[0], bowlTeam[0], extraPlayer, message, max);
       
       async function pick(cap, team, type) {
         try {
