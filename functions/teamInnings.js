@@ -184,8 +184,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           changeStatus(players, false)
           logs.currentBalls = 0;
           //rewards for bowlingTeam
-          const randoCoins = Math.floor(Math.random() * 696);
-          channel.send(`BowlingTeam recieved ${await getEmoji('coin')} ${randoCoins} each.`);
+          const randoCoins = Math.floor((Math.random() * 696)/1.5);
           return rewards(channel, bowlingTeam, battingTeam, oldLogs, logs, randoCoins, ducks, STRs);
         } else if (response === 'win') {
           if (batExtra) {
@@ -202,8 +201,7 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
           isInnings2 = 'over';
           changeStatus(players, false)
           //rewards for battingTeam
-          const randoCoins = Math.floor(Math.random() * 696);
-          channel.send(`BattingTeam recieved ${await getEmoji('coin')} ${randoCoins} each.`);
+          const randoCoins = Math.floor((Math.random() * 696)/1.5);
           return rewards(channel, battingTeam, bowlingTeam, oldLogs, logs, randoCoins, ducks, STRs);
         } else {
           if (type === 'bat') {
@@ -693,7 +691,8 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
   }
   
   async function rewards(channel, wonTeam, lostTeam, i1Logs, i2Logs, randoCoins, ducks, STRs) {
-  
+    let coinEmoji = await getEmoji('coin');
+    
     //PurpleCaps
     let orangeCapHolder = await getOrangeCapHolder();
     let orangeCapHolderData = await db.findOne({ _id: orangeCapHolder });
@@ -706,6 +705,19 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
       });
       console.log('orange', orangeCapHolder);
     }
+    
+    let rewardsEmbed = new Discord.MessageEmbed()
+      .setTitle('Rewards')
+      .addField(
+        'Coins',
+        `${coinEmoji} ${randoCoins} for ${wonTeam[0].username}'s team\n` + 
+        `${coinEmoji} ${parseInt(randoCoins/3)} for ${lostTeam[0].username}'s team`
+      )
+      .addField('OrangeCap Holder', (await client.users.fetch(orangeCapHolder)).username)
+      .setFooter('Legends say that they have noticed many other rewards!')
+      .setColor(embedColor);
+    
+    channel.send('Aight Guys, here are the rewards', rewardsEmbed);
     
     async function getOrangeCapHolder() {
       let inningsOne = await getInningsHighestScore(i1Logs.batting);
@@ -761,6 +773,8 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
             cc: bal,
             wins: wins,
             quests: quests,
+            coinMulti: parseFloat(data.coinMulti + 0.0069),
+            tossMulti: parseFloat(data.tossMulti - 0.0069),
           }
         });
         return;
@@ -775,6 +789,8 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
             wins: wins,
             strikeRate: STR,
             quests: quests,
+            coinMulti: parseFloat(data.coinMulti + 0.0069),
+            tossMulti: parseFloat(data.tossMulti - 0.0069),
           }
         });
       }
@@ -785,14 +801,17 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
       if(typeof player !== 'object') return;
       
       const data = await db.findOne({ _id: player.id });
-      const loses = data.loses + 1;
-      const quests = data.quests || {};
+      let loses = data.loses + 1;
+      let quests = data.quests || {};
+      let bal = data.cc + parseInt(randoCoins/3);
       quests.tripWin = [0, '123'];
       
       if(!STRs[player.id]) {
         await db.findOneAndUpdate({ _id: player.id }, {
+          cc: bal,
           loses: loses,
           quests: quests,
+          tossMulti: parseFloat(data.tossMulti + 0.0069),
         });
         return;
       } else {
@@ -802,9 +821,11 @@ module.exports = async function innings(players, battingTeam, bowlingTeam, batti
         
         await db.findOneAndUpdate({ _id: player.id }, {
           $set: {
+            cc: bal,
             loses: loses,
             strikeRate: STR,
             quests: quests,
+            tossMulti: parseFloat(data.tossMulti + 0.0069),
           }
         });
       }
