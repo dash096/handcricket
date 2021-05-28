@@ -10,7 +10,7 @@ module.exports = {
   name: 'send',
   aliases: ['give'],
   description: 'send some pc to another user, mercy.',
-  category: 'Cricket',
+  category: 'Dogenomy',
   syntax: 'e.send @user <coins/itemName> <amount>',
   cooldown: 10,
   run: async ({message, args, client}) => {
@@ -24,7 +24,7 @@ module.exports = {
     if(!target) return;
     
     if(user.id === target.id) {
-      let error = 'syntax'; let filePath = 'cricket/trade.js';
+      let error = 'syntax'; let filePath = 'dogenomy/trade.js';
       message.reply(getErrors({error, filePath}));
       return;
     }
@@ -38,16 +38,14 @@ module.exports = {
     //send @ping c/coins 1
     if(args[1].trim().toLowerCase() == 'c' || args[1].trim().toLowerCase().startsWith('coin')) {
       if(!amount || isNaN(amount)) {
-        let error = 'syntax';
-        let filePath = 'cricket/trade.js';
-        return message.reply(getErrors({error, filePath}));
-      } else if (args.length === 3) { 
+        return message.reply(getErrors({error: 'syntax', filePath: 'dogenomy/trade.js'}));
+      } else if (args.length === 3) {
         //send @ping item_name 1
         await trade('coins', amount, user, target, message);
       }
     } else {
       message.content = content.split(' ').slice(1).join(' ');
-      const itemArray = await checkItems(message, 'cricket/trade.js');
+      const itemArray = await checkItems(message, 'dogenomy/trade.js');
       
       if(itemArray != 'err') {
         trade(itemArray[0], itemArray[1], user, target, message);

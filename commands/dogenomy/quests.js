@@ -9,7 +9,7 @@ module.exports = {
   name: 'quests',
   aliases: ['task', 'tasks', 'quest'],
   description: 'Your daily tasks and to keep you interested',
-  category: 'Cricket',
+  category: 'Dogenomy',
   syntax: 'e.quests',
   run: async ({ message }) => {
     const { channel, author, content } = message;

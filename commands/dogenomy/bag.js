@@ -9,7 +9,7 @@ module.exports = {
   name: 'bag',
   aliases: ['inventory', 'inv'],
   description: 'Shows your backpack',
-  category: 'Cricket',
+  category: 'Dogenomy',
   syntax: 'e.bag',
   cooldown: 5,
   run: async ({message, args, client}) => {

@@ -1,7 +1,3 @@
-
-
-
-
 module.exports = (ball, bat) => {
   
   const batting = {

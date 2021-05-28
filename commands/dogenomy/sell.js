@@ -10,13 +10,13 @@ const updateCoins = require('../../functions/updateCoins.js');
 module.exports = {
   name: 'sell',
   description: 'Sell items and get coins back, not 100% cashback ofc.',
-  category: 'Cricket',
+  category: 'Dogenomy',
   syntax: 'e.sell <itemName> <amount>',
   cooldown: 10,
   run: async ({message}) => {
     const { author, content, channel, mentions } = message;
     
-    const itemsArray = await checkItems(message, 'cricket/sell.js');
+    const itemsArray = await checkItems(message, 'dogenomy/sell.js');
     if(itemsArray == 'err') return;
     
     const itemName = itemsArray[0];

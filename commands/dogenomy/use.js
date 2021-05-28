@@ -14,7 +14,7 @@ module.exports = {
   name: 'use',
   aliases: ['open'],
   description: 'Use an item in your bag',
-  category: 'Cricket',
+  category: 'Dogenomy',
   syntax: 'e.use <itemName>',
   cooldown: 7,
   run: async ({message, args, prefix}) => {
@@ -24,7 +24,7 @@ module.exports = {
       if(args[0] !== 'lb' && args[0] !== 'lootbox' && args[0] !== 'loot') return;
     }
     
-    const itemArray = await checkItems(message, 'cricket/use.js');
+    const itemArray = await checkItems(message, 'dogenomy/use.js');
     
     if(itemArray == 'err') return;
     let itemAmount = itemArray[1];

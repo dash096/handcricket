@@ -5,6 +5,7 @@ const embedColor = require('../../functions/getEmbedColor.js');
 
 module.exports = {
   name: 'help',
+  aliases: ['halp'],
   description: 'Get help!',
   category: 'General',
   syntax: 'e.help',
@@ -14,14 +15,15 @@ module.exports = {
     try {
       const commands = await getCommands();
       const general = commands[0];
-      const cricket = commands[1];
-      const minigames = commands[2];
+      const dogenomy = commands[1];
+      const games = commands[2];
+      const minigames = commands[3];
       
       const send = new Discord.MessageEmbed()
         .setTitle('Help')
-        .setDescription('Here\'s an Interactive GUIDE for you!\n\n')
+        .setDescription('**__The prefix is `e.` forever and ever!__**\n\nHere\'s an Interactive GUIDE for you!\n\n')
         .addField('Navigate via the pages of the guide by appending the number next to ' + `${prefix}help`, 
-          '1) ❓ - **__About and Guide__**\n2) 👀 - **__General Conmands__**\n3) 🏏 - **__Cricket Commands__**\n4) 🎮 - **__Minigames Commands__**')
+          '1) ❓ - **__About and Guide__**\n2) 👀 - **__General Conmands__**\n3) 💰 - **__Dogenomy Commands__**\n4) 🔫 - **__Games Commands__**\n5) 🎲 - **__MiniGames Commands__**')
         .addField('Links', '[Add the bot](https://bit.ly/dispoBot)\n[Vote me](https://top.gg/bot/804346878027235398/vote)\n[Support Server](https://bit.ly/dispoGuild)')
         .setColor(embedColor)
         .attachFiles('./assets/banner.jpg')
@@ -31,8 +33,9 @@ module.exports = {
       const helpEmbed = await channel.send('Loading...');
       await helpEmbed.react('❓');
       await helpEmbed.react('👀');
-      await helpEmbed.react('🏏');
-      await helpEmbed.react('🎮');
+      await helpEmbed.react('💰');
+      await helpEmbed.react('🔫');
+      await helpEmbed.react('🎲');
       await helpEmbed.react('❌');
       await helpEmbed.edit(null, { embed: send });
       
@@ -54,10 +57,13 @@ module.exports = {
           } else if (reaction == '👀') {
             helpEmbed.edit(getEmbed('general'));
             return checkReaction();
-          } else if (reaction == '🏏') {
-            helpEmbed.edit(getEmbed('cricket'));
+          } else if (reaction == '💰') {
+            helpEmbed.edit(getEmbed('dogenomy'));
             return checkReaction();
-          } else if (reaction == '🎮') {
+          } else if (reaction == '🔫') {
+            helpEmbed.edit(getEmbed('games'));
+            return checkReaction();
+          } else if (reaction == '🎲') {
             helpEmbed.edit(getEmbed('minigames'));
             return checkReaction();
           } else {
@@ -84,9 +90,14 @@ module.exports = {
           .setDescription(general)
           .setColor(embedColor)
           .setFooter('Requested by ' + author.username);
-        const cricketEmbed = new Discord.MessageEmbed()
-          .setTitle('Cricket Commands')
-          .setDescription(cricket)
+        const dogenomyEmbed = new Discord.MessageEmbed()
+          .setTitle('Dogenomy Commands')
+          .setDescription(dogenomy)
+          .setColor(embedColor)
+          .setFooter('Requested by ' + author.username);
+        const gamesEmbed = new Discord.MessageEmbed()
+          .setTitle('Games Commands')
+          .setDescription(games)
           .setColor(embedColor)
           .setFooter('Requested by ' + author.username);
         const minigamesEmbed = new Discord.MessageEmbed()
@@ -97,7 +108,8 @@ module.exports = {
         
         if(name == 'about') return aboutEmbed;
         else if(name == 'general') return generalEmbed;
-        else if(name == 'cricket') return cricketEmbed;
+        else if(name == 'dogenomy') return dogenomyEmbed;
+        else if(name == 'games') return gamesEmbed;
         else return minigamesEmbed;
       }
     } catch (e) {
@@ -107,24 +119,27 @@ module.exports = {
 };
 
 function getCommands() {
-  let General = '';
-  let Cricket = '';
-  let Minigames = '';
+  let general = '';
+  let dogenomy = '';
+  let games = '';
+  let minigames = '';
   const folders = fs.readdirSync('./commands');
   for(const folder of folders) {
     const files = fs.readdirSync(`./commands/${folder}`);
     for(const file of files) {
       const command = require(`../${folder}/${file}`);
-      if(folder.toLowerCase() == 'cricket') {
-        Cricket += `**${command.name}** - \`${command.syntax}\`\n ${command.description}\n\n`;
+      if(folder.toLowerCase() == 'games') {
+        games += `**${command.name}** - \`${command.syntax}\`\n ${command.description}\n\n`;
       } else if (folder.toLowerCase() == 'general') {
-        General += `**${command.name}** - \`${command.syntax}\`\n ${command.description}\n\n`;
+        general += `**${command.name}** - \`${command.syntax}\`\n ${command.description}\n\n`;
+      } else if (folder.toLowerCase() == 'dogenomy') {
+        dogenomy += `**${command.name}** - \`${command.syntax}\`\n ${command.description}\n\n`;
       } else if (folder.toLowerCase() == 'minigames') {
-        Minigames += `**${command.name}** - \`${command.syntax}\`\n ${command.description}\n\n`;
+        minigames += `**${command.name}** - \`${command.syntax}\`\n ${command.description}\n\n`;
       }
     }
   }
   return [
-    General, Cricket, Minigames
+    general, dogenomy, games, minigames
   ];
 }

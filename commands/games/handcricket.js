@@ -2,15 +2,15 @@ const db = require("../../schemas/player.js");
 const Discord = require("discord.js");
 const getErrors = require("../../functions/getErrors.js");
 const getTarget = require("../../functions/getTarget.js");
-const firstInnings = require("../../functions/duoInnings1.js");
-const executeTeamMatch = require("../../functions/teamMatch.js");
-const executeDuoMatch = require("../../functions/duoMatch.js");
+const firstInnings = require("../../cricketFunctions/duoInnings1.js");
+const executeTeamMatch = require("../../cricketFunctions/teamMatch.js");
+const executeDuoMatch = require("../../cricketFunctions/duoMatch.js");
 
 module.exports = {
   name: "handcricket",
   aliases: ["hc", "cricket", "play"],
   description: "Play handcricket with a user",
-  category: "Cricket",
+  category: "Games",
   syntax: "e.handcricket @user --post (to post scores in channel)",
   status: true,
   cooldown: 10,
@@ -39,7 +39,7 @@ module.exports = {
         if (!target) return;
         if (user.id === target.id) {
           return message.reply(
-            getErrors({ error: "syntax", filePath: "cricket/handcricket.js" })
+            getErrors({ error: "syntax", filePath: "games/handcricket.js" })
           );
         }
         //Status Validation

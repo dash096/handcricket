@@ -1,11 +1,11 @@
 const db = require('../schemas/player.js');
 const Discord = require('discord.js');
-const embedColor = require('./getEmbedColor.js');
+const embedColor = require('../functions/getEmbedColor.js');
 const getEmoji = require('../index.js');
-const getErrors = require('./getErrors.js');
-const updateBags = require('./updateBag.js');
+const getErrors = require('../functions/getErrors.js');
+const updateBags = require('../functions/updateBag.js');
 const commentry = require('./getCommentry.js');
-const gainExp = require('./gainExp.js');
+const gainExp = require('../functions/gainExp.js');
 
 module.exports = async function innings(client, players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, message, max, oldLogs, target) {
   let { channel } = message;
@@ -701,29 +701,31 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
     
     //PurpleCaps
     let orangeCapHolder = await getOrangeCapHolder();
-    let orangeCapHolderData = await db.findOne({ _id: orangeCapHolder });
-    if(orangeCapHolderData && orangeCapHolderData._id) {
-      let oldCaps = orangeCapHolderData.orangeCaps || 0;
-      await db.findOneAndUpdate({ _id: orangeCapHolder }, {
-        $set: {
-          orangeCaps: oldCaps + 1
-        }
-      });
-      console.log('orange', orangeCapHolder);
+    if(orangeCapHolder != '0000') {
+      let orangeCapHolderData = await db.findOne({ _id: orangeCapHolder });
+      if(orangeCapHolderData && orangeCapHolderData._id) {
+        let oldCaps = orangeCapHolderData.orangeCaps || 0;
+        await db.findOneAndUpdate({ _id: orangeCapHolder }, {
+          $set: {
+            orangeCaps: oldCaps + 1
+          }
+        });
+        console.log('orange', orangeCapHolder);
+      }
+    
+      let rewardsEmbed = new Discord.MessageEmbed()
+        .setTitle('Rewards')
+        .addField(
+          'Coins',
+          `${coinEmoji} ${randoCoins} for ${wonTeam[0].username}'s team\n` + 
+          `${coinEmoji} ${parseInt(randoCoins/3)} for ${lostTeam[0].username}'s team`
+        )
+        .addField('OrangeCap Holder', (await client.users.fetch(orangeCapHolder)).username)
+        .setFooter('Legends say that they have noticed many other rewards!')
+        .setColor(embedColor);
+    
+      channel.send('Aight Guys, here are the rewards', rewardsEmbed);
     }
-    
-    let rewardsEmbed = new Discord.MessageEmbed()
-      .setTitle('Rewards')
-      .addField(
-        'Coins',
-        `${coinEmoji} ${randoCoins} for ${wonTeam[0].username}'s team\n` + 
-        `${coinEmoji} ${parseInt(randoCoins/3)} for ${lostTeam[0].username}'s team`
-      )
-      .addField('OrangeCap Holder', (await client.users.fetch(orangeCapHolder)).username)
-      .setFooter('Legends say that they have noticed many other rewards!')
-      .setColor(embedColor);
-    
-    channel.send('Aight Guys, here are the rewards', rewardsEmbed);
     
     async function getOrangeCapHolder() {
       let inningsOne = await getInningsHighestScore(i1Logs.batting);

@@ -7,7 +7,7 @@ module.exports = {
   name: 'leaderboard',
   aliases: ['lb', 'rank'],
   description: 'Check the leaderboard of StrikeRate, Wins, Xp and Balance',
-  category: 'Cricket',
+  category: 'Dogenomy',
   syntax: 'e.leaderboard <strike/wins/coin/xp/orange>',
   cooldown: 20,
   run: async ({ message, args, client }) => {
@@ -17,7 +17,7 @@ module.exports = {
     let type = args[0];
     
     if(!availableTypes.find(type => type == args[0])) {
-      message.reply(getErrors({ error: 'syntax', filePath: 'cricket/leaderboard.js'}));
+      message.reply(getErrors({ error: 'syntax', filePath: 'dogenomy/leaderboard.js'}));
       return;
     }
     

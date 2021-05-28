@@ -10,7 +10,7 @@ const updateCoins = require('../../functions/updateCoins.js');
 module.exports = {
   name: 'buy',
   description: 'Buy an item from the shop',
-  category: 'Cricket',
+  category: 'Dogenomy',
   syntax: 'e.buy <itemName> <amount>',
   cooldown: 10,
   run: async ({message}) => {
@@ -18,7 +18,7 @@ module.exports = {
     const coinEmoji = await getEmoji('coin');
     
     //Get items
-    const itemsArray = await checkItems(message, 'cricket/buy.js');
+    const itemsArray = await checkItems(message, 'dogenomy/buy.js');
     if(itemsArray == 'err') return;
     
     //Item Info

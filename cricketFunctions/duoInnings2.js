@@ -2,10 +2,11 @@ const db = require("../schemas/player.js");
 const Discord = require("discord.js");
 const getEmoji = require('../index.js');
 const rewards = require('./rewards.js');
-const updateBag = require('./updateBag.js');
+const updateBag = require('../functions/updateBag.js');
 const serverID = process.env.SERVERID;
-const embedColor = require('./getEmbedColor.js');
+const embedColor = require('../functions/getEmbedColor.js');
 const commentry = require('./getCommentry.js');
+
 //shuffled
 module.exports = async function(bowler, batsman, boS, baB, message, post, max) {
   const emoji = await getEmoji('coin');

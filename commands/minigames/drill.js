@@ -1,7 +1,7 @@
 const gain = require('../../functions/gainExp.js');
 const db = require('../../schemas/player.js');
 const getEmoji = require('../../index.js');
-const updateCoins = require('../cricket/train.js');
+const updateCoins = require('../../functions/updateCoins.js');
 const getErrors = require('../../functions/getErrors.js');
 
 let time = 7000;

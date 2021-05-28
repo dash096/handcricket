@@ -4,7 +4,9 @@ const embedColor = require('../../functions/getEmbedColor.js');
 
 module.exports = {
   name: 'about',
+  aliases: ['info'],
   description: 'Shows info about the bot',
+  category: 'General',
   syntax: 'e.about',
   run: async ({message, client}) => {
     let { channel } = message;

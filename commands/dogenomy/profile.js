@@ -11,9 +11,9 @@ const embedColor = require('../../functions/getEmbedColor.js');
 
 module.exports = {
   name: 'profile',
-  aliases: ['pf', 'info'],
+  aliases: ['pf', 'stat'],
   description: 'Shows the profile of a user.',
-  category: 'Cricket',
+  category: 'Dogenomy',
   syntax: 'e.profile @user',
   cooldown: 6,
   run: async ({message, args, client}) => {

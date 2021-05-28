@@ -7,7 +7,7 @@ module.exports = {
   aliases: ['wear', 'drop', 'unequip'],
   description: 'Equip your fav decoration',
   syntax: 'e.equip <the_item_name_in_your_bag>',
-  category: 'Cricket',
+  category: 'Dogenomy',
   cooldown: 30,
   run: async ({message, client, prefix}) => {
     const { author, content, channel, mentions } = message;
@@ -19,8 +19,7 @@ module.exports = {
     const args = content.toLowerCase().trim().split(/ +/);
     
     if(!args || args.length === 0) {
-      let error = 'syntax'; let filePath = 'cricket/equip.js';
-      message.reply(getErrors({error, filePath}));
+      message.reply(getErrors({error: 'syntax', filePath: 'dogenomy/equip.js'}));
       return;
     }
     

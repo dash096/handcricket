@@ -5,7 +5,7 @@ module.exports = {
   name: "start",
   aliases: ["play"],
   description: "Creates a Database",
-  category: 'Cricket',
+  category: 'Dogenomy',
   syntax: 'e.start',
   cooldown: 30,
   run: async ({message}) => {

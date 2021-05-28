@@ -1,7 +1,7 @@
 const db = require('../schemas/player.js');
 const gain = require('../functions/gainExp.js');
-const getDecors = require('./getDecors.js');
-const updateDecor = require('./updateDecor.js');
+const getDecors = require('../functions/getDecors.js');
+const updateDecor = require('../functions/updateDecor.js');
 
 module.exports = async function(winner, loser, coins, wS, wB, lS, lB, message) {
   const { channel } = message;
@@ -64,7 +64,7 @@ module.exports = async function(winner, loser, coins, wS, wB, lS, lB, message) {
   const winnerSet = {
     $set: {
       cc: parseInt(winnerCoins) + parseInt(coins),
-      coinMulti: (parseFloat(winnerCoinMulti) + parseFloat((random/2).toFixed(3))),
+      coinMulti: (parseFloat(winnerCoinMulti) + 0.0345),
       wins: winnerWins + 1,
       strikeRate: wSTR,
       xp: winnerXP + randoXP,

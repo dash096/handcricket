@@ -9,12 +9,18 @@ module.exports = ({client, prefix, topggapi}) => {
       content, author, channel, mentions, guild
     } = message;
     
+    if (
+      !content.toLowerCase().startsWith(prefix) ||
+      author.bot ||
+      channel.type === 'dm'
+    ) {
+      if(!content.trim().startsWith(`<@${client.user.id}>`)) return;
+    }
+    
     if(content.trim().startsWith(`<@${client.user.id}>`)) {
       message.reply('Oi! My prefix is `e.` Use `e.help` if you want to know more about me :)');
       return;
     }
-    
-    if (!content.toLowerCase().startsWith(prefix) || author.bot || channel.type === 'dm') return;
     
     //BlackLists
     let blacklistedUsers = [];
@@ -28,11 +34,12 @@ module.exports = ({client, prefix, topggapi}) => {
     'SEND_MESSAGES',
     'READ_MESSAGE_HISTORY'
     ];
-    for(const perm of perms) {
+    await perms.forEach(perm => {
       let hasPerm = guild.me.permissionsIn(channel).has(perm);
       if(hasPerm === false && perm === 'SEND_MESSAGES') {
         try {
           author.send('I do not have send messages perms to execute that command in that channel.');
+          return;
         } catch(e) {
           return;
         }
@@ -54,7 +61,7 @@ module.exports = ({client, prefix, topggapi}) => {
         }
         return message.reply('I dont have all of my perms in that channel, My required Permissions are:\n' + getPerms());
       }
-    }
+    });
     
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();

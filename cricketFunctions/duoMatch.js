@@ -1,10 +1,10 @@
 const db = require("../schemas/player.js");
 const Discord = require("discord.js");
-const getErrors = require('./getErrors.js');
+const getErrors = require('../functions/getErrors.js');
 const getEmoji = require('../index.js');
 const firstInnings = require("./duoInnings1.js");
-const rollToss = require('./rollToss.js');
-const chooseToss = require('./chooseToss.js');
+const rollToss = require('../functions/rollToss.js');
+const chooseToss = require('../functions/chooseToss.js');
 
 module.exports = async (message, user, target) => {
   const tossEmoji = await getEmoji('toss');
@@ -52,9 +52,9 @@ module.exports = async (message, user, target) => {
         return await checkWill();
       }
     } catch(e) {
-      let error = 'time';
-      message.reply(getErrors({error}));
-      return console.log(e);
+      message.reply(getErrors({error: 'time'}));
+      console.log(e);
+      return false;
     }
   }
     

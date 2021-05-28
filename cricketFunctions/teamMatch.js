@@ -1,12 +1,12 @@
 const db = require("../schemas/player.js");
 const Discord = require("discord.js");
-const getErrors = require('./getErrors.js');
+const getErrors = require('../functions/getErrors.js');
 const getEmoji = require('../index.js');
 const firstInnings = require("./duoInnings1.js");
-const embedColor = require('./getEmbedColor.js');
+const embedColor = require('../functions/getEmbedColor.js');
 const executeTeamMatch = require('./teamInnings.js');
-const chooseToss = require('./chooseToss.js');
-const rollToss = require('./rollToss.js');
+const chooseToss = require('../functions/chooseToss.js');
+const rollToss = require('../functions/rollToss.js');
 
 module.exports = async (message, client) => {
   const { channel, content, author, mentions } = message;

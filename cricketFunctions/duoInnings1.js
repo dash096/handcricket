@@ -1,9 +1,9 @@
 const db = require("../schemas/player.js");
 const Discord = require("discord.js");
 const secondInnings = require("./duoInnings2.js");
-const updateBag = require('./updateBag.js');
+const updateBag = require('../functions/updateBag.js');
 const getEmoji = require('../index.js');
-const embedColor = require('./getEmbedColor.js');
+const embedColor = require('../functions/getEmbedColor.js');
 const commentry = require('./getCommentry.js');
 
 module.exports = async function(batsman, bowler, message, post, max) {
