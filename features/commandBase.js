@@ -39,10 +39,10 @@ module.exports = ({client, prefix, topggapi}) => {
       if(hasPerm === false && perm === 'SEND_MESSAGES') {
         try {
           author.send('I do not have send messages perms to execute that command in that channel.');
-          return;
         } catch(e) {
           return;
         }
+        return;
       } else if(hasPerm === false) {
         function getPerms() {
           let text = '';

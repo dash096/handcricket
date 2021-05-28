@@ -64,7 +64,7 @@ module.exports = async function(winner, loser, coins, wS, wB, lS, lB, message) {
   const winnerSet = {
     $set: {
       cc: parseInt(winnerCoins) + parseInt(coins),
-      coinMulti: (parseFloat(winnerCoinMulti) + 0.0345),
+      coinMulti: (parseFloat(winnerCoinMulti) + 0.0069),
       wins: winnerWins + 1,
       strikeRate: wSTR,
       xp: winnerXP + randoXP,
