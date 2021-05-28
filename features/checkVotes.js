@@ -99,7 +99,7 @@ async function rewards(data, user) {
     newValue = bag;
     newValue[decor] = (bag[decor] || 0) + 1;
   } else {
-    reward = Math.random() * 696;
+    reward = parseInt(Math.random() * 696);
     newValue = data.cc + reward;
   }
   

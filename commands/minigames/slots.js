@@ -79,8 +79,8 @@ module.exports = {
       async function getText() {
         const random = Math.random();
         const decideWin = () => {
-          if(bet/500 > 0.45) {
-            return 0.6;
+          if(bet/500 > 0.35) {
+            return 0.4;
           } else {
             return bet/500;
           }

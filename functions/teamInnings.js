@@ -575,6 +575,12 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
 
           //Wicket
           if (bowled === rando) {
+            teamScore -= parseInt(rando);
+            if (batExtra) {
+              logs.batting['0000'].pop()
+            } else {
+              logs.batting[batsman.id].pop()
+            }
             let currentIndex = getIndex(battingTeam, batsman);
             let response = battingTeam[currentIndex + 1] || 'end';
             if (batExtra === true) {
