@@ -96,7 +96,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
             if(type === 'bat' && logs.batting['0000'].length === 1) STRs[oldResponse.id] = [(logs.batting[oldResponse.id])[(logs.batting[oldResponse.id]).length - 1], logs.currentBalls];
             logs.batting['0000'] = [finalScore];
           } else {
-            if((logs.batting[oldResponse.id]).length === 1 && !ducks.find(player => player.id == responseX.id)) ducks.push(responseX);
+            if (type === 'bat' && (logs.batting[oldResponse.id]).length === 1 && !ducks.find(player => player.id == responseX.id)) ducks.push(responseX);
             let finalScore = (logs.batting[oldResponse.id])[(logs.batting[oldResponse.id]).length - 1];
             if(type === 'bat') STRs[oldResponse.id] = [finalScore, logs.currentBalls];
             logs.batting[oldResponse.id] = [finalScore];
