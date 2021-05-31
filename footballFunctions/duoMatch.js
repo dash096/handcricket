@@ -10,9 +10,6 @@ const positions = require('./positions.js');
 module.exports = async (client, message, attacker, defender, post) => {
   const { content, channel, mentions, author } = message;
   
-  let startTime = Date.now();
-  let timeoutTime = 5 * 60 * 1000;
-  
   let firstPair = [attacker, defender];
   
   let fieldImage = await jimp.read('./assets/field_football.jpg');
@@ -55,7 +52,7 @@ module.exports = async (client, message, attacker, defender, post) => {
     .addField('Defender', `${getFlame('def')} ${defender.username} (\`Goals:\` ${logs[defender.id]})`)
     .attachFiles(exportPath)
     .setImage(`attachment://${exportPath.split('/').pop()}`)
-    .setFooter("5 mins remaining...")
+    .setFooter("20 turns remaining until Full time")
     .setColor(embedColor)
   
   const firstAtkEmbed = await attacker.send(embed);
@@ -94,7 +91,7 @@ module.exports = async (client, message, attacker, defender, post) => {
           .addField('Defender', `${getFlame('def')} ${defender.username} (${logs[defender.id]})`)
           .attachFiles(exportPath)
           .setImage(`attachment://${exportPath.split('/').pop()}`)
-          .setFooter(`${getTime()} minutes remaining...`)
+          .setFooter((20 - atkLogs.length).toString() + " turns remaining until Full time")
           .setColor(embedColor)
           
         if (atkLogs.slice(-1)[0] === defLogs.slice(-1)[0]) {
@@ -142,7 +139,7 @@ module.exports = async (client, message, attacker, defender, post) => {
           .addField('Defender', `${getFlame('def')} ${defender.username} (${logs[defender.id]})`)
           .attachFiles(exportPath)
           .setImage(`attachment://${exportPath.split('/').pop()}`)
-          .setFooter(`${getTime()} minutes remaining...`)
+          .setFooter((20 - atkLogs.length).toString() + " turns remaining until Full time")
           .setColor(embedColor)
         
         let attackerChoice = atkLogs.slice(-1)[0];
@@ -198,16 +195,6 @@ module.exports = async (client, message, attacker, defender, post) => {
     }).then(async (collected) => {
       if(over) return;
       
-      if(!goalChance) {
-        await msg.react('1️⃣');
-        await msg.react('2️⃣');
-        await msg.react('3️⃣');
-      } else {
-        await msg.react('↖️');
-        await msg.react('⬆️');
-        await msg.react('↗️');
-      }
-      
       const emoji = collected.first().emoji.name;
       
       if(atkLogs.length > defLogs.length) {
@@ -257,6 +244,17 @@ module.exports = async (client, message, attacker, defender, post) => {
         return attackCollect(msg, goalChance);
       }
     });
+      
+    if(!goalChance) {
+      await msg.react('1️⃣');
+      await msg.react('2️⃣');
+      await msg.react('3️⃣');
+    } else {
+      await msg.react('↖️');
+      await msg.react('⬆️');
+      await msg.react('↗️');
+    }
+    
   }
   
   async function defendCollect(msg, goalChance) {
@@ -268,16 +266,6 @@ module.exports = async (client, message, attacker, defender, post) => {
       errors: ['time'],
     }).then(async (collected) => {
       if(over) return;
-      
-      if(!goalChance) {
-        await msg.react('1️⃣');
-        await msg.react('2️⃣');
-        await msg.react('3️⃣');
-      } else {
-        await msg.react('↖️');
-        await msg.react('⬆️');
-        await msg.react('↗️');
-      }
       
       const emoji = collected.first().emoji.name;
       
@@ -328,6 +316,17 @@ module.exports = async (client, message, attacker, defender, post) => {
         return defendCollect(msg, goalChance);
       }
     });
+      
+    if(!goalChance) {
+      await msg.react('1️⃣');
+      await msg.react('2️⃣');
+      await msg.react('3️⃣');
+    } else {
+      await msg.react('↖️');
+      await msg.react('⬆️');
+      await msg.react('↗️');
+    }
+    
   }
   
   
@@ -393,14 +392,6 @@ module.exports = async (client, message, attacker, defender, post) => {
     }
   }
   
-  function getTime() {
-    let diff = timeoutTime - (Date.now() - startTime);
-    let min = diff/1000 / 60;
-    if (min === diff) min = 0;
-    let sec = diff/1000 % 60
-    return `${parseInt(min)}.${parseInt(sec)}`;
-  }
-  
   async function updateField(goal, step, attack) {
     console.log(step, attack);
     
@@ -448,38 +439,39 @@ module.exports = async (client, message, attacker, defender, post) => {
     return;
   }
   
-  async function penalty() {
+  async function penalty(reason) {
     console.log('Penalty starts!');
+    attacker.send(reason, ' Penalty Shootout starts but yet to be made...');
+    defender.send(reason, ' Penalty Shootout starts but yet to be made...');
+    return;
   }
   
   function checkTimeup() {
     console.log((Date.now() - startTime)/1000, timeoutTime/1000, steps);
     
-    if (
-      Date.now() - startTime >= timeoutTime ||
-      atkLogs.length > 10
-    ) {
-      if (Date.now() - startTime >= timeoutTime) {
-        penalty();
-      } else if (steps === 0) {
-        penalty();
+    if (atkLogs.length > 17) {
+      if (steps === 0) {
+        penalty('Full Time');
+        over = true;
+        changeStatus(attacker, false);
+        changeStatus(defender, false);
+        return;
       }
-      over = true;
-      changeStatus(attacker, false);
-      changeStatus(defender, false);
-      return;
-    } else {
-      return;
     }
+    return;
+  }
+  
+  async function changeStatus(user, boolean) {
+    if(boolean !== true && boolean !== false) return;
+    
+    await db.findOneAndUpdate({ _id: user.id }, {
+      $set: {
+        status: boolean
+      }
+    });
+    
+    await fs.unlink(exportPath, (e) => {
+      if(e) console.log(e);
+    });
   }
 };
-
-async function changeStatus(user, boolean) {
-  if(boolean !== true && boolean !== false) return;
-  
-  await db.findOneAndUpdate({ _id: user.id }, {
-    $set: {
-      status: boolean
-    }
-  });
-}

@@ -3,7 +3,7 @@ const Discord = require("discord.js");
 const getErrors = require("../../functions/getErrors.js");
 const getTarget = require("../../functions/getTarget.js");
 const executeDuoMatch = require("../../footballFunctions/duoStart.js");
-const ServerID = process.env.SERVER_ID;
+const ServerID = process.env.SERVERID;
 
 module.exports = {
   name: "handfootball",
