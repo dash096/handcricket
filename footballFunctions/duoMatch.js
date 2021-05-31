@@ -91,7 +91,7 @@ module.exports = async (client, message, attacker, defender, post) => {
           .addField('Defender', `${getFlame('def')} ${defender.username} (${logs[defender.id]})`)
           .attachFiles(exportPath)
           .setImage(`attachment://${exportPath.split('/').pop()}`)
-          .setFooter((20 - atkLogs.length).toString() + " turns remaining until Full time")
+          .setFooter((21 - atkLogs.length ).toString() + " turns remaining until Full time")
           .setColor(embedColor)
           
         if (atkLogs.slice(-1)[0] === defLogs.slice(-1)[0]) {
@@ -121,7 +121,7 @@ module.exports = async (client, message, attacker, defender, post) => {
         let atkEmbed = await attacker.send(text, { embed });
         let defEmbed = await defender.send(text, { embed });
         
-        await checkTimeup();
+        if(atkLogs.length >18) await checkTimeup();
         if(over) return;
         
         attackCollect(atkEmbed, goalChance);
@@ -139,7 +139,7 @@ module.exports = async (client, message, attacker, defender, post) => {
           .addField('Defender', `${getFlame('def')} ${defender.username} (${logs[defender.id]})`)
           .attachFiles(exportPath)
           .setImage(`attachment://${exportPath.split('/').pop()}`)
-          .setFooter((20 - atkLogs.length).toString() + " turns remaining until Full time")
+          .setFooter((21 - atkLogs.length).toString() + " turns remaining until Full time")
           .setColor(embedColor)
         
         let attackerChoice = atkLogs.slice(-1)[0];
@@ -175,7 +175,7 @@ module.exports = async (client, message, attacker, defender, post) => {
         let atkEmbed = await attacker.send(text, { embed });
         let defEmbed = await defender.send(text, { embed });
         
-        await checkTimeup();
+        if(atkLogs.length >18) await checkTimeup();
         if(over) return;
         
         attackCollect(atkEmbed, undefined);
@@ -447,16 +447,12 @@ module.exports = async (client, message, attacker, defender, post) => {
   }
   
   function checkTimeup() {
-    console.log((Date.now() - startTime)/1000, timeoutTime/1000, steps);
-    
-    if (atkLogs.length > 17) {
-      if (steps === 0) {
-        penalty('Full Time');
-        over = true;
-        changeStatus(attacker, false);
-        changeStatus(defender, false);
-        return;
-      }
+    if (steps === 0) {
+      penalty('Full Time');
+      over = true;
+      changeStatus(attacker, false);
+      changeStatus(defender, false);
+      return;
     }
     return;
   }
