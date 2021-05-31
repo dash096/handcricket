@@ -403,7 +403,7 @@ module.exports = async (client, message, attacker, defender, post) => {
     let centerX = 500;
     let centerY = 550;
     
-    if(firstPair[0].id === attacker.id) {
+    if (firstPair[0].id === attacker.id) {
       let ballPosition = positions.red[step - 1] || positions.blue[step];
       ballPosition = ballPosition[attack - 1];
       
@@ -411,20 +411,13 @@ module.exports = async (client, message, attacker, defender, post) => {
         .composite(ballImage, ballPosition.x, ballPosition.y)
       
     } else {
-      let ballPosition;
-      
-      if(!goal) {
-        ballPosition = positions.blue[step - 1] || positions.blue[step];
-        ballPosition = ballPosition[attack - 1];
-      } else {
-        ballPosition = positions.red[step - 1] || positions.red[step];
-        ballPosition = ballPosition[attack - 1];
-      }
+      let ballPosition = positions.blue[step - 1] || positions.blue[step];
+      ballPosition = ballPosition[attack - 1];
       
       await newFieldImage
         .composite(ballImage, ballPosition.x, ballPosition.y)
       
-      if(goal)  {
+      if (goal)  {
         await newFieldImage
           .print(await jimp.loadFont(jimp.FONT_SANS_128_BLACK), centerX, centerY, goalText)
       } else {
