@@ -165,6 +165,8 @@ module.exports = async (client, message, attacker, defender, post) => {
           
           if(logs[defender.id] === 2) {
             over = true;
+            changeStatus(attacker, false);
+            changeStatus(defender, false);
             if(post === true) channel.send(`${defender.username} is the first to reach 2 goals! They won!`, { embed })
             defender.send(`You won! You are the first to reach 2 goals!`, { embed })
             attacker.send(`You lost, ${attacker.username} is the first to reach 2 goals!`, { embed })
@@ -243,8 +245,9 @@ module.exports = async (client, message, attacker, defender, post) => {
         attacker.id === firstPair[1].id &&
         defenderIsActive === false
       ) {
-        console.log('ar');
         over = true;
+        changeStatus(attacker, false);
+        changeStatus(defender, false);
         attacker.send(`Match Ended, as you were inactive`);
         defender.send(`Match Ended, as **${attacker.username}** was inactive`);
         if(post === true) channel.send(`Match Ended, as **${attacker.username}** was inactive`);
@@ -314,7 +317,8 @@ module.exports = async (client, message, attacker, defender, post) => {
         attackerIsActive === false
       ) {
         over = true;
-        console.log('dr');
+        changeStatus(attacker, false);
+        changeStatus(defender, false);
         attacker.send(`Match Ended, as **${defender.username}** was inactive`);
         defender.send(`Match Ended, as you were inactive`);
         if(post === true) channel.send(`Match Ended, as **${defender.username}** was inactive`);
@@ -461,9 +465,21 @@ module.exports = async (client, message, attacker, defender, post) => {
         penalty();
       }
       over = true;
+      changeStatus(attacker, false);
+      changeStatus(defender, false);
       return;
     } else {
       return;
     }
   }
 };
+
+async function changeStatus(user, boolean) {
+  if(boolean !== true && boolean !== false) return;
+  
+  await db.findOneAndUpdate({ _id: user.id }, {
+    $set: {
+      status: boolean
+    }
+  });
+}
