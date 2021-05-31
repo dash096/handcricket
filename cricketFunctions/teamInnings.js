@@ -12,7 +12,9 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
   let isInnings2;
   let ducks = [];
   let STRs = {};
-  
+
+  lookForEndMessages(players, battingCap, bowlingCap, channel);
+
   start(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel, oldLogs, target);
   function start(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel, oldLogs, target) {
     let checkTimeup = [];
@@ -22,8 +24,6 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
       bowling: {},
       currentBalls: 0,
     };
-
-    lookForEndMessages(players, battingCap, bowlingCap, channel);
 
     //Push to Logs and get Tags
     let battingTeamTags = [];
@@ -184,7 +184,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           changeStatus(players, false)
           logs.currentBalls = 0;
           //rewards for bowlingTeam
-          const randoCoins = Math.floor((Math.random() * 696)/1.5);
+          const randoCoins = parseInt((Math.random() * 696)/1.5);
           return rewards(channel, bowlingTeam, battingTeam, oldLogs, logs, randoCoins, ducks, STRs);
         } else if (response === 'win') {
           if (batExtra) {
@@ -201,7 +201,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           isInnings2 = 'over';
           changeStatus(players, false)
           //rewards for battingTeam
-          const randoCoins = Math.floor((Math.random() * 696)/1.5);
+          const randoCoins = parseInt((Math.random() * 696)/1.5);
           return rewards(channel, battingTeam, bowlingTeam, oldLogs, logs, randoCoins, ducks, STRs);
         } else {
           if (type === 'bat') {
@@ -632,25 +632,6 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         });
     }
     
-    async function lookForEndMessages(players, cap1, cap2, channel) {
-      const messageCollector = channel.createMessageCollector(
-        message => {
-          if (message.author.bot === true) return;
-          let c = message.content.toLowerCase().trim();
-          if (c == 'e.hc x' || c == 'e.hc end') return true;
-        }
-      )
-      
-      messageCollector.on('collect', (message) => {
-        if (message.author.id === cap1.id || message.author.id === cap2.id) {
-          respond(`forceEnd: ${message.author.tag} ended.`);
-          messageCollector.stop();
-        } else if (players.find(player => player.id == message.author.id)) {
-          message.reply('Only captains can end a match!');
-        }
-      });
-    }
-
     function getPlayerTagWithLogs(team, type, cap, current) {
       let playerAndLog = [];
       team.forEach(player => {
@@ -662,7 +643,8 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
             else if (current.id === id) playerAndLog.push(`*__${username}__* (cap)     ${ log[log.length - 1] }`);
             else playerAndLog.push(`${username} (cap)     ${log[log.length - 1]}`)
           } else if (id === current.id) {
-            playerAndLog.push(`*__${username}__*     ${ log[log.length - 1] }`);
+            if(batExtra) playerAndLog.push(`*__${username}__* (EW)    ${ log[log.length - 1] }`);
+            else playerAndLog.push(`*__${username}__*     ${ log[log.length - 1] }`);
           } else {
             playerAndLog.push(`${username || `${extraPlayer.username} (EW)`}     ${ log[log.length - 1] }`);
           }
@@ -838,6 +820,25 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         });
       }
       await gainExp(data, 7, message);
+    });
+  }
+  
+  async function lookForEndMessages(players, cap1, cap2, channel) {
+    const messageCollector = channel.createMessageCollector(
+      message => {
+       if (message.author.bot === true) return;
+       let c = message.content.toLowerCase().trim();
+       if (c == 'e.hc x' || c == 'e.hc end') return true;
+      }
+    );
+    
+    messageCollector.on('collect', (message) => {
+      if (message.author.id === cap1.id || message.author.id === cap2.id) {
+        respond(`forceEnd: ${message.author.tag} ended.`);
+        messageCollector.stop();
+      } else if (players.find(player => player.id == message.author.id)) {
+        message.reply('Only captains can end a match!');
+      }
     });
   }
 }

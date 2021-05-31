@@ -22,7 +22,7 @@ module.exports = {
       const send = new Discord.MessageEmbed()
         .setTitle('Help')
         .setDescription('**__The prefix is `e.` forever and ever!__**\n\nHere\'s an Interactive GUIDE for you!\n\n')
-        .addField('Navigate via the pages of the guide by appending the number next to ' + `${prefix}help`, 
+        .addField('Navigate via the pages of the guide by Reacting', 
           '1) ❓ - **__About and Guide__**\n2) 👀 - **__General Conmands__**\n3) 💰 - **__Dogenomy Commands__**\n4) 🔫 - **__Games Commands__**\n5) 🎲 - **__MiniGames Commands__**')
         .addField('Links', '[Add the bot](https://bit.ly/dispoBot)\n[Vote me](https://top.gg/bot/804346878027235398/vote)\n[Support Server](https://bit.ly/dispoGuild)')
         .setColor(embedColor)

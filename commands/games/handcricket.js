@@ -8,10 +8,10 @@ const executeDuoMatch = require("../../cricketFunctions/duoMatch.js");
 
 module.exports = {
   name: "handcricket",
-  aliases: ["hc", "cricket", "play"],
-  description: "Play handcricket with a user",
+  aliases: ["hc", "cricket"],
+  description: "Play handcricket!",
   category: "Games",
-  syntax: "e.handcricket @user --post (to post scores in channel)",
+  syntax: "e.handcricket @user --post (to post scores in channel) --ten (to limit 1-10)",
   status: true,
   cooldown: 10,
   run: async ({ message, args, client, prefix }) => {

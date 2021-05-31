@@ -4,7 +4,7 @@ const getErrors = require('./getErrors.js');
 const getEmoji = require('../index.js');
 const firstInnings = require("../cricketFunctions/duoInnings1.js");
 
-module.exports = async (message, user, target) => {
+module.exports = async (message, user, target, football) => {
   const { channel, mentions, content } = message;
   const tossEmoji = await getEmoji('toss');
   
@@ -15,17 +15,27 @@ module.exports = async (message, user, target) => {
   
   const roll = Math.random();
   
+  function getText(who) {
+    if (who == 'user') {
+      if (!football) return `${user} won the toss, type either \`batting\` or \`bowling\` or \`end\``;
+      else return `${user} won the toss, type either \`attack\` or \`defend\` or \`end\``;
+    } else {
+      if (!football) return `${target} won the toss, type either \`batting\` or \`bowling\` or \`end\``;
+      else return `${target} won the toss, type either \`attack\` or \`defend\` or \`end\``;
+    }
+  }
+  
   //User High Toss
   if (userData.tossMulti > targetData.tossMulti) {
     //Users with roll.
     if (roll < userData.tossMulti) {
       setTimeout( () => {
-        rolling.edit(`${user} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
+        rolling.edit(getText('user'));
       }, 3000);
       return user;
     } else {//Target wins with roll.
       setTimeout( () => {
-        rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
+        rolling.edit(getText('target'));
       }, 3000);
       return target;
     }
@@ -36,12 +46,12 @@ module.exports = async (message, user, target) => {
     //Target wins with roll
     if (roll < targetData.tossMulti) {
       setTimeout( () => {
-        rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
+        rolling.edit(getText('target'));
       }, 3000);
       return target;
     } else {//User wins with roll
       setTimeout( () => {
-        rolling.edit(`${user} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
+        rolling.edit(getText('user'));
       }, 3000);
       return user;
     }
@@ -53,19 +63,19 @@ module.exports = async (message, user, target) => {
 
     if (roll2 === 1) { //User wins
       setTimeout( () => {
-        rolling.edit(`${user} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
+        rolling.edit(getText('user'));
       }, 3000);
       return user;
     } else { //Target wins
       setTimeout( () => {
-        rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
+        rolling.edit(getText('target'));
       }, 3000);
       return target;
     }
   } //Target wins
   else {
     setTimeout( () => {
-        rolling.edit(`${target} won the toss, type either \`batting\` or \`bowling\` or \`end\``);
+      rolling.edit(getText('target'));
     }, 3000);
     return target;
   }

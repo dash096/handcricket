@@ -268,9 +268,9 @@ function getCoins(data, message) {
   let coinMulti = data.coinMulti;
   if (coinMulti === 0) coinMulti = 0.09;
   if(message.guild.id == serverID) {
-    coinMulti = coinMulti * 2;
+    coinMulti = coinMulti * 1.4;
   }
-  const rando = coinMulti * 259;
+  const rando = coinMulti * 269;
   const coins = rando.toFixed(0);
   return coins;
 }

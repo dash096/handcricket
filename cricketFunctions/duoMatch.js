@@ -22,9 +22,8 @@ module.exports = async (message, user, target) => {
   if(content.toLowerCase().includes('post')) post = true;
   if(content.toLowerCase().includes('ten')) max = 10;
   
-  await channel.send(`<@${target.id}> Do you wanna play with **${user.username}**? Type \`y\`/\`n\` in 30s\n Append(add to the end) \`--post\` to the message to post the scores in this channel`);
-    
   //Execute check will
+  await channel.send(`${target} Do you wanna play cricket with **${user.username}**? Type \`y\`/\`n\` in 30s\n Append(add to the end) \`--post\` to the message to post the scores in this channel`);
   const will = await checkWill();
     
   //Ask the target if he wants to duel.
@@ -32,7 +31,7 @@ module.exports = async (message, user, target) => {
     try {
       const msgs = await channel.awaitMessages(m => m.author.id === target.id, {
         max: 1,
-        time: 17000,
+        time: 30000,
         errors: ['time']
       });
       const msg = msgs.first();
@@ -48,7 +47,6 @@ module.exports = async (message, user, target) => {
         msg.reply(`Match aborted`);
         return false;
       } else {
-        msg.reply(`Type either \`y\`/\`n\``);
         return await checkWill();
       }
     } catch(e) {
@@ -61,7 +59,7 @@ module.exports = async (message, user, target) => {
   //If will is true, roll the toss
   if(will === true) {
     try {
-      let tossWinner = await rollToss(message, user, target, post, batsman, bowler);
+      let tossWinner = await rollToss(message, user, target);
       if(tossWinner.id === user.id) {
         let chosen = await chooseToss(message, user, target);
         if(chosen == 'err') return;

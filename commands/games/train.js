@@ -45,6 +45,7 @@ module.exports = {
         multi = multi * 2;
       }
       let amount = parseInt(multi/1.5 * 494 * Math.random());
+      if(amount < 10) amount = 69;
       await message.reply(`You got ${await getEmoji('coin')} ${amount} for your fitness`);
       
       updateCoins(amount, data);
