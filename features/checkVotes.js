@@ -5,8 +5,6 @@ const express = require('express')
 const { Webhook } = require('@top-gg/sdk')
 
 module.exports = async ({client, topggapi}) => {
-  let votes = await topggapi.getVotes();
-  
   const wh = new Webhook(process.env.TOPGG_WEBHOOK_AUTH)
   const app = express()
   

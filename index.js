@@ -16,17 +16,17 @@ client.cooldowns = new Discord.Collection();
 
 module.exports = getEmojis;
 
-const topggapi = new Topgg.Api(process.env.TOPGG_TOKEN);
+const topggapi = new Topgg.Api(process.env.TOPGG_WEBHOOK_AUTH);
 
 //Ready Event
 client.on("ready", async () => {
-  console.log("Logged in!");
+  console.log("Logged in as ", client.user.username);
   
   setInterval(() => {
     topggapi.postStats({
       serverCount: client.guilds.cache.size,
     });
-    client.user.setActivity(`Cheems Cricket in ${client.guilds.cache.size} guilds!`);
+    client.user.setActivity(`Dispo in ${client.guilds.cache.size} guilds!`);
   }, 60 * 30 * 1000); //30 minutes
   
   const dbOptions = {
