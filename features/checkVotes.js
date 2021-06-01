@@ -3,18 +3,21 @@ const getEmoji = require('../index.js');
 const getDecors = require('../functions/getDecors.js');
 const express = require('express')
 const { Webhook } = require('@top-gg/sdk')
+const app = express()
 
 module.exports = async ({client, topggapi}) => {
-  const wh = new Webhook(process.env.TOPGG_WEBHOOK_AUTH)
-  const app = express()
+  const voteWebhook = new Webhook(process.env.TOPGG_WEBHOOK_AUTH)
+  
+  app.post('/topgg',
+    voteWebhook.listener(async (vote) => {
+      (await client.users.fetch("772368021821718549")).send("VOTED")
+    })
+  )
   
   app.get('/', (req, res) => {
     res.send('<h2> Hello World </h2>')
   })
   
-  app.post('/dblwebhook', wh.listener(async (vote) => {
-    (await client.users.fetch("772368021821718549")).send("VOTE", vote)
-  }))
   
   app.listen(process.env.PORT || 8080);
 };
