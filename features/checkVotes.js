@@ -58,7 +58,7 @@ async function rewards(data, user) {
   if (data.voteStreak < 10) {
     reward = 'coin';
     name = 'coin';
-  } else if (data.voteStreak > 0 && data.voteStreak % 25 !== 0) {
+  } else if (data.voteStreak > 0 && data.voteStreak % 25 === 0) {
     reward = 'lootbox';
     name = 'lootbox';
   } else {
@@ -67,6 +67,7 @@ async function rewards(data, user) {
   }
   
   const bag = data.bag || {};
+  const decors = data.decors || {};
   const decorsData = await getDecors();
   
   let newValue;
@@ -75,8 +76,8 @@ async function rewards(data, user) {
     newValue.lootbox = (bag.lootbox || 0) + 2;
   } else if (reward == 'decor') {
     let decor = decorsData[Math.floor(Math.random() * decorsData.length)];
-    newValue = bag;
-    newValue.decors[decor] = (bag.decors[decor] || 0) + 1;
+    newValue = decors;
+    newValue[decor] = (decors[decor] || 0) + 1;
   } else {
     reward = parseInt(Math.random() * 696);
     newValue = data.cc + (reward * 2);
