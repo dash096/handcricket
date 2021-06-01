@@ -13,11 +13,11 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
   let ducks = [];
   let STRs = {};
 
-  lookForEndMessages(players, battingCap, bowlingCap, channel);
-
   start(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel, oldLogs, target);
   function start(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel, oldLogs, target) {
     let checkTimeup = [];
+    
+    lookForEndMessages(players, battingCap, bowlingCap, channel);
 
     let logs = {
       batting: {},
@@ -831,25 +831,37 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
       }
       await gainExp(data, 7, message);
     });
-  }
-  
-  async function lookForEndMessages(players, cap1, cap2, channel) {
-    const messageCollector = channel.createMessageCollector(
-      message => {
-       if (message.author.bot === true) return;
-       let c = message.content.toLowerCase().trim();
-       if (c == 'e.hc x' || c == 'e.hc end') return true;
-      }
-    );
     
-    messageCollector.on('collect', (message) => {
-      if (message.author.id === cap1.id || message.author.id === cap2.id) {
-        respond(`forceEnd: ${message.author.tag} ended.`);
-        messageCollector.stop();
-      } else if (players.find(player => player.id == message.author.id)) {
-        message.reply('Only captains can end a match!');
-      }
-    });
+    async function lookForEndMessages(players, cap1, cap2, channel) {
+      const messageCollector = channel.createMessageCollector(
+        message => {
+         if (message.author.bot === true) return;
+         let c = message.content.toLowerCase().trim();
+         if (c == 'e.hc x' || c == 'e.hc end') return true;
+        }, {
+          time: 30000
+        }
+      );
+      
+      messageCollector.on('collect', (message) => {
+        if(isInnings2 && !oldLogs) return;
+        if(isInnings == 'over') return;
+        
+        if (message.author.id === cap1.id || message.author.id === cap2.id) {
+          await respond(`forceEnd: ${message.author.tag} ended.`);
+          messageCollector.stop();
+        } else if (players.find(player => player.id == message.author.id)) {
+          await message.reply('Only captains can end a match!');
+        }
+      });
+      
+      messageCollector.on('end', () => {
+        if(isInnings2 && !oldLogs) return;
+        if(isInnings == 'over') return;
+        
+        return lookForEndMessages(players, cap1, cap2, channel);
+      })
+    }
   }
 }
 
