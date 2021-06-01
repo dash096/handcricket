@@ -96,10 +96,20 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
             if(type === 'bat' && logs.batting['0000'].length === 1) STRs[oldResponse.id] = [(logs.batting[oldResponse.id])[(logs.batting[oldResponse.id]).length - 1], logs.currentBalls];
             logs.batting['0000'] = [finalScore];
           } else {
-            if (type === 'bat' && (logs.batting[oldResponse.id]).length === 1 && !ducks.find(player => player.id == responseX.id)) ducks.push(responseX);
-            let finalScore = (logs.batting[oldResponse.id])[(logs.batting[oldResponse.id]).length - 1];
-            if(type === 'bat') STRs[oldResponse.id] = [finalScore, logs.currentBalls];
-            logs.batting[oldResponse.id] = [finalScore];
+            if (type === 'bat') {
+              if ((logs.batting[oldResponse.id]).length === 1 && !ducks.find(player => player.id == responseX.id)) ducks.push(responseX);
+              let finalScore = (logs.batting[oldResponse.id])[(logs.batting[oldResponse.id]).length - 1];
+              STRs[oldResponse.id] = [finalScore, logs.currentBalls];
+              logs.batting[oldResponse.id] = [finalScore];
+            } else {
+              let finalScore = (logs.batting[responseX.id])[(logs.batting[responseX.id]).length - 1];
+              if(!batExtra) {
+                logs.batting[responseX.id] = [finalScore];
+              } else {
+                finalScore = (logs.batting['0000'])[(logs.batting['0000']).length - 1];
+                logs.batting['0000'] = [finalScore];
+              }
+            }
           }
           let batsmen = Object.keys(logs.batting);
           let bowlers = Object.keys(logs.bowling);
