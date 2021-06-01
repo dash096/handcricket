@@ -45,6 +45,7 @@ async function getCooldown(user) {
   try {
     const data = await db.findOne({ _id: user.id });
     const time = data.voteCooldown;
+    if(!time) return '';
     const ms = time.getTime() - Date.now();
     const sec = ms/1000;
     const min = sec/60;

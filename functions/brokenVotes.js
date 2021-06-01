@@ -24,18 +24,18 @@ module.exports = async ({client, topggapi}) => {
     }
   }
   
-  let voteReminder = 'Your vote timer has refreshed, you can vote here: https://top.gg/bot/804346878027235398/vote,\nJoin the community server for 2x Coin Boost, A Helmet and more!\nDo `e.invite` for the link'
+  let voteReminder = 'Your vote timer has refreshed, you can vote here: https://top.gg/bot/804346878027235398/vote\n  Join the community server for 2x Coin Boost, A Helmet and more!\nDo `e.invite` for the link'
   async function joinVote(data) {
     const user = await client.users.fetch(data._id);
     user.send(voteReminder);
     await db.findOneAndUpdate( { _id: user.id }, {
       $set: {
         voteClaim: false,
-       }, 
-       $unset: {
-         voteCooldown: false 
-       } 
-     });
+      }, 
+      $unset: {
+        voteCooldown: false 
+      } 
+    });
   }
   async function fixVote(data) {
     const user = await client.users.fetch(data._id);

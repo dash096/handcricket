@@ -13,6 +13,29 @@ module.exports = async ({client, topggapi}) => {
       console.log(vote);
       let data = await db.findOne({ _id: vote.user.id });
       let user = await client.users.fetch(vote.user);
+      let quests = data.quests || {};
+      quests.support = true;
+      await db.findOneAndUpdate({ _id: user.id }, {
+        $set: {
+          voteClaim: true,
+          voteCooldown: (Date.now() + (12 * 60 * 60 * 1000)),
+          voteStreak: (data.voteStreak + 1),
+          quests: quests,
+          lastVoted: Date.now(),
+        }
+      });
+      setTimeout(async () => {
+        let voteReminder = 'Your vote timer has refreshed, you can vote here: https://top.gg/bot/804346878027235398/vote\n  Join the community server for 2x Coin Boost, A Helmet and more!\nDo `e.invite` for the link'
+        await db.findOneAndUpdate({ _id: user.id }, {
+          $set: {
+            voteClaim: false,
+          },
+          $unset: {
+            voteCooldown: false,
+          }
+        });
+        user.send(voteReminder);
+      }, 60 * 60 * 12 * 1000);
       user.send(`Thanks for voting, You got ${await rewards} for voting!`)
     })
   )
