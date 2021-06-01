@@ -10,7 +10,6 @@ module.exports = async ({client, topggapi}) => {
   
   app.post('/topgg',
     voteWebhook.listener(async (vote) => {
-      console.log(vote);
       let data = await db.findOne({ _id: vote.user.id });
       let user = await client.users.fetch(vote.user);
       let quests = data.quests || {};
