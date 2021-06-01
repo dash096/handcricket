@@ -8,15 +8,11 @@ const app = express()
 module.exports = async ({client, topggapi}) => {
   const voteWebhook = new Webhook(process.env.TOPGG_WEBHOOK_AUTH)
   
-  /*app.post('/topgg',
+  app.post('/topgg',
     voteWebhook.listener(async (vote) => {
       (await client.users.fetch("772368021821718549")).send("VOTED")
     })
-  )*/
-  
-  app.post('/topgg', voteWebhook.middleware(), (req, res) => {
-    console.log(req.vote.user)
-  })
+  )
   
   app.get('/', (req, res) => {
     res.send('<h2> Hello World </h2>')

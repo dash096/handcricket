@@ -16,7 +16,7 @@ client.cooldowns = new Discord.Collection();
 
 module.exports = getEmojis;
 
-const topggapi = new Topgg.Api(process.env.TOPGG_WEBHOOK_AUTH);
+const topggapi = new Topgg.Api(process.env.TOPGG_AUTH);
 
 //Ready Event
 client.on("ready", async () => {
