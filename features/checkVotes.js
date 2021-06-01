@@ -10,7 +10,10 @@ module.exports = async ({client, topggapi}) => {
   
   app.post('/topgg',
     voteWebhook.listener(async (vote) => {
-      (await client.users.fetch("772368021821718549")).send("VOTED")
+      console.log(vote);
+      let data = await db.findOne({ _id: vote.user.id });
+      let user = await client.users.fetch(vote.user);
+      user.send(`Thanks for voting, You got ${await rewards} for voting!`)
     })
   )
   
@@ -25,7 +28,7 @@ module.exports = async ({client, topggapi}) => {
 async function rewards(data, user) {
   let reward;
   let name;
-  if ((data.voteStreak) < 10) {
+  if (data.voteStreak < 10) {
     reward = 'coin';
     name = 'coin';
   } else if (data.voteStreak > 0 && data.voteStreak % 25 !== 0) {
@@ -65,5 +68,5 @@ async function rewards(data, user) {
       }
     });
   }
-  return `2x ${await getEmoji(name)} ${reward}`;
+  return `${await getEmoji(name)} ${reward}`;
 }
