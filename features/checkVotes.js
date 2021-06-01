@@ -7,7 +7,7 @@ const { Webhook } = require('@top-gg/sdk')
 module.exports = async ({client, topggapi}) => {
   let votes = await topggapi.getVotes();
   
-  const wh = new Webhook(process.env.TOPGG_WEBHOOK_PASSWORD)
+  const wh = new Webhook(process.env.TOPGG_WEBHOOK_AUTH)
   const app = express()
   
   app.get('/', (req, res) => {
@@ -15,7 +15,7 @@ module.exports = async ({client, topggapi}) => {
   })
   
   app.post('/webhook', wh.listener((vote) => {
-    console.log(vote.user) // 172075838806818817
+    console.log(vote.user)
   }))
   
   app.listen(process.env.PORT);
