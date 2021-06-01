@@ -10,7 +10,7 @@ module.exports = async ({client, topggapi}) => {
   
   app.post('/topgg',
     voteWebhook.listener(async (vote) => {
-      let data = await db.findOne({ _id: vote.user.id });
+      let data = await db.findOne({ _id: vote.user });
       let user = await client.users.fetch(vote.user);
       let quests = data.quests || {};
       quests.support = true;
@@ -52,12 +52,12 @@ async function rewards(data, user) {
   if (data.voteStreak < 10) {
     reward = 'coin';
     name = 'coin';
-  } else if (data.voteStreak > 0 && data.voteStreak % 25 !== 0) {
-    reward = 'lootbox';
-    name = 'lootbox';
-  } else {
+  } else if (data.voteStreak > 0 && data.voteStreak % 25 === 0) {
     reward = 'decor';
     name = 'sh';
+  } else {
+    reward = 'lootbox';
+    name = 'lootbox';
   }
   
   const bag = data.bag || {};
