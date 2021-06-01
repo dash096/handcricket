@@ -22,8 +22,8 @@ module.exports = {
         .setTitle('Vote Command')
         .setDescription('Thanks for Supporting me! You have already voted for me.\n' + cooldown +
         '\n [Community Server](https://bit.ly/dispoGuild)' +
-        '\n [Invite Bot to Your World](https://bit.ly/dispoBot)')
-        .addField(`Vote Streak: ${data.voteStreak || 0}`, 'You will get a decor for each 10s after 30')
+        '\n [Invite Bot](https://bit.ly/dispoBot)')
+        .addField(`Vote Streak: ${data.voteStreak || 0}`, 'You will get lootboxes after 10 votes and decors for each 25s.')
         .setColor(embedColor)
         .setThumbnail(author.displayAvatarURL());
       message.reply(embed);
@@ -31,10 +31,9 @@ module.exports = {
       const embed = new Discord.MessageEmbed()
         .setTitle('Vote Command')
         .setDescription('You havent voted yet, Support us [here](https://top.gg/bot/804346878027235398/vote)' + 
-        '\n**PS:** It might take a maximum of 3 minutes for you to get the vote reward.' +
         '\n [Community Server](https://bit.ly/dispoGuild)' +
-        '\n [Invite Bot to Your World](https://bit.ly/dispoBot)')
-        .addField(`Vote Streak: ${data.voteStreak || 0}`, 'You will get a decor for each 10s after 30')
+        '\n [Invite Bot](https://bit.ly/dispoBot)')
+        .addField(`Vote Streak: ${data.voteStreak || 0}`, 'You will get lootboxes after 10 votes and decors for each 25s.')
         .setColor(embedColor)
         .setThumbnail(author.displayAvatarURL());
       message.reply(embed);
