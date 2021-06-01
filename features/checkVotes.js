@@ -76,10 +76,10 @@ module.exports = async ({client, topggapi}) => {
 async function rewards(data, user) {
   let reward;
   let name;
-  if (data.voteStreak < 10) {
+  if ((data.voteStreak) < 10) {
     reward = 'coin';
     name = 'coin';
-  } else if (data.voteStreak % 25 !== 0) {
+  } else if (data.voteStreak > 0 && data.voteStreak % 25 !== 0) {
     reward = 'lootbox';
     name = 'lootbox';
   } else {
