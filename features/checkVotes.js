@@ -16,7 +16,7 @@ module.exports = async ({client, topggapi}) => {
     console.log(vote.user)
   }))
   
-  app.listen(process.env.PORT);
+  app.listen(process.env.PORT || 8080);
 };
 
 async function rewards(data, user) {
