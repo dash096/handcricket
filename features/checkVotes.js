@@ -93,14 +93,14 @@ async function rewards(data, user) {
   let newValue;
   if (reward == 'lootbox') {
     newValue = bag;
-    newValue.lootbox = (bag.lootbox || 0) + 1;
+    newValue.lootbox = (bag.lootbox || 0) + 2;
   } else if (reward == 'decor') {
     let decor = decorsData[Math.floor(Math.random() * decorsData.length)];
     newValue = bag;
     newValue[decor] = (bag[decor] || 0) + 1;
   } else {
     reward = parseInt(Math.random() * 696);
-    newValue = data.cc + reward;
+    newValue = data.cc + (reward * 2);
   }
   
   if(parseInt(reward)) {
@@ -116,5 +116,5 @@ async function rewards(data, user) {
       }
     });
   }
-  return `${await getEmoji(name)} ${reward}`;
+  return `2x ${await getEmoji(name)} ${reward}`;
 }
