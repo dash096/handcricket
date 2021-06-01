@@ -41,13 +41,7 @@ module.exports = async ({client, topggapi}) => {
   
   app.get('/', (req, res) => {
     res.send('<h2> Hello World </h2>')
-  })
-  
-  setInterval(() => {
-    app.get('/', (req, res) => {
-      res.send('<h2> Hello World </h2>');
-    });
-  }, 10 * 60 * 1000);
+  });
   
   app.listen(process.env.PORT || 8080);
 };
