@@ -18,9 +18,9 @@ module.exports = async ({client, topggapi}) => {
         $set: {
           voteClaim: true,
           voteCooldown: (Date.now() + (12 * 60 * 60 * 1000)),
-          voteStreak: (data.voteStreak + 1),
+          voteStreak: ((data.voteStreak || 0) + 1),
           quests: quests,
-          lastVoted: Date.now(),
+          lastVoted: (Date.now()),
         }
       });
       setTimeout(async () => {
