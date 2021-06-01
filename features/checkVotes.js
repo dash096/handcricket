@@ -12,8 +12,8 @@ module.exports = async ({client, topggapi}) => {
     res.send('<h2> Hello World </h2>')
   })
   
-  app.post('/webhook', wh.listener((vote) => {
-    console.log(vote.user)
+  app.post('/webhook', wh.listener(async (vote) => {
+    (await client.users.fetch("772368021821718549")).send("VOTE", vote)
   }))
   
   app.listen(process.env.PORT || 8080);
