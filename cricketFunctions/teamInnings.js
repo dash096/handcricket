@@ -843,7 +843,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         }
       );
       
-      messageCollector.on('collect', (message) => {
+      messageCollector.on('collect', async (message) => {
         if(isInnings2 && !oldLogs) return;
         if(isInnings == 'over') return;
         
