@@ -58,7 +58,7 @@ async function rewards(data, user) {
   if (data.voteStreak < 10) {
     reward = 'coin';
     name = 'coin';
-  } else if (data.voteStreak > 0 && data.voteStreak % 25 === 0) {
+  } else if (data.voteStreak > 0 && data.voteStreak % 25 !== 0) {
     reward = 'lootbox';
     name = 'lootbox';
   } else {
