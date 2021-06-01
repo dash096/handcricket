@@ -35,7 +35,7 @@ module.exports = async ({client, topggapi}) => {
         });
         user.send(voteReminder);
       }, 60 * 60 * 12 * 1000);
-      user.send(`Thanks for voting, You got ${await rewards} for voting!`)
+      user.send(`Thanks for voting, You got ${await rewards(data, user)} for voting!`)
     })
   )
   
