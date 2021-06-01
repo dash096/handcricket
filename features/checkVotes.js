@@ -97,7 +97,7 @@ async function rewards(data, user) {
   } else if (reward == 'decor') {
     let decor = decorsData[Math.floor(Math.random() * decorsData.length)];
     newValue = bag;
-    newValue[decor] = (bag[decor] || 0) + 1;
+    newValue.decors[decor] = (bag.decors[decor] || 0) + 1;
   } else {
     reward = parseInt(Math.random() * 696);
     newValue = data.cc + (reward * 2);
@@ -112,7 +112,7 @@ async function rewards(data, user) {
   } else {
     await db.findOneAndUpdate({ _id: user.id }, {
       $set: {
-        bag: bag
+        bag: newValue
       }
     });
   }
