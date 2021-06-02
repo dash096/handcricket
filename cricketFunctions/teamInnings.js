@@ -711,7 +711,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
       
       messageCollector.on('end', () => {
         if(isInnings2 && !oldLogs) return;
-        if(isInnings == 'over') return;
+        if(isInnings2 == 'over') return;
         
         return lookForEndMessages(players, cap1, cap2, channel);
       })
