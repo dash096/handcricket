@@ -282,7 +282,13 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
             if ((logs.bowling[bowler.id]).length === (logs.batting[batsman.id]).length) {
               await clearInterval(interval);
               if(isInnings2 && !oldLogs) {}
-              else await switchBowler();
+              else {
+                if(batSwap) {
+                  batsman = batSwap;
+                  batSwap = undefined;
+                }
+                await switchBowler();
+              }
             }
           }, 1000);
           return;
@@ -699,7 +705,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
       
       messageCollector.on('collect', async (message) => {
         if(isInnings2 && !oldLogs) return;
-        if(isInnings == 'over') return;
+        if(isInnings2 == 'over') return;
         
         if (message.author.id === cap1.id || message.author.id === cap2.id) {
           await respond(`forceEnd: ${message.author.tag} ended.`);
