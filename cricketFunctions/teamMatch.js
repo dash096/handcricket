@@ -201,7 +201,12 @@ module.exports = async (message, client) => {
             channel.send(`${author}, there's no Extra Wicket available, availableMembers are:\n ${availablePlayersUsernames().join(',\n')}`);
             return ListenToCaptain1();
           }
-        } else if(content === 'end' || content === 'cancel') {
+        } else if(
+          content === 'end' ||
+          content === 'cancel' ||
+          content === 'e.hc x' ||
+          content === 'e.hc end'
+        ) {
           message.reply('TeamMatch aborted');
           return 'err'
         } else if(!pick) {
@@ -255,7 +260,12 @@ module.exports = async (message, client) => {
             channel.send(`${author}, there's no Extra Wicket available, availableMembers are:\n ${availablePlayersUsernames().join(',\n')}`);
             return ListenToCaptain2();
           }
-        } else if(content === 'end' || content === 'cancel') {
+        } else if(
+          content === 'end' ||
+          content === 'cancel' ||
+          content === 'e.hc x' ||
+          content === 'e.hc end'
+        ) {
           message.reply('TeamMatch aborted');
           return 'err';
         } else if(!pick) {
@@ -388,7 +398,12 @@ module.exports = async (message, client) => {
           if(content.includes('extra')) {
             channel.send(`${cap}, extrawickets can only and will be added in the end, u just ping the members, they are:\n ${availablePlayersUsernames(team).join(',\n')}`);
             return await pick(cap, team, type);
-          } else if(content === 'end' || content === 'cancel') {
+          } else if(
+            content === 'end' ||
+            content === 'cancel' ||
+            content === 'e.hc x' ||
+            content === 'e.hc end'
+          ) {
             message.reply('TeamMatch aborted');
             return 'err'
           } else if(picks.length === 0) {
@@ -444,7 +459,12 @@ module.exports = async (message, client) => {
     
       if (!ping) {
         return await askForTheExtraWicketBatsman(players, team, channel);
-      } else if(content === 'end' || content === 'cancel') {
+      } else if (
+        content === 'end' ||
+        content === 'cancel' ||
+        content === 'e.hc x' ||
+        content === 'e.hc end'
+      ) {
         message.reply('TeamMatch aborted');
         return 'err';
       } else if (!team.find(player => player.id === ping.id)) {
