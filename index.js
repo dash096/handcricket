@@ -19,7 +19,7 @@ const topggapi = new Topgg.Api(process.env.TOPGG_AUTH);
 /* Export GETEMOJI */
 module.exports = getEmojis;
 
-//BOT READY EVENT
+/* Bot READY EVENT */
 client.on("ready", async () => {
   
   try {

@@ -5,12 +5,18 @@ const player = new mongoose.Schema({
     type: String, required: true
   },
   xp: {
-    type: Number, default: 0, required: true
+    type: Number, default: 0
   },
   cc: {
     type: Number, default: 500
   },
   strikeRate: {
+    type: Number, default: 0
+  },
+  highScore: {
+    type: Number, default: 0
+  },
+  totalScore: {
     type: Number, default: 0
   },
   wins: {

@@ -32,9 +32,13 @@ module.exports = ({client, prefix, topggapi}) => {
     'EMBED_LINKS',
     'ATTACH_FILES',
     'SEND_MESSAGES',
-    'READ_MESSAGE_HISTORY'
+    'READ_MESSAGE_HISTORY',
+    'MANAGE_MESSAGES'
     ];
-    await perms.forEach(perm => {
+    
+    for (let perm in perms) {
+      perm = perms[perm];
+      
       let hasPerm = guild.me.permissionsIn(channel).has(perm);
       if(hasPerm === false && perm === 'SEND_MESSAGES') {
         try {
@@ -61,7 +65,7 @@ module.exports = ({client, prefix, topggapi}) => {
         }
         return message.reply('I dont have all of my perms in that channel, My required Permissions are:\n' + getPerms());
       }
-    });
+    };
     
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();

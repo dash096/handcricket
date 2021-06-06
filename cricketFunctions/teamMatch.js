@@ -36,7 +36,8 @@ module.exports = async (message, client) => {
     const reactionCollector = await collectorMessage.createReactionCollector(
       reaction => reaction.emoji.name === 'enter',
       {
-        time: 40 * 1000
+        time: 40 * 1000,
+        dispose: true,
       }
     );
     
@@ -44,24 +45,27 @@ module.exports = async (message, client) => {
     let collectedUsers = [];
     reactionCollector.on('collect', async (reaction, user) => {
       const data = await db.findOne({_id: user.id});
-      if(!data) {
-        channel.send(getErrors({error: 'data', user}));
+      if (!data) {
+        await channel.send(getErrors({error: 'data', user}));
         return;
-      }  else if(data.status === true) {
-        channel.send(getErrors({error: 'engaged', user}));
+      }  else if (data.status === true) {
+        await channel.send(getErrors({error: 'engaged', user}));
+        await collectorMessage.reactions.cache.find(
+          r => r.emoji.name == enterEmoji.name
+        ).users.remove(user.id);
         return;
       }
       collectedUsers.push(user);
-      channel.send(`${enterEmoji} **${user.tag}** joined the teamMatch!`);
-      await db.findOneAndUpdate({_id: user.id}, {$set:{status: true}});
+      await channel.send(`${enterEmoji} **${user.username}** joined the teamMatch!`);
+      await changeStatus(user, true);
     });
     
     //On end, check players.
     reactionCollector.on('end', async (collectedReactions) => {
       let reactors = [];
       
-      await collectedReactions.forEach(reactions => {
-        reactors = (Array.from(reactions.users.cache.values())).filter(user => user.bot === false);
+      await collectedReactions.forEach(reaction => {
+        reactors = (Array.from(reaction.users.cache.values())).filter(user => user.bot === false);
       });
       
       await reactors.forEach(reactor => {
@@ -70,12 +74,6 @@ module.exports = async (message, client) => {
       await players.forEach(player => {
         playerTags.push(player.tag);
       });
-      
-      await collectedUsers.forEach(async user => {
-        if(!reactors.find(reactor => reactor.id === user.id)) {
-          await changeStatus(user, false);
-        }
-      })
       
       if(players.length <= 2) {
         changeStatus(players, false);
@@ -86,6 +84,12 @@ module.exports = async (message, client) => {
         await message.reply('TeamMatch started, Players are\n' + playerTags.join('\n'));
         await chooseCaptains(players, playerTags);
       }
+    });
+    
+    //On remove, chnageStatus
+    reactionCollector.on('remove', async (reaction, user) => {
+      await channel.send(`**${user.username}** left the teamMatch`);
+      await changeStatus(user, false);
     });
   }
   

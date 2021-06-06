@@ -8,12 +8,12 @@ module.exports = {
   aliases: ['lb', 'rank'],
   description: 'Check the leaderboard of StrikeRate, Wins, Xp and Balance',
   category: 'Dogenomy',
-  syntax: 'e.leaderboard <strike/wins/coin/xp/orange>',
+  syntax: 'e.leaderboard <strike/wins/coin/xp/orange/highscore/totalscore>',
   cooldown: 20,
   run: async ({ message, args, client }) => {
     const { guild, content, mentions, channel, author } = message;
     
-    let availableTypes = ['strike', 'wins', 'coins', 'xp', 'orange'];
+    let availableTypes = ['strike', 'wins', 'coins', 'xp', 'orange', 'highscore', 'totalscore'];
     let type = args[0];
     
     if(!availableTypes.find(type => type == args[0])) {
@@ -37,7 +37,13 @@ module.exports = {
     } else if (type == 'orange') {
       type = 'orangeCaps';
       datas = (await db.find().sort({ orangeCaps: -1 })).slice(0, 10);
-    }
+    } else if (type == 'highscore') {
+      type = 'highScore';
+      datas = (await db.find().sort({ highScore: -1 })).slice(0, 10);
+    } else if (type == 'totalscore') {
+      type = 'totalScore';
+      datas = (await db.find().sort({ totalScore: -1 })).slice(0, 10);
+    } 
 
     let leaderboardText = await getLeaderboardText(datas, type, args[0]);
     

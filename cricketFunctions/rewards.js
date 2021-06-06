@@ -60,6 +60,17 @@ module.exports = async function(winner, loser, coins, wS, wB, lS, lB, message) {
   const wSTR = (winnerSTR + (wS/lB))/2;
   const lSTR = (loserSTR + (lS/wB))/2;
   
+  let winnerHighScore = winnerData.highScore || 0;
+  let winnerTotalScore = ((winnerData.totalScore || 0) + parseInt(wS));
+  if (wS > winnerHighScore) {
+    winnerHighScore = wS;
+  }
+  let loserHighScore = loserData.highScore || 0;
+  let loserTotalScore = ((loserData.totalScore || 0) + parseInt(lS));
+  if (lS > loserHighScore) {
+    loserHighScore = lS;
+  }
+  
   //Set new Data
   const winnerSet = {
     $set: {
@@ -69,6 +80,8 @@ module.exports = async function(winner, loser, coins, wS, wB, lS, lB, message) {
       strikeRate: wSTR,
       xp: winnerXP + randoXP,
       quests: winnerQuests,
+      highScore: winnerHighScore,
+      totalScore: winnerTotalScore,
       status: false
     }
   };
@@ -79,6 +92,8 @@ module.exports = async function(winner, loser, coins, wS, wB, lS, lB, message) {
       strikeRate: lSTR,
       xp: loserXP + randoXP,
       quests: loserQuests,
+      highScore: loserHighScore,
+      totalScore: loserTotalScore,
       status: false
     }
   };

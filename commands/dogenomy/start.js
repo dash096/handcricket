@@ -13,6 +13,7 @@ module.exports = {
     
     const player = new db({
       _id: author.id,
+      xp: 0,
       startedOn: Date.now()
     });
 
