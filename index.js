@@ -14,35 +14,41 @@ const { commands, cooldowns } = client;
 client.commands = new Discord.Collection();
 client.cooldowns = new Discord.Collection();
 
-module.exports = getEmojis;
-
 const topggapi = new Topgg.Api(process.env.TOPGG_AUTH);
 
-//Ready Event
+/* Export GETEMOJI */
+module.exports = getEmojis;
+
+//BOT READY EVENT
 client.on("ready", async () => {
-  console.log("Logged in as ", client.user.username);
   
-  setInterval(() => {
-    topggapi.postStats({
-      serverCount: client.guilds.cache.size,
-    });
-    client.user.setActivity(`Dispo in ${client.guilds.cache.size} guilds!`);
-  }, 60 * 30 * 1000); //30 minutes
-  
-  const dbOptions = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-    useCreateIndex: true
-  };
   try {
-    await mongoose.connect(process.env.MONGO, dbOptions);
+    console.log("Logged in as ", client.user.username);
+   
+    /* Post Stats to TOPGG */
+    setInterval(() => {
+      topggapi.postStats({
+        serverCount: client.guilds.cache.size,
+      });
+      client.user.setActivity(`Dispo in ${client.guilds.cache.size} guilds!`);
+    }, 60 * 30 * 1000); //30 minutes
+    
+    /* Connect to DATABASE */
+    await mongoose.connect(process.env.MONGO, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false,
+      useCreateIndex: true
+    });
     console.log('Mongo Connected');
     
+    /* Log Total GUILDS and PLAYERS */
     console.log(`Total ${client.guilds.cache.size} Servers and ${(await db.find()).length} users have a profile.`);
     
+    /* Load COMMANDS and LISTENERS */
     await loadFiles();
-  
+    
+    /* Fix BROKEN TIMERS */
     let loadFunctions = fs.readdirSync('./functions').filter(file => file.startsWith('broke'));
     for(const loadFunction of loadFunctions) {
       const execute = require(`./functions/${loadFunction}`);
@@ -55,6 +61,8 @@ client.on("ready", async () => {
 });
 
 function loadFiles() {
+  
+  /* Load LISTENERS */
   const listeners = fs.readdirSync('./features');
   for(const listener of listeners) {
     try {
@@ -64,7 +72,8 @@ function loadFiles() {
       console.error(e);
     }
   }
-
+  
+  /* Load COMMAND CATEGORIES and COMMANDS */
   const folders = fs.readdirSync('./commands').filter(folder => !folder.includes('.'));
   for(const folder of folders) {
     const files = fs.readdirSync(`./commands/${folder}`);
@@ -83,7 +92,7 @@ function loadFiles() {
 
 client.login(process.env.TOKEN);
 
-//Get Emojis
+//Functiom to FETCH EMOJIS
 async function getEmojis(name) {
   const emojiGuild = await client.guilds.fetch('828269371699888178');
   const emoji = emojiGuild.emojis.cache.find(emoji => emoji.name == name);
