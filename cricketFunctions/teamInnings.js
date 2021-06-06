@@ -819,17 +819,22 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         
         console.log(bal, wins, STR);
         
+        const winnerSet: {
+          cc: bal,
+          wins: wins,
+          strikeRate: STR,
+          quests: quests,
+          coinMulti: parseFloat(data.coinMulti + 0.0069),
+          tossMulti: parseFloat(data.tossMulti - 0.0069),
+          totalScore: parseInt((data.totalScore || 0) + (STRs[player.id]) [0]),
+        }
+        
+        if ((data.highScore || 0) < (STRs[player.id]) [0]) {
+          winnerSet.highScore = parseInt((data.highScore || 0) + (STRs[player.id]) [0]);
+        }
+        
         await db.findOneAndUpdate({ _id: player.id }, {
-          $set: {
-            cc: bal,
-            wins: wins,
-            strikeRate: STR,
-            quests: quests,
-            coinMulti: parseFloat(data.coinMulti + 0.0069),
-            tossMulti: parseFloat(data.tossMulti - 0.0069),
-            highScore: parseInt(data.highScore + (STRs[player.id]) [0]),
-            totalScore: parseInt((data.totalScore || 0) + (STRs[player.id]) [0]),
-          }
+          $set: winnerSet
         });
       }
       await gainExp(data, 7, message);
@@ -857,16 +862,21 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         
         console.log(loses, STR);
         
+        const loserSet = {
+          cc: bal,
+          loses: loses,
+          strikeRate: STR,
+          quests: quests,
+          tossMulti: parseFloat(data.tossMulti + 0.0069),
+          totalScore: parseInt((data.totalScore || 0) + (STRs[player.id]) [0]),
+        }
+        
+        if ((data.highScore || 0) < (STRs[player.id]) [0]) {
+          loserSet.highScore = parseInt((data.highScore || 0) + (STRs[player.id]) [0]);
+        }
+        
         await db.findOneAndUpdate({ _id: player.id }, {
-          $set: {
-            cc: bal,
-            loses: loses,
-            strikeRate: STR,
-            quests: quests,
-            tossMulti: parseFloat(data.tossMulti + 0.0069),
-            highScore: parseInt(data.highScore + (STRs[player.id]) [0]),
-            totalScore: parseInt((data.totalScore || 0) + (STRs[player.id]) [0]),
-          }
+          $set: loserSet
         });
       }
       await gainExp(data, 7, message);
