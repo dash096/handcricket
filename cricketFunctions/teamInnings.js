@@ -819,7 +819,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         
         console.log(bal, wins, STR);
         
-        const winnerSet: {
+        const winnerSet = {
           cc: bal,
           wins: wins,
           strikeRate: STR,
