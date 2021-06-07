@@ -44,6 +44,7 @@ module.exports = async (client, message, attacker, defender, post) => {
     .addField('Defender', `${getFlame('def')} ${defender.username} (\`Goals:\` ${logs.scores[defender.id]})`)
     .attachFiles(await getGoalpostImage())
     .setImage(`attachment://${exportPath.split('/').pop()}`)
+    .setFooter('The person who breaks the goal lead after 5 chances wins.')
     .setColor(embedColor)
   
   const firstAtkEmbed = await attacker.send(embed);
@@ -91,13 +92,14 @@ module.exports = async (client, message, attacker, defender, post) => {
         .addField('Current Defender', `${getFlame('def')} ${defender.username} (\`Goals:\` ${logs.scores[defender.id]})\n    ${getPenaltyHistory('def')}`)
         .attachFiles(await getGoalpostImage())
         .setImage(`attachment://${exportPath.split('/').pop()}`)
+        .setFooter('The person who breaks the goal lead after 5 chances wins.')
         .setColor(embedColor)
-      
+        
       if (post === true) channel.send(text, { embed });
       let atkEmbed = await attacker.send(text, { embed });
       let defEmbed = await defender.send(text, { embed });
       
-      if (logs[defender.id].length >= 5) {
+      if (logs[defender.id].length >= 5 && logs[attacker.id].length >= 5) {
         let attackerGoals = logs.scores[attacker.id];
         let defenderGoals = logs.scores[defender.id];
         
