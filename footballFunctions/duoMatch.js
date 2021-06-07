@@ -316,6 +316,7 @@ module.exports = async (client, message, attacker, defender, post) => {
   function getPenaltyHistory(type) {
     let text = '';
     let history;
+    let unlisted = [];
     
     if(type == 'atk') {
       history = logs[attacker.id];
@@ -324,7 +325,7 @@ module.exports = async (client, message, attacker, defender, post) => {
     }
     
     for(let i = history.length; i < 5; i++) {
-      history.push('  -');
+      unlisted.push('  -');
     }
     
     history.forEach(score => {
@@ -337,7 +338,7 @@ module.exports = async (client, message, attacker, defender, post) => {
       }
     });
     
-    return text;
+    return text + ` ${unlisted.join('')}`;
   }
   
   async function changeStatus(user, boolean) {
