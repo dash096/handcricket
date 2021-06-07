@@ -11,14 +11,14 @@ module.exports = async (client, message, attacker, defender, post) => {
   let firstPair = [attacker, defender];
   
   let exportPath = `./temp/${attacker.id}_${defender.id}.jpg`;
-  let goalpostRedBluePath = './assets/goalpost_rb.jpg';
-  let goalpostRedBlueImage = await jimp.read(goalpostRedBluePath);
-  let goalpostBlueRedPath = './assets/goalpost_br.jpg';
-  let goalpostBlueRedImage = await jimp.read(goalpostBlueRedPath);
+  let goalpostRedYellowPath = './assets/goalpost_ry.jpg';
+  let goalpostRedYellowImage = await jimp.read(goalpostRedYellowPath);
+  let goalpostYellowRedPath = './assets/goalpost_yr.jpg';
+  let goalpostYellowRedImage = await jimp.read(goalpostYellowRedPath);
   let ballImagePath = './assets/football.png';
   let ballImage = await (await jimp.read(ballImagePath)).resize(70, 70);
   let redFlame = await getEmoji('redflame');
-  let blueFlame = await getEmoji('blueflame');
+  let blueFlame = await getEmoji('yellowflame');
   
   let over;
   let atkLogs = [0];
@@ -247,10 +247,10 @@ module.exports = async (client, message, attacker, defender, post) => {
   
   async function getGoalpostImage() {
     if(firstPair[0].id === attacker.id) {
-      await goalpostRedBlueImage
+      await goalpostRedYellowImage
         .write(exportPath);
     } else {
-      await goalpostBlueRedImage
+      await goalpostYellowRedImage
         .write(exportPath);
     }
     return exportPath;
