@@ -115,6 +115,9 @@ module.exports = async (client, message, attacker, defender, post) => {
           if(post === true) channel.send(`${winner.username} scored more goals, They won!`);
           loser.send(`You lost as **${winner.username}** score more goals..`);
           winner.send(`You won! You scored the most goals`);
+        
+          await changeStatus(attacker, false);
+          await changeStatus(defender, false);
         } else {
           attackCollect(atkEmbed);
           defendCollect(defEmbed);
