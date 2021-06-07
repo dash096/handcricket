@@ -11,7 +11,7 @@ const embedColor = require('../../functions/getEmbedColor.js');
 
 module.exports = {
   name: 'slots',
-  aliases: ['luck', 'slot'],
+  aliases: ['lottery', 'slot'],
   description: 'More money, more chance! Hope you win but legends says you will never ever win.',
   category: 'Minigames',
   syntax: 'e.slots <amount>',
