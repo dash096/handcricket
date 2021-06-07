@@ -77,18 +77,25 @@ async function rewards(data, user) {
     newValue = data.cc + (reward * 2);
   }
   
-  if(parseInt(reward)) {
+  if(name == 'coin') {
     await db.findOneAndUpdate({ _id: user.id }, {
       $set: {
         cc: newValue
       }
     });
-  } else {
+  } else if (reward == 'decor') {
+    await db.findOneAndUpdate({ _id: user.id }, {
+      $set: {
+        decors: newValue
+      }
+    });
+  } else if (reward == 'lootbox') {
     await db.findOneAndUpdate({ _id: user.id }, {
       $set: {
         bag: newValue
       }
     });
   }
+  
   return `${await getEmoji(name)} ${reward}`;
 }
