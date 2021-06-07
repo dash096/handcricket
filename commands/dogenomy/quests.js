@@ -47,7 +47,7 @@ module.exports = {
     
     let text = ``;
     
-    const quests = await questDB.find({ _id: { $ne: 'decorSale' } });
+    const quests = await questDB.find({ name: { $ne: 'decorSale' } });
     for(const quest of quests) {
       const namestatus = whatQuest(quest.name);
       const name = (quest.name).charAt(0).toUpperCase() + quest.name.slice(1);
