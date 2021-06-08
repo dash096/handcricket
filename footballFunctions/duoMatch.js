@@ -101,7 +101,10 @@ module.exports = async (client, message, attacker, defender, post) => {
         let attackerGoals = logs.scores[attacker.id];
         let defenderGoals = logs.scores[defender.id];
         
-        if (attackerGoals !== defenderGoals) {
+        if (
+          attackerGoals !== defenderGoals &&
+          logs[defender.id].length === logs[attacker.id].length
+        ) {
           let winner;
           let loser;
           if (attackerGoals > defenderGoals) {
