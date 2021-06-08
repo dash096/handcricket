@@ -53,7 +53,7 @@ module.exports = async (message, client) => {
       if (reaction.emoji.name === '❌' && user.id === author.id) {
         ended = true;
         await message.reply('TeamMatch ended');
-        await changeStatus(collectedUsers, true);
+        await changeStatus(collectedUsers, false);
         await reactionCollector.stop();
         await collectorMessage.delete();
         return;
@@ -81,11 +81,7 @@ module.exports = async (message, client) => {
     reactionCollector.on('end', async (collectedReactions) => {
       if (ended) return;
       
-      let reactors = [];
-      
-      await collectedReactions.forEach(reaction => {
-        reactors = (Array.from(reaction.users.cache.values())).filter(user => user.bot === false);
-      });
+      let reactors = collectedUsers;
       
       await reactors.forEach(reactor => {
         players.push(reactor);
@@ -108,7 +104,7 @@ module.exports = async (message, client) => {
     //On remove, chnageStatus
     reactionCollector.on('remove', async (reaction, user) => {
       if (ended) return;
-      
+      collectedUsers.splice(collectedUsers.indexOf(user), 1);
       await channel.send(`**${user.username}** left the teamMatch`);
       await changeStatus(user, false);
     });
