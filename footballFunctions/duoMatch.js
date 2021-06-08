@@ -5,6 +5,7 @@ const jimp = require('jimp');
 const getErrors = require('../functions/getErrors.js');
 const getEmoji = require('../index.js');
 const embedColor = require('../functions/getEmbedColor.js');
+const rewards = require('./rewards.js');
 
 module.exports = async (client, message, attacker, defender, post) => {
   const { content, channel, mentions, author } = message;
@@ -118,7 +119,9 @@ module.exports = async (client, message, attacker, defender, post) => {
           if(post === true) channel.send(`${winner.username} scored more goals, They won!`);
           loser.send(`You lost as **${winner.username}** score more goals..`);
           winner.send(`You won! You scored the most goals`);
-        
+          
+          await rewards(winner, loser, channel);
+          
           await changeStatus(attacker, false);
           await changeStatus(defender, false);
         } else {

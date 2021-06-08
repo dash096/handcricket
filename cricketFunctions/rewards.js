@@ -1,7 +1,5 @@
 const db = require('../schemas/player.js');
 const gain = require('../functions/gainExp.js');
-const getDecors = require('../functions/getDecors.js');
-const updateDecor = require('../functions/updateDecor.js');
 
 module.exports = async function(winner, loser, coins, wS, wB, lS, lB, message) {
   const { channel } = message;
@@ -78,7 +76,6 @@ module.exports = async function(winner, loser, coins, wS, wB, lS, lB, message) {
       coinMulti: (parseFloat(winnerCoinMulti) + 0.0069),
       wins: winnerWins + 1,
       strikeRate: wSTR,
-      xp: winnerXP + randoXP,
       quests: winnerQuests,
       highScore: winnerHighScore,
       totalScore: winnerTotalScore,
@@ -90,7 +87,6 @@ module.exports = async function(winner, loser, coins, wS, wB, lS, lB, message) {
     $set: {
       loses: loserLoses + 1,
       strikeRate: lSTR,
-      xp: loserXP + randoXP,
       quests: loserQuests,
       highScore: loserHighScore,
       totalScore: loserTotalScore,
@@ -105,14 +101,6 @@ module.exports = async function(winner, loser, coins, wS, wB, lS, lB, message) {
   await db.findOneAndUpdate( {
     _id: loser.id
   }, loserSet);
-  
-  const rando = Math.random();
-  if(rando < 0.05) {
-    const decors = getDecors('type1');
-    const decor = decors[Math.floor(Math.random() * decors.length)];
-    updateDecor(decor, 1, winnerData);
-    winner.send(`Oh Damm! You got a ${decor} too!`);
-  }
   
   await gain(winnerData, 7, message, winner);
   await gain(loserData, 6, message, loser);
