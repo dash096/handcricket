@@ -3,16 +3,21 @@ const db = require("../schemas/items.js");
 module.exports = async function (amount, data, msg) {
   const random = Math.random();
   
-  const itemsData = await db.find({name: {$ne: 'lootbox'}});
+  const itemsData = await db.find({
+    name: {
+      $ne: 'lootbox'
+    }
+  });
+  
   const items = [];
-  const getItemNames = () => {
-    itemsData.forEach(data => {
-      items.push(data.name);
-    });
-  };
-  getItemNames();
+  
+  itemsData.forEach(data => {
+    items.push(data.name);
+  });
+  
   items.push('decor');
   items.push(259);
+  
   const toReturn = choose();
   return toReturn;
   
@@ -20,10 +25,10 @@ module.exports = async function (amount, data, msg) {
     const reward = items[Math.floor(Math.random() * items.length)];
     if(reward === 'decor') {
       const rando = Math.random();
-      if(rando > 0.5) {
+      if(rando < 0.2) {
         return reward;
       }
-      return 696;
+      return 250;
     }
     return reward;
   }
