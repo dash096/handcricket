@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const db = require('../schemas/player.js');
-const getEmoji = require('../index.js');
+const getEmoji = require('./getEmoji.js');
 
 module.exports = async ({client, topggapi}) => {
   

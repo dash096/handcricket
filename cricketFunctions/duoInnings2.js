@@ -1,6 +1,6 @@
 const db = require("../schemas/player.js");
 const Discord = require("discord.js");
-const getEmoji = require('../index.js');
+const getEmoji = require('../functions/getEmoji.js');
 const rewards = require('./rewards.js');
 const updateBag = require('../functions/updateBag.js');
 const serverID = process.env.SERVERID;

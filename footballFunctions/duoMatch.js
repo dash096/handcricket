@@ -3,7 +3,7 @@ const fs = require('fs');
 const Discord = require("discord.js");
 const jimp = require('jimp');
 const getErrors = require('../functions/getErrors.js');
-const getEmoji = require('../index.js');
+const getEmoji = require('../functions/getEmoji.js');
 const embedColor = require('../functions/getEmbedColor.js');
 const rewards = require('./rewards.js');
 

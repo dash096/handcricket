@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const db = require('../../schemas/player.js');
-const getEmoji = require('../../index.js');
+const getEmoji = require('../../functions/getEmoji.js');
 const gainExp = require('../../functions/gainExp.js');
 const getErrors = require('../../functions/getErrors.js');
 const embedColor = require('../../functions/getEmbedColor.js');

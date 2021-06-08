@@ -7,7 +7,7 @@ const updateDecor = require('../../functions/updateDecor.js');
 const updateCoins = require('../../functions/updateCoins.js');
 const openBox = require('../../functions/openBox.js');
 const gain = require('../../functions/gainExp.js');
-const getEmoji = require('../../index.js');
+const getEmoji = require('../../functions/getEmoji.js');
 const getDecors = require('../../functions/getDecors.js');
 
 module.exports = {

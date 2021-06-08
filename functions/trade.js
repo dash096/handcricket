@@ -1,5 +1,5 @@
 const db = require('../schemas/player.js');
-const getEmoji = require('../index.js');
+const getEmoji = require('./getEmoji.js');
 const getErrors = require('./getErrors.js');
 const updateBag = require('./updateBag.js');
 const updateCoins = require('./updateCoins.js');

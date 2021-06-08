@@ -1,6 +1,6 @@
 const gain = require('../../functions/gainExp.js');
 const db = require('../../schemas/player.js');
-const getEmoji = require('../../index.js');
+const getEmoji = require('../../functions/getEmoji.js');
 const updateCoins = require('../../functions/updateCoins.js');
 const getErrors = require('../../functions/getErrors.js');
 

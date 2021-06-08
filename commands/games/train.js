@@ -1,7 +1,7 @@
 const fs = require('fs');
 const db = require('../../schemas/player.js');
 const updateCoins = require('../../functions/updateCoins.js');
-const getEmoji = require('../../index.js');
+const getEmoji = require('../../functions/getEmoji.js');
 const serverID = process.env.SERVERID;
 
 module.exports = {

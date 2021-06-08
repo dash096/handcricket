@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const db = require('../../schemas/player.js');
 const questDB = require('../../schemas/quests.js');
-const getEmoji = require('../../index.js');
+const getEmoji = require('../../functions/getEmoji.js');
 const updateBag = require('../../functions/updateBag.js');
 const embedColor = require('../../functions/getEmbedColor.js');
 

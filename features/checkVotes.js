@@ -1,5 +1,5 @@
 const db = require('../schemas/player.js');
-const getEmoji = require('../index.js');
+const getEmoji = require('../functions/getEmoji.js');
 const getDecors = require('../functions/getDecors.js');
 const express = require('express')
 const { Webhook } = require('@top-gg/sdk')

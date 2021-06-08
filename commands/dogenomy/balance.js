@@ -1,5 +1,5 @@
 const db = require('../../schemas/player.js');
-const getEmoji = require('../../index.js');
+const getEmoji = require('../../functions/getEmoji.js');
 const gain = require('../../functions/gainExp.js');
 const getTarget = require('../../functions/getTarget.js');
 

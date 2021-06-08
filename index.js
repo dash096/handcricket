@@ -16,8 +16,7 @@ client.cooldowns = new Discord.Collection();
 
 const topggapi = new Topgg.Api(process.env.TOPGG_AUTH);
 
-/* Export GETEMOJI */
-module.exports = getEmojis;
+module.exports = client;
 
 /* Bot READY EVENT */
 client.on("ready", async () => {
@@ -91,10 +90,3 @@ function loadFiles() {
 }
 
 client.login(process.env.TOKEN);
-
-//Functiom to FETCH EMOJIS
-async function getEmojis(name) {
-  const emojiGuild = await client.guilds.fetch('828269371699888178');
-  const emoji = emojiGuild.emojis.cache.find(emoji => emoji.name == name);
-  return emoji;
-}
