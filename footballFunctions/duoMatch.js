@@ -15,8 +15,6 @@ module.exports = async (client, message, attacker, defender, post) => {
   let goalpostRedYellowImage = await jimp.read(goalpostRedYellowPath);
   let goalpostYellowRedPath = './assets/goalpost_yr.jpg';
   let goalpostYellowRedImage = await jimp.read(goalpostYellowRedPath);
-  let ballImagePath = './assets/football.png';
-  let ballImage = await (await jimp.read(ballImagePath)).resize(70, 70);
   let redFlame = await getEmoji('redflame');
   let blueFlame = await getEmoji('yellowflame');
   
@@ -37,12 +35,12 @@ module.exports = async (client, message, attacker, defender, post) => {
   logs.scores[`${attacker.id}`] = 0;
   logs.scores[`${defender.id}`] = 0;
   
-  
+  await getGoalpostImage();
   const embed = new Discord.MessageEmbed()
     .setTitle('Football Match')
     .addField('Attacker', `${getFlame('atk')} ${attacker.username} (\`Goals:\` ${logs.scores[attacker.id]})`)
     .addField('Defender', `${getFlame('def')} ${defender.username} (\`Goals:\` ${logs.scores[defender.id]})`)
-    .attachFiles(await getGoalpostImage())
+    .attachFiles(exportPath)
     .setImage(`attachment://${exportPath.split('/').pop()}`)
     .setFooter('The person who breaks the goal lead after 5 chances wins.')
     .setColor(embedColor)
@@ -355,9 +353,7 @@ module.exports = async (client, message, attacker, defender, post) => {
       }
     });
     
-    await fs.unlink(exportPath, (e) => {
-      if(e) console.log(e);
-    });
+    await fs.unlink(exportPath, (e) => {});
   }
   
   function getFlame(type) {
