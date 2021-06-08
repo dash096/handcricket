@@ -21,14 +21,17 @@ module.exports = {
     const data = await db.findOne({_id: target.id});
     let bagItems = data.bag || {};
     
+    const itemsText = await getItemsFieldText();
+    const decorsText = await getDecorsFieldText();
+    
     const bagEmbed = await new Discord.MessageEmbed()
       .setTitle(`${target.username}'s bag`)
-      .setDescription('The bag looks so pro\n\n' + await getItemsFieldText())
+      .setDescription('The bag looks so pro\n\n' + itemsText)
       .setFooter('🔨 for items and 👗 for decors')
       .setColor(embedColor);
     const decorEmbed = await new Discord.MessageEmbed()
       .setTitle(`${target.username}'s wardrobe`)
-      .setDescription('The wardrobe looks so pro\n\n' + await getDecorsFieldText())
+      .setDescription('The wardrobe looks so pro\n\n' + decorsText)
       .setFooter('🔨 for items and 👗 for decors')
       .setColor(embedColor);
     
@@ -93,13 +96,19 @@ module.exports = {
       if(!keys || keys.length === 0) {
         fieldText += 'None here NOOB';
       } else {
-        keys.forEach(key => {
-          if(key.includes('suit')) return fieldText += `**${(key.split('_'))[1]} suit** - \`${userDecors[key]}\`\n`;
+        await keys.forEach(async key => {
+          let decorEmoji = await getEmoji(key, true);
+          
+          if(key.includes('suit')) {
+            return fieldText += `${decorEmoji} **${(key.split('_'))[1]} suit** - \`${userDecors[key]}\`\n`;
+          }
+          
           let color = key.split('_');
           let type = color.shift();
           let value = userDecors[key];
           if(color.length !== 0) type = ` ${type}`; //To adjust spacing
-          fieldText += `**${color}${type}** - \`${value}\`\n`;
+          
+          fieldText += `${decorEmoji} **${color}${type}** - \`${value}\`\n`;
         });
       }
       return fieldText;
