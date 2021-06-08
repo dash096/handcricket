@@ -7,7 +7,7 @@ const embedColor = require('../../functions/getEmbedColor.js');
 
 module.exports = {
   name: 'bag',
-  aliases: ['inventory', 'inv'],
+  aliases: ['decors', 'pack'],
   description: 'Shows your backpack',
   category: 'Dogenomy',
   syntax: 'e.bag',

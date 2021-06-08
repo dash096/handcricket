@@ -3,7 +3,7 @@ const embedColor = require('../../functions/getEmbedColor.js');
 
 module.exports = {
   name: 'invite',
-  aliases: ['link', 'support', 'server', 'join', 'bot'],
+  aliases: ['link', 'support', 'server', 'join', 'bot', 'add'],
   description: 'Invite the Bot or Join the Official server',
   category: 'General',
   syntax: 'e.invite',

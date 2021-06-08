@@ -25,21 +25,20 @@ module.exports = {
         .addField('Navigate via the pages of the guide by Reacting', 
           '1) ❓ - **__About and Guide__**\n2) 👀 - **__General Conmands__**\n3) 💰 - **__Dogenomy Commands__**\n4) 🔫 - **__Games Commands__**\n5) 🎲 - **__MiniGames Commands__**')
         .addField('Links', '[Add the bot](https://bit.ly/dispo-bot)\n[Support Server](https://bit.ly/dispoGuild)')
-        .setColor(embedColor)
         .attachFiles('./assets/banner.jpg')
-        .setImage('attachment://banner.jpg')
-        .setFooter('Requested by ' + author.tag);
+        .setImage(`attachment://banner.jpg`)
+        .setFooter('Requested by ' + author.tag)
+        .setColor(embedColor);
       
-      const helpEmbed = await channel.send('Loading...');
+      const helpEmbed = await channel.send(send);
+      checkReaction();
       await helpEmbed.react('❓');
       await helpEmbed.react('👀');
       await helpEmbed.react('💰');
       await helpEmbed.react('🔫');
       await helpEmbed.react('🎲');
       await helpEmbed.react('❌');
-      await helpEmbed.edit(null, { embed: send });
       
-      checkReaction();
       function checkReaction() {
         helpEmbed.awaitReactions(
           (reaction, user) => user.id == author.id,

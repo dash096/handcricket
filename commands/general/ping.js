@@ -8,7 +8,7 @@ module.exports = {
     const { content, author, channel, mentions } = message;
     
     message.reply('Ponging..').then(msg => {
-      msg.edit(`Pong! ${msg.createdTimestamp - message.createdTimestamp}ms`);
+      msg.edit(`🔫 Pong 🔫 ${msg.createdTimestamp - message.createdTimestamp}ms`);
     }).catch(e => {
       console.log(e)
     });
