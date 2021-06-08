@@ -3,7 +3,6 @@ const Discord = require("discord.js");
 const getErrors = require("../../functions/getErrors.js");
 const getTarget = require("../../functions/getTarget.js");
 const executeDuoMatch = require("../../footballFunctions/duoStart.js");
-const ServerID = process.env.SERVERID;
 
 module.exports = {
   name: "handfootball",
@@ -15,11 +14,6 @@ module.exports = {
   cooldown: 10,
   run: async ({ message, args, client, prefix }) => {
     const { content, author, guild, channel, mentions } = message;
-
-    if(guild.id !== ServerID) {
-      message.reply('That command is restricted only to OS (e.invite) untill the command is fully developed.');
-      return;
-    }
 
     //Check Status of the user.
     const user = author;
