@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const db = require('../schemas/player.js');
 const getErrors = require('../functions/getErrors.js');
+const misc = require('../schemas/misc.js');
 
 module.exports = ({client, prefix, topggapi}) => {
   client.on('message', async message => {
@@ -23,7 +24,7 @@ module.exports = ({client, prefix, topggapi}) => {
     }
     
     //BlackLists
-    let blacklistedUsers = [];
+    let blacklistedUsers = (await misc.findOne({ name: 'blacklist' })).blacklist;
     if(blacklistedUsers.find(user => user.id === author.id)) return;
     
     const perms = [
