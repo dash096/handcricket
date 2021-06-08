@@ -25,7 +25,7 @@ module.exports = ({client, prefix, topggapi}) => {
     
     //BlackLists
     let blacklistedUsers = (await misc.findOne({ name: 'blacklist' })).blacklist;
-    if(blacklistedUsers.find(user => user.id === author.id)) return;
+    if(blacklistedUsers.find(user => user === author.id)) return;
     
     const perms = [
     'ADD_REACTIONS',
