@@ -75,7 +75,7 @@ module.exports = {
             const decors = getDecors('type1');
             let decor = decors[Math.floor(Math.random() * decors.length)];
             if(decor.includes('suit')) decor = decors[Math.floor(Math.random() * decors.length)];
-            text += `Oh Damn, You got a ${decor.split('_').join(' ')}!\n`;
+            text += `Oh Damn, You got a ${await getEmoji(decor, true)} ${decor.split('_').join(' ')}!\n`;
             updateDecor(decor, 1, playerData, message);
           }
         

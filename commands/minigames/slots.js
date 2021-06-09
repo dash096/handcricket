@@ -15,7 +15,7 @@ module.exports = {
   description: 'More money, more chance! Hope you win but legends says you will never ever win.',
   category: 'Minigames',
   syntax: 'e.slots <amount>',
-  cooldown: 60,
+  cooldown: 25,
   run: async ({ message, client, prefix }) => {
     const { content, channel, mentions, author } = message;
     
@@ -98,7 +98,7 @@ module.exports = {
             let decor = decors[Math.floor(Math.random() * decors.length)];
             if(decor.includes('suit')) decor = decors[Math.floor(Math.random() * decors.length)];
             updateDecor(decor, author);
-            return `${await getEmoji('sh')} ${await getEmoji('sh')} ${await getEmoji('sh')}`;
+            return `${await getEmoji(decor, true)} ${await getEmoji(decor, true)} ${await getEmoji(decor, true)}`;
           } else if ( win[1] === 'item') {
             const itemsData = await getItems.find();
             const items = [];
@@ -149,8 +149,11 @@ async function getRandomEmoji() {
   const item = items[Math.floor(Math.random() * items.length)];
   
   const rando = Math.random();
-  if(rando < 0.25) {
-    return getEmoji('sh');
+  if(rando < 0.15) {
+    const decors = getDecors('type1');
+    const decor = decors[Math.floor(Math.random() * decors.length)];
+    
+    return getEmoji(decor, true);
   } else {
     return getEmoji(item);
   }
