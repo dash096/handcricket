@@ -96,20 +96,22 @@ module.exports = {
       if(!keys || keys.length === 0) {
         fieldText += 'None here NOOB';
       } else {
-        await keys.forEach(async key => {
+        for(let key in keys) {
+          key = keys[key];
+          
           let decorEmoji = await getEmoji(key, true);
           
           if(key.includes('suit')) {
-            return fieldText += `${decorEmoji} **${(key.split('_'))[1]} suit** - \`${userDecors[key]}\`\n`;
+            fieldText += `${decorEmoji} **${(key.split('_'))[1]} suit** - \`${userDecors[key]}\`\n`;
+          } else {
+            let color = key.split('_');
+            let type = color.shift();
+            let value = userDecors[key];
+            if(color.length !== 0) type = ` ${type}`; //To adjust spacing
+            
+            fieldText += `${decorEmoji} **${color}${type}** - \`${value}\`\n`;
           }
-          
-          let color = key.split('_');
-          let type = color.shift();
-          let value = userDecors[key];
-          if(color.length !== 0) type = ` ${type}`; //To adjust spacing
-          
-          fieldText += `${decorEmoji} **${color}${type}** - \`${value}\`\n`;
-        });
+        };
       }
       return fieldText;
     }
