@@ -24,7 +24,7 @@ module.exports = async (message, client) => {
     let players = [];
     let playerTags = [];
     
-    let ended;
+    let ended = undefined;
     
     //Send and React the Embed
     const embed = new Discord.MessageEmbed()
@@ -72,14 +72,14 @@ module.exports = async (message, client) => {
         ).users.remove(user.id);
         return;
       }
-      collectedUsers.push(user);
+      await collectedUsers.push(user);
       await channel.send(`${enterEmoji} **${user.username}** joined the teamMatch!`);
       await changeStatus(user, true);
     });
     
     //On end, check players.
     reactionCollector.on('end', async (collectedReactions) => {
-      if (ended) return;
+      if (ended === true) return changeStatus(collectedUsers, false);
       
       let reactors = collectedUsers;
       
@@ -91,11 +91,11 @@ module.exports = async (message, client) => {
       });
       
       if(players.length <= 2) {
-        changeStatus(players, false);
+        await changeStatus(collectedUsers, false);
         message.reply('TeamMatch aborted due to insufficient members, the members required are minimum 3');
         return;
       } else {
-        await changeStatus(players, true);
+        await changeStatus(collectedUsers, true);
         await message.reply('TeamMatch started, Players are\n' + playerTags.join('\n'));
         await chooseCaptains(players, playerTags);
       }
@@ -103,7 +103,7 @@ module.exports = async (message, client) => {
     
     //On remove, chnageStatus
     reactionCollector.on('remove', async (reaction, user) => {
-      if (ended) return;
+      if (ended === true) return;
       collectedUsers.splice(collectedUsers.indexOf(user), 1);
       await channel.send(`**${user.username}** left the teamMatch`);
       await changeStatus(user, false);
