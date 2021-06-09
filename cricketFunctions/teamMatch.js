@@ -81,9 +81,7 @@ module.exports = async (message, client) => {
     reactionCollector.on('end', async (collectedReactions) => {
       if (ended === true) return changeStatus(collectedUsers, false);
       
-      let reactors = collectedUsers;
-      
-      await reactors.forEach(reactor => {
+      await collectedUsers.forEach(reactor => {
         players.push(reactor);
       });
       await players.forEach(player => {
