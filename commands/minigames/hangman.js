@@ -26,7 +26,24 @@ module.exports = {
     }
     await db.findOneAndUpdate({_id: author.id}, {status: true});
     
-    const words = ['cricket', 'sports', 'cheems', 'googly', 'batsman', 'bowler', 'swing', 'playtime'];
+    const WordsAndHints = {
+      'cricket': 'Wear your pads!', 
+      'cheems': 'Best Doge',
+      'googly': 'Left turn right, ya know?',
+      'batsman': 'Do you own a bat?',
+      'bowler': 'Your hands spins straight enough.',
+      'swing': 'A bowling style.',
+      'yorker': 'Remember Malinga of SriLanka?',
+      'coach': 'Doesn\'t really mean a train.',
+      'jogging': 'Who even wakes early to do this?',
+      'pace': 'You dont have this when you bowl.',
+      'fielding': 'Hope you can run.',
+      'stamina': 'your gf gains a lot when she\'s against you!',
+      'wicket': 'stumps is not the only way to get this',
+      'duck': 'You would literally be at top if a leaderboard was made for this',
+    };
+    
+    const words = Object.keys(WordsAndHints);
     const word = words[Math.floor(Math.random() * words.length)];
     const splitted = word.split('');
     const revealed = [];
@@ -52,7 +69,7 @@ module.exports = {
     }
     
     await message.reply('Guess the upcoming word with the revealled characters, you can type a character to see if it exists in the word.');
-    await message.reply(`\`${revealed.join(' ')}\``);
+    await message.reply(`\`${revealed.join(' ')}\` ${WordsAndHints[word]}`);
     await awaitAnswers();
     
     async function awaitAnswers() {
@@ -75,12 +92,12 @@ module.exports = {
         } else if(splitted.find(char => char == answer)) {
           //reveal the char
           revealed.splice(splitted.indexOf(answer), 1, answer);
-          msg.reply(`\`${revealed.join(' ')}\``);
+          msg.reply(`\`${revealed.join(' ')}\` ${WordsAndHints[word]}`);
           return awaitAnswers();
         } else {
           //try again
           if(wordLives === 0 || letterLives === 0) return msg.reply('Better luck next time :)');
-          msg.reply(`\`${revealed.join(' ')}\`` + ' Try again');
+          msg.reply(`Try again, \`${revealed.join(' ')}\` ${WordsAndHints[word]}`);
           return awaitAnswers();
         }
         
