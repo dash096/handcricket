@@ -33,11 +33,6 @@ let css = `
   text-align: center;
   position: relative;
 }
-    #header h2 {
-      color: var(--white);
-      font-size: 4em;
-    }
-    
     #header #nav_icon_container {
       display: flex;
       flex-direction: vertical;
@@ -45,11 +40,12 @@ let css = `
       position: absolute;
       right: 1em;
       padding: 1em;
+      width: 5em;
     }
     
-    #header .nav_icon {
-      height: 0.5em;
-      width : 1em;
+    #header > div {
+      height: 2.5em;
+      width : 2em;
       background-color: var(--white);
     }
 
