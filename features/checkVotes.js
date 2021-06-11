@@ -2,11 +2,18 @@ const db = require('../schemas/player.js');
 const getEmoji = require('../functions/getEmoji.js');
 const getDecors = require('../functions/getDecors.js');
 const express = require('express')
+const enforce = require('express-sslify');
 const { Webhook } = require('@top-gg/sdk')
 const app = express()
 
 module.exports = async ({client, topggapi}) => {
   const voteWebhook = new Webhook(process.env.TOPGG_WEBHOOK_AUTH)
+  
+  app.use(enforce.HTTPS({ trustProtoHeader: true }));
+  
+  app.get('/', (req, res) => {
+    res.send(require('../server/main.js'));
+  });
   
   app.post('/topgg',
     voteWebhook.listener(async (vote) => {
@@ -38,10 +45,6 @@ module.exports = async ({client, topggapi}) => {
       user.send(`Thanks for voting, You got ${await rewards(data, user)} for voting!`)
     })
   )
-  
-  app.get('/', (req, res) => {
-    res.send(require('../server/main.js'));
-  });
   
   app.listen(process.env.PORT || 8080);
 };
