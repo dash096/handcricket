@@ -36,16 +36,16 @@ let css = `
     #header #nav_icon_container {
       display: flex;
       flex-direction: vertical;
-      background-color: #000;
       position: absolute;
       right: 1em;
-      padding: 1em;
-      width: 5em;
+      padding: 2em;
+      width: 10em;
     }
     
     #header #nav_icon_container > div {
-      height: 2.5em;
-      width : 2em;
+      height: 3.5em;
+      width : 5em;
+      margin: 0 0 1em 0;
       background-color: var(--white);
     }
 
@@ -249,7 +249,7 @@ let css = `
     #footer h2 {
       color: var(--white);
       font-size: 6em;
-      text-shadow: 0.2em 0.2em 0.3em #00000055
+      text-shadow: 0.2em 0.2em 0.3em #00000055;
     }
 
 
