@@ -15,11 +15,11 @@ let css = `
   font-family: Helvetica;
 }
 
-body {
+#wrapper {
   background-color: var(--yellow);
 }
 
-div {
+#wrapper div {
   width: 100%;
 }
 
