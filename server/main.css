@@ -43,7 +43,7 @@ let css = `
       width: 5em;
     }
     
-    #header > div {
+    #header #nav_icon_container > div {
       height: 2.5em;
       width : 2em;
       background-color: var(--white);
