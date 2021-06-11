@@ -31,7 +31,7 @@ var html = `
       </p>
       
       <div class='redirect'>
-          <a href=\`${process.env.INVITE_URL}\`> <strong> Invite Bot </strong> </a>
+          <a href="${process.env.INVITE_URL}"> <strong> Invite Bot </strong> </a>
       </div>
       
   </div>
@@ -100,7 +100,7 @@ var html = `
       </div>
       
       <div id='redirect'>
-          <a href=\`${process.env.COMMUNITY_URL}\`>
+          <a href="${process.env.COMMUNITY_URL}">
               Join us
           </a>
       </div>
