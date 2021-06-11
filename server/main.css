@@ -19,7 +19,7 @@ body {
   background-color: var(--yellow);
 }
 
-body div {
+div {
   width: 100%;
 }
 

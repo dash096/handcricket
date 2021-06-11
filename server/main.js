@@ -9,7 +9,8 @@ var html = `
 </head>
 
 <body>
-
+  <div id='wrapper'>
+  
 
   <div id='header'>
       <h2>
@@ -111,6 +112,8 @@ var html = `
       <h2> @Dispo </h2>
   </div>
   
+  
+  </div>
 </body>
 
 </html>
