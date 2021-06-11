@@ -17,6 +17,7 @@ let css = `
 
 #wrapper {
   background-color: var(--yellow);
+  width: 100%;
 }
 
 #wrapper div {
@@ -30,10 +31,26 @@ let css = `
   min-height: 7.5em;
   box-shadow: 0.2em 0.2em 0.5em #00000055;
   text-align: center;
+  position: relative;
 }
     #header h2 {
       color: var(--white);
       font-size: 4em;
+    }
+    
+    #header #nav_icon_container {
+      display: flex;
+      flex-direction: vertical;
+      background-color: #000;
+      position: absolute;
+      right: 1em;
+      padding: 1em;
+    }
+    
+    #header .nav_icon {
+      height: 0.5em;
+      width : 1em;
+      background-color: var(--white);
     }
 
 

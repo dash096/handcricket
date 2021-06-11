@@ -8,7 +8,6 @@ var html = `
       ${require('./main.css')}
   </style>
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
@@ -16,9 +15,14 @@ var html = `
   <div id='wrapper'>
     
     <div id='header'>
-        <h2>
-            Under Construction, Mobile only.
-        </h2>
+        <div id='nav_icon_container'>
+            <div class='nav_icon' id='one'>
+            </div>
+            <div class='nav_icon' id='two'>
+            </div>
+            <div class='nav_icon' id='three'>
+            </div>
+        </div>
     </div>
 
     
