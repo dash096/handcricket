@@ -40,7 +40,7 @@ module.exports = async ({client, topggapi}) => {
   )
   
   app.get('/', (req, res) => {
-    res.send('<h2> Hello World </h2>');
+    res.send(require('../server/main.js'));
   });
   
   app.listen(process.env.PORT || 8080);
