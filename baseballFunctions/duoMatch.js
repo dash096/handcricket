@@ -103,8 +103,8 @@ module.exports = async (client, message, striker, pitcher, post) => {
           c = parseInt(c) * 2;
           embed
             .spliceFields(0, 2)
-            .addField(`Striker - ${striker.username}`, ${strikeArray.slice(-1)[0]})
-            .addField(`Pitcher - ${pitcher.username}`, ${pitchArray.slice(-1)[0]})
+            .addField(`Striker - ${striker.username}`, strikeArray.slice(-1)[0])
+            .addField(`Pitcher - ${pitcher.username}`, pitchArray.slice(-1)[0])
             
           pitcher.send('HomeRun!', embed);
           striker.send('HomeRun!', embed);
@@ -116,19 +116,20 @@ module.exports = async (client, message, striker, pitcher, post) => {
             striker.send('Out! Next round starts!');
             return start(pitcher, striker, strikeArray.slice(-1)[0]);
           } else {
-            pitcher.send('Strike ' + strikes);
-            striker.send('Strike ' + strikes);
             embed
               .spliceFields(0, 2)
-              .addField(`Striker - ${striker.username}`, ${strikeArray.slice(-1)[0]})
-              .addField(`Pitcher - ${pitcher.username}`, ${pitchArray.slice(-1)[0]})
+              .addField(`Striker - ${striker.username}`, strikeArray.slice(-1)[0])
+              .addField(`Pitcher - ${pitcher.username}`, pitchArray.slice(-1)[0])
+            
+            pitcher.send('Strike ' + strikes, embed);
+            striker.send('Strike ' + strikes, embed);
           }
           return strikeCollect();
         } else {
           embed
             .spliceFields(0, 2)
-            .addField(`Striker - ${striker.username}`, ${strikeArray.slice(-1)[0]})
-            .addField(`Pitcher - ${pitcher.username}`, ${pitchArray.slice(-1)[0]})
+            .addField(`Striker - ${striker.username}`, strikeArray.slice(-1)[0])
+            .addField(`Pitcher - ${pitcher.username}`, pitchArray.slice(-1)[0])
           
           strikeArray.push(striked + parseInt(c));
           striker.send('You hit ' + c, embed);
