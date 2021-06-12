@@ -9,16 +9,16 @@ module.exports = async function chooseToss(message, winner, loser, type) {
   
   let options;
   if (type === 'cricket') options = {
-    'one': ['bat', 'Batsman'],
-    'two': ['bowl', 'bowler']
+    'one': [['bat', 'batting'], 'Batsman'],
+    'two': [['bowl', 'bowling'], 'bowler']
   }
   else if (type === 'football') options = {
-    'one': ['attack', 'Attacker'],
-    'two': ['defend', 'Defender']
+    'one': [['attack', 'atk'], 'Attacker'],
+    'two': [['defend', 'def'], 'Defender']
   }
   else if (type === 'baseball') options = {
-    'one': ['strike', 'Striker'],
-    'two': ['pitch', 'Pitcher']
+    'one': [['strike', 'str'], 'Striker'],
+    'two': [['pitch', 'pit'], 'Pitcher']
   }
   
   let first;
@@ -31,10 +31,10 @@ module.exports = async function chooseToss(message, winner, loser, type) {
     const m = msgs.first();
     const c = m.content.toLowerCase().trim();
       
-    if(options.one[0] == c) {
+    if(options.one[0].find(i => i == c)) {
       first = winner;
       second = loser;
-    } else if (options.two[0] == c) {
+    } else if (options.two[0].find(i => i == c)) {
       first = loser;
       second = winner;
     } else {
