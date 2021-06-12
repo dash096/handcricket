@@ -46,9 +46,7 @@ module.exports = {
       await changeStatus(user, true);
       await changeStatus(target, true);
       
-      let post;
-      if(content.toLowerCase().includes('post')) post = true;
-      executeDuoMatch(client, message, user, target, post)
+      executeDuoMatch(client, message, user, target)
     } catch (e) {
       console.log(e);
       return;

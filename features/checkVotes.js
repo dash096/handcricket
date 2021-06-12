@@ -9,7 +9,7 @@ module.exports = async ({client, topggapi}) => {
   const voteWebhook = new Webhook(process.env.TOPGG_WEBHOOK_AUTH)
   
   app.get('/', (req, res) => {
-    res.send(require('../server/main.js'));
+    res.send('<h1> Hello World </h1>');
   });
   
   app.post('/topgg',

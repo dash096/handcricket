@@ -6,13 +6,21 @@ const rollToss = require('../functions/rollToss.js');
 const chooseToss = require('../functions/chooseToss.js');
 const startMatch = require('./duoMatch.js');
 const embedColor = require('../functions/getEmbedColor.js');
+const checkWill = require('../functions/checkWill.js');
 
-module.exports = async (client, message, user, target, post) => {
+module.exports = async (client, message, user, target) => {
   const { channel, content, author } = message;
   
   //Check Target's Will
   await channel.send(`${target} do you want to play football with ${user.username}? Type \`y\`/\`n\` in 30s\n Append(add to the end) \`--post\` to the message to post the progress in this channel`);
-  const will = await checkWill();
+  
+  let post;
+  if (content.toLowerCase().includes('--post')) post = true;
+  
+  let will = await checkWill(channel, target, post);
+  will = will[0];
+  post = will[1];
+  
   if(will === true) {
     const tossWinner = await rollToss(message, user, target, 'football');
     if(tossWinner.id === user.id) {
@@ -61,34 +69,6 @@ module.exports = async (client, message, user, target, post) => {
       return 'err';
     }
     return 'ok';
-  }
-  
-  async function checkWill() {
-    try {
-      const msgs = await channel.awaitMessages(m => m.author.id === target.id, {
-        max: 1,
-        time: 30000,
-        errors: ['time']
-      });
-      const msg = msgs.first();
-      const c = msg.content.trim().toLowerCase();
-      
-      if(c.includes('post')) post = true;
-      
-      if(c.startsWith('y')) {
-        return true;
-      }
-      else if(c.startsWith('n')){
-        msg.reply(`Match aborted`);
-        return false;
-      } else {
-        return await checkWill();
-      }
-    } catch(e) {
-      message.reply(getErrors({ error: 'time' }));
-      console.log(e);
-      return false;
-    }
   } 
 }
 

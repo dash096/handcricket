@@ -5,6 +5,7 @@ const getEmoji = require('../functions/getEmoji.js');
 const firstInnings = require("./duoInnings1.js");
 const rollToss = require('../functions/rollToss.js');
 const chooseToss = require('../functions/chooseToss.js');
+const checkWill = require('../functions/checkWill.js');
 
 module.exports = async (message, user, target) => {
   const tossEmoji = await getEmoji('toss');
@@ -17,45 +18,18 @@ module.exports = async (message, user, target) => {
   let bowler;
   
   //Flags
-  let post = false;
+  let post;
   let max = 6;
   if(content.toLowerCase().includes('post')) post = true;
   if(content.toLowerCase().includes('ten')) max = 10;
   
   //Execute check will
   await channel.send(`${target} Do you wanna play cricket with **${user.username}**? Type \`y\`/\`n\` in 30s\n Append(add to the end) \`--post\` to the message to post the scores in this channel`);
-  const will = await checkWill();
-    
-  //Ask the target if he wants to duel.
-  async function checkWill() {
-    try {
-      const msgs = await channel.awaitMessages(m => m.author.id === target.id, {
-        max: 1,
-        time: 30000,
-        errors: ['time']
-      });
-      const msg = msgs.first();
-      const c = msg.content.trim().toLowerCase();
-      
-      if(c.includes('post')) post = true;
-      if(c.includes('ten')) max = 10;
-      
-      if(c.startsWith('y')) {
-        return true;
-      }
-      else if(c.startsWith('n')){
-        msg.reply(`Match aborted`);
-        return false;
-      } else {
-        return await checkWill();
-      }
-    } catch(e) {
-      message.reply(getErrors({error: 'time'}));
-      console.log(e);
-      return false;
-    }
-  }
-    
+  let will = await checkWill(channel, target, post, max);
+  will = will[0];
+  post = will[1];
+  max = will[2];
+  
   //If will is true, roll the toss
   if(will === true) {
     try {
