@@ -29,8 +29,6 @@ module.exports = async (client, message, striker, pitcher, post) => {
     pitchCollect();
     strikeCollect();
     async function pitchCollect() {
-      const pitcherDM = (await pitcher.send(embed)).channel;
-      
       pitcherDM.awaitMessages(
         msg => msg.author.id === pitcher.id,
         {
@@ -101,8 +99,9 @@ module.exports = async (client, message, striker, pitcher, post) => {
         } else if (c > 6 || c < 1) {
           striker.send('This match is limited to 1-6');
           return strikeCollect();
-        } else if (c === pitched) {
+        } else if (c == pitched) {
           c = parseInt(c) * 2;
+          strikeArray.push(c);
           embed
             .spliceFields(0, 2)
             .addField(`Striker - ${striker.username}`, strikeArray.slice(-1)[0])
