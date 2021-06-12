@@ -128,12 +128,13 @@ module.exports = async (client, message, striker, pitcher, post) => {
           }
           return strikeCollect();
         } else {
+          strikeArray.push(striked + parseInt(c));
+          
           embed
             .spliceFields(0, 2)
             .addField(`Striker - ${striker.username}`, strikeArray.slice(-1)[0])
             .addField(`Pitcher - ${pitcher.username}`, (target || 0))
           
-          strikeArray.push(striked + parseInt(c));
           striker.send('You hit ' + c, embed);
           pitcher.send('Striker hit ' + embed);
           return strikeCollect();
