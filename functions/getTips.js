@@ -14,6 +14,10 @@ module.exports = (message) => {
   'Noticed any bug? Report it to the official server for a neat reward!',
   'There is a daily decor market in official server',
   'Voting rewards today is multiplied twice!',
-  ]; //Last three Guild, Total index 8 
-  return `\n**Tip:** ${tips[Math.floor(Math.random() * 8)]}`;
+  ];
+  
+  let random = Math.random();
+  
+  if(random < 0.4) return `\n**Tip:** ${tips[Math.floor(Math.random() * 8)]}`;
+  else return '';
 };

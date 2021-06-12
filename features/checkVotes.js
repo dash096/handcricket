@@ -8,10 +8,6 @@ const app = express()
 module.exports = async ({client, topggapi}) => {
   const voteWebhook = new Webhook(process.env.TOPGG_WEBHOOK_AUTH)
   
-  app.get('/', (req, res) => {
-    res.send('<h1> Hello World </h1>');
-  });
-  
   app.post('/topgg',
     voteWebhook.listener(async (vote) => {
       let data = await db.findOne({ _id: vote.user });
@@ -42,6 +38,10 @@ module.exports = async ({client, topggapi}) => {
       user.send(`Thanks for voting, You got ${await rewards(data, user)} for voting!`)
     })
   )
+  
+  app.get('/', (req, res) => {
+    res.send('<h1> Hello World </h1>');
+  });
   
   app.listen(process.env.PORT || 8080);
 };

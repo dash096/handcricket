@@ -26,7 +26,7 @@ async function checkWill(channel, target, post, max) {
     }
     
   } catch(e) {
-    message.reply(getErrors({ error: 'time' }));
+    channel.send(getErrors({ error: 'time' }));
     console.log(e);
     return [false, post, max];
   }
