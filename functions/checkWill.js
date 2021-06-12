@@ -12,8 +12,8 @@ async function checkWill(channel, target, post, max) {
     const msg = msgs.first();
     const c = msg.content.trim().toLowerCase();
     
-    if(!max && c.includes('--ten')) max = true;
-    if(!post && c.includes('--post')) post = true;
+    if(c.includes('--ten')) max = 10;
+    if(c.includes('--post')) post = true;
     
     if(c.startsWith('y')) {
       return [true, post, max];
