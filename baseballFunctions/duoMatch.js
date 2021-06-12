@@ -99,6 +99,15 @@ module.exports = async (client, message, striker, pitcher, post) => {
         } else if (c > 6 || c < 1) {
           striker.send('This match is limited to 1-6');
           return strikeCollect();
+        } else if (c === pitched) {
+          c = parseInt(c) * 2;
+          embed
+            .spliceFields(0, 2)
+            .addField(`Striker - ${striker.username}`, ${strikeArray.slice(-1)[0]})
+            .addField(`Pitcher - ${pitcher.username}`, ${pitchArray.slice(-1)[0]})
+            
+          pitcher.send('HomeRun!', embed);
+          striker.send('HomeRun!', embed);
         } else if (c - pitched === 1 || c - pitched === -1) {
           strikes += 1;
           if (strikes === 3) {

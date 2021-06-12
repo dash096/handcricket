@@ -3,6 +3,7 @@ const Discord = require("discord.js");
 const getErrors = require("../../functions/getErrors.js");
 const getTarget = require("../../functions/getTarget.js");
 const executeDuoMatch = require("../../baseballFunctions/duoStart.js");
+const ServerID = process.env.SERVERID;
 
 module.exports = {
   name: "handbaseball",
@@ -14,7 +15,11 @@ module.exports = {
   cooldown: 10,
   run: async ({ message, args, client, prefix }) => {
     const { content, author, guild, channel, mentions } = message;
-
+    
+    if (guild.id !== ServerID) {
+      return message.reply('This command is restricted to Community Server only');
+    }
+    
     //Check Status of the user.
     const user = author;
     const userdata = await db.findOne({
