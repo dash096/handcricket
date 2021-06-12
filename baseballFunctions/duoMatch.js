@@ -136,7 +136,7 @@ module.exports = async (client, message, striker, pitcher, post) => {
             .addField(`Pitcher - ${pitcher.username}`, (target || 0))
           
           striker.send('You hit ' + c, embed);
-          pitcher.send('Striker hit ' + embed);
+          pitcher.send('Striker hit ' + c, embed);
           return strikeCollect();
         }
       }).catch(async e => {
