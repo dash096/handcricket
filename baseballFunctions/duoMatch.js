@@ -20,8 +20,11 @@ module.exports = async (client, message, striker, pitcher, post) => {
     let embed = new Discord.MessageEmbed()
       .setTitle('Baseball Match')
       .addField(`Striker - ${striker.username}`, 0)
-      .addField(`Pitcher - ${pitcher.username}`, 0)
+      .addField(`Pitcher - ${pitcher.username}`, (target || 0))
       .setColor(embedColor);
+    
+    const strikerDM = (await striker.send(embed)).channel;
+    const pitcherDM = (await pitcher.send(embed)).channel;
     
     pitchCollect();
     strikeCollect();
@@ -71,8 +74,6 @@ module.exports = async (client, message, striker, pitcher, post) => {
     }
     
     async function strikeCollect() {
-      const strikerDM = (await striker.send(embed)).channel;
-      
       strikerDM.awaitMessages(
         msg => msg.author.id === striker.id,
         {
@@ -105,7 +106,7 @@ module.exports = async (client, message, striker, pitcher, post) => {
           embed
             .spliceFields(0, 2)
             .addField(`Striker - ${striker.username}`, strikeArray.slice(-1)[0])
-            .addField(`Pitcher - ${pitcher.username}`, pitchArray.slice(-1)[0])
+            .addField(`Pitcher - ${pitcher.username}`, (target || 0))
             
           pitcher.send('HomeRun!', embed);
           striker.send('HomeRun!', embed);
@@ -120,7 +121,7 @@ module.exports = async (client, message, striker, pitcher, post) => {
             embed
               .spliceFields(0, 2)
               .addField(`Striker - ${striker.username}`, strikeArray.slice(-1)[0])
-              .addField(`Pitcher - ${pitcher.username}`, pitchArray.slice(-1)[0])
+              .addField(`Pitcher - ${pitcher.username}`, (target || 0))
             
             pitcher.send('Strike ' + strikes, embed);
             striker.send('Strike ' + strikes, embed);
@@ -130,7 +131,7 @@ module.exports = async (client, message, striker, pitcher, post) => {
           embed
             .spliceFields(0, 2)
             .addField(`Striker - ${striker.username}`, strikeArray.slice(-1)[0])
-            .addField(`Pitcher - ${pitcher.username}`, pitchArray.slice(-1)[0])
+            .addField(`Pitcher - ${pitcher.username}`, (target || 0))
           
           strikeArray.push(striked + parseInt(c));
           striker.send('You hit ' + c, embed);
