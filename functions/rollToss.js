@@ -4,7 +4,7 @@ const getErrors = require('./getErrors.js');
 const getEmoji = require('./getEmoji.js');
 const firstInnings = require("../cricketFunctions/duoInnings1.js");
 
-module.exports = async (message, user, target, football) => {
+module.exports = async (message, user, target, type) => {
   const { channel, mentions, content } = message;
   const tossEmoji = await getEmoji('toss');
   
@@ -17,11 +17,13 @@ module.exports = async (message, user, target, football) => {
   
   function getText(who) {
     if (who == 'user') {
-      if (!football) return `${user} won the toss, type either \`batting\` or \`bowling\` or \`end\``;
-      else return `${user} won the toss, type either \`attack\` or \`defend\` or \`end\``;
+      if (type === 'cricket') return `${user} won the toss, type either \`batting\` or \`bowling\` or \`end\``;
+      else if (type === 'football') return `${user} won the toss, type either \`attack\` or \`defend\` or \`end\``;
+      else if (type === 'baseball') return `${user} won the toss, type either \`strike\` or \`pitch\` or \`end\``;
     } else {
-      if (!football) return `${target} won the toss, type either \`batting\` or \`bowling\` or \`end\``;
-      else return `${target} won the toss, type either \`attack\` or \`defend\` or \`end\``;
+      if (type === 'cricket') return `${target} won the toss, type either \`batting\` or \`bowling\` or \`end\``;
+      else if (type === 'football') return `${target} won the toss, type either \`attack\` or \`defend\` or \`end\``;
+      else if (type === 'baseball') return `${target} won the toss, type either \`strike\` or \`pitch\` or \`end\``;
     }
   }
   

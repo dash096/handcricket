@@ -1,4 +1,4 @@
-
+const getErrors = require('./getErrors.js');
 
 module.exports =
 
@@ -22,7 +22,7 @@ async function checkWill(channel, target, post, max) {
       msg.reply(`Match aborted`);
       return [false, post, max];
     } else {
-      return await checkWill();
+      return await checkWill(channel, target, post, max);
     }
     
   } catch(e) {

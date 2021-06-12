@@ -332,13 +332,13 @@ module.exports = async (message, client) => {
     }
     
     async function executeSchedule(players, team1, team2, team1Tags, team2Tags, extraPlayer, channel) {
-      let winnerCap = await rollToss(message, team1[0], team2[0]);
+      let winnerCap = await rollToss(message, team1[0], team2[0], 'cricket');
       
       let batTeam;
       let bowlTeam;
       
       if(winnerCap.id === team1[0].id) {
-        let toss = await chooseToss(message, team1[0], team2[0]);
+        let toss = await chooseToss(message, team1[0], team2[0], 'cricket');
         if(chooseToss === 'err') {
           await changeStatus(players, false);
           return;
@@ -351,7 +351,7 @@ module.exports = async (message, client) => {
           bowlTeam = team1;
         }
       } else {
-        let toss = await chooseToss(message, team2[0], team1[0]);
+        let toss = await chooseToss(message, team2[0], team1[0], 'cricket');
         if(chooseToss === 'err') {
           await changeStatus(players, false);
           return;

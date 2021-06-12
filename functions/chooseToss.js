@@ -4,14 +4,25 @@ const getErrors = require('./getErrors.js');
 const getEmoji = require('./getEmoji.js');
 const firstInnings = require("../cricketFunctions/duoInnings1.js");
 
-module.exports = async function chooseToss(message, winner, loser, football) {
+module.exports = async function chooseToss(message, winner, loser, type) {
   const { content, author, channel, mentions } = message;
   
-  let batsman;
-  let bowler;
+  let options;
+  if (type === 'cricket') options = {
+    'one': ['bat', 'Batsman'],
+    'two': ['bowl', 'bowler']
+  }
+  else if (type === 'football') options = {
+    'one': ['attack', 'Attacker'],
+    'two': ['defend', 'Defender']
+  }
+  else if (type === 'baseball') options = {
+    'one': ['strike', 'Striker'],
+    'two': ['pitch', 'Pitcher']
+  }
   
-  let attacker;
-  let defender;
+  let first;
+  let second;
   
   try {
     const msgs = await channel.awaitMessages(
@@ -20,34 +31,18 @@ module.exports = async function chooseToss(message, winner, loser, football) {
     const m = msgs.first();
     const c = m.content.toLowerCase().trim();
       
-    if(football && c.startsWith("attack")) {
-      attacker = winner;
-      defender = loser;
-    } else if (football && c.startsWith("defend")) {
-      attacker = loser;
-      defender = winner;
-    } else if (!football && c.startsWith("batting")) {
-      batsman = winner;
-      bowler = loser;
-    } else if (!football && c.startsWith("bowling")) {
-      batsman = loser;
-      bowler = winner;
-    } else if (c == "end" || c == "cancel" || c == "exit") {
-      await changeStatus(winner, false);
-      await changeStatus(loser, false);
-      channel.send('Aborted');
-      return 'err';
+    if(options.one[0] == c) {
+      first = winner;
+      second = loser;
+    } else if (options.two[0] == c) {
+      first = loser;
+      second = winner;
     } else {
-      return chooseToss(message, winner, loser, football);
+      return chooseToss(message, winner, loser, type);
     }
     
-    if(!football) {
-      await channel.send(`Batsman is ${batsman}, Bowler is ${bowler}`);
-      return [batsman, bowler];
-    } else {
-      await channel.send(`Attacker is ${attacker}, Defender is ${defender}`);
-      return [attacker, defender];
-    }
+    await channel.send(`${options.one[1]} is ${first}, ${options.two[1]} is ${second}`);
+    return [first, second];
   } catch (e) {
     await changeStatus(winner, false);
     await changeStatus(loser, false);

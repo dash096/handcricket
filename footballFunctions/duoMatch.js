@@ -278,6 +278,9 @@ module.exports = async (client, message, attacker, defender, post) => {
           over = true;
           user.send('You forfeited.');
           target.send(`**${user.username}** forfeited`);
+          if(post === true) channel.send(`**${user.username}** forfeited.`);
+          changsStatus(attacker, false);
+          changsStatus(defender, false);
           return;
         } else {
           target.send(`\`${user.username}:\` ${content}`);
@@ -308,6 +311,8 @@ module.exports = async (client, message, attacker, defender, post) => {
           target.send('You forfeited.');
           user.send(`**${target.username}** forfeited.`);
           if(post === true) channel.send(`**${target.username}** forfeited.`);
+          changsStatus(attacker, false);
+          changsStatus(defender, false);
           return;
         } else {
           user.send(`\`${target.username}:\` ${content}`);
