@@ -9,6 +9,10 @@ module.exports = async (client, message, striker, pitcher, post) => {
   const { channel } = message;
   let isInnings2;
   
+  let hitPath = './assets/baseball_hit.png';
+  let strikePath = './assets/baseball_strike.png';
+  let homerunPath = './assets/baseball_homerun.png';
+  
   start(striker, pitcher);
   async function start(striker, pitcher, target) {
     if (isInnings2 == 'over' || isInnings2 && !target) return;
@@ -106,9 +110,12 @@ module.exports = async (client, message, striker, pitcher, post) => {
             .spliceFields(0, 2)
             .addField(`Striker - ${striker.username}`, strikeArray.slice(-1)[0])
             .addField(`Pitcher - ${pitcher.username}`, (target || 0))
+            .attachFiles(homerunPath)
+            .setImage(`attachment://${homerunPath.split('/').pop()}`)
             
           pitcher.send('HomeRun!', embed);
           striker.send('HomeRun!', embed);
+          return strikeCollect();
         } else if (c - pitched === 1 || c - pitched === -1) {
           strikes += 1;
           if (strikes === 3) {
@@ -121,6 +128,8 @@ module.exports = async (client, message, striker, pitcher, post) => {
               .spliceFields(0, 2)
               .addField(`Striker - ${striker.username}`, strikeArray.slice(-1)[0])
               .addField(`Pitcher - ${pitcher.username}`, (target || 0))
+              .attachFiles(strikePath)
+              .setImage(`attachment://${strikePath.split('/').pop()}`)
             
             pitcher.send('Strike ' + strikes, embed);
             striker.send('Strike ' + strikes, embed);
@@ -133,6 +142,8 @@ module.exports = async (client, message, striker, pitcher, post) => {
             .spliceFields(0, 2)
             .addField(`Striker - ${striker.username}`, strikeArray.slice(-1)[0])
             .addField(`Pitcher - ${pitcher.username}`, (target || 0))
+            .attachFiles(hitPath)
+            .setImage(`attachment://${hitPath.split('/').pop()}`)
           
           striker.send('You hit ' + c, embed);
           pitcher.send('Striker hit ' + c, embed);
