@@ -21,11 +21,12 @@ module.exports = async (client, message, striker, pitcher, post) => {
       .setTitle('Baseball Match')
       .addField(`Striker - ${striker.username}`, 0)
       .addField(`Pitcher - ${pitcher.username}`, 0)
-      
+      .setColor(embedColor);
+    
     pitchCollect();
     strikeCollect();
     async function pitchCollect() {
-      const pitcherDM = await pitcher.send(embed);
+      const pitcherDM = (await pitcher.send(embed)).channel;
       
       pitcherDM.awaitMessages(
         msg => msg.author.id === pitcher.id,
@@ -70,7 +71,7 @@ module.exports = async (client, message, striker, pitcher, post) => {
     }
     
     async function strikeCollect() {
-      const strikerDM = await striker.send(embed);
+      const strikerDM = (await striker.send(embed)).channel;
       
       strikerDM.awaitMessages(
         msg => msg.author.id === striker.id,
