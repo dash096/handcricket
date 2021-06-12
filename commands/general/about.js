@@ -18,7 +18,7 @@ module.exports = {
     const embed = new Discord.MessageEmbed()
       .setTitle('About Dispo Cheems')
       .setDescription('Thanks to Aadithya, General Nix Sh Sandile, Diego, Killua, Ace, Basara, Prateek and all other peeps who helped the bot grow and test it out.')
-      .addField('Links', '[Add the bot](${INVITE_URL})\n[Vote me](https://top.gg/bot/804346878027235398/vote)\n[Community Server](${COMMUNITY_URL})')
+      .addField('Links', `[Add the bot](${INVITE_URL})\n[Vote me](https://top.gg/bot/804346878027235398/vote)\n[Community Server](${COMMUNITY_URL})`)
       .addField('Guilds', `${GUILDS} Guilds`)
       .addField(
         'Users',
