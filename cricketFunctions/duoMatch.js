@@ -25,10 +25,11 @@ module.exports = async (message, user, target) => {
   
   //Execute check will
   await channel.send(`${target} Do you wanna play cricket with **${user.username}**? Type \`y\`/\`n\` in 30s\n Append(add to the end) \`--post\` to the message to post the scores in this channel`);
+  
   let will = await checkWill(channel, target, post, max);
-  will = will[0];
   post = will[1];
   max = will[2];
+  will = will[0];
   
   //If will is true, roll the toss
   if(will === true) {

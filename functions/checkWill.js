@@ -1,8 +1,6 @@
 const getErrors = require('./getErrors.js');
 
-module.exports =
-
-async function checkWill(channel, target, post, max) {
+module.exports = async function checkWill(channel, target, post, max) {
   try {
     const msgs = await channel.awaitMessages(m => m.author.id === target.id, {
       max: 1,

@@ -18,8 +18,8 @@ module.exports = async (client, message, user, target) => {
   if (content.toLowerCase().includes('--post')) post = true;
   
   let will = await checkWill(channel, target, post);
-  will = will[0];
   post = will[1];
+  will = will[0];
   
   if(will === true) {
     const tossWinner = await rollToss(message, user, target, 'football');
