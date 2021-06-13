@@ -41,6 +41,7 @@ module.exports = {
       await helpEmbed.react('🎲');
       await helpEmbed.react('❌');
       
+      let i;
       function checkReaction() {
         helpEmbed.awaitReactions(
           (reaction, user) => user.id == author.id,
@@ -51,6 +52,12 @@ module.exports = {
           }
         ).then(async (collected) => {
           const reaction = Array.from(collected.keys()) [0];
+          
+          if(!i) {
+            send.files = [];
+            await helpEmbed.edit(send);
+            i = true;
+          }
           
           if(reaction == '🏏') {
             helpEmbed.edit(getEmbed('cricket'));
@@ -86,8 +93,8 @@ module.exports = {
         const cricketEmbed = new Discord.MessageEmbed()
           .setTitle('About Cricket')
           .setDescription('Not actually cricket, but **__handcricket__**. A popular kiddo game originated in **South India** and spread to whole India')
-          .addField(
-            'How to Play?', 'Once when you start a match, get to dms to play. It is played in dms cause the numbers are supposed to be hidden...\n\n' +
+          .addField('How to Play?',
+            'Once when you start a match, get to dms to play. It is played in dms cause the numbers are supposed to be hidden...\n\n' +
             'The bowler bowls a ball by typing a number , the batsman  hits the ball by typing a number. If both the numbers are same, it is a Wicket and the batsman changes else the batsman\'s number adds to his score, and after wicket, the next innings starts with a target that the previous batsman has hit in total\n\n' +
             'The batsman and bowler in first innings gets swapped their position. Now the batsman(i.e the bowler in innings 1) has to chase the bowler\'s(i.e. batsman in innings 1) score\n\n' +
             'If the batsman and the bowler type the same number before the score is reached, bolwer wins, else if the batsman crosses the target, batsman wins.'
@@ -97,13 +104,24 @@ module.exports = {
         const footballEmbed = new Discord.MessageEmbed()
           .setTitle('About Football')
           .setDescription('Penalty Shootouts are so cool!')
-          .addField()
+          .addField('Oop',
+            'Something Went Wrong, Status Code 399. Report to the Community server.'
+          )
           .setColor(embedColor)
           .setFooter('Requested by ' + author.username);
         const baseballEmbed = new Discord.MessageEmbed()
           .setTitle('About Baseball')
           .setDescription('A modified version of real life baseball.')
-          .addField()
+          .addField('Gameplay',
+            'The toss is done and the pitcher and Striker are selected.\n' +
+            'Baseball is played with strikes so if the pitcher and the striker put numbers which are consecutive to each other then it is considered a strike.\n' +
+            'If the number is non consecutive then the score is added to the tally.\n' +
+            'If the same number is put by both pitcher and Striker , a home run is hit and the score is doubled.\n' +
+            'The pitcher needs to get the strikes thrice in total which results in an out.\n' +
+            'There is another mechanism to this called the "Run".\n' +
+            'If the striker feels that they can hit the ball such a way that it is not a strike or a homerun then they have to type the number and react to the prompt. Not reacting will not activate the run\n' +
+            'This adds the run counter and once the run counter reaches 4 a bonus 10 runs are added to the score.\n'
+          )
           .setColor(embedColor)
           .setFooter('Requested by ' + author.username);
         const generalEmbed = new Discord.MessageEmbed()
