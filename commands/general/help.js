@@ -25,8 +25,6 @@ module.exports = {
         .addField('Navigate via the pages of the guide by Reacting', 
           '1) 🏏 - **__Cricket Info__**\n2) ⚽ - **__Football Info__**\n3) ⚾ - **__Baseball Info**\n4) 👀 - **__General Conmands__**\n5) 💰 - **__Dogenomy Commands__**\n6) 🔫 - **__Games Commands__**\n7) 🎲 - **__MiniGames Commands__**')
         .addField('Links', '[Add the bot](https://bit.ly/dispo-bot)\n[Support Server](https://bit.ly/dispoGuild)')
-        .attachFiles('./assets/banner.jpg')
-        .setImage(`attachment://banner.jpg`)
         .setFooter('Requested by ' + author.tag)
         .setColor(embedColor);
       
@@ -41,7 +39,6 @@ module.exports = {
       await helpEmbed.react('🎲');
       await helpEmbed.react('❌');
       
-      let i;
       function checkReaction() {
         helpEmbed.awaitReactions(
           (reaction, user) => user.id == author.id,
@@ -52,12 +49,6 @@ module.exports = {
           }
         ).then(async (collected) => {
           const reaction = Array.from(collected.keys()) [0];
-          
-          if(!i) {
-            send.files = [];
-            await helpEmbed.edit(send);
-            i = true;
-          }
           
           if(reaction == '🏏') {
             helpEmbed.edit(getEmbed('cricket'));
