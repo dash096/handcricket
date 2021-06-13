@@ -16,6 +16,8 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
   start(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel, oldLogs, target);
   function start(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel, oldLogs, target) {
     let checkTimeup = [];
+    let battingTime = 45000;
+    let bowlingTime = 45000;
     
     lookForEndMessages(players, battingCap, bowlingCap, channel);
 
@@ -339,15 +341,21 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
       dm.awaitMessages(
         message => message.author.id === bowler.id, {
           max: 1,
-          time: 45000,
+          time: bowlingTime,
           errors: ['time']
         }
       ).then(async messages => {
           if (isInnings2 === 'over') return;
           if (!oldLogs && isInnings2) return;
           
+          //Clear Timeup logs
+          if (checkTimeup.find(player => player === bowler.id)) {
+            checkTimeup.splice(checkTimeup.indexOf(bowler.id), 1);
+          }
+          
           let message = messages.first();
           let content = message.content.trim().toLowerCase();
+          
           //End
           if (content === 'end' || content === 'cancel') {
             bowler.send('Only team captains should type `e.hc x` in the channel to end.');
@@ -370,11 +378,6 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
             return bowlCollect(batsman, bowler, dm);
           } //Log
           else {
-            if ((checkTimeup.filter(player => player === bowler.id)).length !== 0) {
-              (checkTimeup.filter(player => player === bowler.id)).forEach((player) => {
-                checkTimeup.splice(checkTimeup.indexOf(player), 1);
-              });
-            }
             remainingBalls -= 1;
             totalBalls -= 1;
             await logs.bowling[bowler.id].push(parseInt(content));
@@ -384,10 +387,13 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           }
         }).catch(async e => {
           console.log(e);
+          
           //Push timeup and check timeups
-          if (checkTimeup.length === 4) {
-            return respond(`forceEnd: Both ${batsman.tag} and ${bowler.tag} were afk.`);
-          } else if ((checkTimeup.filter(player => player === bowler.id)).length !== 2) {
+          if (checkTimeup.length === 2) {
+            return respond(`forceEnd: Both ${batsman.username} and ${bowler.username} were afk.`);
+          } else if (checkTimeup.find(player => player === bowler.id)) {
+            //Change Instant CPU Bowl
+          } else {
             checkTimeup.push(bowler.id);
           }
 
@@ -421,17 +427,23 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         bowlSwap = undefined;
         return batCollect(batsman, bowler, dm);
       }
+      
       //Collector
       dm.awaitMessages(
         message => message.author.id === batsman.id, {
           max: 1,
-          time: 45000,
+          time: battingTime,
           errors: ['time']
         }
       ).then(async messages => {
           if (isInnings2 === 'over') return;
           if (!oldLogs && isInnings2) return;
 
+          //Clear Timeup logs
+          if (checkTimeup.find(player => player === batsman.id)) {
+            checkTimeup.splice(checkTimeup.indexOf(batsman.id), 1);
+          }
+          
           let message = messages.first();
           let content = message.content.trim().toLowerCase();
           let bowled = (logs.bowling[bowler.id])[(logs.bowling[bowler.id]).length - 1];
@@ -519,11 +531,6 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
             return respond('win', bowler, batsman, 'bat');
           } //Log
           else {
-            if ((checkTimeup.filter(player => player === batsman.id)).length !== 0) {
-              (checkTimeup.filter(player => player === bowler.id)).forEach((player) => {
-                checkTimeup.splice(checkTimeup.indexOf(player), 1);
-              });
-            }
             //Push the scores
             if (batExtra) logs.batting['0000'].push(oldScore + parseInt(content));
             else logs.batting[batsman.id].push(oldScore + parseInt(content));
@@ -550,9 +557,12 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           }
         }).catch(async e => {
           console.log(e);
-          if (checkTimeup.length === 4) {
-            return respond(`forceEnd: Both ${batsman.tag} and ${bowler.tag} were afk.`);
-          } else if ((checkTimeup.filter(player => player === batsman.id)).length !== 2) {
+          
+          if (checkTimeup.length === 2) {
+            return respond(`forceEnd: Both ${batsman.username} and ${bowler.username} were afk.`);
+          } else if (checkTimeup.find(player => player === batsman.id)) {
+            //Change Instant CPU Bat
+          } else {
             checkTimeup.push(batsman.id);
           }
           

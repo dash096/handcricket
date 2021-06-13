@@ -32,7 +32,9 @@ module.exports = {
       
       const helpEmbed = await channel.send(send);
       checkReaction();
-      await helpEmbed.react('❓');
+      await helpEmbed.react('🏏');
+      await helpEmbed.react('⚽');
+      await helpEmbed.react('⚾');
       await helpEmbed.react('👀');
       await helpEmbed.react('💰');
       await helpEmbed.react('🔫');
@@ -50,8 +52,14 @@ module.exports = {
         ).then(async (collected) => {
           const reaction = Array.from(collected.keys()) [0];
           
-          if(reaction == '❓') {
-            helpEmbed.edit(getEmbed('about'));
+          if(reaction == '🏏') {
+            helpEmbed.edit(getEmbed('cricket'));
+            return checkReaction();
+          } else if (reaction == '⚽') {
+            helpEmbed.edit(getEmbed('football'));
+            return checkReaction();
+          } else if (reaction == '⚾') {
+            helpEmbed.edit(getEmbed('baseball'));
             return checkReaction();
           } else if (reaction == '👀') {
             helpEmbed.edit(getEmbed('general'));
@@ -75,13 +83,27 @@ module.exports = {
       }
       
       function getEmbed(name) {
-        const aboutEmbed = new Discord.MessageEmbed()
+        const cricketEmbed = new Discord.MessageEmbed()
           .setTitle('About Cricket')
           .setDescription('Not actually cricket, but **__handcricket__**. A popular kiddo game originated in **South India** and spread to whole India')
-          .addField('How to Play?', 'Once when you start a match, get to dms to play. It is played in dms cause the numbers are supposed to be hidden...\n\n' +
+          .addField(
+            'How to Play?', 'Once when you start a match, get to dms to play. It is played in dms cause the numbers are supposed to be hidden...\n\n' +
             'The bowler bowls a ball by typing a number , the batsman  hits the ball by typing a number. If both the numbers are same, it is a Wicket and the batsman changes else the batsman\'s number adds to his score, and after wicket, the next innings starts with a target that the previous batsman has hit in total\n\n' +
             'The batsman and bowler in first innings gets swapped their position. Now the batsman(i.e the bowler in innings 1) has to chase the bowler\'s(i.e. batsman in innings 1) score\n\n' +
-            'If the batsman and the bowler type the same number before the score is reached, bolwer wins, else if the batsman crosses the target, batsman wins.')
+            'If the batsman and the bowler type the same number before the score is reached, bolwer wins, else if the batsman crosses the target, batsman wins.'
+          )
+          .setColor(embedColor)
+          .setFooter('Requested by ' + author.username);
+        const footballEmbed = new Discord.MessageEmbed()
+          .setTitle('About Football')
+          .setDescription('Penalty Shootouts are so cool!')
+          .addField()
+          .setColor(embedColor)
+          .setFooter('Requested by ' + author.username);
+        const baseballEmbed = new Discord.MessageEmbed()
+          .setTitle('About Baseball')
+          .setDescription('A modified version of real life baseball.')
+          .addField()
           .setColor(embedColor)
           .setFooter('Requested by ' + author.username);
         const generalEmbed = new Discord.MessageEmbed()
@@ -105,7 +127,9 @@ module.exports = {
           .setColor(embedColor)
           .setFooter('Requested by ' + author.username);
         
-        if(name == 'about') return aboutEmbed;
+        if(name == 'cricket') return cricketEmbed;
+        else if(name == 'football') return footballEmbed;
+        else if(name == 'baseball') return baseballEmbed;
         else if(name == 'general') return generalEmbed;
         else if(name == 'dogenomy') return dogenomyEmbed;
         else if(name == 'games') return gamesEmbed;
