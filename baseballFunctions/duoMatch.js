@@ -154,7 +154,7 @@ module.exports = async (client, message, striker, pitcher, post) => {
         
         if (c == pitched) {
           c = parseInt(c) * 2;
-          strikeArray.push(strikeArray.slice(-1)[0] + ?parseInt(c));
+          strikeArray.push(strikeArray.slice(-1)[0] + parseInt(c));
           
           embed.files = [homerunPath];
           embed
