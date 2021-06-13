@@ -209,8 +209,9 @@ module.exports = async (client, message, striker, pitcher, post) => {
         return;
       });
       
-      asyn function askForRun() {
-        const msg = await striker.send(`Do you want to run to base ${base + 1} next turn?`);
+      async function askForRun() {
+        const msg = 
+        await striker.send(`Do you want to run to base ${base + 1} next turn? \`You will get 15 runs as bonus at base 4.\``);
         await msg.react('✅');
         await msg.react('❌');
         
