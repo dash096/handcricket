@@ -23,7 +23,7 @@ module.exports = {
         .setTitle('Help')
         .setDescription('**__The prefix is `e.` forever and ever!__**\n\nHere\'s an Interactive GUIDE for you!\n\n')
         .addField('Navigate via the pages of the guide by Reacting', 
-          '1) ❓ - **__About and Guide__**\n2) 👀 - **__General Conmands__**\n3) 💰 - **__Dogenomy Commands__**\n4) 🔫 - **__Games Commands__**\n5) 🎲 - **__MiniGames Commands__**')
+          '1) 🏏 - **__Cricket Info__**\n2) ⚽ - **__Football Info__**\n3) ⚾ - **__Baseball Info**\n4) 👀 - **__General Conmands__**\n5) 💰 - **__Dogenomy Commands__**\n6) 🔫 - **__Games Commands__**\n7) 🎲 - **__MiniGames Commands__**')
         .addField('Links', '[Add the bot](https://bit.ly/dispo-bot)\n[Support Server](https://bit.ly/dispoGuild)')
         .attachFiles('./assets/banner.jpg')
         .setImage(`attachment://banner.jpg`)
