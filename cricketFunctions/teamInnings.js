@@ -81,6 +81,8 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
     //Core
     async function respond(response, responseX, oldResponse, type) {
       checkTimeup = [];
+      battingTime = 45000;
+      bowlingTime = 45000;
       
       if (typeof response === 'string' && response.startsWith('forceEnd')) {
         isInnings2 = 'over';
@@ -392,7 +394,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           if (checkTimeup.length === 2) {
             return respond(`forceEnd: Both ${batsman.username} and ${bowler.username} were afk.`);
           } else if (checkTimeup.find(player => player === bowler.id)) {
-            //Change Instant CPU Bowl
+            bowlingTime = 5000;
           } else {
             checkTimeup.push(bowler.id);
           }
@@ -561,7 +563,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           if (checkTimeup.length === 2) {
             return respond(`forceEnd: Both ${batsman.username} and ${bowler.username} were afk.`);
           } else if (checkTimeup.find(player => player === batsman.id)) {
-            //Change Instant CPU Bat
+            battingTime = 5000;
           } else {
             checkTimeup.push(batsman.id);
           }
