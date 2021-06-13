@@ -5,6 +5,10 @@ const mongoose = require("mongoose");
 const db = require('./schemas/player.js');
 const Topgg = require('@top-gg/sdk');
 const Discord = require("discord.js");
+
+const express = require('express');
+const app = express();
+
 const client = new Discord.Client({
   partials: ['USER', 'CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 'REACTION']
 });
@@ -23,7 +27,13 @@ client.on("ready", async () => {
   
   try {
     console.log("Logged in as ", client.user.username);
-   
+    
+    /* Start Server */
+    app.get('/', (req, res) => {
+      res.send('<h1> Hello World </h1>');
+    });
+    app.listen(process.env.PORT || 8080);
+    
     /* Post Stats to TOPGG */
     setInterval(() => {
       topggapi.postStats({
@@ -66,7 +76,7 @@ function loadFiles() {
   for(const listener of listeners) {
     try {
       const feature = require(`./features/${listener}`);
-      feature({client, prefix, topggapi});
+      feature({ app, client, prefix, topggapi });
     } catch (e) {
       console.error(e);
     }
