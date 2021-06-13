@@ -352,6 +352,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           
           //Clear Timeup logs
           if (checkTimeup.find(player => player === bowler.id)) {
+            bowlingTime = 45000;
             checkTimeup.splice(checkTimeup.indexOf(bowler.id), 1);
           }
           
@@ -395,6 +396,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
             return respond(`forceEnd: Both ${batsman.username} and ${bowler.username} were afk.`);
           } else if (checkTimeup.find(player => player === bowler.id)) {
             bowlingTime = 5000;
+            channel.send(`Looks like **${bowler.username}** is afk, CPU is going to instant bowl.`);
           } else {
             checkTimeup.push(bowler.id);
           }
@@ -443,6 +445,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
 
           //Clear Timeup logs
           if (checkTimeup.find(player => player === batsman.id)) {
+            battingTeam = 45000;
             checkTimeup.splice(checkTimeup.indexOf(batsman.id), 1);
           }
           
@@ -564,6 +567,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
             return respond(`forceEnd: Both ${batsman.username} and ${bowler.username} were afk.`);
           } else if (checkTimeup.find(player => player === batsman.id)) {
             battingTime = 5000;
+            channel.send(`Looks like **${batsman.username}** is afk, CPU is going to instant hit the balls.`);
           } else {
             checkTimeup.push(batsman.id);
           }
