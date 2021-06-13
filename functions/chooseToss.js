@@ -30,8 +30,10 @@ module.exports = async function chooseToss(message, winner, loser, type) {
     );
     const m = msgs.first();
     const c = m.content.toLowerCase().trim();
-      
-    if(options.one[0].find(i => i == c)) {
+    
+    if (c == 'end') {
+      return 'err';
+    } else if (options.one[0].find(i => i == c)) {
       first = winner;
       second = loser;
     } else if (options.two[0].find(i => i == c)) {
