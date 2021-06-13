@@ -34,6 +34,7 @@ module.exports = async (client, message, striker, pitcher, post) => {
     
     pitchCollect();
     strikeCollect();
+    
     async function pitchCollect() {
       pitcherDM.awaitMessages(
         msg => msg.author.id === pitcher.id,
@@ -194,8 +195,8 @@ module.exports = async (client, message, striker, pitcher, post) => {
           
           striker.send('You hit ' + c, embed);
           pitcher.send('Striker hit ' + c, embed);
-          const run = await askForRun();
-          return strikeCollect(run);
+          const askForRun = await askForRun();
+          return strikeCollect(askForRun);
         }
       }).catch(async e => {
         if (isInnings2 == 'over') return;
