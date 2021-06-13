@@ -23,7 +23,9 @@ module.exports = async (client, message, striker, pitcher, post) => {
     
     let embed = new Discord.MessageEmbed()
       .setTitle('Baseball Match')
-      .addField(`Striker - ${striker.username}`, 0)
+      .addField(`Striker - ${striker.username}`, 
+        'Score: 0\nNo. Of Strikes: 0'
+      )
       .addField(`Pitcher - ${pitcher.username}`, (target || 0))
       .setColor(embedColor);
     
@@ -123,7 +125,9 @@ module.exports = async (client, message, striker, pitcher, post) => {
             embed.files = [strikePath];
             embed
               .spliceFields(0, 2)
-              .addField(`Striker - ${striker.username}`, strikeArray.slice(-1)[0])
+              .addField(`Striker - ${striker.username}`, 
+                `Score: ${strikeArray.slice(-1)[0]}\nNo. Of Strikes: ${strikes}`
+              )
               .addField(`Pitcher - ${pitcher.username}`, (target || 0))
               .setImage(`attachment://${strikePath.split('/').pop()}`)
             
@@ -143,7 +147,9 @@ module.exports = async (client, message, striker, pitcher, post) => {
           embed.files = [];
           embed
             .spliceFields(0, 2)
-            .addField(`Striker - ${striker.username}`, strikeArray.slice(-1)[0])
+            .addField(`Striker - ${striker.username}`, 
+              `Score: ${strikeArray.slice(-1)[0]}\nNo. Of Strikes: ${strikes}`
+            )
             .addField(`Pitcher - ${pitcher.username}`, (target || 0))
           
           pitcher.send('You lost.', embed);
@@ -159,7 +165,9 @@ module.exports = async (client, message, striker, pitcher, post) => {
           embed.files = [homerunPath];
           embed
             .spliceFields(0, 2)
-            .addField(`Striker - ${striker.username}`, strikeArray.slice(-1)[0])
+            .addField(`Striker - ${striker.username}`, 
+              `Score: ${strikeArray.slice(-1)[0]}\nNo. Of Strikes: ${strikes}`
+            )
             .addField(`Pitcher - ${pitcher.username}`, (target || 0))
             .setImage(`attachment://${homerunPath.split('/').pop()}`)
           
@@ -172,7 +180,9 @@ module.exports = async (client, message, striker, pitcher, post) => {
           embed.files = [hitPath];
           embed
             .spliceFields(0, 2)
-            .addField(`Striker - ${striker.username}`, strikeArray.slice(-1)[0])
+            .addField(`Striker - ${striker.username}`, 
+              `Score: ${strikeArray.slice(-1)[0]}\nNo. Of Strikes: ${strikes}`
+            )
             .addField(`Pitcher - ${pitcher.username}`, (target || 0))
             .setImage(`attachment://${hitPath.split('/').pop()}`)
           
