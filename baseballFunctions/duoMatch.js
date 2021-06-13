@@ -180,9 +180,14 @@ module.exports = async (client, message, striker, pitcher, post) => {
           striker.send(`HomeRun! Perfect Shot!${run || ''}`, embed);
           return strikeCollect();
         } else {
-          if (run) base += 1;
-          
           strikeArray.push(striked + parseInt(c));
+          
+          if (run) base += 1;
+          if (base === 4) {
+            strikeArray.splice(strikeArray.length - 1, 1, striked + parseInt(c) + 10);
+            c = `${c}, Bonus 10 for reaching base 4!`;
+            base = 0;
+          }
           
           embed.files = [hitPath];
           embed
@@ -195,8 +200,8 @@ module.exports = async (client, message, striker, pitcher, post) => {
           
           striker.send('You hit ' + c, embed);
           pitcher.send('Striker hit ' + c, embed);
-          const askForRun = await askForRun();
-          return strikeCollect(askForRun);
+          const runPrompt = await askForRun();
+          return strikeCollect(runPrompt);
         }
       }).catch(async e => {
         if (isInnings2 == 'over') return;
@@ -211,23 +216,26 @@ module.exports = async (client, message, striker, pitcher, post) => {
       });
       
       async function askForRun() {
-        const msg = 
-        await striker.send(`Do you want to run to base ${base + 1} next turn? \`You will get 15 runs as bonus at base 4.\``);
-        await msg.react('✅');
-        await msg.react('❌');
+        try {
+          const msg = await striker.send(`Do you want to run to base ${base + 1} next pitch? \`You will get 10 runs as bonus at base 4.\``);
+          await msg.react('✅');
+          await msg.react('❌');
         
-        const reaction = (await msg.awaitReactions(
-          r => r.user.id === striker.id,
-          {
-            time: 10000,
-            max: 1,
-            errors: ['time']
+          const reaction = (await msg.awaitReactions(
+            r => r.user.id === striker.id,
+            {
+              time: 10000,
+              max: 1,
+              errors: ['time']
+            }
+          )).first();
+          if (reaction.emoji.name === '✅') {
+            return ' Your run streak got reset to main base 1.';
+          } else {
+            return;
           }
-        )).first();
-        if (reaction.emoji.name === '✅') {
-          return ' Your run streak got reset to main base 1.';
-        } else {
-          return;
+        } catch (e) {
+          return console.log(e);
         }
       }
     }
