@@ -103,29 +103,22 @@ module.exports = async (client, message, striker, pitcher, post) => {
         } else if (c > 6 || c < 1) {
           striker.send('This match is limited to 1-6');
           return strikeCollect();
-        } else if (c == pitched) {
-          c = parseInt(c) * 2;
-          strikeArray.push(c);
-          
-          embed.files = [homerunPath];
-          embed
-            .spliceFields(0, 2)
-            .addField(`Striker - ${striker.username}`, strikeArray.slice(-1)[0])
-            .addField(`Pitcher - ${pitcher.username}`, (target || 0))
-            .setImage(`attachment://${homerunPath.split('/').pop()}`)
-          
-          pitcher.send('HomeRun!', embed);
-          striker.send('HomeRun! Perfect Shot!', embed);
-          return strikeCollect();
         } else if (c - pitched === 1 || c - pitched === -1) {
           strikes += 1;
           strikeArray.push(strikeArray.slice(-1)[0]);
           
           if (strikes === 3) {
-            isInnings2 = true;
-            pitcher.send('Striker is out! Next round starts!');
-            striker.send('Out! Next round starts!');
-            return start(pitcher, striker, strikeArray.slice(-1)[0]);
+            if(!target) {
+              isInnings2 = true;
+              pitcher.send('Striker is out! Next round starts!');
+              striker.send('Out! Next round starts!');
+              return start(pitcher, striker, strikeArray.slice(-1)[0]);
+            } else {
+              isInnings2 = 'over';
+              pitcher.send('You won!');
+              striker.send('You lost');
+              return;
+            }
           } else {
             embed.files = [strikePath];
             embed
@@ -137,6 +130,41 @@ module.exports = async (client, message, striker, pitcher, post) => {
             pitcher.send('Strike ' + strikes + '. The striker missed it', embed);
             striker.send('Strike ' + strikes + '. Ouch you missed it', embed);
           }
+          return strikeCollect();
+        } else if (target && (striked + parseInt(c) * 2) > target) {
+          if (c != pitched && (striked + parseInt(c)) <= target) {
+            return;
+          } else if (striked == pitched) {
+            strikeArray.push(parseInt(c) * 2);
+          } else {
+            strikeArray.push(parseInt(c));
+          }
+          
+          embed.files = [];
+          embed
+            .spliceFields(0, 2)
+            .addField(`Striker - ${striker.username}`, strikeArray.slice(-1)[0])
+            .addField(`Pitcher - ${pitcher.username}`, (target || 0))
+          
+          pitcher.send('You lost.', embed);
+          striker.send('You won!', embed);
+          isInnings2 = 'over';
+          return;
+        }
+        
+        if (c == pitched) {
+          c = parseInt(c) * 2;
+          strikeArray.push(strikeArray.slice(-1)[0] + ?parseInt(c));
+          
+          embed.files = [homerunPath];
+          embed
+            .spliceFields(0, 2)
+            .addField(`Striker - ${striker.username}`, strikeArray.slice(-1)[0])
+            .addField(`Pitcher - ${pitcher.username}`, (target || 0))
+            .setImage(`attachment://${homerunPath.split('/').pop()}`)
+          
+          pitcher.send('HomeRun!', embed);
+          striker.send('HomeRun! Perfect Shot!', embed);
           return strikeCollect();
         } else {
           strikeArray.push(striked + parseInt(c));
