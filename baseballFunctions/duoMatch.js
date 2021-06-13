@@ -5,7 +5,6 @@ const getEmoji = require('../functions/getEmoji.js');
 const embedColor = require('../functions/getEmbedColor.js');
 
 module.exports = async (client, message, striker, pitcher, post) => {
-  
   const { channel } = message;
   let isInnings2;
   
@@ -18,6 +17,7 @@ module.exports = async (client, message, striker, pitcher, post) => {
     if (isInnings2 == 'over' || isInnings2 && !target) return;
     
     let strikes = 0;
+    let base = 0;
     let pitchArray = [0];
     let strikeArray = [0];
     
@@ -77,7 +77,7 @@ module.exports = async (client, message, striker, pitcher, post) => {
       });
     }
     
-    async function strikeCollect() {
+    async function strikeCollect(run) {
       strikerDM.awaitMessages(
         msg => msg.author.id === striker.id,
         {
@@ -106,6 +106,8 @@ module.exports = async (client, message, striker, pitcher, post) => {
           striker.send('This match is limited to 1-6');
           return strikeCollect();
         } else if (c - pitched === 1 || c - pitched === -1) {
+          if (run) base = 1;
+          
           strikes += 1;
           strikeArray.push(strikeArray.slice(-1)[0]);
           
@@ -132,7 +134,7 @@ module.exports = async (client, message, striker, pitcher, post) => {
               .setImage(`attachment://${strikePath.split('/').pop()}`)
             
             pitcher.send('Strike ' + strikes + '. The striker missed it', embed);
-            striker.send('Strike ' + strikes + '. Ouch you missed it', embed);
+            striker.send('Strike ' + strikes + `. Ouch you missed it.${run || ''}`, embed);
           }
           return strikeCollect();
         } else if (target && (striked + parseInt(c) * 2) > target) {
@@ -159,6 +161,8 @@ module.exports = async (client, message, striker, pitcher, post) => {
         }
         
         if (c == pitched) {
+          if (run) base = 1;
+          
           c = parseInt(c) * 2;
           strikeArray.push(strikeArray.slice(-1)[0] + parseInt(c));
           
@@ -172,9 +176,11 @@ module.exports = async (client, message, striker, pitcher, post) => {
             .setImage(`attachment://${homerunPath.split('/').pop()}`)
           
           pitcher.send('HomeRun!', embed);
-          striker.send('HomeRun! Perfect Shot!', embed);
+          striker.send(`HomeRun! Perfect Shot!${run || ''}`, embed);
           return strikeCollect();
         } else {
+          if (run) base += 1;
+          
           strikeArray.push(striked + parseInt(c));
           
           embed.files = [hitPath];
@@ -188,7 +194,8 @@ module.exports = async (client, message, striker, pitcher, post) => {
           
           striker.send('You hit ' + c, embed);
           pitcher.send('Striker hit ' + c, embed);
-          return strikeCollect();
+          const run = await askForRun();
+          return strikeCollect(run);
         }
       }).catch(async e => {
         if (isInnings2 == 'over') return;
@@ -201,6 +208,26 @@ module.exports = async (client, message, striker, pitcher, post) => {
         await changeStatus(pitcher, false);
         return;
       });
+      
+      asyn function askForRun() {
+        const msg = await striker.send(`Do you want to run to base ${base + 1} next turn?`);
+        await msg.react('✅');
+        await msg.react('❌');
+        
+        const reaction = (await msg.awaitReactions(
+          r => r.user.id === striker.id,
+          {
+            time: 10000,
+            max: 1,
+            errors: ['time']
+          }
+        )).first();
+        if (reaction.emoji.name === '✅') {
+          return ' Your run streak got reset to main base 1.';
+        } else {
+          return;
+        }
+      }
     }
   }
 };
