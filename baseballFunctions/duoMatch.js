@@ -106,43 +106,46 @@ module.exports = async (client, message, striker, pitcher, post) => {
         } else if (c == pitched) {
           c = parseInt(c) * 2;
           strikeArray.push(c);
+          
+          embed.files = [homerunPath];
           embed
             .spliceFields(0, 2)
             .addField(`Striker - ${striker.username}`, strikeArray.slice(-1)[0])
             .addField(`Pitcher - ${pitcher.username}`, (target || 0))
-            .attachFiles(homerunPath)
             .setImage(`attachment://${homerunPath.split('/').pop()}`)
-            
+          
           pitcher.send('HomeRun!', embed);
-          striker.send('HomeRun!', embed);
+          striker.send('HomeRun! Perfect Shot!', embed);
           return strikeCollect();
         } else if (c - pitched === 1 || c - pitched === -1) {
           strikes += 1;
+          strikeArray.push(strikeArray.slice(-1)[0]);
+          
           if (strikes === 3) {
             isInnings2 = true;
             pitcher.send('Striker is out! Next round starts!');
             striker.send('Out! Next round starts!');
             return start(pitcher, striker, strikeArray.slice(-1)[0]);
           } else {
+            embed.files = [strikePath];
             embed
               .spliceFields(0, 2)
               .addField(`Striker - ${striker.username}`, strikeArray.slice(-1)[0])
               .addField(`Pitcher - ${pitcher.username}`, (target || 0))
-              .attachFiles(strikePath)
               .setImage(`attachment://${strikePath.split('/').pop()}`)
             
-            pitcher.send('Strike ' + strikes, embed);
-            striker.send('Strike ' + strikes, embed);
+            pitcher.send('Strike ' + strikes + '. The striker missed it', embed);
+            striker.send('Strike ' + strikes + '. Ouch you missed it', embed);
           }
           return strikeCollect();
         } else {
           strikeArray.push(striked + parseInt(c));
           
+          embed.files = [hitPath];
           embed
             .spliceFields(0, 2)
             .addField(`Striker - ${striker.username}`, strikeArray.slice(-1)[0])
             .addField(`Pitcher - ${pitcher.username}`, (target || 0))
-            .attachFiles(hitPath)
             .setImage(`attachment://${hitPath.split('/').pop()}`)
           
           striker.send('You hit ' + c, embed);
