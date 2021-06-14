@@ -23,7 +23,7 @@ module.exports = {
         .setTitle('Help')
         .setDescription('**__The prefix is `e.` forever and ever!__**\n\nHere\'s an Interactive GUIDE for you!\n\n')
         .addField('Navigate via the pages of the guide by Reacting', 
-          '1) 🏏 - **__Cricket Info__**\n2) ⚽ - **__Football Info__**\n3) ⚾ - **__Baseball Info**\n4) 👀 - **__General Conmands__**\n5) 💰 - **__Dogenomy Commands__**\n6) 🔫 - **__Games Commands__**\n7) 🎲 - **__MiniGames Commands__**')
+          '1) 🏏 - **__Cricket Info__**\n2) ⚽ - **__Football Info__**\n3) ⚾ - **__Baseball Info__**\n4) 👀 - **__General Conmands__**\n5) 💰 - **__Dogenomy Commands__**\n6) 🔫 - **__Games Commands__**\n7) 🎲 - **__MiniGames Commands__**')
         .addField('Links', '[Add the bot](https://bit.ly/dispo-bot)\n[Support Server](https://bit.ly/dispoGuild)')
         .setFooter('Requested by ' + author.tag)
         .setColor(embedColor);
@@ -83,8 +83,8 @@ module.exports = {
       function getEmbed(name) {
         const cricketEmbed = new Discord.MessageEmbed()
           .setTitle('About Cricket')
-          .setDescription('Not actually cricket, but **__handcricket__**. A popular kiddo game originated in **South India** and spread to whole India')
-          .addField('How to Play?',
+          .setDescription('Cheems cant afford a bat, so ye he plays with hand.')
+          .addField('Gameplay',
             'Once when you start a match, get to dms to play. It is played in dms cause the numbers are supposed to be hidden...\n\n' +
             'The bowler bowls a ball by typing a number , the batsman  hits the ball by typing a number. If both the numbers are same, it is a Wicket and the batsman changes else the batsman\'s number adds to his score, and after wicket, the next innings starts with a target that the previous batsman has hit in total\n\n' +
             'The batsman and bowler in first innings gets swapped their position. Now the batsman(i.e the bowler in innings 1) has to chase the bowler\'s(i.e. batsman in innings 1) score\n\n' +
@@ -94,15 +94,16 @@ module.exports = {
           .setFooter('Requested by ' + author.username);
         const footballEmbed = new Discord.MessageEmbed()
           .setTitle('About Football')
-          .setDescription('Penalty Shootouts are so cool!')
-          .addField('Oop',
-            'Something Went Wrong, Status Code 399. Report to the Community server.'
+          .setDescription('Cheems can\'t run all over the pitch so he likes taking penalties.')
+          .addField('Gameplay',
+            'As the name states it\'s a best of 5 penalty shootout. Tap the reactions to determine the trajectory of the ball . If same direction then the ball is saved if different direction then its a goal.\n' +
+            'To keep things fair if all 5 goals on either side are scored then the game becomes a sudden death match. The person who misses the next goal loses the game.'
           )
           .setColor(embedColor)
           .setFooter('Requested by ' + author.username);
         const baseballEmbed = new Discord.MessageEmbed()
           .setTitle('About Baseball')
-          .setDescription('A modified version of real life baseball.')
+          .setDescription('Cheems was bored by the normal play, here\'s a modified version.')
           .addField('Gameplay',
             'The toss is done and the pitcher and Striker are selected.\n' +
             'Baseball is played with strikes so if the pitcher and the striker put numbers which are consecutive to each other then it is considered a strike.\n' +
