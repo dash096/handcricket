@@ -24,7 +24,7 @@ module.exports = async (client, message, striker, pitcher, post) => {
     let embed = new Discord.MessageEmbed()
       .setTitle('Baseball Match')
       .addField(`Striker - ${striker.username}`, 
-        'Score: 0\nNo. Of Strikes: 0'
+        '**Score:**       0\n**No. Of Strikes:** 0'
       )
       .addField(`Pitcher - ${pitcher.username}`, (target || 0))
       .setColor(embedColor);
@@ -133,7 +133,7 @@ module.exports = async (client, message, striker, pitcher, post) => {
             embed
               .spliceFields(0, 2)
               .addField(`Striker - ${striker.username}`, 
-                `Score: ${strikeArray.slice(-1)[0]}\nNo. Of Strikes: ${strikes}`
+                `**Score:**       ${strikeArray.slice(-1)[0]}\n**No. Of Strikes:** ${strikes}`
               )
               .addField(`Pitcher - ${pitcher.username}`, (target || 0))
               .setImage(`attachment://${strikePath.split('/').pop()}`)
@@ -157,7 +157,7 @@ module.exports = async (client, message, striker, pitcher, post) => {
           embed
             .spliceFields(0, 2)
             .addField(`Striker - ${striker.username}`, 
-              `Score: ${strikeArray.slice(-1)[0]}\nNo. Of Strikes: ${strikes}`
+              `**Score:**       ${strikeArray.slice(-1)[0]}\n**No. Of Strikes:** ${strikes}`
             )
             .addField(`Pitcher - ${pitcher.username}`, (target || 0))
           
@@ -181,7 +181,7 @@ module.exports = async (client, message, striker, pitcher, post) => {
           embed
             .spliceFields(0, 2)
             .addField(`Striker - ${striker.username}`, 
-              `Score: ${strikeArray.slice(-1)[0]}\nNo. Of Strikes: ${strikes}`
+              `**Score:**       ${strikeArray.slice(-1)[0]}\n**No. Of Strikes:** ${strikes}`
             )
             .addField(`Pitcher - ${pitcher.username}`, (target || 0))
             .setImage(`attachment://${homerunPath.split('/').pop()}`)
@@ -207,7 +207,7 @@ module.exports = async (client, message, striker, pitcher, post) => {
           embed
             .spliceFields(0, 2)
             .addField(`Striker - ${striker.username}`, 
-              `Score: ${strikeArray.slice(-1)[0]}\nNo. Of Strikes: ${strikes}`
+              `**Score:**       ${strikeArray.slice(-1)[0]}\n**No. Of Strikes:** ${strikes}`
             )
             .addField(`Pitcher - ${pitcher.username}`, (target || 0))
             .setImage(`attachment://${hitPath.split('/').pop()}`)
@@ -244,13 +244,10 @@ module.exports = async (client, message, striker, pitcher, post) => {
             }
           )).first();
           await msg.delete();
-          if (reaction.emoji.name === '✅') {
-            return ' Your run streak got reset to main base 1.';
-          }
-          return
+          return ' Your run streak got reset to main base 1.';
         } catch (e) {
           await msg.delete();
-          return console.log(e);
+          return;
         }
       }
     }
