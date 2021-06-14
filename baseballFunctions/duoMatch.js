@@ -198,8 +198,8 @@ module.exports = async (client, message, striker, pitcher, post) => {
             .addField(`Pitcher - ${pitcher.username}`, (target || 0))
             .setImage(`attachment://${hitPath.split('/').pop()}`)
           
-          striker.send('You hit ' + c, embed);
-          pitcher.send('Striker hit ' + c, embed);
+          await striker.send('You hit ' + c, embed);
+          await pitcher.send('Striker hit ' + c, embed);
           const runPrompt = await askForRun();
           return strikeCollect(runPrompt);
         }
@@ -219,7 +219,6 @@ module.exports = async (client, message, striker, pitcher, post) => {
         try {
           const msg = await striker.send(`Do you want to run to base ${base + 1} next pitch? \`You will get 10 runs as bonus at base 4.\``);
           await msg.react('✅');
-          await msg.react('❌');
         
           const reaction = (await msg.awaitReactions(
             r => r.user.id === striker.id,
@@ -235,6 +234,7 @@ module.exports = async (client, message, striker, pitcher, post) => {
             return;
           }
         } catch (e) {
+          await msg.react('❌');
           return console.log(e);
         }
       }
