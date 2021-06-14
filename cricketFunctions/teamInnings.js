@@ -1353,6 +1353,8 @@ module.exports = async function innings(
         randoCoins,
         results,
     ) {
+        console.log(results);
+        
         let coinEmoji = await getEmoji('coin')
 
         //PurpleCaps
