@@ -151,8 +151,7 @@ module.exports = async function innings(
                     if (isInnings2) return
                     if (batExtra) {
                         if (
-                            logs.batting['0000'].length === 1 &&
-                            !results.ducks.find((player) => player.id == responseX.id)
+                            logs.batting['0000'].length === 1
                         ) {
                             results.ducks.push(responseX)
                         }
@@ -177,10 +176,7 @@ module.exports = async function innings(
                     } else {
                         if (type === 'bat') {
                             if (
-                                logs.batting[oldResponse.id].length === 1 &&
-                                !results.ducks.find(
-                                    (player) => player.id == responseX.id
-                                )
+                                logs.batting[oldResponse.id].length === 1
                             ) {
                                 results.ducks.push(responseX)
                             }
@@ -241,10 +237,7 @@ module.exports = async function innings(
                     if (type === 'bat') {
                         if (batExtra) {
                             if (
-                                logs.batting['0000'].length === 1 &&
-                                !results.ducks.find(
-                                    (player) => player.id == responseX.id
-                                )
+                                logs.batting['0000'].length === 1
                             ) {
                                 results.ducks.push(responseX)
                             }
@@ -265,10 +258,7 @@ module.exports = async function innings(
                             logs.batting['0000'] = [finalScore]
                         } else {
                             if (
-                                logs.batting[oldResponse.id].length === 1 &&
-                                !results.ducks.find(
-                                    (player) => player.id == responseX.id
-                                )
+                                logs.batting[oldResponse.id].length === 1
                             ) {
                                 results.ducks.push(responseX)
                             }
@@ -376,8 +366,7 @@ module.exports = async function innings(
                     isInnings2 = 'over'
                     if (batExtra) {
                         if (
-                            logs.batting['0000'].length === 1 &&
-                            !results.ducks.find((player) => player.id == responseX.id)
+                            logs.batting['0000'].length === 1
                         ) {
                             results.ducks.push(responseX)
                         }
@@ -399,10 +388,7 @@ module.exports = async function innings(
                             logs.batting[responseX.id] = [finalScore]
                         } else {
                             if (
-                                logs.batting[oldResponse.id].length === 1 &&
-                                !results.ducks.find(
-                                    (player) => player.id == responseX.id
-                                )
+                                logs.batting[oldResponse.id].length === 1
                             ) {
                                 results.ducks.push(responseX)
                             }
@@ -476,10 +462,7 @@ module.exports = async function innings(
                     if (type === 'bat') {
                         if (batExtra) {
                             if (
-                                logs.batting['0000'].length === 1 &&
-                                !results.ducks.find(
-                                    (player) => player.id == responseX.id
-                                )
+                                logs.batting['0000'].length === 1
                             ) {
                                 results.ducks.push(responseX)
                             }
@@ -500,10 +483,7 @@ module.exports = async function innings(
                             logs.batting['0000'] = [finalScore]
                         } else {
                             if (
-                                logs.batting[oldResponse.id].length === 1 &&
-                                !results.ducks.find(
-                                    (player) => player.id == responseX.id
-                                )
+                                logs.batting[oldResponse.id].length === 1
                             ) {
                                 results.ducks.push(responseX)
                             }
