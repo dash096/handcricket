@@ -1353,8 +1353,6 @@ module.exports = async function innings(
         randoCoins,
         results,
     ) {
-        console.log(results);
-        
         let coinEmoji = await getEmoji('coin')
 
         //PurpleCaps
@@ -1442,7 +1440,7 @@ module.exports = async function innings(
             )
         })
 
-        await wickets.forEach(async player => {
+        await results.wickets.forEach(async player => {
             let data = await db.findOne({_id: player.id})
             if (!data) return console.log('no data for results.wickets')
 
