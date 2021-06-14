@@ -2,7 +2,6 @@ const db = require("../schemas/player.js");
 const Discord = require("discord.js");
 const getErrors = require('./getErrors.js');
 const getEmoji = require('./getEmoji.js');
-const firstInnings = require("../cricketFunctions/duoInnings1.js");
 
 module.exports = async (message, user, target, type) => {
   const { channel, mentions, content } = message;

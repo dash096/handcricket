@@ -2,7 +2,6 @@ const db = require("../schemas/player.js");
 const Discord = require("discord.js");
 const getErrors = require('../functions/getErrors.js');
 const getEmoji = require('../functions/getEmoji.js');
-const firstInnings = require("./duoInnings1.js");
 const embedColor = require('../functions/getEmbedColor.js');
 const executeTeamMatch = require('./teamInnings.js');
 const chooseToss = require('../functions/chooseToss.js');

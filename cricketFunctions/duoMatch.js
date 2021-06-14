@@ -2,7 +2,7 @@ const db = require("../schemas/player.js");
 const Discord = require("discord.js");
 const getErrors = require('../functions/getErrors.js');
 const getEmoji = require('../functions/getEmoji.js');
-const firstInnings = require("./duoInnings1.js");
+const startInnings = require("./duoInnings.js");
 const rollToss = require('../functions/rollToss.js');
 const chooseToss = require('../functions/chooseToss.js');
 const checkWill = require('../functions/checkWill.js');
@@ -65,7 +65,7 @@ async function start(message, batsman, bowler, post, max) {
   await channel.send(`${batsman} and ${bowler}, get to your dms to play!`);
   await changeStatus(batsman, true);
   await changeStatus(bowler, true);
-  firstInnings(batsman, bowler, message, post, max);
+  startInnings(batsman, bowler, message, post, max);
 }
 
 async function changeStatus(a, boolean) {

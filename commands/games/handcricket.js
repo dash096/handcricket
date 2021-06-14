@@ -2,7 +2,6 @@ const db = require("../../schemas/player.js");
 const Discord = require("discord.js");
 const getErrors = require("../../functions/getErrors.js");
 const getTarget = require("../../functions/getTarget.js");
-const firstInnings = require("../../cricketFunctions/duoInnings1.js");
 const executeTeamMatch = require("../../cricketFunctions/teamMatch.js");
 const executeDuoMatch = require("../../cricketFunctions/duoMatch.js");
 
