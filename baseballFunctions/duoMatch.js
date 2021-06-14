@@ -226,12 +226,12 @@ module.exports = async (client, message, striker, pitcher, post) => {
       });
       
       async function askForRun() {
-        try {
-          const msg = await striker.send(`Do you want to run to base ${base + 1} next pitch? \`You will get 10 runs as bonus at base 4.\``);
-          await msg.react('✅');
+        const msg = await striker.send(`Do you want to run to base ${base + 1} next pitch? \`You will get 10 runs as bonus at base 4.\``);
+        await msg.react('✅');
         
+        try {
           const reaction = (await msg.awaitReactions(
-            r => r.user.id === striker.id,
+            (reaction, user) => user.id === striker.id,
             {
               time: 10000,
               max: 1,
