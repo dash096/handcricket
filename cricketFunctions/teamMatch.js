@@ -337,7 +337,7 @@ module.exports = async (message, client) => {
       let bowlTeam;
       
       if(winnerCap.id === team1[0].id) {
-        let toss = await chooseToss(message, team1[0], team2[0], 'cricket');
+        let toss = await chooseToss(message, team1[0], team2[0], 'cricket', players);
         if(chooseToss === 'err') {
           await changeStatus(players, false);
           return;

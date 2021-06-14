@@ -208,18 +208,20 @@ module.exports = async function(batsman, bowler, message, post, max) {
             return start(bowler, batsman, batArray[batArray.length - 1] + 1, ballArray.length);
           } else {
             isInnings2 = 'over';
+            const coins = Math.floor(Math.random() * 345 * (await db.findOne({ _id: bowler.id })).coinMulti);
             await batsman.send("You lost! The bowler bowled " + ballArray[ballArray.length - 1]);
-            await bowler.send(`You won! The batsman hit ${c}${dot(c, bowled, useDot)}`);
+            await bowler.send(`You won! The batsman hit ${c}${dot(c, bowled, useDot)} and looted ${await getEmoji('coin')} ${coins}`);
             if (post === true) await channel.send(`**${bowler.username}** won!!! Wicket! Batsman hit ${c}${dot(c, bowled, useDot)}, and was bowled ${ballArray[ballArray.length - 1]} by **${bowler.username}**`);
-            return rewards(bowler, batsman, target - 1, balls, batArray.slice(-1)[0], ballArray.length, message);
+            return rewards(bowler, batsman, coins, target - 1, balls, batArray.slice(-1)[0], ballArray.length, message);
           }
         } //Target++
         else if (target && newScore >= target) {
           isInnings2 = 'over';
-          await batsman.send("You won! You chased the target!");
+          const coins = Math.floor(Math.random() * 345 * (await db.findOne({ _id: batsman.id })).coinMulti);
+          await batsman.send("You won! You chased the target!" +  ` You looted ${await getEmoji('coin')} ${coins}`);
           await bowler.send('You lost! The batsman chased the target');
           if (post === true) await channel.send(`**${batsman.username}** won!!! He chased the target!`);
-          return rewards(batsman, bowler, batArray.slice(-1)[0], ballArray.length, target - 1, balls, message);
+          return rewards(batsman, bowler, coins, batArray.slice(-1)[0], ballArray.length, target - 1, balls, message);
         } //Push
         else {
           useDot = false;
