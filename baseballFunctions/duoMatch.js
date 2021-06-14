@@ -112,6 +112,10 @@ module.exports = async (client, message, striker, pitcher, post) => {
           strikes += 1;
           strikeArray.push(strikeArray.slice(-1)[0]);
           
+          if (run) {
+            c = `${c}, Striker is in base **${base}**`;
+          }
+          
           if (strikes === 3) {
             if(!target) {
               isInnings2 = true;
@@ -167,6 +171,10 @@ module.exports = async (client, message, striker, pitcher, post) => {
           c = parseInt(c) * 2;
           strikeArray.push(strikeArray.slice(-1)[0] + parseInt(c));
           
+          if (run) {
+            c = `${c}, Striker is in base **${base}**`;
+          }
+          
           embed.files = [homerunPath];
           embed
             .spliceFields(0, 2)
@@ -186,7 +194,9 @@ module.exports = async (client, message, striker, pitcher, post) => {
           if (base === 4) {
             strikeArray.splice(strikeArray.length - 1, 1, striked + parseInt(c) + 10);
             c = `${c}, Bonus 10 for reaching base 4!`;
-            base = 0;
+            base = 1;
+          } else if (run) {
+            c = `${c}, Striker is in base **${base}**`;
           }
           
           embed.files = [hitPath];
