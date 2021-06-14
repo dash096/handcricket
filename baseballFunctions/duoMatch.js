@@ -107,7 +107,7 @@ module.exports = async (client, message, striker, pitcher, post) => {
           striker.send('This match is limited to 1-6');
           return strikeCollect();
         } else if (c - pitched === 1 || c - pitched === -1) {
-          if (run) base = 1;
+          if (run) base = 0;
           
           strikes += 1;
           strikeArray.push(strikeArray.slice(-1)[0]);
@@ -138,10 +138,12 @@ module.exports = async (client, message, striker, pitcher, post) => {
               .addField(`Pitcher - ${pitcher.username}`, (target || 0))
               .setImage(`attachment://${strikePath.split('/').pop()}`)
             
-            pitcher.send('Strike ' + strikes + '. The striker missed it', embed);
-            striker.send('Strike ' + strikes + `. Ouch you missed it.${run || ''}`, embed);
+            await pitcher.send('Strike ' + strikes + '. The striker missed it', embed);
+            await striker.send('Strike ' + strikes + `. Ouch you missed it.${run || ''}`, embed);
           }
-          return strikeCollect();
+          
+          const runPrompt = await askForRun();
+          return strikeCollect(runPrompt);
         } else if (target && (striked + parseInt(c) * 2) > target) {
           if (c != pitched && (striked + parseInt(c)) <= target) {
             return;
@@ -166,7 +168,7 @@ module.exports = async (client, message, striker, pitcher, post) => {
         }
         
         if (c == pitched) {
-          if (run) base = 1;
+          if (run) base = 0;
           
           c = parseInt(c) * 2;
           strikeArray.push(strikeArray.slice(-1)[0] + parseInt(c));
@@ -184,9 +186,11 @@ module.exports = async (client, message, striker, pitcher, post) => {
             .addField(`Pitcher - ${pitcher.username}`, (target || 0))
             .setImage(`attachment://${homerunPath.split('/').pop()}`)
           
-          pitcher.send('HomeRun!', embed);
-          striker.send(`HomeRun! Perfect Shot!${run || ''}`, embed);
-          return strikeCollect();
+          await pitcher.send('HomeRun!', embed);
+          await striker.send(`HomeRun! Perfect Shot!${run || ''}`, embed);
+          
+          const runPrompt = await askForRun();
+          return strikeCollect(runPrompt);
         } else {
           strikeArray.push(striked + parseInt(c));
           
@@ -210,6 +214,7 @@ module.exports = async (client, message, striker, pitcher, post) => {
           
           await striker.send('You hit ' + c, embed);
           await pitcher.send('Striker hit ' + c, embed);
+          
           const runPrompt = await askForRun();
           return strikeCollect(runPrompt);
         }
@@ -238,13 +243,13 @@ module.exports = async (client, message, striker, pitcher, post) => {
               errors: ['time']
             }
           )).first();
+          await msg.delete();
           if (reaction.emoji.name === '✅') {
             return ' Your run streak got reset to main base 1.';
-          } else {
-            return;
           }
+          return
         } catch (e) {
-          await msg.react('❌');
+          await msg.delete();
           return console.log(e);
         }
       }
