@@ -18,11 +18,11 @@ module.exports = {
 
     //Check Status of the user.
     const user = author;
-    const userdata = await db.findOne({
+    const userData = await db.findOne({
       _id: user.id,
     });
 
-    if (userdata.status === true) {
+    if (userData.status === true) {
       message.reply(getErrors({ error: 'engaged', user }));
       return;
     }
@@ -42,15 +42,15 @@ module.exports = {
           );
         }
         //Status Validation
-        const targetdata = await db.findOne({ _id: target.id });
-        if (targetdata.status === true) {
+        const targetData = await db.findOne({ _id: target.id });
+        if (targetData.status === true) {
           message.reply(getErrors({ error: "engaged", user: target }));
           return;
         }
 
         //Change status
-        await changeStatus(userdata, true);
-        await changeStatus(targetdata, true);
+        await changeStatus(user, true);
+        await changeStatus(target, true);
         executeDuoMatch(message, user, target);
       }
     } catch (e) {
@@ -62,7 +62,7 @@ module.exports = {
 
 async function changeStatus(a, boolean) {
   if (boolean !== true && boolean !== false) return;
-  await db.findOneAndUpdate({ _id: a._id }, {
+  await db.findOneAndUpdate({ _id: a.id }, {
     $set: {
       status: boolean,
     }

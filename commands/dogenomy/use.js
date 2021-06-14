@@ -39,11 +39,15 @@ module.exports = {
       return;
     } else if (itemName === 'nuts') {
       const e = await updateBag(itemName, itemAmount, playerData, message);
-      if(e != 'err') message.reply('You ate some nuts!');
+      if(e == 'err') return;
+      message.reply('You ate some nuts and got 2 stamina!');
+      //await updateStamina(author, 2);
       return;
     } else if (itemName === 'redbull') {
       const e = await updateBag(itemName, itemAmount, playerData, message);
-      if(e != 'err') message.reply('You drank a redbull!');
+      if(e == 'err') return;
+      message.reply('You drank a redbull and got 5 stamina!');
+      //await updateStamina(author, 5);
       return;
     } else if (itemName === 'coinboost') {
       const e1 = await updateBag(itemName, 1, playerData, message);

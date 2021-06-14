@@ -3,7 +3,7 @@ const Discord = require("discord.js");
 const getErrors = require('./getErrors.js');
 const getEmoji = require('./getEmoji.js');
 
-module.exports = async function chooseToss(message, winner, loser, type) {
+module.exports = async function chooseToss(message, winner, loser, type, teamMatchPlayers) {
   const { content, author, channel, mentions } = message;
   
   let options;
@@ -45,6 +45,13 @@ module.exports = async function chooseToss(message, winner, loser, type) {
       return chooseToss(message, winner, loser, type);
     }
     
+    // Update Stamina
+    if (teamMatchPlayers) {
+      updateStamina(teamMatchPlayers);
+    } else {
+      updateStamina([winner, loser]);
+    }
+    
     await channel.send(`${options.one[1]} is ${first}, ${options.two[1]} is ${second}`);
     return [first, second];
   } catch (e) {
@@ -59,4 +66,17 @@ module.exports = async function chooseToss(message, winner, loser, type) {
 async function changeStatus(a, boolean) {
   if(boolean !== true && boolean !== false) return;
   await db.findOneAndUpdate({_id: a.id}, { $set: {status: boolean}});
+}
+
+async function updateStamina(arr) {
+  for (let player in arr) {
+    player = arr[player];
+    
+    const data = await db.findOne({ _id: player.id });
+    await db.findOneAndUpdate({ _id: data._id }, {
+      $set: {
+        stamina: (data.stamina - 1)
+      }
+    })
+  }
 }

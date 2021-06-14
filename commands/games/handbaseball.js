@@ -22,11 +22,11 @@ module.exports = {
     
     //Check Status of the user.
     const user = author;
-    const userdata = await db.findOne({
+    const userData = await db.findOne({
       _id: user.id,
     });
 
-    if (userdata.status === true) {
+    if (userData.status === true) {
       message.reply(getErrors({ error: 'engaged', user }));
       return;
     }
@@ -48,8 +48,8 @@ module.exports = {
       }
 
       //Change status
-      await changeStatus(userdata, true);
-      await changeStatus(targetData, true);
+      await changeStatus(user, true);
+      await changeStatus(target, true);
       
       executeDuoMatch(client, message, user, target)
     } catch (e) {
@@ -61,7 +61,7 @@ module.exports = {
 
 async function changeStatus(a, boolean) {
   if (boolean !== true && boolean !== false) return;
-  await db.findOneAndUpdate({ _id: a._id }, {
+  await db.findOneAndUpdate({ _id: a.id }, {
     $set: {
       status: boolean,
     }
