@@ -19,6 +19,9 @@ const player = new mongoose.Schema({
   totalScore: {
     type: Number, default: 0
   },
+  wickets: {
+    type: Number, default: 0
+  },
   wins: {
     type: Number, default: 0
   },
