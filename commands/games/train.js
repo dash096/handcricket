@@ -44,7 +44,7 @@ module.exports = {
       if(message.guild.id == serverID) {
         multi = multi * 2;
       }
-      let amount = parseInt(multi/1.5 * 494 * Math.random());
+      let amount = parseInt(multi/1.5 * 269 * Math.random());
       if(amount < 10) amount = 69;
       await message.reply(`You got ${await getEmoji('coin')} ${amount} for your fitness`);
       

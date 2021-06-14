@@ -12,7 +12,7 @@ module.exports = async function(winner, loser, channel) {
     _id: loser.id
   });
   
-  const randoCoins = parseInt(Math.random() * 345);
+  const randoCoins = parseInt(Math.random() * (winnerData.coinMulti || 0.2) * 345);
   winner.send(`You looted a grand amount of ${coinEmoji} ${randoCoins}`);
   
   //Winner Old Data
