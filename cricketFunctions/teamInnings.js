@@ -24,9 +24,9 @@ module.exports = async function innings(
     let isInnings2
     
     let results = {
-      results.ducks: [],
-      results.STRs: {},
-      wickets: [],
+      'ducks': [],
+      'STRs': {},
+      'wickets': [],
     }
 
     start(
