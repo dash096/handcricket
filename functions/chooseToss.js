@@ -32,6 +32,9 @@ module.exports = async function chooseToss(message, winner, loser, type) {
     const c = m.content.toLowerCase().trim();
     
     if (c == 'end') {
+      channel.send('Match aborted');
+      await changeStatus(winner, false);
+      await changeStatus(loser, false);
       return 'err';
     } else if (options.one[0].find(i => i == c)) {
       first = winner;
