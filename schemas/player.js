@@ -7,6 +7,9 @@ const player = new mongoose.Schema({
   xp: {
     type: Number, default: 0
   },
+  stamina: {
+    type: Number, default: 10
+  },
   cc: {
     type: Number, default: 500
   },

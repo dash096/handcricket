@@ -39,6 +39,7 @@ module.exports = {
     let level = (await getPreceedingPair(levels, data.xp))[0] || 'Nab (0)';
     let targetXP = levels[level + 1] || 10;
     const XPLine = await getXPLine(data.xp);
+    const staminaLine = await getStaminaLine(data.stamina || 0);
     const xpFixed = data.xp.toFixed(0);
     const STR = data.strikeRate;
     const WR = getWR(data);
@@ -72,7 +73,8 @@ module.exports = {
     
     function userInfo() {
       let text =
-      `**Level ${level}** \`${xpFixed}xp\`\n    **Next level:** ${XPLine} \`${targetXP}xp\`\n\n` +
+      `**Stamina** \`${data.stamina || 0}/10\`\n${staminaLine}\n` +
+      `**Level ${level}** ${XPLine}\n\n` +
       `**Balance**             ${coinEmoji} ${data.cc}\n` +
       `**Wins**                    ${data.wins}\n` +
       `**Strike Rate**        ${data.strikeRate.toFixed(3)}\n` +
@@ -86,6 +88,20 @@ module.exports = {
     }
   }
 };
+
+async function getStaminaLine(stamina) {
+  const fill = await getEmoji('stamina_fill');
+  const empty = await getEmoji('stamina_empty');
+  
+  let text = '';
+  for(i = 0; i < stamina; i++) {
+    text += `${fill}`;
+  }
+  for(i = stamina; i < 10; i++) {
+    text += `${empty}`;
+  }
+  return text;
+}
 
 async function getXPLine(xp) {
   

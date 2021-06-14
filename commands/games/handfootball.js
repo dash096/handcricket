@@ -43,8 +43,8 @@ module.exports = {
       }
 
       //Change status
-      await changeStatus(user, true);
-      await changeStatus(target, true);
+      await changeStatus(userdata, true);
+      await changeStatus(targetData, true);
       
       executeDuoMatch(client, message, user, target)
     } catch (e) {
@@ -56,5 +56,9 @@ module.exports = {
 
 async function changeStatus(a, boolean) {
   if (boolean !== true && boolean !== false) return;
-  await db.findOneAndUpdate({ _id: a.id }, { $set: { status: boolean } });
+  await db.findOneAndUpdate({ _id: a._id }, {
+    $set: {
+      status: boolean,
+    }
+  });
 }

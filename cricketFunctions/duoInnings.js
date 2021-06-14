@@ -199,7 +199,7 @@ module.exports = async function(batsman, bowler, message, post, max) {
             newScore = (await batArray[batArray.length - 1]) + parseInt(ballArray[ballArray.length - 1]);
           }
         } //Wicket
-        if (parseInt(ballArray[ballArray.length - 1]) === parseInt(c) && dot(c, ballArray[ballArray.length - 1], useDot) == false) {
+        if (bowled === parseInt(c) && dot(c, ballArray[ballArray.length - 1], useDot) == false) {
           if (!target) {
             isInnings2 = true;
             await batsman.send("Wicket! The bowler bowled " + ballArray[ballArray.length - 1]);
@@ -216,9 +216,9 @@ module.exports = async function(batsman, bowler, message, post, max) {
         } //Target++
         else if (target && newScore >= target) {
           isInnings2 = 'over';
-          await batsman.send("You lost! The bowler bowled " + ballArray[ballArray.length - 1]);
-          await bowler.send(`You won! The batsman hit ${c}${dot(c, bowled, useDot)}`);
-          if (post === true) await channel.send(`**${bowler.username}** won!!! Wicket! Batsman hit ${c}${dot(c, bowled, useDot)}, and was bowled ${ballArray[ballArray.length - 1]} by **${bowler.username}**`);
+          await batsman.send("You won! You chased the target!");
+          await bowler.send('You lost! The batsman chased the target');
+          if (post === true) await channel.send(`**${batsman.username}** won!!! He chased the target!`);
           return rewards(batsman, bowler, batArray.slice(-1)[0], ballArray.length, target - 1, balls, message);
         } //Push
         else {
