@@ -274,7 +274,7 @@ module.exports = async (client, message, attacker, defender, post) => {
         let msg = msgs.first();
         let { content } = msg;
         let c = msg.content.toLowerCase().trim();
-        if(c == 'end') {
+        if(c == 'end' || c =='e.hc end' || c == 'e.hc x') {
           over = true;
           user.send('You forfeited.');
           target.send(`**${user.username}** forfeited`);
@@ -306,7 +306,7 @@ module.exports = async (client, message, attacker, defender, post) => {
         let msg = msgs.first();
         let { content } = msg;
         let c = msg.content.toLowerCase().trim();
-        if(c == 'end') {
+        if(c == 'end' || c =='e.hc end' || c == 'e.hc x') {
           over = true;
           target.send('You forfeited.');
           user.send(`**${target.username}** forfeited.`);

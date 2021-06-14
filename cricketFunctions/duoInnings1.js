@@ -58,14 +58,14 @@ module.exports = async function(batsman, bowler, message, post, max) {
       );
       if(timeoutDecider === false) return;
       const m = msgs.first();
-      let c = m.content;
+      let c = m.content.toLowerCase().trim();
       //change c if magikball
-      if(c.trim().toLowerCase() == 'magikball' || c.trim().toLowerCase() == 'magik' || c.trim().toLowerCase() == 'mb') {
+      if(c == 'magikball' || c == 'magik' || c == 'mb') {
         c = 'magikball';
       }
       
       //End the match
-      if (c == "end") {
+      if (c == 'end' || c == 'e.hc end' || c == 'e.hc x') {
         timeoutDecider = false;
         changeStatus(batsman, bowler);
         batsman.send(`**${bowler.username}** forfeited`);
@@ -131,12 +131,12 @@ module.exports = async function(batsman, bowler, message, post, max) {
       );
       if(timeoutDecider === false) return;
       const m = msgs.first();
-      let c = m.content;
+      let c = m.content.toLowerCase().trim();
       let newScore = parseInt(await batArray[batArray.length - 1]) + parseInt(c);
       let bowled = await ballArray[ballArray.length - 1];
 
       //End the match
-      if (c.toLowerCase() === "end") {
+      if (c == 'end' || c =='e.hc end' || c == 'e.hc x') {
         timeoutDecider = false;
         changeStatus(batsman, bowler);
         batsman.send(`**${batsman.username}(You)** forfeited`);

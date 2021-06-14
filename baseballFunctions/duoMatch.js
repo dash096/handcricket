@@ -50,7 +50,14 @@ module.exports = async (client, message, striker, pitcher, post) => {
         let { content } = msg;
         let c = content.toLowerCase().trim();
         
-        if (isNaN(c)) {
+        if (c == 'end' || c =='e.hc end' || c == 'e.hc x') {
+          isInnings2 = 'over';
+          await changeStatus(striker, false);
+          await changeStatus(pitcher, false);
+          striker.send('The pitcher forfeited');
+          pitcher.send('You forfeited');
+          return;
+        } else if (isNaN(c)) {
           striker.send(`\`${pitcher.username}:\` ${content}`);
           return pitchCollect();
         } else if (strikeArray.length < pitchArray.length) {
@@ -97,7 +104,14 @@ module.exports = async (client, message, striker, pitcher, post) => {
         let { content } = msg;
         let c = content.toLowerCase().trim();
         
-        if (isNaN(c)) {
+        if (c == 'end' || c =='e.hc end' || c == 'e.hc x') {
+          isInnings2 = 'over';
+          await changeStatus(striker, false);
+          await changeStatus(pitcher, false);
+          striker.send('You forfeited');
+          pitcher.send('The striker forfeited');
+          return;
+        } else if (isNaN(c)) {
           pitcher.send(`\`${striker.username}:\` ${content}`);
           return strikeCollect();
         } else if (strikeArray.length === pitchArray.length) {
@@ -126,6 +140,8 @@ module.exports = async (client, message, striker, pitcher, post) => {
               isInnings2 = 'over';
               pitcher.send('You won!');
               striker.send('You lost');
+              await changeStatus(striker, false);
+              await changeStatus(pitcher, false);
               return;
             }
           } else {
@@ -164,6 +180,8 @@ module.exports = async (client, message, striker, pitcher, post) => {
           pitcher.send('You lost.', embed);
           striker.send('You won!', embed);
           isInnings2 = 'over';
+          await changeStatus(striker, false);
+          await changeStatus(pitcher, false);
           return;
         }
         
