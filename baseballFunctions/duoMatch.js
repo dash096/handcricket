@@ -43,7 +43,7 @@ module.exports = async (client, message, striker, pitcher, post) => {
           max: 1,
           errors: ['time']
         }
-      ).then(collected => {
+      ).then(async collected => {
         if (isInnings2 == 'over' || isInnings2 && !target) return;
         
         const msg = collected.first();
