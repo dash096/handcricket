@@ -26,14 +26,5 @@ module.exports = {
         message.reply(`Created a profile! You got a ${await getEmoji('tracks_black')} black tracks, try \`e.pf\` to view, join community server to get a helmet!`);
       }
     });
-    
-    await db.findOne({ _id: author.id }, {
-      $set: {
-        decors: {
-          tracks_black: 1,
-        },
-        equipped: [tracks_black],
-      }
-    })
   }
 };

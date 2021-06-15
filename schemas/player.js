@@ -42,7 +42,13 @@ const player = new mongoose.Schema({
   },
   bag: {},
   quests: {},
-  decors: { type: {}, default: { equipped: [] } },
+  decors: {
+    type: {},
+    default: {
+      equipped: ['tracks_black'],
+      tracks_black: 1,
+    }
+  },
   coinBoost: Date,
   tossBoost: Date,
   startedOn: {
