@@ -129,30 +129,30 @@ module.exports = async (client, message, striker, pitcher, post) => {
             c = `${c}, Striker is in base **${base}**`;
           }
           
+          embed.files = [strikePath];
+          embed
+            .spliceFields(0, 2)
+            .addField(`Striker - ${striker.username}`, 
+              `**Score:**       ${strikeArray.slice(-1)[0]}\n**No. Of Strikes:** ${strikes}`
+            )
+            .addField(`Pitcher - ${pitcher.username}`, (target || 0))
+            .setImage(`attachment://${strikePath.split('/').pop()}`)
+          
           if (strikes === 3) {
             if(!target) {
               isInnings2 = true;
-              pitcher.send('Striker is out! Next round starts!');
-              striker.send('Out! Next round starts!');
+              pitcher.send('Strike 3, Out! Next round starts!', embed);
+              striker.send('Strike 3, Out! Next round starts!', embed);
               return start(pitcher, striker, strikeArray.slice(-1)[0]);
             } else {
               isInnings2 = 'over';
-              pitcher.send('You won!');
-              striker.send('You lost');
+              pitcher.send('Strike 3, Out! You won!', embed);
+              striker.send('Strike 3, Out! You lost.', embed);
               await changeStatus(striker, false);
               await changeStatus(pitcher, false);
               return;
             }
           } else {
-            embed.files = [strikePath];
-            embed
-              .spliceFields(0, 2)
-              .addField(`Striker - ${striker.username}`, 
-                `**Score:**       ${strikeArray.slice(-1)[0]}\n**No. Of Strikes:** ${strikes}`
-              )
-              .addField(`Pitcher - ${pitcher.username}`, (target || 0))
-              .setImage(`attachment://${strikePath.split('/').pop()}`)
-            
             await pitcher.send('Strike ' + strikes + '. The striker missed it', embed);
             await striker.send('Strike ' + strikes + `. Ouch you missed it.${run || ''}`, embed);
           }
@@ -220,16 +220,18 @@ module.exports = async (client, message, striker, pitcher, post) => {
             
             //Target++
             if(target && strikeArray.slice(-1)[0] >= target) {
-              embed.files = [];
+              embed.files = [hitPath];
               embed
                 .spliceFields(0, 2)
                 .addField(`Striker - ${striker.username}`, 
                   `**Score:**       ${strikeArray.slice(-1)[0]}\n**No. Of Strikes:** ${strikes}`
                 )
                 .addField(`Pitcher - ${pitcher.username}`, (target || 0))
+                .setImage(`attachment://${hitPath.split('/').pop()}`)
               
-              pitcher.send('You lost.', embed);
-              striker.send('You won!', embed);
+              await striker.send('You chased the target and won! You hit ' + c, embed);
+              await pitcher.send('You lost! Striker hit ' + c, embed);
+              
               isInnings2 = 'over';
               await changeStatus(striker, false);
               await changeStatus(pitcher, false);
