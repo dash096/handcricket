@@ -751,13 +751,16 @@ module.exports = async function innings(
                             `forceEnd: Both ${batsman.username} and ${bowler.username} were afk.`
                         )
                     } else if (
+                        bowlingTime !== 5000 &&
                         checkTimeup.find((player) => player === bowler.id)
                     ) {
                         bowlingTime = 5000
                         channel.send(
                             `Looks like **${bowler.username}** is afk, CPU is going to instant bowl.`
                         )
-                    } else {
+                    } else if (
+                      !checkTimeup.includes(bowler.id)
+                    ) {
                         checkTimeup.push(bowler.id)
                     }
 
@@ -1038,13 +1041,16 @@ module.exports = async function innings(
                             `forceEnd: Both ${batsman.username} and ${bowler.username} were afk.`
                         )
                     } else if (
+                        battingTime !== 5000 &&
                         checkTimeup.find((player) => player === batsman.id)
                     ) {
                         battingTime = 5000
                         channel.send(
                             `Looks like **${batsman.username}** is afk, CPU is going to instant hit the balls.`
                         )
-                    } else {
+                    } else if ( 
+                      !checkTimeup.includes(batsman.id)
+                    ) {
                         checkTimeup.push(batsman.id)
                     }
 
@@ -1333,6 +1339,7 @@ module.exports = async function innings(
         randoCoins,
         results,
     ) {
+        console.log(results);
         let coinEmoji = await getEmoji('coin')
 
         //PurpleCaps
@@ -1401,38 +1408,34 @@ module.exports = async function innings(
 
         await results.ducks.forEach(async (player) => {
             let data = await db.findOne({_id: player.id})
-            if (!data) return console.log('no data for results.ducks')
+            if (!data._id) return console.log('no data for results.ducks')
 
             const quests = data.quests || {}
             quests.duck = true
-
-            let wickets = data.wickets || 0
-            wickets += 1;
 
             await db.findOneAndUpdate(
                 {_id: player.id},
                 {
                     $set: {
                         quests: quests,
-                        wickets: wickets,
                     },
+                    $inc: {
+                        wickets: 1,
+                    }
                 }
             )
         })
 
         await results.wickets.forEach(async player => {
             let data = await db.findOne({_id: player.id})
-            if (!data) return console.log('no data for results.wickets')
-
-            let wickets = data.wickets || 0
-            wickets += 1;
+            if (!data._id) return console.log('no data for results.wickets')
 
             await db.findOneAndUpdate(
                 {_id: player.id},
                 {
-                    $set: {
-                        wickets: wickets,
-                    },
+                    $inc: {
+                        wickets: 1,
+                    }
                 }
             )
         })
