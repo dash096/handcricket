@@ -5,6 +5,7 @@ const updateBag = require('../../functions/updateBag.js');
 const updateMulti = require('../../functions/updateMulti.js');
 const updateDecor = require('../../functions/updateDecor.js');
 const updateCoins = require('../../functions/updateCoins.js');
+const updateStamina = require('../../functions/updateStamina.js');
 const openBox = require('../../functions/openBox.js');
 const gain = require('../../functions/gainExp.js');
 const getEmoji = require('../../functions/getEmoji.js');
@@ -40,14 +41,14 @@ module.exports = {
     } else if (itemName === 'nuts') {
       const e = await updateBag(itemName, itemAmount, playerData, message);
       if(e == 'err') return;
-      message.reply('You ate some nuts and got 2 stamina!');
-      //await updateStamina(author, 2);
+      await updateStamina(author, 2);
+      await message.reply('You ate some nuts and got 2 stamina!');
       return;
     } else if (itemName === 'redbull') {
       const e = await updateBag(itemName, itemAmount, playerData, message);
       if(e == 'err') return;
-      message.reply('You drank a redbull and got 5 stamina!');
-      //await updateStamina(author, 5);
+      await updateStamina(author, 5);
+      await message.reply('You drank a redbull and got 5 stamina!');
       return;
     } else if (itemName === 'coinboost') {
       const e1 = await updateBag(itemName, 1, playerData, message);

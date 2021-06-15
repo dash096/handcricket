@@ -113,20 +113,19 @@ module.exports = async (client, message, striker, pitcher, post) => {
           return;
         } else if (isNaN(c)) {
           pitcher.send(`\`${striker.username}:\` ${content}`);
-          return strikeCollect();
+          return strikeCollect(run);
         } else if (strikeArray.length === pitchArray.length) {
           striker.send('Wait for the pitch');
-          return strikeCollect();
+          return strikeCollect(run);
         } else if (c > 6 || c < 1) {
           striker.send('This match is limited to 1-6');
-          return strikeCollect();
+          return strikeCollect(run);
         } else if (c - pitched === 1 || c - pitched === -1) {
-          if (run) base = 0;
-          
           strikes += 1;
           strikeArray.push(strikeArray.slice(-1)[0]);
           
           if (run) {
+            base = 0;
             c = `${c}, Striker is in base **${base}**`;
           }
           
@@ -160,38 +159,38 @@ module.exports = async (client, message, striker, pitcher, post) => {
           
           const runPrompt = await askForRun();
           return strikeCollect(runPrompt);
-        } else if (target && (striked + parseInt(c) * 2) > target) {
+        } else if (target && (striked + parseInt(c) * 2 + 10) > target) {
           if (c != pitched && (striked + parseInt(c)) <= target) {
-            return;
-          } else if (striked == pitched) {
-            strikeArray.push(parseInt(c) * 2);
           } else {
-            strikeArray.push(parseInt(c));
+            if (striked == pitched) {
+              strikeArray.push(parseInt(c) * 2);
+            } else {
+              strikeArray.push(parseInt(c));
+            }
+            
+            embed.files = [];
+            embed
+              .spliceFields(0, 2)
+              .addField(`Striker - ${striker.username}`, 
+                `**Score:**       ${strikeArray.slice(-1)[0]}\n**No. Of Strikes:** ${strikes}`
+              )
+              .addField(`Pitcher - ${pitcher.username}`, (target || 0))
+            
+            pitcher.send('You lost.', embed);
+            striker.send('You won!', embed);
+            isInnings2 = 'over';
+            await changeStatus(striker, false);
+            await changeStatus(pitcher, false);
+            return;
           }
-          
-          embed.files = [];
-          embed
-            .spliceFields(0, 2)
-            .addField(`Striker - ${striker.username}`, 
-              `**Score:**       ${strikeArray.slice(-1)[0]}\n**No. Of Strikes:** ${strikes}`
-            )
-            .addField(`Pitcher - ${pitcher.username}`, (target || 0))
-          
-          pitcher.send('You lost.', embed);
-          striker.send('You won!', embed);
-          isInnings2 = 'over';
-          await changeStatus(striker, false);
-          await changeStatus(pitcher, false);
-          return;
         }
         
         if (c == pitched) {
-          if (run) base = 0;
-          
           c = parseInt(c) * 2;
           strikeArray.push(strikeArray.slice(-1)[0] + parseInt(c));
           
           if (run) {
+            base = 0;
             c = `${c}, Striker is in base **${base}**`;
           }
           
@@ -213,10 +212,29 @@ module.exports = async (client, message, striker, pitcher, post) => {
           strikeArray.push(striked + parseInt(c));
           
           if (run) base += 1;
+          
           if (base === 4) {
             strikeArray.splice(strikeArray.length - 1, 1, striked + parseInt(c) + 10);
             c = `${c}, Bonus 10 for reaching base 4!`;
             base = 1;
+            
+            //Target++
+            if(target && strikeArray.slice(-1)[0] >= target) {
+              embed.files = [];
+              embed
+                .spliceFields(0, 2)
+                .addField(`Striker - ${striker.username}`, 
+                  `**Score:**       ${strikeArray.slice(-1)[0]}\n**No. Of Strikes:** ${strikes}`
+                )
+                .addField(`Pitcher - ${pitcher.username}`, (target || 0))
+              
+              pitcher.send('You lost.', embed);
+              striker.send('You won!', embed);
+              isInnings2 = 'over';
+              await changeStatus(striker, false);
+              await changeStatus(pitcher, false);
+              return;
+            }
           } else if (run) {
             c = `${c}, Striker is in base **${base}**`;
           }
@@ -261,9 +279,9 @@ module.exports = async (client, message, striker, pitcher, post) => {
               errors: ['time']
             }
           )).first();
-          await msg.delete();
           return ' Your run streak got reset to main base 1.';
         } catch (e) {
+          console.log(e);
           await msg.delete();
           return;
         }

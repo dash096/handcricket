@@ -2,6 +2,7 @@ const db = require("../schemas/player.js");
 const Discord = require("discord.js");
 const getErrors = require('./getErrors.js');
 const getEmoji = require('./getEmoji.js');
+const updateStamina = require('./updateStamina.js');
 
 module.exports = async function chooseToss(message, winner, loser, type, teamMatchPlayers) {
   const { content, author, channel, mentions } = message;
@@ -47,9 +48,9 @@ module.exports = async function chooseToss(message, winner, loser, type, teamMat
     
     // Update Stamina
     if (teamMatchPlayers) {
-      updateStamina(teamMatchPlayers);
+      executeUpdateStamina(teamMatchPlayers);
     } else {
-      updateStamina([winner, loser]);
+      executeUpdateStamina([winner, loser]);
     }
     
     await channel.send(`${options.one[1]} is ${first}, ${options.two[1]} is ${second}`);
@@ -68,15 +69,10 @@ async function changeStatus(a, boolean) {
   await db.findOneAndUpdate({_id: a.id}, { $set: {status: boolean}});
 }
 
-async function updateStamina(arr) {
+async function executeUpdateStamina(arr) {
   for (let player in arr) {
     player = arr[player];
     
-    const data = await db.findOne({ _id: player.id });
-    await db.findOneAndUpdate({ _id: data._id }, {
-      $set: {
-        stamina: (data.stamina - 1)
-      }
-    })
+    updateStamina(player, -1);
   }
 }
