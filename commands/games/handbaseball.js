@@ -37,7 +37,7 @@ module.exports = {
       if (!target) return;
       if (user.id === target.id) {
         return message.reply(
-          getErrors({ error: "syntax", filePath: "games/handcricket.js" })
+          getErrors({ error: "syntax", filePath: "games/handbaseball.js" })
         );
       }
       //Status Validation
