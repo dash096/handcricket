@@ -18,7 +18,7 @@ module.exports = {
       startedOn: Date.now()
     });
 
-    await player.save(e => {
+    await player.save(async e => {
       if (e) {
         message.reply("No u.");
         return;
