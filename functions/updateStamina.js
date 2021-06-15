@@ -9,7 +9,7 @@ module.exports = async (user, amount) => {
   
   await db.findOneAndUpdate({ _id: data._id }, {
     $set: {
-      stamina: (data.stamina + amount)
+      stamina: newAmount
     }
   });
   return;
