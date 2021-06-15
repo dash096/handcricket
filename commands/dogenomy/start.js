@@ -1,5 +1,6 @@
 const db = require("../../schemas/player.js");
 const Discord = require("discord.js");
+const getEmoji = require('../../functions/getEmoji.js');
 
 module.exports = {
   name: "start",
@@ -17,13 +18,22 @@ module.exports = {
       startedOn: Date.now()
     });
 
-    player.save(e => {
+    await player.save(e => {
       if (e) {
         message.reply("No u.");
         return;
       } else {
-        message.reply("Get the party started");
+        message.reply(`Created a profile! You got a ${await getEmoji('tracks_black')} black tracks, try \`e.pf\` to view, join community server to get a helmet!`);
       }
     });
+    
+    await db.findOne({ _id: author.id }, {
+      $set: {
+        decors: {
+          tracks_black: 1,
+        },
+        equipped: [tracks_black],
+      }
+    })
   }
 };
