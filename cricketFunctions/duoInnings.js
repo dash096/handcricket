@@ -6,12 +6,12 @@ const embedColor = require('../functions/getEmbedColor.js');
 const commentry = require('./getCommentry.js');
 const rewards = require('./rewards.js');
 
-module.exports = async function(batsman, bowler, message, post, max) {
+module.exports = async function(batsman, bowler, message, post, max, wckts, ovrs) {
   const { channel, author, mentions, content } = message;
   
   const embed = new Discord.MessageEmbed()
     .setTitle("Cricket Match - First Innings")
-    .addField(batsman.username + " - Batsman", 0, true)
+    .addField(batsman.username + " - Batsman", `**Score:**       0\n\n**Wickets Left:**     ${wckts}\n**Balls Left:**     ${ovrs * 6}`, true)
     .addField(bowler.username + " - Bowler", 0, true)
     .setColor(embedColor);
   
@@ -40,12 +40,14 @@ module.exports = async function(batsman, bowler, message, post, max) {
     let useDot = false;
     let useMagik = [false, 1];
     
+    let wickets = wckts;
+    let remainingBalls = ovrs * 6;
     const batArray = [0];
     const ballArray = [0];
 
     const embed = new Discord.MessageEmbed()
       .setTitle("Cricket Match - First Innings")
-      .addField(batsman.username + " - Batsman", 0, true)
+      .addField(batsman.username + " - Batsman", `**Score:**      0\n\n**Wickets Left:**     ${wickets}\n**Balls Left:**     ${remainingBalls}`, true)
       .addField(bowler.username + " - Bowler", target || 0, true)
       .setColor(embedColor);
     batsman.send(embed);
@@ -60,6 +62,39 @@ module.exports = async function(batsman, bowler, message, post, max) {
     async function loopBallCollect() {
       if (isInnings2 == 'over') return;
       if (isInnings2 && !target) return;
+      
+      if (remainingBalls === 0) {
+        const comment = await commentry('O');
+        const embed = new Discord.MessageEmbed()
+          .setTitle("Cricket Match")
+          .setDescription(comment)
+          .addField(batsman.username + " - Batsman", `**Score:**      ${batArray.slice(-1)[0]}\n\n**Wickets Left:**     ${wickets}\n**Balls Left:**     ${remainingBalls}`, true)
+          .addField(bowler.username + " - Bowler", target || 0, true)
+          .setColor(embedColor);
+        
+        let interval = setInterval(() => {
+          if (batArray.length !== ballArray.length) {
+            return;
+          }
+          
+          clearInterval(interval);
+          if (isInnnings2) {
+            isInnings2 = 'over';
+            bowler.send(`${ovrs} overs over. You won!`);
+            batsman.send(`${ovrs} overs over. You lost!`);
+            if (post === true) channel.send(`${ovrs} overs over. Bowler won!`);
+            changeStatus(batsman, bowler);
+            return rewards(bowler, batsman, coins, target - 1, balls, batArray.slice(-1)[0], ballArray.length, message);
+          } else {
+            isInnings2 = true;
+            bowler.send(`${ovrs} overs over. Second Innings starts!`);
+            batsman.send(`${ovrs} overs over. Second Innings starts!`);
+            if (post === true) channel.send(`${ovrs} overs over. Second Innings starts!`);
+            return start(bowler, batsman, batArray[batArray.length - 1] + 1, ballArray.length);
+          }
+        }, 1 * 1000);
+        return;
+      }
       
       try {
         const msgs = await bowler.dmChannel.awaitMessages(
@@ -110,6 +145,7 @@ module.exports = async function(batsman, bowler, message, post, max) {
           const bal = await updateBag('magikball', 1, await db.findOne({_id: bowler.id}), { channel: bowler });
           if(bal === 'err') return loopBallCollect();
           
+          remainingBalls -= 1;
           let magikRando = ([1, 2, 3, 4, 5, 6]) [Math.floor(Math.random() * ([1, 2, 3, 4, 5, 6]).length)];
           let bowledMagik = await letBowlerChooseMagik(magikRando, bowler, batsman);
           if(bowledMagik == 'err') throw 'Timeup';
@@ -118,6 +154,7 @@ module.exports = async function(batsman, bowler, message, post, max) {
           return loopBallCollect();
         } //Push it
         else {
+          remainingBalls -= 1;
           ballArray.push(parseInt(c));
           await bowler.send("You bowled " + c);
           await batsman.send("Ball is coming, hit it by typing a number.");
@@ -200,19 +237,37 @@ module.exports = async function(batsman, bowler, message, post, max) {
           }
         } //Wicket
         if (bowled === parseInt(c) && dot(c, ballArray[ballArray.length - 1], useDot) == false) {
-          if (!target) {
-            isInnings2 = true;
-            await batsman.send("Wicket! The bowler bowled " + ballArray[ballArray.length - 1]);
-            await bowler.send(`Wicket! The batsman hit ${c}${dot(c, bowled, useDot)}`);
-            if (post === true) await channel.send(`**${batsman.username}** wicket!!! He hit ${c}${dot(c, bowled, useDot)}, and was bowled ${ballArray[ballArray.length - 1]} by **${bowler.username}**`);
-            return start(bowler, batsman, batArray[batArray.length - 1] + 1, ballArray.length);
+          wickets -= 1;
+          batArray.push(batArray.splice(-1)[0]);
+          
+          const comment = await commentry(bowled, 'W');
+          const embed = new Discord.MessageEmbed()
+            .setTitle("Cricket Match")
+            .setDescription(comment)
+            .addField(batsman.username + " - Batsman", `**Score:**      ${newScore}\n\n**Wickets Left:**     ${wickets}\n**Balls Left:**     ${remainingBalls}`, true)
+            .addField(bowler.username + " - Bowler", target || 0, true)
+            .setColor(embedColor);
+
+          if (wickets === 0) {
+            if (!target) {
+              isInnings2 = true;
+              await batsman.send("Wicket! Second Innings starts. The bowler bowled " + ballArray[ballArray.length - 1], embed);
+              await bowler.send(`Wicket! Second Innings statts. The batsman hit ${c}${dot(c, bowled, useDot)}`, embed);
+              if (post === true) await channel.send(`Wicket! Second Innings starts. He hit ${c}${dot(c, bowled, useDot)}, and was bowled ${ballArray[ballArray.length - 1]}`, embed);
+              return start(bowler, batsman, batArray[batArray.length - 1] + 1, ballArray.length);
+            } else {
+              isInnings2 = 'over';
+              const coins = Math.floor(Math.random() * 345 * (await db.findOne({ _id: bowler.id })).coinMulti);
+              await batsman.send("You lost! The bowler bowled " + ballArray[ballArray.length - 1], embed);
+              await bowler.send(`You won! The batsman hit ${c}${dot(c, bowled, useDot)} and looted ${await getEmoji('coin')} ${coins}`, embed);
+              if (post === true) await channel.send(`**${bowler.username}** won!!! Wicket! Batsman hit ${c}${dot(c, bowled, useDot)}, and was bowled ${ballArray[ballArray.length - 1]} by **${bowler.username}**`, embed);
+              return rewards(bowler, batsman, coins, target - 1, balls, batArray.slice(-1)[0], ballArray.length, message);
+            }
           } else {
-            isInnings2 = 'over';
-            const coins = Math.floor(Math.random() * 345 * (await db.findOne({ _id: bowler.id })).coinMulti);
-            await batsman.send("You lost! The bowler bowled " + ballArray[ballArray.length - 1]);
-            await bowler.send(`You won! The batsman hit ${c}${dot(c, bowled, useDot)} and looted ${await getEmoji('coin')} ${coins}`);
-            if (post === true) await channel.send(`**${bowler.username}** won!!! Wicket! Batsman hit ${c}${dot(c, bowled, useDot)}, and was bowled ${ballArray[ballArray.length - 1]} by **${bowler.username}**`);
-            return rewards(bowler, batsman, coins, target - 1, balls, batArray.slice(-1)[0], ballArray.length, message);
+            await batsman.send("Wicket! The bowler bowled " + ballArray[ballArray.length - 1], embed);
+            await bowler.send(`Wicket! The batsman hit ${c}${dot(c, bowled, useDot)}}`, embed);
+            if (post === true) await channel.send(`Wicket! Batsman hit ${c}${dot(c, bowled, useDot)}, and was bowled ${ballArray[ballArray.length - 1]}`, embed);
+            return loopBatCollect();
           }
         } //Target++
         else if (target && newScore >= target) {
@@ -229,9 +284,9 @@ module.exports = async function(batsman, bowler, message, post, max) {
          
           const comment = await commentry(bowled, parseInt(c));
           const embed = new Discord.MessageEmbed()
-            .setTitle("Cricket Match - First Innings")
+            .setTitle("Cricket Match")
             .setDescription(comment)
-            .addField(batsman.username + " - Batsman", newScore, true)
+            .addField(batsman.username + " - Batsman", `**Score:**      ${newScore}\n\n**Wickets Left:**     ${wickets}\n**Balls Left:**     ${remainingBalls}`, true)
             .addField(bowler.username + " - Bowler", target || 0, true)
             .setColor(embedColor);
 

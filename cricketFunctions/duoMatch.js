@@ -18,17 +18,45 @@ module.exports = async (message, user, target) => {
   let bowler;
   
   //Flags
-  let post;
-  let max = 6;
-  if(content.toLowerCase().includes('post')) post = true;
-  if(content.toLowerCase().includes('ten')) max = 10;
+  let flags = {
+    post: undefined,
+    max: 6,
+    wickets: 1,
+    overs: 5,
+  }
+  if(content.toLowerCase().includes('--post')) flags.post = true;
+  if(content.toLowerCase().includes('--ten')) flags.max = 10;
+  if(content.toLowerCase().includes('--wickets')) {
+    let wickets = content[(/--wickets/.exec(content)).index + 9];
+    if (!wickets || isNaN(wickets)) {
+      return message.reply('Invalid Value for Flag Wickets and it is set to 1 as default.');
+    } else if (wickets > 5) {
+      flags.wickets = 5;
+      message.reply('Maximum wickets for a duoMatch is 5, it is now set to 5');
+    } else {
+      flags.wickets = wickets;
+    }
+  }
+  if(content.toLowerCase().includes('--overs')) {
+    let overs = content[(/--overs/.exec(content)).index + 7];
+    if (!overs || isNaN(overs)) {
+      message.reply('Invalid Value for Flag Overs and it is set to 5 as default.');
+    } else if (overs > 5) {
+      flags.overs = 5;
+      message.reply('Maximum overs for a duoMatch is 5, it is now set to 5');
+    } else {
+      flags.overs = overs;
+    }
+  }
   
   //Execute check will
   await channel.send(`${target} Do you wanna play cricket with **${user.username}**? Type \`y\`/\`n\` in 30s\n Append(add to the end) \`--post\` to the message to post the scores in this channel`);
   
-  let will = await checkWill(channel, target, post, max);
-  post = will[1];
-  max = will[2];
+  let will = await checkWill(channel, target, flags.post, flags.max, flags.wickets, flags.overs);
+  flags.post = will[1];
+  flags.max = will[2];
+  flags.wickets = will[3];
+  flags.overs = will[4];
   will = will[0];
   
   //If will is true, roll the toss
@@ -40,13 +68,13 @@ module.exports = async (message, user, target) => {
         if(chosen == 'err') return;
         let batsman = chosen[0];
         let bowler = chosen[1];
-        start(message, batsman, bowler, post, max);
+        start(message, batsman, bowler, flags);
       } else {
         let chosen = await chooseToss(message, target, user, 'cricket');
         if(chosen == 'err') return;
         let batsman = chosen[0];
         let bowler = chosen[1];
-        start(message, batsman, bowler, post, max);
+        start(message, batsman, bowler, flags);
       }
     } catch(e) {
       await changeStatus(user, false);
@@ -59,13 +87,12 @@ module.exports = async (message, user, target) => {
     return;
   }
 };
-async function start(message, batsman, bowler, post, max) {
+async function start(message, batsman, bowler, flags) {
   const { content, author, channel, mentions } = message;
-  
   await channel.send(`${batsman} and ${bowler}, get to your dms to play!`);
   await changeStatus(batsman, true);
   await changeStatus(bowler, true);
-  startInnings(batsman, bowler, message, post, max);
+  startInnings(batsman, bowler, message, ...Object.values(flags));
 }
 
 async function changeStatus(a, boolean) {

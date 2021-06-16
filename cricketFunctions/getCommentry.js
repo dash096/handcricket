@@ -105,8 +105,12 @@ module.exports = (ball, bat) => {
       'The pace of the ball broke the record.',
       'The fastest paced ball is coming.',
     ],
+    'O': [
+      'Overs Over!',
+    ]
   }
   
+  if(ball == 'O') return (bowling['O'])[0];
   const batArray = batting[bat];
   const ballArray = bowling[ball];
   const batCommentry = batArray [ Math.floor( Math.random() * batArray.length ) ];
