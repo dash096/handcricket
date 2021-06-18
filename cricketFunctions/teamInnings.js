@@ -728,7 +728,7 @@ module.exports = async function innings(
                         parseInt(content) > max ||
                         parseInt(content) <= 0
                     ) {
-                        bowler.send('This match is limited to 6')
+                        bowler.send('This match is limited to ' + max)
                         return bowlCollect(batsman, bowler, dm)
                     } //Log
                     else {
@@ -870,7 +870,7 @@ module.exports = async function innings(
                         parseInt(content) > max ||
                         parseInt(content) <= 0
                     ) {
-                        batsman.send('This match is limited to 6')
+                        batsman.send('This match is limited to ' + max)
                         return batCollect(batsman, bowler, dm)
                     }
                     logs.currentBalls += 1
