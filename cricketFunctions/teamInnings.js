@@ -844,7 +844,7 @@ module.exports = async function innings(
                         batsman.send(
                             'Only team captains should type `e.hc x` in the channel to end.'
                         )
-                        return bowlCollect(batsman, bowler, dm)
+                        return batCollect(batsman, bowler, dm)
                     } //Conversation
                     else if (isNaN(content)) {
                         bowler.send(`\`${batsman.username}:\` ` + content)
