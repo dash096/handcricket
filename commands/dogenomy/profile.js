@@ -78,7 +78,7 @@ module.exports = {
       `**Balance**             ${coinEmoji} ${data.cc}\n` +
       `**Wins**                    ${data.wins}\n` +
       `**Strike Rate**        ${data.strikeRate.toFixed(3)}\n` +
-      `**Wickets**               ${data.wickets || 0}\n (Disabled Temporarily)` +
+      `**Wickets**               ${data.wickets || 0} (Disabled Temporarily)\n` +
       `**High Score**         ${data.highScore || 0}\n` +
       `**Total Score**        ${data.totalScore || 0}\n` +
       `**OrangeCaps**     ${data.orangeCaps}\n` +
