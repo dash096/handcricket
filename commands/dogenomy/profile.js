@@ -77,6 +77,7 @@ module.exports = {
       `**Level ${level}** ${XPLine}\n\n` +
       `**Balance**             ${coinEmoji} ${data.cc}\n` +
       `**Wins**                    ${data.wins}\n` +
+      `**Wickets**               ${data.wickets}\n` +
       `**Strike Rate**        ${data.strikeRate.toFixed(3)}\n` +
       `**High Score**         ${data.highScore || 0}\n` +
       `**Total Score**        ${data.totalScore || 0}\n` +

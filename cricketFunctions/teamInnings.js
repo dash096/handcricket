@@ -766,6 +766,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
     let ducks = results.ducks
     let STRs = results.STRs
     let wickets = results.wickets
+    console.log(wickets)
     
     //PurpleCaps
     let orangeCapHolder = await getOrangeCapHolder();
