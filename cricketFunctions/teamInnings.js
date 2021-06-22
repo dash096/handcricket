@@ -838,7 +838,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
     });
     
     
-    await wickets.forEach(player => {
+    await wickets.forEach(async player => {
     	await db.findOneAndUpdate({_id: player.id}, {
     	  $inc: {
     	  	wickets: 1,
