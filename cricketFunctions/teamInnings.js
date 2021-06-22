@@ -704,7 +704,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         }
       });
       if (type === 'batting' && oldLogs) {
-        playerAndLog.push(`${target} is the Target Score`);
+        playerAndLog.push(`${target} is the Target Score, more ${target - teamScore} runs left.`);
       }
       return playerAndLog.join(`\n`);
     }
