@@ -12,9 +12,9 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
   let isInnings2;
   
   let results = {
-  	ducks = [],
-    STRs = {},
-    wickets = [],
+  	ducks: [],
+    STRs: {},
+    wickets: [],
   }
   
   start(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel, oldLogs, target);
