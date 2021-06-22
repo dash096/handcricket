@@ -226,7 +226,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
             logs.batting['0000'] = [finalScore];
           } else {
             let finalScore = (logs.batting[oldResponse.id])[(logs.batting[oldResponse.id]).length - 1];
-            STRs[oldResponse.id] = [finalScore, logs.currentBalls];
+            results.STRs[oldResponse.id] = [finalScore, logs.currentBalls];
             logs.batting[oldResponse.id] = [(logs.batting[oldResponse.id])[(logs.batting[oldResponse.id]).length - 1]];
           }
           isInnings2 = 'over';
