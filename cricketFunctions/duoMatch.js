@@ -32,7 +32,7 @@ module.exports = async (message, user, target) => {
       return message.reply('Invalid Value for Flag Wickets and it is set to 1 as default.');
     } else if (wickets > 5) {
       flags.wickets = 5;
-      message.reply('Maximum wickets for a duoMatch is 5, it is now set to 5');
+      message.reply('Limited wickets for a duoMatch is 1-5, it is now set to 5');
     } else {
       flags.wickets = wickets;
     }
@@ -43,7 +43,7 @@ module.exports = async (message, user, target) => {
       message.reply('Invalid Value for Flag Overs and it is set to 5 as default.');
     } else if (overs > 5) {
       flags.overs = 5;
-      message.reply('Maximum overs for a duoMatch is 5, it is now set to 5');
+      message.reply('Limited overs for a duoMatch is 1-5, it is now set to 5');
     } else {
       flags.overs = overs;
     }
@@ -52,11 +52,11 @@ module.exports = async (message, user, target) => {
   //Execute check will
   await channel.send(`${target} Do you wanna play cricket with **${user.username}**? Type \`y\`/\`n\` in 30s\n Append(add to the end) \`--post\` to the message to post the scores in this channel`);
   
-  let will = await checkWill(channel, target, flags.post, flags.max, flags.wickets, flags.overs);
+  let will = await checkWill(channel, target, flags.post, flags.max, flags.wickets || 1, flags.overs || 5);
   flags.post = will[1];
   flags.max = will[2];
-  flags.wickets = will[3];
-  flags.overs = will[4];
+  flags.wickets = will[3] || 1;
+  flags.overs = will[4] || 5;
   will = will[0];
   
   //If will is true, roll the toss

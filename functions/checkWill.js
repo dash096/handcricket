@@ -19,7 +19,7 @@ module.exports = async function checkWill(channel, target, post, max, wickets, o
         msg.reply('Invalid Value for Flag Wickets and it is set to 1 as default');
       } else if (wickets > 5) {
         wickets = 5;
-        msg.reply('Maximum wickets for a duoMatch is 5, it is now set to 5');
+        msg.reply('Limited wickets for a duoMatch is 1-5, it is now set to 5');
       }
     }
     if(c.toLowerCase().includes('--overs')) {
@@ -29,16 +29,16 @@ module.exports = async function checkWill(channel, target, post, max, wickets, o
         msg.reply('Invalid Value for Flag Overs, it is set to 5 as default.');
       } else if (overs > 5) {
         overs = 5;
-        msg.reply('Maximum overs for a duoMatch is 5, it is now set to 5');
+        msg.reply('Limited overs for a duoMatch is 1-5, it is now set to 5');
       }
     }
     
     if(c.startsWith('y')) {
-      return [true, post, max, wickets, overs];
+      return [true, post, max, wickets || 1, overs || 5];
     }
     else if(c.startsWith('n')){
       msg.reply(`Match aborted`);
-      return [false, post, max, wickets, overs];
+      return [false, post, max, wickets || 1, overs || 5];
     } else {
       return await checkWill(channel, target, post, max);
     }
