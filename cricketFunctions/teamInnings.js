@@ -617,6 +617,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
             (logs.batting[batsman.id]).push(oldScore + parseInt(rando));
           }
 
+          print(battingTeam)
           teamScore += parseInt(rando);
           const embed = new Discord.MessageEmbed()
             .setTitle('TeamMatch')
@@ -939,7 +940,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
 }
 
 function getIndex(team, player) {
-  let index = team.indexOf(team.find(member => member.id === player.id));
+  let index = team.indexOf(player);
   return index;
 }
 
