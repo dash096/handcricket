@@ -233,7 +233,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           changeStatus(players, false)
           //rewards for battingTeam
           const randoCoins = parseInt((Math.random() * 696)/1.5);
-          return rewards(channel, battingTeam, bowlingTeam, oldLogs, logs, randoCoins, rewards);
+          return rewards(channel, battingTeam, bowlingTeam, oldLogs, logs, randoCoins, results);
         } else {
           if (type === 'bat') {
             if (batExtra) {
