@@ -206,7 +206,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
               results.STRs[responseX.id] = [finalScore, logs.currentBalls];
               logs.batting[responseX.id] = [finalScore];
             } else {
-            	if((logs.batting['0000']).length === 1 && !results.ducks.find(player => player.id == responseX.id)) results.ducks.push(responseX);
+            	if((logs.batting[oldResponse.id]).length === 1 && !results.ducks.find(player => player.id == responseX.id)) results.ducks.push(responseX);
               else results.wickets.push(responseX)
               
               let finalScore = (logs.batting[oldResponse.id])[(logs.batting[oldResponse.id]).length - 1];
