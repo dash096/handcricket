@@ -122,7 +122,7 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
         
         if (bowler.CPU) {
           random = Math.floor(Math.random * 7)
-          m = { content = `${random}` }
+          m = { 'content': `${random}` }
         } else {
           m = (await bowler.dmChannel.awaitMessages(
             m => m.author.id === bowler.id,
