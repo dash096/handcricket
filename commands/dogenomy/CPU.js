@@ -7,7 +7,7 @@ module.exports = {
     let { content, channel, author } = message
 
     let wickets = 2
-    let overs = 8.2
+    let overs = 8
     let target = Math.floor(Math.random() * 100)
     let innings = 2
     let max = 6

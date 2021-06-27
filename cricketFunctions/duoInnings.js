@@ -7,12 +7,10 @@ const commentry = require('./getCommentry.js');
 const rewards = require('./rewards.js');
 
 module.exports = async function(batsman, bowler, message, post, max = 6, wckts, ovrs, challenge) {
-  console.log(challenge)
-  
   const { channel, author, mentions, content } = message;
   
   const embed = new Discord.MessageEmbed()
-    .setTitle("Cricket Match - First Innings")
+    .setTitle("Cricket Match")
     .addField(batsman.username + " - Batsman", `**Score:**       0\n\n**Wickets Left:**     ${wckts}\n**Balls Left:**     ${ovrs * 6}`, true)
     .addField(bowler.username + " - Bowler", 0, true)
     .setColor(embedColor);
@@ -46,12 +44,14 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
       if (challenge.innings === 1) {
         start(challenge.player, challenge.CPU)
       } else if (challenge.innings === 2)  {
+        isInnings2 = true
         start(challenge.player, challenge.CPU, challenge.target, 10)
       }
     } else if (challenge.type === 'bowl') {
       if (challenge.innings === 1) {
         start(challenge.CPU, challenge.player)
       } else if (challenge.innings === 2)  {
+        isInnings2 = true
         start(challenge.CPU, challenge.player, challenge.target, 10)
       }
     }
@@ -99,7 +99,7 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
           }
           
           clearInterval(interval);
-          if (isInnnings2) {
+          if (isInnings2) {
             isInnings2 = 'over';
             bowler.send(`${ovrs} overs over. You won!`);
             batsman.send(`${ovrs} overs over. You lost!`);
