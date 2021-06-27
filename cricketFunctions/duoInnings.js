@@ -7,7 +7,7 @@ const commentry = require('./getCommentry.js');
 const rewards = require('./rewards.js');
 
 module.exports = async function(batsman, bowler, message, post, max = 6, wckts, ovrs, challenge) {
-  print(challenge)
+  console.log(challenge)
   
   const { channel, author, mentions, content } = message;
   
