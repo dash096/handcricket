@@ -3,7 +3,7 @@ let duoInnings = require('../../cricketFunctions/duoInnings.js')
 module.exports = {
   name: 'cpu',
   syntax: 'e.cpu',
-  run: ({ message }) => {
+  run: async ({ message }) => {
     let { content, channel, author } = message
 
     let wickets = 2
