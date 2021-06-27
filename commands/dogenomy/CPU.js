@@ -28,7 +28,7 @@ module.exports = {
       post,
     }
 
-    await channel.send("setted up match for\n Chasing ${target} in ${overs * 6} balls with ${wickets} wickets")
+    await channel.send(`setted up match for\n Chasing ${target} in ${overs * 6} balls with ${wickets} wickets`)
     await duoInnings(author, CPU, message, false, 6, wickets, overs, challenge)
   }
 }
