@@ -10,14 +10,12 @@ module.exports = async ({ client, topggapi, app }) => {
     voteWebhook.listener(async (vote) => {
       let data = await db.findOne({ _id: vote.user });
       let user = await client.users.fetch(vote.user);
-      let quests = data.quests || {};
-      quests.support = true;
+      
       await db.findOneAndUpdate({ _id: user.id }, {
         $set: {
           voteClaim: true,
           voteCooldown: (Date.now() + (12 * 60 * 60 * 1000)),
           voteStreak: ((data.voteStreak || 0) + 1),
-          quests: quests,
           lastVoted: (Date.now()),
         }
       });
