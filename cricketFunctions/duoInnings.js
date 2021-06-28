@@ -9,6 +9,10 @@ const rewards = require('./rewards.js');
 module.exports = async function(batsman, bowler, message, post, max = 6, wckts, ovrs, challenge) {
   const { channel, author, mentions, content } = message;
   
+  function sleep(ms) {
+    return new Promise(r => setTimeout(r, ms))
+  }
+  
   const embed = new Discord.MessageEmbed()
     .setTitle("Cricket Match")
     .addField(batsman.username + " - Batsman", `**Score:**       0\n\n**Wickets Left:**     ${wckts}\n**Balls Left:**     ${ovrs * 6}`, true)
@@ -121,6 +125,7 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
       try {
         let m
         if (bowler.CPU) {
+          await sleep(3000)
           random = Math.floor(Math.random * 7)
           m = { 'content': `${random}` }
         } else {
@@ -185,6 +190,7 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
         let m
         
         if (challenge && challenge.batsman ? challenge.batsman.CPU : false) {
+          await sleep(3000)
           random = Math.floor(Math.random() * 7)
           m = { 'content': `${random}` }
         } else {
