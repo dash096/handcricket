@@ -883,6 +883,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           coinMulti: parseFloat(data.coinMulti + 0.0069),
           tossMulti: parseFloat(data.tossMulti - 0.0069),
           totalScore: parseInt((data.totalScore || 0) + (STRs[player.id]) [0]),
+          pattern: pattern,
         }
         
         if ((data.highScore || 0) < (STRs[player.id]) [0]) {
@@ -926,6 +927,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           quests: quests,
           tossMulti: parseFloat(data.tossMulti + 0.0069),
           totalScore: parseInt((data.totalScore || 0) + (STRs[player.id]) [0]),
+          pattern: pattern,
         }
         
         if ((data.highScore || 0) < (STRs[player.id]) [0]) {
