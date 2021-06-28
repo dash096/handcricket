@@ -9,7 +9,8 @@ module.exports = async function(winner, loser, coins, winnerLogs, loserLogs, mes
     const lB = winnerLogs.ballArray.length
     const lS = loserLogs.batArray.slice(-1)[0]
     const wB = loserLogs.ballArray.length
-     
+    console.log(winnerLogs, loserLogs)
+    
     const winnerData = await db.findOne({
       _id: winner.id
     });
@@ -102,6 +103,7 @@ function changePattern(data, scores) {
     num = logs[i]
     pattern[num] = (pattern[num] || 0) + 1
   }
-
+  
+  console.log(pattern)
   return pattern
 }
