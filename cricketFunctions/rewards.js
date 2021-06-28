@@ -3,7 +3,7 @@ const gain = require('../functions/gainExp.js');
 
 module.exports = async function(winner, loser, coins, winnerLogs, loserLogs, message) {
   const { channel } = message;
-  
+  console.log(winnerLogs, loserLogs)
   const wS = winnerLogs.batArray.slice(-1)[0]
   const lB = winnerLogs.ballArray.length
   const lS = loserLogs.batArray.slice(-1)[0]
