@@ -64,7 +64,7 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
   }
   
   async function start(batsman, bowler, oldLogs = {}) {
-    let target = oldLogs.batArray.slice(-1)[0] + 1
+    let target = oldLogs ? oldLogs.batArray.slice(-1)[0] + 1 : undefined
     
     let noOfUsedDots = 0;
     let useDot = false;
