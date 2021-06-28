@@ -15,7 +15,8 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
     .addField(bowler.username + " - Bowler", 0, true)
     .setColor(embedColor);
   
-  console.log('ema');
+  let isInnings2;
+  
   try {
     await batsman.send(embed);
   } catch (e) {
@@ -25,7 +26,6 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
     return;
   }
   try {
-    console.log('fma')
     await bowler.send(embed);
   } catch (e) {
     console.log(e);
@@ -33,12 +33,10 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
     message.reply(`Cant send message to ${bowler}`);
     return;
   }
-  console.log('gma')
   
-  let isInnings2;
-  
-  if (!challenge) start(batsman, bowler)
-  else {
+  if (!challenge) {
+    start(batsman, bowler)
+  } else {
     wckts = challenge.wickets
     ovrs = challenge.overs
     post = challenge.post || false
@@ -84,10 +82,9 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
     loopBatCollect();
 
     async function loopBallCollect() {
-      console.log('alpha', bowler)
       if (isInnings2 == 'over') return;
       if (isInnings2 && !target) return;
-      console.log('beta')
+      
       if (remainingBalls === 0) {
         const comment = await commentry('O');
         const embed = new Discord.MessageEmbed()
@@ -123,7 +120,6 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
       
       try {
         let m
-        console.log('gamma')
         if (bowler.CPU) {
           random = Math.floor(Math.random * 7)
           m = { 'content': `${random}` }
@@ -133,7 +129,6 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
             { max: 1, time: 60000, errors: ["time"] }
           )).first()
         }
-        console.log('delta');
         if (isInnings2 == 'over') return;
         if (isInnings2 && !target) return;
         

@@ -17,6 +17,7 @@ module.exports = {
       send: function(i) { console.log(i) },
       id: 'CPU',
     }
+    let type = 'bat'
 
     let challenge = {
       CPU,
@@ -26,6 +27,7 @@ module.exports = {
       innings,
       max,
       post,
+      type
     }
 
     await channel.send(`setted up match for\n Chasing ${target} in ${overs * 6} balls with ${wickets} wickets`)
