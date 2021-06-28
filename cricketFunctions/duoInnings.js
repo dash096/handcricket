@@ -38,8 +38,8 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
   else {
     wckts = challenge.wickets
     ovrs = challenge.overs
-    post = challenge.post
-    max = challenge.max
+    post = challenge.post || false
+    max = challenge.max || 6
     if (challenge.type === 'bat') {
       if (challenge.innings === 1) {
         start(challenge.player, challenge.CPU)
@@ -67,7 +67,7 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
     const ballArray = [0];
 
     const embed = new Discord.MessageEmbed()
-      .setTitle("Cricket Match - First Innings")
+      .setTitle("Cricket Match")
       .addField(batsman.username + " - Batsman", `**Score:**      0\n\n**Wickets Left:**     ${wickets}\n**Balls Left:**     ${remainingBalls}`, true)
       .addField(bowler.username + " - Bowler", target || 0, true)
       .setColor(embedColor);
@@ -81,9 +81,10 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
     loopBatCollect();
 
     async function loopBallCollect() {
+      console.log('alpha', bowler)
       if (isInnings2 == 'over') return;
       if (isInnings2 && !target) return;
-      
+      console.log('beta')
       if (remainingBalls === 0) {
         const comment = await commentry('O');
         const embed = new Discord.MessageEmbed()
@@ -119,7 +120,7 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
       
       try {
         let m
-        
+        console.log('gamma')
         if (bowler.CPU) {
           random = Math.floor(Math.random * 7)
           m = { 'content': `${random}` }
@@ -129,7 +130,7 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
             { max: 1, time: 60000, errors: ["time"] }
           )).first()
         }
-        
+        console.log('delta');
         if (isInnings2 == 'over') return;
         if (isInnings2 && !target) return;
         
