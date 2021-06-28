@@ -1,4 +1,4 @@
-let duoInnings = require('../../cricketFunctions/duoInnings.js')
+const duoInnings = require('../../cricketFunctions/duoInnings.js')
 
 module.exports = {
   name: 'cpu',
