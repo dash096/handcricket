@@ -90,10 +90,15 @@ module.exports = async function(winner, loser, coins, winnerLogs, loserLogs, mes
   }
 }
 
-function changePattern(data, logs) {
+function changePattern(data, scores) {
   let pattern = data.pattern || {}
-
-  for (let i = 0; i < logs; i++) {
+  
+  logs = []
+  for (let i = 0; i < scores.length; i++) {
+    if (i !== 0) logs.push(scores[i] - scores[i-1])
+  }
+  
+  for (let i = 0; i < logs.length; i++) {
     num = logs[i]
     pattern[num] = (pattern[num] || 0) + 1
   }

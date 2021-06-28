@@ -288,6 +288,7 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
           }
         } //Target++
         else if (target && newScore >= target) {
+          batArray.push(newScore);
           isInnings2 = 'over';
           const coins = Math.floor(Math.random() * 345 * (await db.findOne({ _id: batsman.id })).coinMulti);
           await batsman.send("You won! You chased the target!" +  ` You looted ${await getEmoji('coin')} ${coins}`);
