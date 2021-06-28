@@ -16,6 +16,7 @@ module.exports = {
       username: 'CPU',
       send: function(i) { console.log(i) },
       id: 'CPU',
+      bot: true,
     }
     let type = 'bat'
 

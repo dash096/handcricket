@@ -124,7 +124,7 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
       
       try {
         let m
-        if (bowler.CPU) {
+        if (challenge && challenge.batsman ? challenge.batsman.CPU : false) {
           await sleep(3000)
           random = Math.floor(Math.random * 7)
           m = { 'content': `${random}` }
