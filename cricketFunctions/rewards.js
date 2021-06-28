@@ -18,8 +18,8 @@ module.exports = async function(winner, loser, coins, winnerLogs, loserLogs, mes
       _id: loser.id
     });
     
-    const winnerPattern = await changePattern(winnerData, winnerLogs)
-    const loserPattern = await changePattern(loserData, loserLogs)
+    const winnerPattern = await changePattern(winnerData, winnerLogs.batArray)
+    const loserPattern = await changePattern(loserData, loserLogs.batArray)
   
     const random = Math.random();
     const randoXP = Math.random() * 6.9;
