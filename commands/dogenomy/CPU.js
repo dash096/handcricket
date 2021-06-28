@@ -19,10 +19,11 @@ module.exports = {
       max: 6,
       post: false,
       type: 'bat',
-      player: author
+      player: author,
+      message: message,
     }
 
-    await channel.send(`setted up match for\n Chasing ${target} in ${overs * 6} balls with ${wickets} wickets`)
-    await duoInnings(author, challenge.CPU, message, false, 6, challenge.wickets, challenge.overs, challenge)
+    await channel.send(`setted up match for\n Chasing ${challenge.target} in ${challenge.overs * 6} balls with ${challenge.wickets} wickets`)
+    await duoInnings(challenge.player, challenge.CPU, message, false, 6, challenge.wickets, challenge.overs, challenge)
   }
 }
