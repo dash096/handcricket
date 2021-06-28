@@ -3,7 +3,7 @@ const gain = require('../functions/gainExp.js');
 
 module.exports = async function(winner, loser, coins, winnerLogs, loserLogs, message) {
   const { channel } = message;
-  console.log(winnerLogs, loserLogs)
+  
   const wS = winnerLogs.batArray.slice(-1)[0]
   const lB = winnerLogs.ballArray.length
   const lS = loserLogs.batArray.slice(-1)[0]
@@ -17,7 +17,7 @@ module.exports = async function(winner, loser, coins, winnerLogs, loserLogs, mes
   });
   
   const winnerPattern = await changePattern(winnerData, winnerLogs)
-  const loserPattern = await changePattern(loseraData, loserLogs)
+  const loserPattern = await changePattern(loserData, loserLogs)
   
   const random = Math.random();
   const randoXP = Math.random() * 6.9;
