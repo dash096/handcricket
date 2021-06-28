@@ -15,6 +15,7 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
     .addField(bowler.username + " - Bowler", 0, true)
     .setColor(embedColor);
   
+  console.log('ema');
   try {
     await batsman.send(embed);
   } catch (e) {
@@ -24,6 +25,7 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
     return;
   }
   try {
+    console.log('fma')
     await bowler.send(embed);
   } catch (e) {
     console.log(e);
@@ -31,6 +33,7 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
     message.reply(`Cant send message to ${bowler}`);
     return;
   }
+  console.log('gma')
   
   let isInnings2;
   
@@ -71,10 +74,8 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
       .addField(batsman.username + " - Batsman", `**Score:**      0\n\n**Wickets Left:**     ${wickets}\n**Balls Left:**     ${remainingBalls}`, true)
       .addField(bowler.username + " - Bowler", target || 0, true)
       .setColor(embedColor);
-    console.log('fmao')
     batsman.send(embed);
     bowler.send(embed);
-    console.log('ema');
     if (post === true) {
       await channel.send(embed);
     }
