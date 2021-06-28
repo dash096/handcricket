@@ -6,33 +6,23 @@ module.exports = {
   run: async ({ message }) => {
     let { content, channel, author } = message
 
-    let wickets = 2
-    let overs = 8
-    let target = Math.floor(Math.random() * 100)
-    let innings = 2
-    let max = 6
-    let post = false
-    let CPU = {
-      username: 'CPU',
-      send: function(i) { console.log(i) },
-      id: 'CPU',
-      bot: true,
-    }
-    let type = 'bat'
-
     let challenge = {
-      CPU,
-      wickets,
-      overs,
-      target,
-      innings,
-      max,
-      post,
-      type,
+      CPU: {
+        id: 'CPU',
+        username: 'CPU',
+        send: function(i) { console.log(i) },
+      },
+      wickets: 2,
+      overs: 8,
+      target: (Math.floor(Math.random() * 100)),
+      innings: 2,
+      max: 6,
+      post: false,
+      type: 'bat',
       player: author
     }
 
     await channel.send(`setted up match for\n Chasing ${target} in ${overs * 6} balls with ${wickets} wickets`)
-    await duoInnings(author, CPU, message, false, 6, wickets, overs, challenge)
+    await duoInnings(author, challenge.CPU, message, false, 6, challenge.wickets, challenge.overs, challenge)
   }
 }

@@ -41,6 +41,7 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
   if (!challenge) {
     start(batsman, bowler)
   } else {
+    console.log(challenge)
     wckts = challenge.wickets
     ovrs = challenge.overs
     post = challenge.post || false
