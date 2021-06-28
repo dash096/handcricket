@@ -20,6 +20,7 @@ module.exports = {
       post: false,
       type: 'bat',
       player: author,
+      start: false,
       message: message,
     }
 

@@ -115,7 +115,7 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
             bowler.send(`${ovrs} overs over. Second Innings starts!`);
             batsman.send(`${ovrs} overs over. Second Innings starts!`);
             if (post === true) channel.send(`${ovrs} overs over. Second Innings starts!`);
-            if (!challenge) return start(bowler, batsman, batArray[batArray.length - 1] + 1, ballArray.length);
+            if (!challenge || challenge?.start) return start(bowler, batsman, batArray[batArray.length - 1] + 1, ballArray.length);
           }
         }, 1 * 1000);
         return;
@@ -124,8 +124,8 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
       try {
         let m
         if (bowler.id === 'CPU') {
-          await sleep(3000)
-          random = Math.floor(Math.random * 7)
+          await sleep(5000)
+          random = Math.floor(Math.random() * 7)
           m = { 'content': `${random}` }
         } else {
           m = (await bowler.dmChannel.awaitMessages(
@@ -189,7 +189,7 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
         let m
         
         if (batsman.id === 'CPU') {
-          await sleep(3000)
+          await sleep(5000)
           random = Math.floor(Math.random() * 7)
           m = { 'content': `${random}` }
         } else {
@@ -257,7 +257,7 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
               await batsman.send("Wicket! Second Innings starts. The bowler bowled " + ballArray[ballArray.length - 1], embed);
               await bowler.send(`Wicket! Second Innings statts. The batsman hit ${c}${dot(c, bowled, useDot)}`, embed);
               if (post === true) await channel.send(`Wicket! Second Innings starts. He hit ${c}${dot(c, bowled, useDot)}, and was bowled ${ballArray[ballArray.length - 1]}`, embed);
-              return start(bowler, batsman, batArray[batArray.length - 1] + 1, ballArray.length);
+              if (!challenge || challenge?.start) return start(bowler, batsman, batArray[batArray.length - 1] + 1, ballArray.length);
             } else {
               isInnings2 = 'over';
               const coins = Math.floor(Math.random() * 345 * (await db.findOne({ _id: bowler.id })).coinMulti);
