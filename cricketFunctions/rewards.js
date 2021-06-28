@@ -1,8 +1,13 @@
 const db = require('../schemas/player.js');
 const gain = require('../functions/gainExp.js');
 
-module.exports = async function(winner, loser, coins, wS, wB, lS, lB, message) {
+module.exports = async function(winner, loser, coins, winnerLogs, loserLogs, message) {
   const { channel } = message;
+  
+  const wS = winnerLogs.batArray.slice(-1)[0]
+  const lB = winnerLogs.ballArray.length
+  const lS = loserLogs.batArray.slice(-1)[0]
+  const wB = loserLogs.ballArray.length
   
   const winnerData = await db.findOne({
     _id: winner.id
@@ -10,7 +15,10 @@ module.exports = async function(winner, loser, coins, wS, wB, lS, lB, message) {
   const loserData = await db.findOne({
     _id: loser.id
   });
-
+  
+  const winnerPattern = changePattern(winnerLogs, winnerData)
+  const loserPattern = changePattern(loserLogs, loserData)
+  
   const random = Math.random();
   const randoXP = Math.random() * 6.9;
 
@@ -50,7 +58,8 @@ module.exports = async function(winner, loser, coins, wS, wB, lS, lB, message) {
       strikeRate: wSTR,
       highScore: winnerHighScore,
       totalScore: winnerTotalScore,
-      status: false
+      status: false,
+      pattern: winnerPattern,
     }
   };
 
@@ -60,7 +69,8 @@ module.exports = async function(winner, loser, coins, wS, wB, lS, lB, message) {
       strikeRate: lSTR,
       highScore: loserHighScore,
       totalScore: loserTotalScore,
-      status: false
+      status: false,
+      pattern: loserPattern,
     }
   };
 
@@ -75,3 +85,14 @@ module.exports = async function(winner, loser, coins, wS, wB, lS, lB, message) {
   await gain(winnerData, 7, message, winner);
   await gain(loserData, 6, message, loser);
 };
+
+function changePattern(data, logs) {
+  let pattern = data.pattern || {}
+  
+  for (let i = 0; i < logs; i++) {
+    num = logs[i]
+    pattern[num] = (pattern[num] || 0) + 1
+  }
+  
+  return pattern
+}

@@ -63,7 +63,9 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
     }
   }
   
-  async function start(batsman, bowler, target, balls) {
+  async function start(batsman, bowler, oldLogs = {}) {
+    let target = oldLogs.batArray.slice(-1)[0] + 1
+    
     let noOfUsedDots = 0;
     let useDot = false;
     
@@ -109,13 +111,19 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
             batsman.send(`${ovrs} overs over. You lost!`);
             if (post === true) channel.send(`${ovrs} overs over. Bowler won!`);
             changeStatus(batsman, bowler);
-            if (!challenge) return rewards(bowler, batsman, coins, target - 1, balls, batArray.slice(-1)[0], ballArray.length, message);
+            if (!challenge) return rewards(bowler, batsman, coins, {
+              'batArray': batArray,
+              'ballArray': ballArray,
+            }, oldLogs, message);
           } else {
             isInnings2 = true;
             bowler.send(`${ovrs} overs over. Second Innings starts!`);
             batsman.send(`${ovrs} overs over. Second Innings starts!`);
             if (post === true) channel.send(`${ovrs} overs over. Second Innings starts!`);
-            if (!challenge || challenge?.start) return start(bowler, batsman, batArray[batArray.length - 1] + 1, ballArray.length);
+            if (!challenge || challenge?.start) return start(bowler, batsman, {
+              'batArray': batArray,
+              'ballArray': ballArray,
+            });
           }
         }, 1 * 1000);
         return;
@@ -257,14 +265,20 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
               await batsman.send("Wicket! Second Innings starts. The bowler bowled " + ballArray[ballArray.length - 1], embed);
               await bowler.send(`Wicket! Second Innings statts. The batsman hit ${c}${dot(c, bowled, useDot)}`, embed);
               if (post === true) await channel.send(`Wicket! Second Innings starts. He hit ${c}${dot(c, bowled, useDot)}, and was bowled ${ballArray[ballArray.length - 1]}`, embed);
-              if (!challenge || challenge?.start) return start(bowler, batsman, batArray[batArray.length - 1] + 1, ballArray.length);
+              if (!challenge || challenge?.start) return start(bowler, batsman, {
+                'batArray': batArray,
+                'ballArray': ballArray,
+              });
             } else {
               isInnings2 = 'over';
               const coins = Math.floor(Math.random() * 345 * (await db.findOne({ _id: bowler.id })).coinMulti);
               await batsman.send("You lost! The bowler bowled " + ballArray[ballArray.length - 1], embed);
               await bowler.send(`You won! The batsman hit ${c}${dot(c, bowled, useDot)} and looted ${await getEmoji('coin')} ${coins}`, embed);
               if (post === true) await channel.send(`**${bowler.username}** won!!! Wicket! Batsman hit ${c}${dot(c, bowled, useDot)}, and was bowled ${ballArray[ballArray.length - 1]} by **${bowler.username}**`, embed);
-              if (!challenge) return rewards(bowler, batsman, coins, target - 1, balls, batArray.slice(-1)[0], ballArray.length, message);
+              if (!challenge) return rewards(bowler, batsman, coins, {
+                'batArray': batArray,
+                'ballArray': ballArray,
+              }, oldLogs, message);
             }
           } else {
             await batsman.send("Wicket! The bowler bowled " + ballArray[ballArray.length - 1], embed);
@@ -279,7 +293,10 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
           await batsman.send("You won! You chased the target!" +  ` You looted ${await getEmoji('coin')} ${coins}`);
           await bowler.send('You lost! The batsman chased the target');
           if (post === true) await channel.send(`**${batsman.username}** won!!! He chased the target!`);
-          if (!challenge) return rewards(batsman, bowler, coins, batArray.slice(-1)[0], ballArray.length, target - 1, balls, message);
+          if (!challenge) return rewards(batsman, bowler, coins, oldLogs, {
+            'batArray': batArray,
+            'ballArray': ballArray,
+          }, message);
         } //Push
         else {
           useDot = false;

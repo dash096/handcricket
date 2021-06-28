@@ -40,8 +40,8 @@ const player = new mongoose.Schema({
   tossMulti: {
     type: Number, default: 0.5
   },
+  pattern: {},
   bag: {},
-  quests: {},
   decors: {
     type: {},
     default: {
