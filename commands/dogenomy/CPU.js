@@ -27,7 +27,8 @@ module.exports = {
       innings,
       max,
       post,
-      type
+      type,
+      player: author
     }
 
     await channel.send(`setted up match for\n Chasing ${target} in ${overs * 6} balls with ${wickets} wickets`)
