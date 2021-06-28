@@ -78,9 +78,7 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
       .setColor(embedColor);
     batsman.send(embed);
     bowler.send(embed);
-    if (post === true) {
-      await channel.send(embed);
-    }
+    if (post === true) await channel.send(embed);
 
     loopBallCollect();
     loopBatCollect();
@@ -124,7 +122,7 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
       
       try {
         let m
-        if (challenge && challenge.batsman ? challenge.batsman.CPU : false) {
+        if (bowler.id === 'CPU') {
           await sleep(3000)
           random = Math.floor(Math.random * 7)
           m = { 'content': `${random}` }
@@ -189,7 +187,7 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
       try {
         let m
         
-        if (challenge && challenge.batsman ? challenge.batsman.CPU : false) {
+        if (batsman.id === 'CPU') {
           await sleep(3000)
           random = Math.floor(Math.random() * 7)
           m = { 'content': `${random}` }
