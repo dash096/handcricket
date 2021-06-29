@@ -29,7 +29,7 @@ module.exports = {
     }
     challenge.player.data = data
     challenge.player.pattern = data.pattern
-    challenge.player.pattern = Object.entries(challenge.player.pattern).sort(a, b => b[1] - a[1])
+    challenge.player.pattern = Object.entries(challenge.player.pattern).sort((a, b) => b[1] - a[1])
     challenge.player.pattern = map(x => x[0], challenge.player.pattern)
 
     await channel.send(`setted up match for\n Chasing ${challenge.target} in ${challenge.overs * 6} balls with ${challenge.wickets} wickets`)
