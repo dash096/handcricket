@@ -47,7 +47,6 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
   if (!challenge) {
     start(batsman, bowler)
   } else {
-    console.log(challenge)
     wckts = challenge.wickets
     ovrs = challenge.overs
     if (challenge.type === 'bat') {
