@@ -348,12 +348,10 @@ function dot(c, bowled, useDot) {
 
 async function cpuBowl(batsman) {
   pattern = batsman.pattern
-  random = Math.random()
-  let value = random < 0.45 ? pattern[0] :
-              random < 0.65 ? pattern[1] :
-              random < 0.80 ? pattern[2] :
-              random < 0.90 ? pattern[3] :
-              random < 0.95 ? pattern[4] :
-              pattern[5]
-  if (!value) return [3, 4, 6, 1, 5][Math.floor(Math.random() * 5)]
+  return random < 0.45 ? pattern[0] :
+         random < 0.65 ? pattern[1] :
+         random < 0.80 ? pattern[2] :
+         random < 0.90 ? pattern[3] :
+         random < 0.95 ? pattern[4] :
+         pattern[5]
 }
