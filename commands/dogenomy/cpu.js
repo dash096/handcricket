@@ -1,4 +1,5 @@
 const duoInnings = require('../../cricketFunctions/duoInnings.js')
+const db = require('../../schemas/player.js')
 
 module.exports = {
   name: 'cpu',
