@@ -11,7 +11,7 @@ module.exports = {
     let data = await db.findOne({ _id: author.id })
     
     try {
-      let challenge = getChallenge(message, data.challengeProgress || 'classic_0')
+      let challenge = await getChallenge(message, data.challengeProgress || 'classic_0')
       if (!challenge) throw 'completed'
       challenge.player.data = data
       challenge.player.pattern = data.pattern
