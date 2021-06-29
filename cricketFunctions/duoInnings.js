@@ -6,8 +6,14 @@ const embedColor = require('../functions/getEmbedColor.js');
 const commentry = require('./getCommentry.js');
 const rewards = require('./rewards.js');
 
-module.exports = async function(batsman, bowler, message, post, max = 6, wckts, ovrs, challenge) {
+module.exports = async function(batsman, bowler, message, flags, challenge) {
   const { channel, author, mentions, content } = message;
+  
+  // flags
+  let post = flags.post
+  let max = flags.max
+  let wckts = flags.wickets
+  let ovrs = flags.overs
   
   function sleep(ms) {
     return new Promise(r => setTimeout(r, ms))
@@ -44,21 +50,19 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
     console.log(challenge)
     wckts = challenge.wickets
     ovrs = challenge.overs
-    post = challenge.post || false
-    max = challenge.max || 6
     if (challenge.type === 'bat') {
       if (challenge.innings === 1) {
         start(challenge.player, challenge.CPU)
       } else if (challenge.innings === 2)  {
         isInnings2 = true
-        start(challenge.player, challenge.CPU, challenge.oldLogs, 10)
+        start(challenge.player, challenge.CPU, challenge.oldLogs)
       }
     } else if (challenge.type === 'bowl') {
       if (challenge.innings === 1) {
         start(challenge.CPU, challenge.player)
       } else if (challenge.innings === 2)  {
         isInnings2 = true
-        start(challenge.CPU, challenge.player, challenge.oldLogs, 10)
+        start(challenge.CPU, challenge.player, challenge.oldLogs)
       }
     }
   }
@@ -121,7 +125,7 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
             bowler.send(`${ovrs} overs over. Second Innings starts!`);
             batsman.send(`${ovrs} overs over. Second Innings starts!`);
             if (post === true) channel.send(`${ovrs} overs over. Second Innings starts!`);
-            if (!challenge || challenge?.start) return start(bowler, batsman, {
+            if (!challenge || challenge?.doubleInnings) return start(bowler, batsman, {
               'batArray': batArray,
               'ballArray': ballArray,
             });
@@ -266,7 +270,7 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
               await batsman.send("Wicket! Second Innings starts. The bowler bowled " + ballArray[ballArray.length - 1], embed);
               await bowler.send(`Wicket! Second Innings statts. The batsman hit ${c}${dot(c, bowled, useDot)}`, embed);
               if (post === true) await channel.send(`Wicket! Second Innings starts. He hit ${c}${dot(c, bowled, useDot)}, and was bowled ${ballArray[ballArray.length - 1]}`, embed);
-              if (!challenge || challenge?.start) return start(bowler, batsman, {
+              if (!challenge || challenge?.doubleInnings) return start(bowler, batsman, {
                 'batArray': batArray,
                 'ballArray': ballArray,
               });

@@ -1,5 +1,6 @@
 const duoInnings = require('../../cricketFunctions/duoInnings.js')
 const db = require('../../schemas/player.js')
+const getChallenge = require('../../cricketFunctions/getChallenges.js')
 
 module.exports = {
   name: 'cpu',
@@ -9,25 +10,8 @@ module.exports = {
 
     let data = await db.findOne({ _id: author.id })
     
-    let challenge = {
-      CPU: {
-        id: 'CPU',
-        username: 'CPU',
-        send: function(i) { console.log(i) },
-      },
-      wickets: 2,
-      overs: 8,
-      target: 109,
-      oldLogs: { ballArray: [0, 1], batArray: [0, 109] },
-      innings: 2,
-      max: 6,
-      post: false,
-      type: 'bat',
-      player: author,
-      start: false,
-      message: message,
-      currentScore: 69,
-    }
+    let challenge = getChallenge(message, data.challenge.progress || 'classic_1')
+    
     challenge.player.data = data
     challenge.player.pattern = data.pattern
     challenge.player.pattern = Object.entries(challenge.player.pattern).sort((a, b) => b[1] - a[1])

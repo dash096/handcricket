@@ -92,7 +92,7 @@ async function start(message, batsman, bowler, flags) {
   await channel.send(`${batsman} and ${bowler}, get to your dms to play!`);
   await changeStatus(batsman, true);
   await changeStatus(bowler, true);
-  startInnings(batsman, bowler, message, ...Object.values(flags));
+  startInnings(batsman, bowler, message, flags);
 }
 
 async function changeStatus(a, boolean) {
