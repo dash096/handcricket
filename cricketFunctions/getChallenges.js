@@ -55,8 +55,8 @@ let challenges = {
 
 module.exports = (message, progress) => {
   let mode = progress.split('_')[0]
-  let progress = progress.split('_')[1]
-  let challenge = challenges[mode][progress]
+  let num = progress.split('_')[1]
+  let challenge = challenges[mode][num]
   
   challenge.CPU = {
     id: 'CPU',
