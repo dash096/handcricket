@@ -15,12 +15,16 @@ module.exports = async function(winner, loser, coins, winnerLogs, loserLogs, mes
       bag.lootbox = (bag.lootbox || 0) + 1
       let challengeProgress = challenge.name
       
+      let pattern = await changePattern(data, winnerLogs.batArray)
+      
       await db.findOneAndUpdate({ _id: data.id }, {
         $set: {
           bag: bag,
           challengeProgress: challengeProgress,
+          pattern: pattern,
         }
       })
+      
       return
     }
     
