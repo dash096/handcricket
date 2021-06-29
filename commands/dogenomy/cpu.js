@@ -12,6 +12,7 @@ module.exports = {
     
     try {
       let challenge = getChallenge(message, data.challengeProgress || 'classic_0')
+      if (!challenge) throw 'completed'
       challenge.player.data = data
       challenge.player.pattern = data.pattern
       challenge.player.pattern = Object.entries(challenge.player.pattern).sort((a, b) => b[1] - a[1])
