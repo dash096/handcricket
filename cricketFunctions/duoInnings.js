@@ -248,7 +248,7 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
         } //Wicket
         if (bowled === parseInt(c) && dot(c, ballArray[ballArray.length - 1], useDot) == false) {
           wickets -= 1;
-          batArray.push(batArray.splice(-1)[0]);
+          batArray.push(batArray.slice(-1)[0]);
           
           const comment = await commentry(bowled, 'W');
           const embed = new Discord.MessageEmbed()
