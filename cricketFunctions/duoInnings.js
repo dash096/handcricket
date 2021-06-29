@@ -71,7 +71,8 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
     
     let wickets = wckts;
     let remainingBalls = ovrs * 6;
-    const batArray = [0];
+    
+    const batArray = [(challenge || {}).currentScore || 0];
     const ballArray = [0];
 
     const embed = new Discord.MessageEmbed()
@@ -133,7 +134,7 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
         let m
         if (bowler.id === 'CPU') {
           await sleep(5000)
-          random = Math.floor(Math.random() * 7)
+          random = await cpuBowl(challenge.player)
           m = { 'content': `${random}` }
         } else {
           m = (await bowler.dmChannel.awaitMessages(
@@ -343,4 +344,16 @@ function dot(c, bowled, useDot) {
   } else {
     return '';
   }
+}
+
+async function cpuBowl(batsman) {
+  pattern = batsman.pattern
+  random = Math.random()
+  return random < 0.45 ? pattern[0] :
+         random < 0.65 ? pattern[1] :
+         random < 0.80 ? pattern[2] :
+         random < 0.90 ? pattern[3] :
+         random < 0.95 ? pattern[4] :
+         pattern[5]
+         
 }

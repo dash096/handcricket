@@ -40,7 +40,12 @@ const player = new mongoose.Schema({
   tossMulti: {
     type: Number, default: 0.5
   },
-  pattern: {},
+  pattern: {
+    type: {},
+    default: {
+      1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0
+    }
+  },
   bag: {},
   decors: {
     type: {},
