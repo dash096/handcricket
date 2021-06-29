@@ -56,6 +56,7 @@ let challenges = {
 module.exports = (message, progress) => {
   let mode = progress.split('_')[0]
   let num = progress.split('_')[1]
+  console.log(mode, num)
   let challenge = challenges[mode][num + 1]
   if (!challenge) throw 'Unknown Challenge';
   
