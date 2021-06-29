@@ -107,7 +107,7 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
             isInnings2 = 'over';
             const coins = Math.floor(Math.random() * 345 * ((await db.findOne({ _id: bowler.id }) || {}).coinMulti || 0.2));
             bowler.send(`${ovrs} overs over. You won and looted ${await getEmoji('coin')} ${coins}!`);
-            batsman.send(`${ovrs} overs over. You lost!`);
+            batsman.send(`${ovrs} overs over. You lost`);
             if (post === true) channel.send(`${ovrs} overs over. Bowler won!`);
             changeStatus(batsman, bowler);
             return rewards(bowler, batsman, coins, oldLogs, {
