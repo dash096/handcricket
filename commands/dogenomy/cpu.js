@@ -6,6 +6,8 @@ module.exports = {
   run: async ({ message }) => {
     let { content, channel, author } = message
 
+    let data = await db.findOne({ _id: author.id })
+    
     let challenge = {
       CPU: {
         id: 'CPU',
@@ -24,6 +26,8 @@ module.exports = {
       message: message,
       currentScore: 69,
     }
+    challenge.player.data = data
+    challenge.player.pattern = data.pattern
     challenge.player.pattern = Object.entries(challenge.player.pattern).sort(a, b => b[1] - a[1])
     challenge.player.pattern = map(x => x[0], challenge.player.pattern)
 

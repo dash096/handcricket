@@ -355,5 +355,4 @@ async function cpuBowl(batsman) {
          random < 0.90 ? pattern[3] :
          random < 0.95 ? pattern[4] :
          pattern[5]
-         
 }
