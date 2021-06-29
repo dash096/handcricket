@@ -19,31 +19,6 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
     return new Promise(r => setTimeout(r, ms))
   }
   
-  const embed = new Discord.MessageEmbed()
-    .setTitle("Cricket Match")
-    .addField(batsman.username + " - Batsman", `**Score:**       ${(challenge || {}).currentScore || 0}\n\n**Wickets Left:**     ${wckts}\n**Balls Left:**     ${ovrs * 6}`, true)
-    .addField(bowler.username + " - Bowler", 0, true)
-    .setColor(embedColor);
-  
-  let isInnings2;
-  
-  try {
-    await batsman.send(embed);
-  } catch (e) {
-    console.log(e);
-    changeStatus(batsman, bowler);
-    message.reply(`Cant send message to ${batsman}`);
-    return;
-  }
-  try {
-    await bowler.send(embed);
-  } catch (e) {
-    console.log(e);
-    changeStatus(batsman, bowler);
-    message.reply(`Cant send message to ${bowler}`);
-    return;
-  }
-  
   if (!challenge) {
     start(batsman, bowler)
   } else {
@@ -83,8 +58,26 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
       .addField(batsman.username + " - Batsman", `**Score:**      0\n\n**Wickets Left:**     ${wickets}\n**Balls Left:**     ${remainingBalls}`, true)
       .addField(bowler.username + " - Bowler", target || 0, true)
       .setColor(embedColor);
-    batsman.send(embed);
-    bowler.send(embed);
+    if (challenge) embed.setFooter(challenge.info)
+    
+    try {
+      batsman.send(embed);
+    } catch (e) {
+      console.log(e);
+      isInnings2 = 'over'
+      changeStatus(batsman, bowler);
+      message.reply(`Cant send message to ${batsman}`);
+      return;
+    }
+    try {
+      bowler.send(embed);
+    } catch (e) {
+      console.log(e);
+      isInnings2 = 'over'
+      changeStatus(batsman, bowler);
+      message.reply(`Cant send message to ${bowler}`);
+      return;
+    }
     if (post === true) await channel.send(embed);
 
     loopBallCollect();
@@ -102,8 +95,9 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
           .addField(batsman.username + " - Batsman", `**Score:**      ${batArray.slice(-1)[0]}\n\n**Wickets Left:**     ${wickets}\n**Balls Left:**     ${remainingBalls}`, true)
           .addField(bowler.username + " - Bowler", target || 0, true)
           .setColor(embedColor);
+        if (challenge) embed.setFooter(challenge.info)
         
-        let interval = setInterval(() => {
+        let interval = setInterval(async () => {
           if (batArray.length !== ballArray.length) {
             return;
           }
@@ -111,7 +105,8 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
           clearInterval(interval);
           if (isInnings2) {
             isInnings2 = 'over';
-            bowler.send(`${ovrs} overs over. You won!`);
+            const coins = Math.floor(Math.random() * 345 * ((await db.findOne({ _id: bowler.id }) || {}).coinMulti || 0.2));
+            bowler.send(`${ovrs} overs over. You won and looted ${await getEmoji('coin')} ${coins}!`);
             batsman.send(`${ovrs} overs over. You lost!`);
             if (post === true) channel.send(`${ovrs} overs over. Bowler won!`);
             changeStatus(batsman, bowler);
@@ -262,6 +257,7 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
             .addField(batsman.username + " - Batsman", `**Score:**      ${newScore}\n\n**Wickets Left:**     ${wickets}\n**Balls Left:**     ${remainingBalls}`, true)
             .addField(bowler.username + " - Bowler", target || 0, true)
             .setColor(embedColor);
+          if (challenge) embed.setFooter(challenge.info)
 
           if (wickets === 0) {
             if (!target) {
@@ -275,7 +271,7 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
               });
             } else {
               isInnings2 = 'over';
-              const coins = Math.floor(Math.random() * 345 * (await db.findOne({ _id: bowler.id })).coinMulti);
+              const coins = Math.floor(Math.random() * 345 * ((await db.findOne({ _id: bowler.id }) || {}).coinMulti || 0.2));
               await batsman.send("You lost! The bowler bowled " + ballArray[ballArray.length - 1], embed);
               await bowler.send(`You won! The batsman hit ${c}${dot(c, bowled, useDot)} and looted ${await getEmoji('coin')} ${coins}`, embed);
               if (post === true) await channel.send(`**${bowler.username}** won!!! Wicket! Batsman hit ${c}${dot(c, bowled, useDot)}, and was bowled ${ballArray[ballArray.length - 1]} by **${bowler.username}**`, embed);
@@ -286,7 +282,7 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
             }
           } else {
             await batsman.send("Wicket! The bowler bowled " + ballArray[ballArray.length - 1], embed);
-            await bowler.send(`Wicket! The batsman hit ${c}${dot(c, bowled, useDot)}}`, embed);
+            await bowler.send(`Wicket! The batsman hit ${c}${dot(c, bowled, useDot)}`, embed);
             if (post === true) await channel.send(`Wicket! Batsman hit ${c}${dot(c, bowled, useDot)}, and was bowled ${ballArray[ballArray.length - 1]}`, embed);
             return loopBatCollect();
           }
@@ -294,7 +290,7 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
         else if (target && newScore >= target) {
           batArray.push(newScore);
           isInnings2 = 'over';
-          const coins = Math.floor(Math.random() * 345 * (await db.findOne({ _id: batsman.id })).coinMulti);
+          const coins = Math.floor(Math.random() * 345 * ((await db.findOne({ _id: batsman.id }) || {}).coinMulti || 0.2));
           await batsman.send("You won! You chased the target!" +  ` You looted ${await getEmoji('coin')} ${coins}`);
           await bowler.send('You lost! The batsman chased the target');
           if (post === true) await channel.send(`**${batsman.username}** won!!! He chased the target!`);
@@ -314,6 +310,7 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
             .addField(batsman.username + " - Batsman", `**Score:**      ${newScore}\n\n**Wickets Left:**     ${wickets}\n**Balls Left:**     ${remainingBalls}`, true)
             .addField(bowler.username + " - Bowler", target || 0, true)
             .setColor(embedColor);
+          if (challenge) embed.setFooter(challenge.info)
 
           await batsman.send(`You hit ${c}${dot(c, bowled, useDot)} and you were bowled ${bowled}, **Scoreboard**`, { embed });
           await bowler.send(`Batsman hit ${c}${dot(c, bowled, useDot)}, **Scoreboard**`, { embed });

@@ -1,6 +1,7 @@
 let challenges = {
   'classic': {
     1: {
+      info: 'Score 50 runs in 4 overs with 2 wickets.',
       innings: 2,
       type: 'bat',
       wickets: 2,
@@ -10,6 +11,7 @@ let challenges = {
       doubleInnings: false,
     },
     2: {
+      info: 'Win before the bot chases this target.',
       innings: 2,
       type: 'bowl',
       wickets: 1,
@@ -19,6 +21,7 @@ let challenges = {
       doubleInnings: false,
     },
     3: {
+      info: 'Chase this target.',
       innings: 2,
       type: 'bat',
       wickets: 1,
@@ -28,6 +31,7 @@ let challenges = {
       doubleInnings: false,
     },
     4: {
+      info: 'Take a wicket in 12 balls.',
       innings: 2,
       type: 'bowl',
       wickets: 1,
@@ -37,11 +41,7 @@ let challenges = {
       doubleInnings: false,
     },
     5: {
-      CPU: {
-        id: 'CPU',
-        username: 'CPU',
-        send: function(i) { console.log(i) },
-      },
+      info: 'Win this match.',
       innings: 1,
       type: 'bat',
       wickets: 1,
