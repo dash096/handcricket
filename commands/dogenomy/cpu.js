@@ -18,6 +18,6 @@ module.exports = {
     challenge.player.pattern = challenge.player.pattern.map(x => x[0])
 
     await channel.send(`setted up match for\n Chasing ${challenge.target} in ${challenge.overs * 6} balls with ${challenge.wickets} wickets`)
-    await duoInnings(challenge.player, challenge.CPU, message, false, 6, challenge.wickets, challenge.overs, challenge)
+    await duoInnings(challenge.player, challenge.CPU, message, { max: 6, post: false }, challenge)
   }
 }

@@ -10,10 +10,10 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
   const { channel, author, mentions, content } = message;
   
   // flags
-  let post = flags.post
-  let max = flags.max
-  let wckts = flags.wickets
-  let ovrs = flags.overs
+  let post = flags.post || false
+  let max = flags.max || 6
+  let wckts = flags.wickets || 1
+  let ovrs = flags.overs || 5
   
   function sleep(ms) {
     return new Promise(r => setTimeout(r, ms))
