@@ -1,9 +1,28 @@
 const db = require('../schemas/player.js');
 const gain = require('../functions/gainExp.js');
+const getEmoji = require('../functions/getEmoji.js')
 
-module.exports = async function(winner, loser, coins, winnerLogs, loserLogs, message) {
+module.exports = async function(winner, loser, coins, winnerLogs, loserLogs, message, challenge) {
   try {
     const { channel } = message;
+    
+    if (challenge) {
+      if (winner.id === 'CPU') return await loser.send('You lost the challenge')
+      else await winner.send(`You won the challenge and earned a ${await getEmoji('lootbox')} lootbox!`)
+      
+      let data = await db.findOne({ _id: winner.id })
+      let bag = data.bag || {}
+      bag.lootbox = (bag.lootbox || 0) + 1
+      let challengeProgress = challenge.name
+      
+      await db.findOneAndUpdate({ _id: data.id }, {
+        $set: {
+          bag: bag,
+          challengeProgress: challengeProgress,
+        }
+      })
+      return
+    }
     
     const wS = winnerLogs.batArray.slice(-1)[0]
     const lB = winnerLogs.ballArray.length

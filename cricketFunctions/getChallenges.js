@@ -56,13 +56,15 @@ let challenges = {
 module.exports = (message, progress) => {
   let mode = progress.split('_')[0]
   let num = progress.split('_')[1]
-  let challenge = challenges[mode][num]
+  let challenge = challenges[mode][num + 1]
+  if (!challenge) throw 'Unknown Challenge';
   
   challenge.CPU = {
     id: 'CPU',
     username: 'CPU',
     send: function(i) { console.log(i) },
   }
+  challenge.name = `${mode}_${num}`
   challenge.player = message.author
   challenge.message = message
   
