@@ -18,6 +18,7 @@ module.exports = {
       wickets: 2,
       overs: 8,
       target: 109,
+      oldLogs: { ballArray: [0, 1], batArray: [0, 109] },
       innings: 2,
       max: 6,
       post: false,

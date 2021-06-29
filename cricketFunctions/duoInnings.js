@@ -15,7 +15,7 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
   
   const embed = new Discord.MessageEmbed()
     .setTitle("Cricket Match")
-    .addField(batsman.username + " - Batsman", `**Score:**       0\n\n**Wickets Left:**     ${wckts}\n**Balls Left:**     ${ovrs * 6}`, true)
+    .addField(batsman.username + " - Batsman", `**Score:**       ${(challenge || {}).currentScore || 0}\n\n**Wickets Left:**     ${wckts}\n**Balls Left:**     ${ovrs * 6}`, true)
     .addField(bowler.username + " - Bowler", 0, true)
     .setColor(embedColor);
   
@@ -51,14 +51,14 @@ module.exports = async function(batsman, bowler, message, post, max = 6, wckts, 
         start(challenge.player, challenge.CPU)
       } else if (challenge.innings === 2)  {
         isInnings2 = true
-        start(challenge.player, challenge.CPU, challenge.target, 10)
+        start(challenge.player, challenge.CPU, challenge.oldLogs, 10)
       }
     } else if (challenge.type === 'bowl') {
       if (challenge.innings === 1) {
         start(challenge.CPU, challenge.player)
       } else if (challenge.innings === 2)  {
         isInnings2 = true
-        start(challenge.CPU, challenge.player, challenge.target, 10)
+        start(challenge.CPU, challenge.player, challenge.oldLogs, 10)
       }
     }
   }
