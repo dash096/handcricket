@@ -69,5 +69,6 @@ module.exports = (message, progress) => {
   challenge.player = message.author
   challenge.message = message
   
+  print(challenge, challenge.player.dmChannel)
   return challenge
 }
