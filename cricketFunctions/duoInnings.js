@@ -137,7 +137,7 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
         let m
         if (bowler.id === 'CPU') {
           await sleep(5000)
-          random = await cpuBowl(challenge.player)
+          let random = await cpuBowl(challenge.player)
           m = { 'content': `${random}` }
         } else {
           m = (await bowler.dmChannel.awaitMessages(
@@ -202,7 +202,7 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
         
         if (batsman.id === 'CPU') {
           await sleep(5000)
-          random = Math.floor(Math.random() * 7)
+          let random = Math.floor(Math.random() * 7)
           m = { 'content': `${random}` }
         } else {
           m = (await batsman.dmChannel.awaitMessages(
