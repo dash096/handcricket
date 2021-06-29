@@ -10,7 +10,7 @@ module.exports = {
 
     let data = await db.findOne({ _id: author.id })
     
-    let challenge = getChallenge(message, data.challenge.progress || 'classic_1')
+    let challenge = getChallenge(message, (data.challenge || {}).progress || 'classic_1')
     
     challenge.player.data = data
     challenge.player.pattern = data.pattern
