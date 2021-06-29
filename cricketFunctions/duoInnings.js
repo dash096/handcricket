@@ -352,7 +352,9 @@ async function cpuBowl(batsman, arr) {
   
   if (arr.slice(-2).every((v, i, a) => v === a[0])) {
     let random = Math.random()
-    return random < 0.50 ? arr.slice(-1)[0] :
+    let spamNum = arr.slice(-1)[0]
+    return random < 0.50 ? spamNum :
+           spamNum - 1 < 1 ? spamNum - 1 :
            pattern[0]
   } 
   
