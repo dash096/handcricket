@@ -10,8 +10,9 @@ module.exports = {
 
     let data = await db.findOne({ _id: author.id })
     
+    let challenge
     try {
-      let challenge = getChallenge(message, data.challengeProgress || 'classic_0')
+      challenge = getChallenge(message, data.challengeProgress || 'classic_0')
     } catch(e) {
       await message.reply('Oof, You crossed the Classic mode already, Next mode is **Coming soon!**')
     }
