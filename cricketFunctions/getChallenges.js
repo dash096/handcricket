@@ -63,12 +63,11 @@ module.exports = (message, progress) => {
   challenge.CPU = {
     id: 'CPU',
     username: 'CPU',
-    send: function(i) { console.log(i) },
+    send: function(i) { console.log('a dm,', i.toString().slice(0, 10), '...') },
   }
   challenge.name = `${mode}_${num}`
   challenge.player = message.author
   challenge.message = message
   
-  console.log(challenge, challenge.player.dmChannel)
   return challenge
 }
