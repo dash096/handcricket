@@ -349,17 +349,15 @@ async function cpuBowl(batsman, arr) {
   pattern = batsman.pattern
   
   if (arr.length > 2) {
-    arr.shift()
-    arr = arr.slice(-3).map((v, i, a) => v - (a[i - 1] || 0)).slice(-3)
-    
-    console.log(arr)
+    arr = arr.slice(-4).map((v, i, a) => v - (a[i - 1] || 0)).slice(-3)
+    arr = arr.slice(-3)
     
     if (arr.slice(-2).every((v, i, a) => v === a[0])) {
       if (arr.every((v, i, a) => v === a[0] && parseInt(v))) { 
         return arr.slice(-1)[0]
       } else {
         let spamNum = arr.slice(-1)[0]
-        return Math.random() < 0.75 ? spamNum :
+        return Math.random() < 0.65 ? spamNum :
                spamNum !== 1 ? spamNum - 1 :
                pattern[0]
       }
