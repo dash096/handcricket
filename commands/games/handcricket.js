@@ -38,7 +38,7 @@ module.exports = {
         executeTeamMatch(message, client);
       } //Solo Map
       if (args[0] == "map") {
-        let progress = userData.challengeProgress.split('_')
+        let progress = (userData.challengeProgress || 'classic_0').split('_')
         let mode = progress[0]
         let num = progress[1]
         
