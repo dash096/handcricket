@@ -6,6 +6,7 @@ const executeTeamMatch = require("../../cricketFunctions/teamMatch.js");
 const executeDuoMatch = require("../../cricketFunctions/duoMatch.js");
 const duoInnings = require('../../cricketFunctions/duoInnings.js')
 const getChallenge = require('../../cricketFunctions/getChallenges.js')
+const ServerID = process.env.SERVERID
 
 module.exports = {
   name: "handcricket",
@@ -52,6 +53,10 @@ module.exports = {
         await message.reply({ embed: embed })
       } //Solo Match
       else if (args[0] == 'solo') {
+        if (message.guild.id === ServerID) {
+          return await message.reply('Beta feature, Challenges only available in Official Server.')
+        }
+        
         try {
           let challenge = await getChallenge(message, userData.challengeProgress || 'classic_0')
           if (!challenge) throw 'coming soon'
