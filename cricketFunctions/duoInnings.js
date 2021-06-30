@@ -149,9 +149,10 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
         if (c == 'end' || c == 'e.hc end' || c == 'e.hc x') {
           isInnings2 = 'over';
           changeStatus(batsman, bowler);
-          batsman.send(`**${bowler.username}** forfeited`);
-          bowler.send(`You forfeited`);
-          if (post === true) channel.send(`${bowler.tag} forfeited..`);
+          let text = `**${bowler.username}** forfeited`
+          batsman.send(text);
+          bowler.send(text);
+          if (post === true) channel.send(text);
           return;
         } //Communication
         else if (isNaN(c)) {
@@ -217,9 +218,10 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
         if (c == 'end' || c =='e.hc end' || c == 'e.hc x') {
           isInnings2 = 'over';
           changeStatus(batsman, bowler);
-          batsman.send(`**${batsman.username}(You)** forfeited`);
-          bowler.send(`**${batsman.username}** forfeited`);
-          if (post == true) channel.send(`${batsman.tag} forfeited..`);
+          let text = `**${batsman.username}** forfeited`
+          batsman.send(text);
+          bowler.send(text);
+          if (post == true) channel.send(text);
           return;
         } //Communication
         else if (isNaN(c)) {
