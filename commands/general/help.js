@@ -162,9 +162,9 @@ function getCommands() {
     for(const file of files) {
       const command = require(`../${folder}/${file}`);
       if(folder.toLowerCase() == 'games') {
-        games += `**${command.name}** - \`${command.syntax}\`\n ${command.description}\n\n`;
+        games += `**${command.name}** - \`${command.syntax}\`\n ${command.description} ${command.flags?command.flags:''}\n\n`;
       } else if (folder.toLowerCase() == 'general') {
-        general += `**${command.name}** - \`${command.syntax}\`\n ${command.description} ${command.flags?command.flags:''}\n\n`;
+        general += `**${command.name}** - \`${command.syntax}\`\n ${command.description}\n\n`;
       } else if (folder.toLowerCase() == 'dogenomy') {
         dogenomy += `**${command.name}** - \`${command.syntax}\`\n ${command.description}\n\n`;
       } else if (folder.toLowerCase() == 'minigames') {
