@@ -351,7 +351,12 @@ function dot(c, bowled, useDot) {
 async function cpuBowl(batsman, arr) {
   pattern = batsman.pattern
   
+  console.log(arr, arr.slice(-2).every((v, i, a) => v === a[0]), arr.slice(-3).every((v, i, a) => v === a[0]))
+  
   if (arr.length >= 2 && arr.slice(-2).every((v, i, a) => v === a[0])) {
+    if (arr.slice(-3).every((v, i, a) => v === a[0])) {
+      return arr.slice(-1)[0]
+    }
     let spamNum = arr.slice(-1)[0]
     return Math.random() < 0.75 ? spamNum :
            spamNum !== 1 ? spamNum - 1 :
