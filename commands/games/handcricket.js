@@ -39,7 +39,7 @@ module.exports = {
       if (args[0] == "team") {
         executeTeamMatch(message, client);
       } //Solo Map
-      if (args[0] == "map") {
+      else if (args[0] == "map") {
         let progress = (userData.challengeProgress || 'classic_0').split('_')
         let mode = progress[0]
         let num = progress[1]
@@ -51,7 +51,7 @@ module.exports = {
             .setFooter(`You have made your way to "${num}"\n Use the command "e.hc solo" to the next adventure.`)
         await message.reply({ embed: embed })
       } //Solo Match
-      if (args[0] == 'solo') {
+      else if (args[0] == 'solo') {
         try {
           let challenge = await getChallenge(message, userData.challengeProgress || 'classic_0')
           if (!challenge) throw 'coming soon'
