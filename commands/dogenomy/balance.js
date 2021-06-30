@@ -8,7 +8,7 @@ module.exports = {
   aliases: ['bal', 'cash', 'wallet'],
   description: 'Shows balance of a user.',
   category: 'Dogenomy',
-  syntax: 'e.balance @user',
+  syntax: 'e.balance [@user/userID]',
   cooldown: 5,
   run: async ({message, args, client}) => {
     const { content, author, channel, mentions } = message;

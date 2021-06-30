@@ -10,7 +10,7 @@ module.exports = {
   aliases: ['decors', 'pack'],
   description: 'Shows your backpack',
   category: 'Dogenomy',
-  syntax: 'e.bag',
+  syntax: 'e.bag [@user/userID]',
   cooldown: 5,
   run: async ({message, args, client}) => {
     const { content, author, channel, mentions } = message;

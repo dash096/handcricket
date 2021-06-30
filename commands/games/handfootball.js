@@ -9,7 +9,8 @@ module.exports = {
   aliases: ["hf", "football", "soccer"],
   description: "Play handfootball!",
   category: "Games",
-  syntax: "e.handfootball @user --post (to post progress in channel)",
+  syntax: "e.handfootball <@user/userID> --post [flags]",
+  flags: "`--post`: to post progress in channel.",
   status: true,
   cooldown: 10,
   run: async ({ message, args, client, prefix }) => {
