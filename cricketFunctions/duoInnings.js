@@ -45,7 +45,6 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
     let target = oldLogs ? oldLogs.batArray.slice(-1)[0] + 1 : undefined
     
     let noOfUsedDots = 0;
-    let useDot = false;
     
     let wickets = wckts;
     let remainingBalls = ovrs * 6;
@@ -244,11 +243,10 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
             batsman.send('Only 3 dots can be used in a match and you are left with 0!');
             return loopBatCollect();
           } else {
-            useDot = true;
             noOfUsedDots += 1;
           }
         } //Wicket
-        if (bowled === parseInt(c) && dot(c, ballArray[ballArray.length - 1], useDot) == false) {
+        if (bowled === parseInt(c)) {
           wickets -= 1;
           batArray.push(batArray.slice(-1)[0]);
           
@@ -265,8 +263,8 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
             if (!target) {
               isInnings2 = true;
               await batsman.send("Wicket! Second Innings starts. The bowler bowled " + ballArray[ballArray.length - 1], embed);
-              await bowler.send(`Wicket! Second Innings statts. The batsman hit ${c}${dot(c, bowled, useDot)}`, embed);
-              if (post === true) await channel.send(`Wicket! Second Innings starts. He hit ${c}${dot(c, bowled, useDot)}, and was bowled ${ballArray[ballArray.length - 1]}`, embed);
+              await bowler.send(`Wicket! Second Innings statts. The batsman hit ${c}${dot(c, bowled)}`, embed);
+              if (post === true) await channel.send(`Wicket! Second Innings starts. He hit ${c}${dot(c, bowled)}, and was bowled ${ballArray[ballArray.length - 1]}`, embed);
               if (!challenge || challenge?.doubleInnings) return start(bowler, batsman, {
                 'batArray': batArray,
                 'ballArray': ballArray,
@@ -275,8 +273,8 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
               isInnings2 = 'over';
               const coins = Math.floor(Math.random() * 345 * ((await db.findOne({ _id: bowler.id }) || {}).coinMulti || 0.2));
               await batsman.send("You lost! The bowler bowled " + ballArray[ballArray.length - 1], embed);
-              await bowler.send(`You won! The batsman hit ${c}${dot(c, bowled, useDot)} and looted ${await getEmoji('coin')} ${coins}`, embed);
-              if (post === true) await channel.send(`**${bowler.username}** won!!! Wicket! Batsman hit ${c}${dot(c, bowled, useDot)}, and was bowled ${ballArray[ballArray.length - 1]} by **${bowler.username}**`, embed);
+              await bowler.send(`You won! The batsman hit ${c}${dot(c, bowled)} and looted ${await getEmoji('coin')} ${coins}`, embed);
+              if (post === true) await channel.send(`**${bowler.username}** won!!! Wicket! Batsman hit ${c}${dot(c, bowled)}, and was bowled ${ballArray[ballArray.length - 1]} by **${bowler.username}**`, embed);
               return rewards(bowler, batsman, coins, oldLogs, {
                 'batArray': batArray,
                 'ballArray': ballArray,
@@ -284,8 +282,8 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
             }
           } else {
             await batsman.send("Wicket! The bowler bowled " + ballArray[ballArray.length - 1], embed);
-            await bowler.send(`Wicket! The batsman hit ${c}${dot(c, bowled, useDot)}`, embed);
-            if (post === true) await channel.send(`Wicket! Batsman hit ${c}${dot(c, bowled, useDot)}, and was bowled ${ballArray[ballArray.length - 1]}`, embed);
+            await bowler.send(`Wicket! The batsman hit ${c}${dot(c, bowled)}`, embed);
+            if (post === true) await channel.send(`Wicket! Batsman hit ${c}${dot(c, bowled)}, and was bowled ${ballArray[ballArray.length - 1]}`, embed);
             return loopBatCollect();
           }
         } //Target++
@@ -302,7 +300,6 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
           }, oldLogs, message, challenge);
         } //Push
         else {
-          useDot = false;
           batArray.push(newScore);
          
           const comment = await commentry(bowled, parseInt(c));
@@ -314,9 +311,9 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
             .setColor(embedColor);
           if (challenge) embed.setFooter(challenge.info)
 
-          await batsman.send(`You hit ${c}${dot(c, bowled, useDot)} and you were bowled ${bowled}, **Scoreboard**`, { embed });
-          await bowler.send(`Batsman hit ${c}${dot(c, bowled, useDot)}, **Scoreboard**`, { embed });
-          if (post === true) await channel.send(`**${batsman.username}** hit ${c}${dot(c, bowled, useDot)}, and was bowled ${bowled} by **${bowler.username}**`, { embed });
+          await batsman.send(`You hit ${c}${dot(c, bowled)} and you were bowled ${bowled}, **Scoreboard**`, { embed });
+          await bowler.send(`Batsman hit ${c}${dot(c, bowled)}, **Scoreboard**`, { embed });
+          if (post === true) await channel.send(`**${batsman.username}** hit ${c}${dot(c, bowled)}, and was bowled ${bowled} by **${bowler.username}**`, { embed });
           return loopBatCollect();
         }
       } catch (e) {
@@ -340,8 +337,8 @@ async function changeStatus(a, b) {
   await db.findOneAndUpdate({ _id: b.id }, { $set: { status: false } });
 }
 
-function dot(c, bowled, useDot) {
-  if(bowled == c && useDot !== false) {
+function dot(c, bowled) {
+  if(c === 0) {
     return ' (used a dot)';
   } else {
     return '';
@@ -351,10 +348,8 @@ function dot(c, bowled, useDot) {
 async function cpuBowl(batsman, arr) {
   pattern = batsman.pattern
   
-  console.log(arr, arr.slice(-2).every((v, i, a) => v === a[0]), arr.slice(-3).every((v, i, a) => v === a[0]))
-  
   if (arr.length >= 2 && arr.slice(-2).every((v, i, a) => v === a[0])) {
-    if (arr.slice(-3).every((v, i, a) => v === a[0])) {
+    if (arr.slice(-3).every((v, i, a) => v === a[0] && parseInt(v))) {
       return arr.slice(-1)[0]
     }
     let spamNum = arr.slice(-1)[0]
