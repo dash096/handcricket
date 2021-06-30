@@ -4,6 +4,8 @@ const getErrors = require("../../functions/getErrors.js");
 const getTarget = require("../../functions/getTarget.js");
 const executeTeamMatch = require("../../cricketFunctions/teamMatch.js");
 const executeDuoMatch = require("../../cricketFunctions/duoMatch.js");
+const duoInnings = require('../../cricketFunctions/duoInnings.js')
+const getChallenge = require('../../cricketFunctions/getChallenges.js')
 
 module.exports = {
   name: "handcricket",
@@ -50,7 +52,20 @@ module.exports = {
         await message.reply({ embed: embed })
       } //Solo Match
       if (args[0] == 'solo') {
-        
+        try {
+          let challenge = await getChallenge(message, userData.challengeProgress || 'classic_0')
+          if (!challenge) throw 'coming soon'
+          challenge.player.data = userData
+          challenge.player.pattern = userData.pattern
+          challenge.player.pattern = Object.entries(challenge.player.pattern).sort((a, b) => b[1] - a[1])
+          challenge.player.pattern = challenge.player.pattern.map(x => x[0])
+          
+          await channel.send(`get to DMs.`)
+          await duoInnings(challenge.player, challenge.CPU, message, { max: 6, post: false }, challenge)
+        } catch(e) {
+          console.log(e)
+          await message.reply('Oof, You crossed the Classic mode already, Next mode is **Coming soon!**')
+        }
       } //Duo Match
       else {
         //Target Validation
