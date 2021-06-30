@@ -63,7 +63,7 @@ module.exports = (message, progress) => {
   challenge.CPU = {
     id: 'CPU',
     username: 'CPU',
-    send: function(i) { console.log(i < 50 ? i : i.slice(0, 50) + '...')},
+    send: function(i) { console.log(i.toString() < 50 ? i.toString() : i.toString().slice(0, 50) + '...')},
   }
   challenge.name = `${mode}_${num}`
   challenge.player = message.author
