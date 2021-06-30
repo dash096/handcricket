@@ -352,7 +352,7 @@ async function cpuBowl(batsman, arr) {
     arr.shift()
     arr = arr.slice(-3).map((v, i, a) => v - (a[i - 1] || 0)).slice(-3)
     
-    print(arr)
+    console.log(arr)
     
     if (arr.slice(-2).every((v, i, a) => v === a[0])) {
       if (arr.every((v, i, a) => v === a[0] && parseInt(v))) { 
