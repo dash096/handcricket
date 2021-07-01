@@ -357,26 +357,31 @@ async function cpuBowl(batsman, batArray) {
   let random = Math.random()
   
   if (arr.length > 2) {
-    arr = arr.slice(-4).map((v, i, a) => v - (a[i - 1] || 0)).slice(-3)
+    arr = arr.slice(-4).map((v, i, a) => v - (a[i - 1] || 0))
     arr = arr.slice(-3)
+    console.log(arr)
     
+    // If spamming 2 nums
     if (arr[0] == arr[2]) {
       swapCounter += 1
-      if (swapCounter > 1) {
-        return random < 0.8 ? arr[1] :
+      if (swapCounter > 2) {
+        return arr[1]
+      } else if (swapCounter > 1) {
+        return random < 0.7 ? arr[1] :
                pattern[5]
       } else {
         return random < 0.4 ? arr[1] :
                random < 0.75 ? 4 :
                pattern[1]
       }
-    } else if (arr.slice(-2).every((v, i, a) => v === a[0])) {
+    } // If spamming same number
+    else if (arr[1] == arr[2]) {
       let num = arr.slice(-1)[0]
       
       if (batArray.filter(x => x === num).length > 5 || batArray.filter(x => x === num - 2).length > 5) {
         return random < 0.50 ? num :
-               random < 0.68 ? pattern[0] :
-               random < 0.88 ? 3 :
+               random < 0.70 ? pattern[0] :
+               random < 0.875 ? 3 :
                5
       } else {
         return random < 0.45 ? num :
@@ -384,7 +389,8 @@ async function cpuBowl(batsman, batArray) {
                pattern[0]
       }
     } 
-  } else {
+  } // Normal
+  else {
     return random < 0.36 ? pattern[0] :
            random < 0.57 ? pattern[1] :
            random < 0.76 ? pattern[2] :
