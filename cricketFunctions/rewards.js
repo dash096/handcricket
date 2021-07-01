@@ -7,7 +7,16 @@ module.exports = async function(winner, loser, coins, winnerLogs, loserLogs, mes
     const { channel } = message;
     
     if (challenge) {
-      if(challenge.update === false) { 'do nothing...' }
+      if(challenge.update === false) {
+        if(winner.id !== 'CPU') {
+          await db.findOneAndUpdate({ _id: winner.id }, {
+            $inc: {
+              cc: parseInt(coins),
+            }
+          })
+          return
+        }
+      }
       else {
         if (winner.id === 'CPU') return await loser.send('You lost the challenge')
         else await winner.send(`You won the challenge and earned a ${await getEmoji('lootbox')} lootbox!`)
