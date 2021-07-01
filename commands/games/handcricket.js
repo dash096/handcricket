@@ -99,6 +99,11 @@ module.exports = {
           challenge.player.pattern = challenge.player.pattern.map(x => x[0])
           
           await channel.send(`get to DMs.`)
+          
+          // Change Status
+          await changeStatus(user, true);
+          await changeStatus(target, true);
+          
           await duoInnings(challenge.player, challenge.CPU, message, { max: 6, post: false }, challenge)
         } catch(e) {
           console.log(e)
