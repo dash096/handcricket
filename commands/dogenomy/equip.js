@@ -51,7 +51,7 @@ module.exports = {
       }
     }
     
-    if(userDecors.includes(decor)) {
+    if(userDecors.keys().includes(decor)) {
       equipped.splice(equipped.indexOf(decor), 1);
       await db.findOneAndUpdate({_id: data.id}, {$set: {decors: userDecors}});
       message.reply('You removed ' + args.join(' '));
