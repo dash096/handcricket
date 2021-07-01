@@ -362,7 +362,7 @@ async function cpuBowl(batsman, batArray) {
         let random = Math.random()
         let num = arr.slice(-1)[0]
         
-        if (batArray.find(num).length > 5 || batArray.find(num - 2).length > 5) {
+        if (batArray.find(x => x === num).length > 5 || batArray.find(x => x === num - 2).length > 5) {
           return random < 0.4 ? pattern[1] :
                  random < 0.65 ? 3 :
                  random < 0.85 ? num :

@@ -53,7 +53,7 @@ module.exports = {
         await message.reply({ embed: embed })
       } //Solo Match
       else if (args[0] == 'solo') {
-        message.author = await client.users.fetch(author.id)
+        if (!message.author.dmChannel) message.author.dmChannel = await message.author.createDM()
         
         if (message.guild.id !== ServerID) {
           return await message.reply('Beta feature, Challenges only available in Official Server.')
