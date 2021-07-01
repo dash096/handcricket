@@ -354,11 +354,11 @@ async function cpuBowl(batsman, batArray) {
   let pattern = batsman.pattern
   let arr = batArray
   
+  let random = Math.random()
+  
   if (arr.length > 2) {
     arr = arr.slice(-4).map((v, i, a) => v - (a[i - 1] || 0)).slice(-3)
     arr = arr.slice(-3)
-    
-    let random = Math.random()
     
     if (arr[0] == arr[2]) {
       swapCounter += 1
