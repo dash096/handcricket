@@ -390,10 +390,11 @@ async function cpuBowl(batsman, batArray) {
     } 
   } 
   
-  return random < 0.36 ? pattern[0] :
-         random < 0.57 ? pattern[1] :
-         random < 0.76 ? pattern[2] :
-         random < 0.88 ? pattern[3] :
-         random < 0.94 ? pattern[4] :
+  return random < 0.200 ? arr[arr.length - 1] - arr[arr.length - 2] :
+         random < 0.500 ? pattern[0] :
+         random < 0.670 ? pattern[1] :
+         random < 0.750 ? pattern[2] :
+         random < 0.870 ? pattern[3] :
+         random < 0.950 ? pattern[4] :
          pattern[5]
 }
