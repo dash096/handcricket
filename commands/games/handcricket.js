@@ -94,7 +94,13 @@ module.exports = {
             'classic_0',
             flags,
           )
-          if (!challenge) throw 'coming soon'
+          
+          if (!challenge) {
+            throw 'Oof, You crossed the Classic mode already, Next mode is **Coming soon!**'
+          } else if (challenge.name !== 'noChallenge' && userData.stamina < 2) {
+            throw 'Oof, You have insufficient stamina.'
+          }
+          
           challenge.player.data = userData
           challenge.player.pattern = userData.pattern
           challenge.player.pattern = Object.entries(challenge.player.pattern).sort((a, b) => b[1] - a[1])
@@ -103,12 +109,12 @@ module.exports = {
           await channel.send(`get to DMs.`)
           
           // Change Status
-          await changeStatus(user, true);
+          await changeStatus(user, true, -2);
           
           await duoInnings(challenge.player, challenge.CPU, message, { max: 6, post: false }, challenge)
         } catch(e) {
           console.log(e)
-          await message.reply('Oof, You crossed the Classic mode already, Next mode is **Coming soon!**')
+          await message.reply(e)
         }
       } //Duo Match
       else {
@@ -139,11 +145,20 @@ module.exports = {
   },
 };
 
-async function changeStatus(a, boolean) {
+async function changeStatus(a, boolean, changeStamina) {
   if (boolean !== true && boolean !== false) return;
-  await db.findOneAndUpdate({ _id: a.id }, {
-    $set: {
-      status: boolean,
+  
+  let update = {
+    '$set': {
+      'status': boolean,
+    },
+  }
+  
+  if (changeStamina) {
+    update['$inc'] = {
+      'stamina': changeStamina 
     }
-  });
+  }
+  
+  await db.findOneAndUpdate({ _id: a.id }, update);
 }
