@@ -54,21 +54,6 @@ client.on("ready", async () => {
     /* Log Total GUILDS and PLAYERS */
     console.log(`Total ${client.guilds.cache.size} Servers and ${(await db.find()).length} users have a profile.`);
     
-    let datas = await db.find({ 'bag.magikball': { $exists: true } })
-    datas.forEach(async data => {
-      let bag = data.bag || {}
-      delete bag.magikball
-      await db.findOneAndUpdate({ _id: data._id }, {
-        $set: {
-          bag: bag,
-        },
-        $unset: {
-          quests: false,
-        }
-      })
-    })
-    return
-    
     /* Load COMMANDS and LISTENERS */
     await loadFiles();
     
