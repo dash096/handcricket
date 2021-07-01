@@ -14,7 +14,7 @@ module.exports = {
   description: "Play handcricket!",
   category: "Games",
   syntax: "e.handcricket <@user/userID/solo/map/team> [flags]",
-  flags: "`--post`: to post progress in the channel, for duos\n`--wickets <number>`: to set wickets\n`--overs <number>`: to set overs",
+  flags: "`--post`: to post progress in the channel, for duos\n`--wickets <number>`: to set wickets\n`--overs <number>`: to set overs\n`--noc`: To play a non-challenging solo match.",
   status: true,
   cooldown: 10,
   run: async ({ message, args, client, prefix }) => {
@@ -57,8 +57,41 @@ module.exports = {
           return await message.reply('Beta feature, Challenges only available in Official Server.')
         }
         
+        let flags = {
+          wickets: 1,
+          overs: 5,
+        }
+        
         try {
-          let challenge = await getChallenge(message, userData.challengeProgress || 'classic_0')
+          if (content.toLowerCase().includes('--wickets')) {
+            let wickets = content[(/--wickets/.exec(content)).index + 11];
+            if (!wickets || isNaN(wickets)) {
+              message.reply('Invalid Value for Flag Wickets and it is set to 1 as default.');
+            } else if (wickets > 5) {
+              flags.wickets = 5;
+              message.reply('Limited wickets for a duoMatch is 1-5, it is now set to 5');
+            } else {
+              flags.wickets = parseInt(wickets) || 1;
+            }
+          }
+          if (content.toLowerCase().includes('--overs')) {
+            let overs = content[(/--overs/.exec(content)).index + 9];
+            if (!overs || isNaN(overs)) {
+              message.reply('Invalid Value for Flag Overs and it is set to 5 as default.');
+            } else if (overs > 5) {
+              flags.overs = 5;
+              message.reply('Limited overs for a duoMatch is 1-5, it is now set to 5');
+            } else {
+              flags.overs = parseInt(overs) || 5;
+            }
+          }
+          let challenge = await getChallenge(
+            message,
+            content.toLowerCase().includes('--noc') ? 'noChallenge' :
+            userData.challengeProgress ? userData.challengeProgress :
+            'classic_0',
+            flags,
+          )
           if (!challenge) throw 'coming soon'
           challenge.player.data = userData
           challenge.player.pattern = userData.pattern

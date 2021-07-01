@@ -7,15 +7,20 @@ module.exports = async function(winner, loser, coins, winnerLogs, loserLogs, mes
     const { channel } = message;
     
     if (challenge) {
-      if (winner.id === 'CPU') return await loser.send('You lost the challenge')
-      else await winner.send(`You won the challenge and earned a ${await getEmoji('lootbox')} lootbox!`)
+      if(challenge.update === false) { 'do nothing...' }
+      else {
+        if (winner.id === 'CPU') return await loser.send('You lost the challenge')
+        else await winner.send(`You won the challenge and earned a ${await getEmoji('lootbox')} lootbox!`)
+      }
       
       let data = await db.findOne({ _id: winner.id })
       let bag = data.bag || {}
       bag.lootbox = (bag.lootbox || 0) + 1
       
       let beforeProgress = challenge.name.split('_')
-      let currentProgress = [beforeProgress[0], beforeProgress[1] + 1].join('_')
+      let currentProgress
+      if (challenge.update === false) currentProgress = beforeProgress
+      else currentProgress = [beforeProgress[0], beforeProgress[1] + 1].join('_')
 
       let pattern = await changePattern(data, winnerLogs.batArray)
       
@@ -34,7 +39,6 @@ module.exports = async function(winner, loser, coins, winnerLogs, loserLogs, mes
     const lB = winnerLogs.ballArray.length
     const lS = loserLogs.batArray.slice(-1)[0]
     const wB = loserLogs.ballArray.length
-    console.log(winnerLogs, loserLogs)
     
     const winnerData = await db.findOne({
       _id: winner.id
