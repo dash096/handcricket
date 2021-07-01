@@ -347,8 +347,9 @@ function dot(c, bowled) {
   }
 }
 
-async function cpuBowl(batsman, arr) {
-  pattern = batsman.pattern
+async function cpuBowl(batsman, batArray) {
+  let pattern = batsman.pattern
+  let arr = batArray
   
   if (arr.length > 2) {
     arr = arr.slice(-4).map((v, i, a) => v - (a[i - 1] || 0)).slice(-3)
@@ -358,10 +359,19 @@ async function cpuBowl(batsman, arr) {
       if (arr.every((v, i, a) => v === a[0] && parseInt(v))) { 
         return arr.slice(-1)[0]
       } else {
-        let spamNum = arr.slice(-1)[0]
-        return Math.random() < 0.65 ? spamNum :
-               spamNum !== 1 ? spamNum - 1 :
-               pattern[0]
+        let random = Math.random()
+        let num = arr.slice(-1)[0]
+        
+        if (batArray.find(num).length > 5 || batArray.find(num - 2).length > 5) {
+          return random < 0.4 ? pattern[1] :
+                 random < 0.65 ? 3 :
+                 random < 0.85 ? num :
+                 5
+        } else {
+          return random < 0.45 ? num :
+                 num > 1 ? num - 1 :
+                 pattern[0]
+        }
       }
     } 
   }
