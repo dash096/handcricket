@@ -277,6 +277,7 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
               await batsman.send("You lost! The bowler bowled " + ballArray[ballArray.length - 1], embed);
               await bowler.send(`You won! The batsman hit ${c}${dot(c, bowled)} and looted ${await getEmoji('coin')} ${coins}`, embed);
               if (post === true) await channel.send(`**${bowler.username}** won!!! Wicket! Batsman hit ${c}${dot(c, bowled)}, and was bowled ${ballArray[ballArray.length - 1]} by **${bowler.username}**`, embed);
+              changeStatus(batsman, bowler)
               return rewards(bowler, batsman, coins, oldLogs, {
                 'batArray': batArray,
                 'ballArray': ballArray,
@@ -296,6 +297,7 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
           await batsman.send("You won! You chased the target!" +  ` You looted ${await getEmoji('coin')} ${coins}`);
           await bowler.send('You lost! The batsman chased the target');
           if (post === true) await channel.send(`**${batsman.username}** won!!! He chased the target!`);
+          changeStatus(batsman, bowler)
           return rewards(batsman, bowler, coins, {
             'batArray': batArray,
             'ballArray': ballArray,
