@@ -9,6 +9,8 @@ const rewards = require('./rewards.js');
 module.exports = async function(batsman, bowler, message, flags, challenge) {
   const { channel, author, mentions, content } = message;
   
+  let isInnings2
+  
   // flags
   let post = flags.post || false
   let max = flags.max || 6
