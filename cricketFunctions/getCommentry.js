@@ -55,6 +55,10 @@ module.exports = (ball, bat) => {
   }
   
   const bowling = {
+    0: [
+      'The bowler slipped to throw a ball.',
+      'The ball spinned back on pitch for slow bouncer.'
+    ],
     1: [
       'A slow ball aimed at the pads.',
       'Pace of the ball taken off for a beautiful spin.',

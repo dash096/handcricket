@@ -14,7 +14,7 @@ module.exports = {
   aliases: ['pf', 'stat'],
   description: 'Shows the profile of a user.',
   category: 'Dogenomy',
-  syntax: 'e.profile @user',
+  syntax: 'e.profile [@user/userID]',
   cooldown: 6,
   run: async ({message, args, client}) => {
     const { content, author, channel, mentions } = message;

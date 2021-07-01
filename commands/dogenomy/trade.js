@@ -11,7 +11,7 @@ module.exports = {
   aliases: ['give'],
   description: 'send some pc to another user, mercy.',
   category: 'Dogenomy',
-  syntax: 'e.send @user <coins/itemName> <amount>',
+  syntax: 'e.send <@user/userId> <itemName> <amount>',
   cooldown: 10,
   run: async ({message, args, client}) => {
     const { content, author, channel, mentions } = message;

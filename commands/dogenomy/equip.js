@@ -5,44 +5,35 @@ const getErrors = require('../../functions/getErrors.js');
 module.exports = {
   name: 'equip',
   aliases: ['wear', 'drop', 'unequip'],
-  description: 'Equip your fav decoration',
-  syntax: 'e.equip <the_item_name_in_your_bag>',
+  description: 'Equip your fav decoration, it toggles equip or unequip.',
+  syntax: 'e.equip <the_item_name_in_your bag>',
   category: 'Dogenomy',
   cooldown: 30,
-  run: async ({message, client, prefix}) => {
+  run: async ({message, client, prefix, args}) => {
     const { author, content, channel, mentions } = message;
     let type = 'type1';
     const data = await db.findOne({_id: author.id});
     const userDecors = data.decors || {};
     const decorsData = getDecors(type);
     
-    const args = content.toLowerCase().trim().split(/ +/);
-    
-    if(!args || args.length === 0) {
-      message.reply(getErrors({error: 'syntax', filePath: 'dogenomy/equip.js'}));
-      return;
-    }
-    
-    let command = (args.shift()).slice(prefix.length);
-    
     let decor = 
     decorsData.find(
-      decor => decor.toLowerCase() == args.join('_')
+      decor => decor.toLowerCase() == args.join('_').toLowerCase()
     ) || 
     decorsData.find(
-      decor => decor.toLowerCase() == (args[1] + '_' + args[0])
+      decor => decor.toLowerCase() == (args[1] + '_' + args[0]).toLowerCase()
     ) ||
     decorsData.find(
-      decor => decor.toLowerCase() == args[0]
+      decor => decor.toLowerCase() == args[0].toLowerCase()
     );
     
     if(!decor && args.join('').includes('suit')) {
       decor = 
       decorsData.find(
-        decor => decor.split('_').pop() == args[1]
+        decor => decor.split('_').pop() == args[1].toLowerCase()
       ) ||
       decorsData.find(
-        decor => decor.split('_').pop() == args[0]
+        decor => decor.split('_').pop() == args[0].toLowerCase()
       );
     }
     if(!decor || decor == 'equipped') {
@@ -60,7 +51,7 @@ module.exports = {
       }
     }
     
-    if(command == 'drop' || command == 'unequip') {
+    if(Object.keys(userDecors.equipped || []).find(d => d == decor)) {
       equipped.splice(equipped.indexOf(decor), 1);
       await db.findOneAndUpdate({_id: data.id}, {$set: {decors: userDecors}});
       message.reply('You removed ' + args.join(' '));
