@@ -29,7 +29,7 @@ module.exports = async function(winner, loser, coins, winnerLogs, loserLogs, mes
       let beforeProgress = challenge.name.split('_')
       let currentProgress
       if (challenge.update === false || beforeProgress[1] > 5) currentProgress = beforeProgress.join('_')
-      else currentProgress = [beforeProgress[0], beforeProgress[1] + 1].join('_')
+      else currentProgress = [beforeProgress[0], parseInt(beforeProgress[1]) + 1].join('_')
 
       let pattern = await changePattern(data, winnerLogs.batArray)
       

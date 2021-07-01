@@ -200,7 +200,7 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
         if (batsman.id === 'CPU') {
           await sleep(5000)
           let random = Math.floor(Math.random() * 7)
-          m = { 'content': `${random}` }
+          m = { 'content': `${random > 0 ? random : [2, 4, 1][Math.floor(Math.random() * 3)]}` }
         } else {
           m = (await batsman.dmChannel.awaitMessages(
             m => m.author.id === batsman.id,
@@ -349,6 +349,7 @@ function dot(c, bowled) {
   }
 }
 
+let swapCounter = 0
 async function cpuBowl(batsman, batArray) {
   let pattern = batsman.pattern
   let arr = batArray
@@ -357,32 +358,38 @@ async function cpuBowl(batsman, batArray) {
     arr = arr.slice(-4).map((v, i, a) => v - (a[i - 1] || 0)).slice(-3)
     arr = arr.slice(-3)
     
-    if (arr.slice(-2).every((v, i, a) => v === a[0])) {
-      if (arr.every((v, i, a) => v === a[0] && parseInt(v))) { 
-        return arr.slice(-1)[0]
+    let random = Math.random()
+    
+    if (arr[0] == arr[2]) {
+      swapCounter += 1
+      if (swapCounter > 1) {
+        return random < 0.8 ? arr[1] :
+               pattern[5]
       } else {
-        let random = Math.random()
-        let num = arr.slice(-1)[0]
-        
-        if (batArray.filter(x => x === num).length > 5 || batArray.filter(x => x === num - 2).length > 5) {
-          return random < 0.4 ? pattern[1] :
-                 random < 0.65 ? 3 :
-                 random < 0.85 ? num :
-                 5
-        } else {
-          return random < 0.45 ? num :
-                 num > 1 ? num - 1 :
-                 pattern[0]
-        }
+        return random < 0.4 ? arr[1] :
+               random < 0.75 ? 4 :
+               pattern[1]
+      }
+    } else if (arr.slice(-2).every((v, i, a) => v === a[0])) {
+      let num = arr.slice(-1)[0]
+      
+      if (batArray.filter(x => x === num).length > 5 || batArray.filter(x => x === num - 2).length > 5) {
+        return random < 0.50 ? num :
+               random < 0.68 ? pattern[0] :
+               random < 0.88 ? 3 :
+               5
+      } else {
+        return random < 0.45 ? num :
+               num > 1 ? num - 1 :
+               pattern[0]
       }
     } 
+  } else {
+    return random < 0.36 ? pattern[0] :
+           random < 0.57 ? pattern[1] :
+           random < 0.76 ? pattern[2] :
+           random < 0.88 ? pattern[3] :
+           random < 0.94 ? pattern[4] :
+           pattern[5]
   }
-  
-  let random = Math.random()
-  return random < 0.36 ? pattern[0] :
-         random < 0.57 ? pattern[1] :
-         random < 0.76 ? pattern[2] :
-         random < 0.88 ? pattern[3] :
-         random < 0.94 ? pattern[4] :
-         pattern[5]
 }
