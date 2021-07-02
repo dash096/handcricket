@@ -66,7 +66,7 @@ function loadFiles() {
   for(const listener of listeners) {
     try {
       const feature = require(`./features/${listener}`);
-      feature({ app, client, prefix, topggapi });
+      feature({ app, client, prefix });
     } catch (e) {
       console.error(e);
     }
