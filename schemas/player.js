@@ -69,9 +69,6 @@ const player = new mongoose.Schema({
   voteCooldown: Date,
   voteStreak: Number,
   lastVoted: Date,
-  notifs: {
-    type: Boolean, default: true
-  }
 });
 
 const model = mongoose.model("player", player);
