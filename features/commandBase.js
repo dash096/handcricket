@@ -3,7 +3,7 @@ const db = require('../schemas/player.js');
 const getErrors = require('../functions/getErrors.js');
 const misc = require('../schemas/misc.js');
 
-module.exports = ({client, prefix, topggapi}) => {
+module.exports = ({client, prefix}) => {
   client.on('message', async message => {
     const { cooldowns, commands } = client;
     const {
@@ -141,7 +141,7 @@ module.exports = ({client, prefix, topggapi}) => {
     
     //Run Command
     try {
-      command.run({message, args, prefix, client, topggapi});
+      command.run({message, args, prefix, client});
     } catch (error) {
       console.error(error);
       message.reply('there was an error trying to execute that command!');

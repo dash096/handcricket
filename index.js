@@ -18,8 +18,6 @@ const { commands, cooldowns } = client;
 client.commands = new Discord.Collection();
 client.cooldowns = new Discord.Collection();
 
-const topggapi = new Topgg.Api(process.env.TOPGG_AUTH);
-
 module.exports = client;
 
 /* Bot READY EVENT */
@@ -33,14 +31,6 @@ client.on("ready", async () => {
       res.send('<h1> Hello World </h1>');
     });
     app.listen(process.env.PORT || 8080);
-    
-    /* Post Stats to TOPGG */
-    setInterval(() => {
-      topggapi.postStats({
-        serverCount: client.guilds.cache.size,
-      });
-      client.user.setActivity(`Dispo in ${client.guilds.cache.size} guilds!`);
-    }, 60 * 30 * 1000); //30 minutes
     
     /* Connect to DATABASE */
     await mongoose.connect(process.env.MONGO, {
@@ -61,7 +51,7 @@ client.on("ready", async () => {
     let loadFunctions = fs.readdirSync('./functions').filter(file => file.startsWith('broke'));
     for(const loadFunction of loadFunctions) {
       const execute = require(`./functions/${loadFunction}`);
-      execute({client, prefix, topggapi});
+      execute({client, prefix});
     }
   } catch (e) {
     console.log(e);

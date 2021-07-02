@@ -16,9 +16,9 @@ module.exports = {
     let serverAlias = ['support', 'community', 'server', 'join']
     
     if (serverAlias.includes(command)) {
-      message.reply('discord.gg/3dhtFggFXZ');
+      message.reply(process.env.COMMUNITY_URL)
     } else {
-      message.reply('https://discord.com/api/oauth2/authorize?client_id=804346878027235398&permissions=321600&scope=bot');
+      message.reply(process.env.INVITE_URL)
     }
   }
 };
