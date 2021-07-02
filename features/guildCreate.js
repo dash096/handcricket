@@ -7,7 +7,7 @@ module.exports = async ({ client }) => {
     let bots = 0
     let humans = 0
     mems.forEach(mem => {
-      if (mem) bots += 1
+      if (mem === true) bots += 1
       else humans += 1
     })
     
