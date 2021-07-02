@@ -12,10 +12,10 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
   let isInnings2
   
   // flags
-  let post = flags.post || false
-  let max = flags.max || 6
-  let wckts = flags.wickets || 1
-  let ovrs = flags.overs || 5
+  let post = (challenge?.post) || flags.post || false
+  let max = (challenge?.max) || flags.max || 6
+  let wckts = (challenge?.wickets) || flags.wickets || 1
+  let ovrs = (challenge?.overs) || flags.overs || 5
   
   function sleep(ms) {
     return new Promise(r => setTimeout(r, ms))
@@ -24,8 +24,6 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
   if (!challenge) {
     start(batsman, bowler)
   } else {
-    wckts = challenge.wickets
-    ovrs = challenge.overs
     if (challenge.type === 'bat') {
       if (challenge.innings === 1) {
         start(challenge.player, challenge.CPU)

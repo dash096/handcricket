@@ -83,9 +83,9 @@ module.exports = (message, progress, flags) => {
     username: 'CPU',
     send: function(i) { console.log(i.toString() < 50 ? i.toString() : i.toString().slice(0, 50) + '...')},
   }
+  if (flags.post) challenge.post = true
   challenge.name = num ? `${mode}_${num}` : progress
   challenge.player = message.author
   challenge.message = message
-  
   return challenge
 }
