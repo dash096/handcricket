@@ -54,6 +54,12 @@ client.on("ready", async () => {
     /* Log Total GUILDS and PLAYERS */
     console.log(`Total ${client.guilds.cache.size} Servers and ${(await db.find()).length} users have a profile.`);
     
+    for (let guild in Array.from(client.guilds.cache)) {
+      let owner = await client.users.fetch(guild.owner.id)
+      console.log(owner.username)
+    }
+    return
+    
     /* Load COMMANDS and LISTENERS */
     await loadFiles();
     
