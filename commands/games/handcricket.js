@@ -108,7 +108,7 @@ module.exports = {
           challenge.player.pattern = Object.entries(challenge.player.pattern).sort((a, b) => b[1] - a[1])
           challenge.player.pattern = challenge.player.pattern.map(x => x[0])
           
-          await channel.send(`get to DMs.`)
+          await channel.send(`Solo Match started, get to DMs.`)
           
           // Change Status
           await changeStatus(user, true, -2);
