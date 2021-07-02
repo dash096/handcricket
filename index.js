@@ -54,10 +54,9 @@ client.on("ready", async () => {
     /* Log Total GUILDS and PLAYERS */
     console.log(`Total ${client.guilds.cache.size} Servers and ${(await db.find()).length} users have a profile.`);
     
-    for (let guild in Array.from(client.guilds.cache)) {
-      console.log(guild)
-      console.log(guild.owner.username)
-    }
+    Array.from(client.guilds.cache).forEach(guild => {
+      console.log(guild?.owner?.username)
+    })
     return
     
     /* Load COMMANDS and LISTENERS */
