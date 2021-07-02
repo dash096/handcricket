@@ -62,9 +62,11 @@ module.exports = {
         let flags = {
           wickets: 1,
           overs: 5,
+          post: undefined,
         }
         
         try {
+          if (content.toLowerCase().includes('--post')) flags.post = true
           if (content.toLowerCase().includes('--wickets')) {
             let wickets = content[(/--wickets/.exec(content)).index + 11];
             if (!wickets || isNaN(wickets)) {
