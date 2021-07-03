@@ -6,14 +6,17 @@ module.exports = async ({ client }) => {
     
     let bots = 0
     let humans = 0
-    mems.forEach(mem => {
+    
+    let i = 0
+    for (i; i < mems.length; i++) {
+      mem = mems[i]
       if (mem === true) bots += 1
       else humans += 1
-    })
+    }
     
     let user = await client.users.fetch(guild.ownerID)
     let os = await client.guilds.fetch(ServerID)
     let logChannel = os.channels.cache.find(c => c.name == 'dispo')
-    logChannel.send([user.username || guild.ownerID, bots, humans].join(', '))
+    logChannel.send([user.username || guild.ownerID, guild.members.cache.size, bots, humans].join(', '))
   })
 }
