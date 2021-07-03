@@ -45,7 +45,6 @@ client.on("ready", async () => {
     console.log(`Total ${client.guilds.cache.size} Servers and ${(await db.find()).length} users have a profile.`);
     
     const leaveUnorganic = require('./functions/leaveUnorganic.js')
-    console.log(guilds)
     for (let guild in Array.from(client.guilds.cache)) {
       await leaveUnorganic(client, guild[1])
     }
