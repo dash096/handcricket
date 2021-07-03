@@ -3,8 +3,7 @@ module.exports = async (client, guild) => {
   let humans = 0
   
   let members = (await guild.members.fetch()).map(m => m)
-  let bots = 0
-  let humans = 0
+  
   for (let i = 0; i < members.length; i++) {
     if (members[i].user.bot) bots += 1
     else humans += 1
