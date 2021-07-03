@@ -1,4 +1,10 @@
+
+
+
+
+
 const ServerID = process.env.SERVERID
+const OwnerID = process.env.OWNERID
 
 module.exports = async (client, guild) => {
   let bots = 0
@@ -14,15 +20,15 @@ module.exports = async (client, guild) => {
   let left
   if (bots >= humans) {
     left = true
-    await guild.owner.user.send('Seems like too many bots as compared to humans in the server, I left it...')
+    await guild.owner.user.send(`Seems like too many bots as compared to humans in **${guild.name}**, I left it...`)
   } else if (bots > 75) {
     left = true
-    await guild.owner.user.send('Oof, 50+ bots in your server, seems like a bot farm, I left it.')
+    await guild.owner.user.send(`50+ bots in **${guild.name}** server, seems like a bot farm, I left it.`)
   } else if (humans <= 2) {
     left = true
-    await guild.owner.user.send('I left the server as it was detected private.')
+    await guild.owner.user.send(`**${guild.name}** was detected private. I left it.`)
   }
-  if (left) {
+  if (!guild.owner.user.id === OwnerID && left) {
     await guild.leave()
   }
   
