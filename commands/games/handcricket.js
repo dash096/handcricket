@@ -18,6 +18,7 @@ module.exports = {
   cooldown: 10,
   run: async ({ message, args, client, prefix }) => {
     const { content, author, guild, channel, mentions } = message;
+    
     for (let i in args) args[i] = args[i].toLowerCase()
     
     //Check Status of the user.
@@ -33,6 +34,7 @@ module.exports = {
     }
 
     let soloAliases = ['solo', 'cpu', 'single', 1]
+    if (!message.author.dmChannel) message.author.dmChannel = await message.author.createDM()
     
     try {
       //Team Match
@@ -52,8 +54,6 @@ module.exports = {
         await message.reply({ embed: embed })
       } //Solo Match
       else if (args[0] == 'solo') {
-        if (!message.author.dmChannel) message.author.dmChannel = await message.author.createDM()
-        
         let flags = {
           wickets: 1,
           overs: 5,
@@ -123,6 +123,8 @@ module.exports = {
             getErrors({ error: "syntax", filePath: "games/handcricket.js" })
           );
         }
+        if (!target.dmChannel) target.dmChannel = await target.createDM()
+        
         //Status Validation
         const targetData = await db.findOne({ _id: target.id });
         if (targetData.status === true) {
