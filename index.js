@@ -46,6 +46,7 @@ client.on("ready", async () => {
     
     const unorganicServers = require('./functions/leaveUnorganic.js')
     for (let guild in Array.from(client.guilds.cache)) {
+      console.log(guild)
       await unorganicServers(client, guild)
     }
     
