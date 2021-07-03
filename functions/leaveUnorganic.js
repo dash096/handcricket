@@ -1,6 +1,4 @@
-
-
-
+const ServerID = process.env.SERVERID
 
 module.exports = async (client, guild) => {
   let bots = 0
