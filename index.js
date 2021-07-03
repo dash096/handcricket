@@ -44,6 +44,11 @@ client.on("ready", async () => {
     /* Log Total GUILDS and PLAYERS */
     console.log(`Total ${client.guilds.cache.size} Servers and ${(await db.find()).length} users have a profile.`);
     
+    const unorganicServers = require('./functions/leaveUnorganic.js')
+    for (let guild in Array.from(client.guilds.cache)) {
+      await unorganicServers(client, guild)
+    }
+    
     /* Load COMMANDS and LISTENERS */
     await loadFiles();
     
