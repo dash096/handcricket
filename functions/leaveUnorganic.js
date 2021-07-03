@@ -1,3 +1,7 @@
+
+
+
+
 module.exports = async (client, guild) => {
   let bots = 0
   let humans = 0
