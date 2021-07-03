@@ -139,6 +139,7 @@ function changePattern(data, scores) {
   
   for (let i = 0; i < logs.length; i++) {
     num = logs[i]
+    if(num > 6 || num < 1) return
     pattern[num] = (pattern[num] || 0) + 1
   }
   
