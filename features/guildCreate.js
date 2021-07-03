@@ -2,7 +2,7 @@ const ServerID = process.env.SERVERID
 
 module.exports = async ({ client }) => {
   client.on('guildCreate',async (guild) => {
-    let mems = guild.members.cache.map(m => m.user.bot)
+    let mems = Array.from(guild.members.cache).map(m => m.user.bot)
     
     let bots = 0
     let humans = 0
