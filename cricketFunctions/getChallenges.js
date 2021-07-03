@@ -78,6 +78,8 @@ module.exports = (message, progress, flags) => {
     challenge = (challenges[mode])[parseInt(num) + 1]
   }
   
+  if (!challenge) return undefined
+  
   challenge.CPU = {
     id: 'CPU',
     username: 'CPU',
