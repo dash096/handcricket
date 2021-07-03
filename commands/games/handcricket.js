@@ -63,7 +63,7 @@ module.exports = {
         try {
           if (content.toLowerCase().includes('--post')) flags.post = true
           if (content.toLowerCase().includes('--wickets')) {
-            let wickets = content[(/--wickets/.exec(content)).index + 11];
+            let wickets = content[(/--wickets/.exec(content)).index + 10];
             if (!wickets || isNaN(wickets)) {
               message.reply('Invalid Value for Flag Wickets and it is set to 1 as default.');
             } else if (wickets > 5) {
@@ -74,7 +74,7 @@ module.exports = {
             }
           }
           if (content.toLowerCase().includes('--overs')) {
-            let overs = content[(/--overs/.exec(content)).index + 9];
+            let overs = content[(/--overs/.exec(content)).index + 8];
             if (!overs || isNaN(overs)) {
               message.reply('Invalid Value for Flag Overs and it is set to 5 as default.');
             } else if (overs > 5) {
@@ -100,7 +100,7 @@ module.exports = {
           
           challenge.player.data = userData
           challenge.player.pattern = userData.pattern
-          challenge.player.pattern = Object.entries(challenge.player.pattern).sort((a, b) => b[1] - a[1])
+          challenge.player.pattern = Object.entries(challenge.player.pattern || {1:0, 2:0, 3:0, 4:0, 5:0, 6:0}).sort((a, b) => b[1] - a[1])
           challenge.player.pattern = challenge.player.pattern.map(x => x[0])
           
           await channel.send(`Solo Match started, get to DMs.`)

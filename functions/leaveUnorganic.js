@@ -1,8 +1,3 @@
-
-
-
-
-
 const ServerID = process.env.SERVERID
 const OwnerID = process.env.OWNERID
 

@@ -27,7 +27,7 @@ module.exports = async (message, user, target) => {
   if(content.toLowerCase().includes('--post')) flags.post = true;
   if(content.toLowerCase().includes('--ten')) flags.max = 10;
   if(content.toLowerCase().includes('--wickets')) {
-    let wickets = content[(/--wickets/.exec(content)).index + 11];
+    let wickets = content[(/--wickets/.exec(content)).index + 10];
     if (!wickets || isNaN(wickets)) {
       return message.reply('Invalid Value for Flag Wickets and it is set to 1 as default.');
     } else if (wickets > 5) {
@@ -38,7 +38,7 @@ module.exports = async (message, user, target) => {
     }
   }
   if(content.toLowerCase().includes('--overs')) {
-    let overs = content[(/--overs/.exec(content)).index + 9];
+    let overs = content[(/--overs/.exec(content)).index + 8];
     if (!overs || isNaN(overs)) {
       message.reply('Invalid Value for Flag Overs and it is set to 5 as default.');
     } else if (overs > 5) {
