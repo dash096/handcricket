@@ -24,7 +24,7 @@ module.exports = {
     let target = await getTarget(message, args, client);
     if(!target) return;
     
-    const data = await db.findOne({_id: target.user.id});
+    const data = await db.findOne({_id: target.id});
     
     let cb = '';
     if(data.coinBoost) {
@@ -46,7 +46,7 @@ module.exports = {
     const orangeCaps = data.orangeCaps || 0;
     
     let waitMessage;
-    if(target.user.id === author.id) waitMessage = await message.reply('Wearing your clothes... ' + `${await getEmoji('swag')}`);
+    if(target.id === author.id) waitMessage = await message.reply('Wearing your clothes... ' + `${await getEmoji('swag')}`);
     else waitMessage = await message.reply(`Wearing ${target.displayName}'s clothes`);
     const characterPath = await getCharacter(target);
     const characterAttachment = new Discord.MessageAttachment(characterPath);
@@ -54,7 +54,7 @@ module.exports = {
     let description = userInfo();
     
     const embed = new Discord.MessageEmbed()
-      .setTitle(`Profile of **${target.tag}**`)
+      .setTitle(`Profile of **${target.displayName}**`)
       .setThumbnail(target.displayAvatarURL({size: 64}))
       .setDescription(description)
       .setFooter("Your Character looks cool! Use `e.equip <name>` to wear a decor for your character")
@@ -196,7 +196,7 @@ function getWR(data) {
 }
 
 async function getCharacter(target) {
-  const userData = await db.findOne({_id: target.user.id});
+  const userData = await db.findOne({_id: target.id});
   
   
   let type = 'type1';
@@ -222,7 +222,7 @@ async function getCharacter(target) {
 
 async function getImage(target, type, paths) {
   let character = await jimp.read(`./assets/decors/${type}/character.png`);
-  let exportPath = `./temp/${target.user.id}.png`;
+  let exportPath = `./temp/${target.id}.png`;
   
   if(paths.length > 0) {
     let i = 0;

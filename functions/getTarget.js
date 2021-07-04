@@ -6,25 +6,30 @@ module.exports = async (message, args, client) => {
  
   if(args.length > 0) {
     let query = args[0];
-    let user = message.mentions.members.first() || 
-    message.guild.members.cache.get(query) || 
-    message.guild.members.cache.find(user => user.displayName == query);
-    if(!user || user.bot) {
+    let member = message.mentions.members.first() || 
+               message.guild.members.cache.find(
+                 m => m.user.id == query || m.displayName == query
+               );
+    
+    if(!member || member.user.bot) {
       message.reply('Invalid Target, ping or give their ID.');
       return;
     }
-    target = await getData();
-    async function getData () {
-      const data = await db.findOne({_id: user.id});
-      if(!data) {
-        message.reply(getErrors({error: 'data', user}));
-        return;
-      } else {
-        return user;
-      }
+    
+    const data = await db.findOne({ _id: member.user.id });
+    if(!data) {
+      message.reply(getErrors({ error: 'data', user: member.user }));
+      return;
+    } else {
+      target = member;
     }
   } else {
     target = message.member;
   }
+  
+  let { displayName } = target
+  target = target.user
+  target.displayName = displayName
+  
   return target;
 }

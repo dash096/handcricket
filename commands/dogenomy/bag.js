@@ -18,7 +18,7 @@ module.exports = {
     let target = await getTarget(message, args, client);
     if(!target) return;
     
-    const data = await db.findOne({_id: target.user.id});
+    const data = await db.findOne({_id: target.id});
     let bagItems = data.bag || {};
     
     const itemsText = await getItemsFieldText();

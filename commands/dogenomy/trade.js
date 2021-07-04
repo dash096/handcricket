@@ -23,7 +23,7 @@ module.exports = {
     let target = await getTarget(message, args, client);
     if(!target) return;
     
-    if(user.id === target.user.id) {
+    if(user.id === target.id) {
       let error = 'syntax'; let filePath = 'dogenomy/trade.js';
       message.reply(getErrors({error, filePath}));
       return;
@@ -31,7 +31,7 @@ module.exports = {
     
     //Data
     const userData = await db.findOne({_id: user.id});
-    const targetData = await db.findOne({_id: target.user.id});
+    const targetData = await db.findOne({_id: target.id});
     
     const amount = args[args.length - 1];
       
@@ -41,14 +41,14 @@ module.exports = {
         return message.reply(getErrors({error: 'syntax', filePath: 'dogenomy/trade.js'}));
       } else if (args.length === 3) {
         //send @ping item_name 1
-        await trade('coins', amount, user, target.user, message);
+        await trade('coins', amount, user, target, message);
       }
     } else {
       message.content = content.split(' ').slice(1).join(' ');
       const itemArray = await checkItems(message, 'dogenomy/trade.js');
       
       if(itemArray != 'err') {
-        trade(itemArray[0], itemArray[1], user, target.user, message);
+        trade(itemArray[0], itemArray[1], user, target, message);
       } else {
         return;
       }
