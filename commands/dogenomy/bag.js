@@ -18,19 +18,19 @@ module.exports = {
     let target = await getTarget(message, args, client);
     if(!target) return;
     
-    const data = await db.findOne({_id: target.id});
+    const data = await db.findOne({_id: target.user.id});
     let bagItems = data.bag || {};
     
     const itemsText = await getItemsFieldText();
     const decorsText = await getDecorsFieldText();
     
     const bagEmbed = await new Discord.MessageEmbed()
-      .setTitle(`${target.username}'s bag`)
+      .setTitle(`${target.displayName}'s bag`)
       .setDescription('The bag looks so pro\n\n' + itemsText)
       .setFooter('🔨 for items and 👗 for decors')
       .setColor(embedColor);
     const decorEmbed = await new Discord.MessageEmbed()
-      .setTitle(`${target.username}'s wardrobe`)
+      .setTitle(`${target.displayName}'s wardrobe`)
       .setDescription('The wardrobe looks so pro\n\n' + decorsText)
       .setFooter('🔨 for items and 👗 for decors')
       .setColor(embedColor);

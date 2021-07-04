@@ -13,7 +13,7 @@ module.exports = {
   syntax: 'e.shop',
   cooldown: 5,
   run: async ({message}) => {
-    const { content, author, channel, mentions } = message;
+    const { content, member, author, channel, mentions } = message;
     const coinsEmoji = await getEmoji('coin');
 
     const data = await db.findOne( {_id: author.id });
@@ -26,7 +26,7 @@ module.exports = {
     const embed = new Discord.MessageEmbed()
       .setTitle(`Shop Items`)
       .setDescription(text)
-      .setFooter(`Requested by ${author.tag}`)
+      .setFooter(`Requested by ${member.displayName}`)
       .setColor(embedColor);
         
     docs.forEach(async doc => {

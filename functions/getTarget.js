@@ -3,13 +3,14 @@ const getErrors = require('./getErrors.js');
 
 module.exports = async (message, args, client) => {
   let target;
+ 
   if(args.length > 0) {
     let query = args[0];
-    let user = message.mentions.users.first() || 
-    client.users.cache.get(query) || 
-    client.users.cache.find(user => user.tag == query);
+    let user = message.mentions.members.first() || 
+    message.guild.members.cache.get(query) || 
+    message.guild.members.cache.find(user => user.displayName == query);
     if(!user || user.bot) {
-      message.reply('Invalid Target, Either ping them, give their id or type their username#0000 without @');
+      message.reply('Invalid Target, ping or give their ID.');
       return;
     }
     target = await getData();
@@ -23,7 +24,7 @@ module.exports = async (message, args, client) => {
       }
     }
   } else {
-    target = message.author;
+    target = message.member;
   }
   return target;
 }
