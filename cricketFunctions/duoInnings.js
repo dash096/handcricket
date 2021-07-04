@@ -351,46 +351,49 @@ let swapCounter = 0
 async function cpuBowl(batsman, batArray) {
   let pattern = batsman.pattern
   let arr = batArray
+  arr = arr.slice(-4).map((v, i, a) => v - (a[i - 1] || 0))
+  arr = arr.slice(-3)
   
   let random = Math.random()
-  
-  if (arr.length > 2) {
-    arr = arr.slice(-4).map((v, i, a) => v - (a[i - 1] || 0))
-    arr = arr.slice(-3)
     
+  if (arr.length > 2) {
     // If spamming 2 nums
     if (arr[0] === arr[2]) {
       swapCounter += 1
-      if (swapCounter > 2) {
+      if (swapCounter > 1) {
         return arr[1]
-      } else if (swapCounter > 1) {
-        return random < 0.7 ? arr[1] :
-               pattern[5]
       } else {
         return random < 0.4 ? arr[1] :
-               random < 0.75 ? 4 :
+               random < 0.75 ? 6 :
                pattern[1]
       }
     } // If spamming same number
     else if (arr[1] === arr[2]) {
       let num = arr.slice(-1)[0]
       
-      if (batArray.filter(x => x === num).length > 5 || batArray.filter(x => x === num - 2).length > 5) {
-        return random < 0.50 ? num :
-               random < 0.70 ? pattern[0] :
-               random < 0.875 ? 3 :
-               5
+      if (batArray.filter(x => x === num).length > 5) {
+        return random < 0.5 ? num :
+               pattern[0]
+      } else if (batArray.filter(x => x === num - 2).length > 5) {
+        return random < 0.5 ? 5 :
+               6
       } else {
         return random < 0.45 ? num :
                num > 1 ? num - 1 :
-               pattern[0]
+               random < 0.100 ? arr.slice(-1) :
+               random < 0.400 ? pattern[0] :
+               random < 0.600 ? pattern[1] :
+               random < 0.750 ? pattern[2] :
+               random < 0.870 ? pattern[3] :
+               random < 0.950 ? pattern[4] :
+               pattern[5]
       }
     } 
   } 
   
-  return random < 0.200 ? arr[arr.length - 1] - arr[arr.length - 2] :
-         random < 0.500 ? pattern[0] :
-         random < 0.670 ? pattern[1] :
+  return random < 0.100 ? arr.slice(-1) :
+         random < 0.400 ? pattern[0] :
+         random < 0.600 ? pattern[1] :
          random < 0.750 ? pattern[2] :
          random < 0.870 ? pattern[3] :
          random < 0.950 ? pattern[4] :
