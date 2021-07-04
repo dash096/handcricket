@@ -27,7 +27,7 @@ module.exports = {
         `Unique Users: ${USERS} users\nCached Users: ${CACHED_USERS} users\nPlaying Now: ${ACTIVE_USERS} users`
       )
       .addField('Process', `Ram Usage: ${RAM}\nUptime: ${TIME}`)
-      .addField('🔫 Dispo Squad 🔫', `Dash\`#0966\`\nUltraMoonEagle\`#3876\`\nKing Kane\`#0018\`\nGRENINJA\`#0017\`\nsantdas36\`#0440\``)
+      .addField('🔫 Dispo Squad 🔫', `Dash\`#0966\`\nUltraMoonEagle\`#3876\`\nKing Kane\`#0018\`\nGRENINJA\`#0017\`\nsantdas36\`#0440\`\nPanda_Rose\`1331\``)
       .setFooter('Made with 💖 with discord.js', "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTt6B6HUVgdNO6fZQYdFl5GvhMPc1B5_LXjjPDpgTZML7DWZvneIJz7tUc&s=10")
       .setColor(embedColor);
     
