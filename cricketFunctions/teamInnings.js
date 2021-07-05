@@ -19,7 +19,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
 
   start(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel, oldLogs, target);
 
-  function start(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel, oldLogs, target) {
+  async function start(players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, channel, oldLogs, target) {
     let checkTimeup = [];
     let battingTime = 45000;
     let bowlingTime = 45000;
