@@ -43,7 +43,7 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
   
   async function start(batsman, bowler, oldLogs) {
     let target = oldLogs ? oldLogs.batArray.slice(-1)[0] + 1 : undefined
-    
+    let targetIn = oldLogs ? oldLogs.ballArray.length - 1 : undefined
     let noOfUsedDots = 0;
     
     let wickets = wckts;
@@ -54,8 +54,8 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
 
     const embed = new Discord.MessageEmbed()
       .setTitle("Cricket Match")
-      .addField(batsman.username + " - Batsman", `**Score:**      0\n\n**Wickets Left:**     ${wickets}\n**Balls Left:**     ${remainingBalls}`, true)
-      .addField(bowler.username + " - Bowler", target || 0, true)
+      .addField(batsman.username + " - Batting", `**Score:**      ${challenge?.currentScore || 0} (${ballArray.length - 1})\n\n**Wickets Left:**     ${wickets}\n**Balls Left:**     ${remainingBalls}`, true)
+      .addField(bowler.username + " - Bowling", `${target || 0} (${targetIn || 0})`, true)
       .setColor(embedColor);
     if (challenge) embed.setFooter(challenge.info)
     
@@ -91,8 +91,8 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
         const embed = new Discord.MessageEmbed()
           .setTitle("Cricket Match")
           .setDescription(comment)
-          .addField(batsman.username + " - Batsman", `**Score:**      ${batArray.slice(-1)[0]}\n\n**Wickets Left:**     ${wickets}\n**Balls Left:**     ${remainingBalls}`, true)
-          .addField(bowler.username + " - Bowler", target || 0, true)
+          .addField(batsman.username + " - Batting", `**Score:**      ${batArray.slice(-1)[0]} (${ballArray.length - 1})\n\n**Wickets Left:**     ${wickets}\n**Balls Left:**     ${remainingBalls}`, true)
+          .addField(bowler.username + " - Bowling", `${target || 0} (${targetIn || 0})`, true)
           .setColor(embedColor);
         if (challenge) embed.setFooter(challenge.info)
         
@@ -254,8 +254,8 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
           const embed = new Discord.MessageEmbed()
             .setTitle("Cricket Match")
             .setDescription(comment)
-            .addField(batsman.username + " - Batsman", `**Score:**      ${newScore}\n\n**Wickets Left:**     ${wickets}\n**Balls Left:**     ${remainingBalls}`, true)
-            .addField(bowler.username + " - Bowler", target || 0, true)
+            .addField(batsman.username + " - Batting", `**Score:**      ${newScore} (${ballArray.length - 1})\n\n**Wickets Left:**     ${wickets}\n**Balls Left:**     ${remainingBalls}`, true)
+            .addField(bowler.username + " - Bowling", `${target || 0} (${targetIn || 0})`, true)
             .setColor(embedColor);
           if (challenge) embed.setFooter(challenge.info)
 
@@ -308,8 +308,8 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
           const embed = new Discord.MessageEmbed()
             .setTitle("Cricket Match")
             .setDescription(comment)
-            .addField(batsman.username + " - Batsman", `**Score:**      ${newScore}\n\n**Wickets Left:**     ${wickets}\n**Balls Left:**     ${remainingBalls}`, true)
-            .addField(bowler.username + " - Bowler", target || 0, true)
+            .addField(batsman.username + " - Batting", `**Score:**      ${newScore} (${ballArray.length - 1})\n\n**Wickets Left:**     ${wickets}\n**Balls Left:**     ${remainingBalls}`, true)
+            .addField(bowler.username + " - Bowling", `${target || 0} (${targetIn || 0})`, true)
             .setColor(embedColor);
           if (challenge) embed.setFooter(challenge.info)
 
