@@ -408,7 +408,7 @@ module.exports = async (message, client) => {
       batTeam[0].team = teams[Math.floor(Math.random() * teams.length)]
       teams.splice(teams.indexOf(batTeam[0].team), 1)
       bowlTeam[0].team = teams[Math.floor(Math.random() * teams.length)]
-      
+      console.log(batTeam[0], bowlTeam[0])
       executeTeamMatch(client, players, batOrder, bowlOrder, batTeam[0], bowlTeam[0], extraPlayer, message, max);
       
       async function pick(cap, team, type) {

@@ -23,8 +23,8 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
     let checkTimeup = [];
     let battingTime = 45000;
     let bowlingTime = 45000;
-    let batFieldName = `${await getEmoji(battingCap.team)} **${battingTeam.team}** - Batting`
-    let bowlFieldName = `${await getEmoji(bowlingCap.team)} **${bowlingTeam.team}** - Bowling`
+    let batFieldName = `${await getEmoji(battingCap.team.toLowerCase())} **${battingTeam.team}** - Batting`
+    let bowlFieldName = `${await getEmoji(bowlingCap.team.toLowerCase())} **${bowlingTeam.team}** - Bowling`
 
     lookForEndMessages(players, battingCap, bowlingCap, channel);
 
@@ -627,6 +627,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         let playerHistory = results.STRs[player.id || '0000']
         let balls = playerHistory ? playerHistory[1] :
                     (id === current.id ? logs.currentBalls : 0)
+        console.log(balls, playerHistory)
         playerAndLog.push(name + `     ${log[log.length -1] || 0} (${(balls/6).toFixed(0)}.${balls % 6})`)
       });
       
