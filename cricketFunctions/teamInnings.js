@@ -350,12 +350,10 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         if (!oldLogs && isInnings2) return;
 
         //Turn based on batExtra
-        if (batExtra && logs.bowling[bowler.id].length > logs.batting['0000'].length) {
-          return bowlCollect(batsman, bowler, dm);
-        } //Turn based on no batExtra
-        else if (!batExtra && logs.bowling[bowler.id].length > logs.batting[batsman.id].length) {
+        if (logs.bowling[bowler.id].length > logs.batting[batExtra ? '0000' : batsman.id].length) {
           return bowlCollect(batsman, bowler, dm);
         }
+        
         //CPU auto bowl
         remainingBalls -= 1;
         totalBalls -= 1;
@@ -482,8 +480,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         } //Log
         else {
           //Push the scores
-          if (batExtra) logs.batting['0000'].push(oldScore + parseInt(content));
-          else logs.batting[batsman.id].push(oldScore + parseInt(content));
+          logs.batting[batExtra ? '0000' : batsman.id].push(oldScore + parseInt(content));
 
           teamScore += parseInt(content);
           const embed = new Discord.MessageEmbed()
@@ -493,6 +490,13 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
             .addField(bowlFieldName, getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, bowler))
             .setColor(embedColor)
             .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
+          //set gif as image on century/half-century
+          if (oldScore < 50 && oldScore + parseInt(content) > 50) {
+            embed.setImage('https://tenor.com/bzehq.gif')
+          } else if (oldScore < 100 && oldScore + parseInt(content) > 100) {
+            embed.setImage('https://tenor.com/bDMWB.gif')
+          }
+          
           let send = `The batsman hit ${content}, was bowled ${bowled}.`
           await batsman.send(send, {
             embed
@@ -523,10 +527,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         if (isInnings2 === 'over') return;
 
         //Turn Based on batExtra
-        if (batExtra && logs.batting['0000'].length === logs.bowling[bowler.id].length) {
-          return batCollect(batsman, bowler, dm);
-        } //Turn Based on no batExtra
-        else if (!batExtra && logs.batting[batsman.id].length === logs.bowling[bowler.id].length) {
+        if (logs.batting[batExtra ? '0000' : batsman.id].length === logs.bowling[bowler.id].length) {
           return batCollect(batsman, bowler, dm);
         }
 
@@ -534,13 +535,9 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         //CPU auto hit
         let rando = ([1, 2, 3, 4, 5, 6])[Math.floor([Math.random() * ([1, 2, 3, 4, 5, 6]).length])];
         let oldScore = (logs.batting[batsman.id])[(logs.batting[batsman.id]).length - 1];
-        if (batExtra) {
-          oldScore = (logs.batting['0000'])[(logs.batting['0000']).length - 1];
-          (logs.batting['0000']).push(oldScore + parseInt(rando));
-        } else {
-          (logs.batting[batsman.id]).push(oldScore + parseInt(rando));
-        }
-
+        oldScore = logs.batting[batExtra ? '0000' : batsman.id].slice(-1)[0];
+        logs.batting[batExtra ? '0000' : batsman.id].push(oldScore + parseInt(rando));
+        
         teamScore += parseInt(rando);
         const embed = new Discord.MessageEmbed()
           .setTitle('TeamMatch')
@@ -553,11 +550,8 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         //Wicket
         if (bowled === rando) {
           teamScore -= parseInt(rando);
-          if (batExtra) {
-            logs.batting['0000'].pop()
-          } else {
-            logs.batting[batsman.id].pop()
-          }
+          logs.batting[batExtra ? '0000' : batsman.id].pop()
+          
           let currentIndex = getIndex(battingTeam, batsman);
           let response = battingTeam[currentIndex + 1] || 'end';
           if (batExtra === true) {
@@ -566,7 +560,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
             response = extraPlayer;
             batExtra = true;
           }
-          let next = 'Wicket!!' + whoIsNext(response, 'bat', extraPlayer, isInnings2);
+          let next = '☝️ Wicket!!' + whoIsNext(response, 'bat', extraPlayer, isInnings2);
           batsman.send(next, {
             embed
           });
@@ -579,10 +573,10 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           return respond(response, bowler, batsman, 'bat');
         } //Target++
         else if (oldLogs && teamScore + parseInt(rando) >= target) {
-          if (batExtra) logs.batting['0000'].push(oldScore + parseInt(rando));
-          else logs.batting[batsman.id].push(oldScore + parseInt(rando));
+          logs.batting[batExtra ? '0000' : batsman.id].push(oldScore + parseInt(rando));
+          
           const embed = new Discord.MessageEmbed()
-          let next = 'Batting Team Won';
+          let next = '🔥 Batting Team Won';
           batsman.send(next, {
             embed
           });

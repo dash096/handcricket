@@ -147,11 +147,11 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
         //End the match
         if (c == 'end' || c == 'e.hc end' || c == 'e.hc x') {
           isInnings2 = 'over';
-          changeStatus(batsman, bowler);
           let text = `**${bowler.username}** forfeited`
           batsman.send(text);
           bowler.send(text);
           if (post === true) channel.send(text);
+          await changeStatus(batsman, bowler);
           return;
         } //Communication
         else if (isNaN(c)) {
@@ -216,11 +216,11 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
         //End the match
         if (c == 'end' || c =='e.hc end' || c == 'e.hc x') {
           isInnings2 = 'over';
-          changeStatus(batsman, bowler);
           let text = `**${batsman.username}** forfeited`
           batsman.send(text);
           bowler.send(text);
           if (post == true) channel.send(text);
+          await changeStatus(batsman, bowler);
           return;
         } //Communication
         else if (isNaN(c)) {
@@ -262,9 +262,9 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
           if (wickets === 0) {
             if (!target) {
               isInnings2 = true;
-              await batsman.send("Wicket! Second Innings starts. The bowler bowled " + ballArray[ballArray.length - 1], embed);
-              await bowler.send(`Wicket! Second Innings statts. The batsman hit ${c}${dot(c, bowled)}`, embed);
-              if (post === true) await channel.send(`Wicket! Second Innings starts. He hit ${c}${dot(c, bowled)}, and was bowled ${ballArray[ballArray.length - 1]}`, embed);
+              await batsman.send("☝️ Wicket! Second Innings starts. The bowler bowled " + ballArray[ballArray.length - 1], embed);
+              await bowler.send(`☝️ Wicket! Second Innings statts. The batsman hit ${c}${dot(c, bowled)}`, embed);
+              if (post === true) await channel.send(`☝️ Wicket! Second Innings starts. He hit ${c}${dot(c, bowled)}, and was bowled ${ballArray[ballArray.length - 1]}`, embed);
               if (!challenge || challenge?.doubleInnings) return start(bowler, batsman, {
                 'batArray': batArray,
                 'ballArray': ballArray,
@@ -272,10 +272,10 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
             } else {
               isInnings2 = 'over';
               const coins = Math.floor(Math.random() * 345 * ((await db.findOne({ _id: bowler.id }) || {}).coinMulti || 0.2));
-              await batsman.send("You lost! The bowler bowled " + ballArray[ballArray.length - 1], embed);
-              await bowler.send(`You won! The batsman hit ${c}${dot(c, bowled)} and looted ${await getEmoji('coin')} ${coins}`, embed);
-              if (post === true) await channel.send(`**${bowler.username}** won!!! Wicket! Batsman hit ${c}${dot(c, bowled)}, and was bowled ${ballArray[ballArray.length - 1]} by **${bowler.username}**`, embed);
-              changeStatus(batsman, bowler)
+              await batsman.send("☝️ You lost! The bowler bowled " + ballArray[ballArray.length - 1], embed);
+              await bowler.send(`☝️ You won! The batsman hit ${c}${dot(c, bowled)} and looted ${await getEmoji('coin')} ${coins}`, embed);
+              if (post === true) await channel.send(`**${bowler.username}** won!!! ☝️ Wicket! Batsman hit ${c}${dot(c, bowled)}, and was bowled ${ballArray[ballArray.length - 1]} by **${bowler.username}**`, embed);
+              await changeStatus(batsman, bowler)
               return rewards(bowler, batsman, coins, oldLogs, {
                 'batArray': batArray,
                 'ballArray': ballArray,
