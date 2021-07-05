@@ -23,8 +23,8 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
     let checkTimeup = [];
     let battingTime = 45000;
     let bowlingTime = 45000;
-    let batFieldName = `${await getEmoji(battingCap.team.toLowerCase())} **${battingTeam.team}** - Batting`
-    let bowlFieldName = `${await getEmoji(bowlingCap.team.toLowerCase())} **${bowlingTeam.team}** - Bowling`
+    let batFieldName = `${await getEmoji(battingCap.team.toLowerCase())} **${battingCap.team}** - Batting`
+    let bowlFieldName = `${await getEmoji(bowlingCap.team.toLowerCase())} **${bowlingCap.team}** - Bowling`
 
     lookForEndMessages(players, battingCap, bowlingCap, channel);
 
