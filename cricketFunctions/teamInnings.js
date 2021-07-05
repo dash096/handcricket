@@ -612,19 +612,19 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         if (id === current.id) username = `__${username}__`
         
         let name = 
-          batExtra ?
+          type === 'batting' && batExtra ?
             `${extraPlayer.username} (EW)` :
           id === cap.id ?
             `${username} (cap)` :
           `${username}`
         
-        let playerHistory = results.STRs[batExtra ? '0000' : player.id]
+        let playerHistory = results.STRs[type === 'batting' && batExtra ? '0000' : player.id]
         let balls = playerHistory ? playerHistory[1] :
                     (id === current.id ? logs.currentBalls : 0)
         
         playerAndLog.push(
           name +
-          `     ${log[log.length -1] || 0}/${battingTeam.length - battingTeam.indexOf(batExtra ? '0000' : batsman)} \`(${(balls/6).toFixed(0)}.${balls % 6})\``
+          `     ${log[log.length -1] || 0}/${battingTeam.length - battingTeam.indexOf(type === 'batting' && batExtra ? '0000' : current)} \`(${(balls/6).toFixed(0)}.${balls % 6})\``
         )
       });
       
