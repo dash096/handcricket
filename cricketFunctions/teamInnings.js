@@ -619,20 +619,23 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         
         let name = 
           batExtra ?
-            `${username} (EW)` :
+            `${extraPlayer.username} (EW)` :
           id === cap.id ?
             `${username} (cap)` :
           `${username}`
         
-        let playerHistory = results.STRs[player.id || '0000']
+        let playerHistory = results.STRs[batExtra ? '0000' : player.id]
         let balls = playerHistory ? playerHistory[1] :
                     (id === current.id ? logs.currentBalls : 0)
-        console.log(balls, playerHistory)
-        playerAndLog.push(name + `     ${log[log.length -1] || 0} (${(balls/6).toFixed(0)}.${balls % 6})`)
+        
+        playerAndLog.push(
+          name +
+          `     ${log[log.length -1] || 0}/${battingTeam.length - battingTeam.indexOf(batExtra ? '0000' : batsman)} \`(${(balls/6).toFixed(0)}.${balls % 6})\``
+        )
       });
       
       if (type === 'batting' && oldLogs) {
-        playerAndLog.push(`**${target}** is the Target Score, more **${target - teamScore}** runs left.`);
+        playerAndLog.push(`**Target:** ${target}, more **${target - teamScore}** runs in ${(totalBalls/6).toFixed(0)}.${totalBalls%6}`);
       }
       return playerAndLog.join(`\n`);
     }
@@ -852,8 +855,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
 }
 
 function getIndex(team, player) {
-  let index = team.indexOf(player);
-  return index;
+  return team.indexOf(player)
 }
 
 function whoIsNext(res, type, extraPlayer, isInnings2) {
