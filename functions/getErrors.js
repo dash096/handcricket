@@ -5,7 +5,7 @@ module.exports = ({error, user, itemName, filePath}) => {
   
   let prefix = 'e.';
   if(error == 'time') {
-    return 'Time\'s up!' + tip;
+    return '🕒 Time\'s up!' + tip;
   } else if( error == 'item') {
     return `Invalid Item - \`${itemName}\`, check it in the shop first..` + tip;
   } else if( error == 'syntax') {

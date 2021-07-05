@@ -282,9 +282,9 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
               }, message, challenge);
             }
           } else {
-            await batsman.send("Wicket! The bowler bowled " + ballArray[ballArray.length - 1], embed);
-            await bowler.send(`Wicket! The batsman hit ${c}${dot(c, bowled)}`, embed);
-            if (post === true) await channel.send(`Wicket! Batsman hit ${c}${dot(c, bowled)}, and was bowled ${ballArray[ballArray.length - 1]}`, embed);
+            await batsman.send("☝️ Wicket! The bowler bowled " + ballArray[ballArray.length - 1], embed);
+            await bowler.send(`☝️ Wicket! The batsman hit ${c}${dot(c, bowled)}`, embed);
+            if (post === true) await channel.send(`☝️ Wicket! Batsman hit ${c}${dot(c, bowled)}, and was bowled ${ballArray[ballArray.length - 1]}`, embed);
             return loopBatCollect();
           }
         } //Target++
@@ -292,7 +292,7 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
           batArray.push(newScore);
           isInnings2 = 'over';
           const coins = Math.floor(Math.random() * 345 * ((await db.findOne({ _id: batsman.id }) || {}).coinMulti || 0.2));
-          await batsman.send("You won! You chased the target!" +  ` You looted ${await getEmoji('coin')} ${coins}`);
+          await batsman.send("🔥 You won! You chased the target!" +  ` You looted ${await getEmoji('coin')} ${coins}`);
           await bowler.send('You lost! The batsman chased the target');
           if (post === true) await channel.send(`**${batsman.username}** won!!! He chased the target!`);
           changeStatus(batsman, bowler)

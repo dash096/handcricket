@@ -10,7 +10,7 @@ const gainExp = require('../functions/gainExp.js');
 module.exports = async function innings(client, players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, message, max, oldLogs, target) {
   let { channel } = message;
   let isInnings2;
-
+  
   let results = {
     ducks: [],
     STRs: {},
@@ -23,6 +23,8 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
     let checkTimeup = [];
     let battingTime = 45000;
     let bowlingTime = 45000;
+    let batFieldName = `${await getEmoji(battingCap.team)} **${battingTeam.team}** - Batting`
+    let bowlFieldName = `${await getEmoji(bowligCap.team)} **${bowlingTeam.team}** - Bowling`
 
     lookForEndMessages(players, battingCap, bowlingCap, channel);
 
@@ -72,9 +74,9 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
 
     const embed = new Discord.MessageEmbed()
       .setTitle('TeamMatch')
-      .addField('Batting Team',
+      .addField(batFieldName,
         getPlayerTagWithLogs(battingTeam, 'batting', battingCap, battingTeam[0]))
-      .addField('Bowling Team',
+      .addField(bowlFieldName,
         getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, bowlingTeam[0]))
       .setColor(embedColor)
       .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
@@ -138,8 +140,8 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           if (type === 'bat') {
             const embed = new Discord.MessageEmbed()
               .setTitle('TeamMatch')
-              .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap, response))
-              .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, responseX))
+              .addField(batFieldName, getPlayerTagWithLogs(battingTeam, 'batting', battingCap, response))
+              .addField(bowlFieldName, getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, responseX))
               .setColor(embedColor)
               .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
 
@@ -151,8 +153,8 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           } else if (type === 'bowl') {
             const embed = new Discord.MessageEmbed()
               .setTitle('TeamMatch')
-              .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap, responseX))
-              .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, response))
+              .addField(batFieldName, getPlayerTagWithLogs(battingTeam, 'batting', battingCap, responseX))
+              .addField(bowlFieldName, getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, response))
               .setColor(embedColor)
               .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
 
@@ -182,8 +184,8 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           if (type === 'bat') {
             const embed = new Discord.MessageEmbed()
               .setTitle('TeamMatch')
-              .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap, response))
-              .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, responseX))
+              .addField(batFieldName, getPlayerTagWithLogs(battingTeam, 'batting', battingCap, response))
+              .addField(bowlFieldName, getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, responseX))
               .setColor(embedColor)
               .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
 
@@ -252,8 +254,8 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
             let response = bowlingTeam[currentIndex + 1] || 'end';
             const embed = new Discord.MessageEmbed()
               .setTitle('TeamMatch')
-              .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap, batsman))
-              .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, bowler))
+              .addField(batFieldName, getPlayerTagWithLogs(battingTeam, 'batting', battingCap, batsman))
+              .addField(bowlFieldName, getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, bowler))
               .setColor(embedColor)
               .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
 
@@ -438,11 +440,11 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           const embed = new Discord.MessageEmbed()
             .setTitle('TeamMatch')
             .setDescription(await commentry(bowled, 'W'))
-            .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap, batsman))
-            .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, bowler))
+            .addField(batFieldName, getPlayerTagWithLogs(battingTeam, 'batting', battingCap, batsman))
+            .addField(bowlFieldName, getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, bowler))
             .setColor(embedColor)
             .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
-          let next = 'Wicket!!' + whoIsNext(response, 'bat', extraPlayer, isInnings2);
+          let next = '☝️ Wicket!!' + whoIsNext(response, 'bat', extraPlayer, isInnings2);
           await batsman.send(next, {
             embed
           });
@@ -462,11 +464,11 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           const embed = new Discord.MessageEmbed()
             .setTitle('TeamMatch')
             .setDescription(await commentry(bowled, parseInt(content)))
-            .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap, batsman))
-            .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, bowler))
+            .addField(batFieldName, getPlayerTagWithLogs(battingTeam, 'batting', battingCap, batsman))
+            .addField(bowlFieldName, getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, bowler))
             .setColor(embedColor)
             .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
-          let next = 'Batting Team Won';
+          let next = '🔥 Batting Team Won';
           batsman.send(next, {
             embed
           });
@@ -487,8 +489,8 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           const embed = new Discord.MessageEmbed()
             .setTitle('TeamMatch')
             .setDescription(await commentry(bowled, parseInt(content)))
-            .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap, batsman))
-            .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, bowler))
+            .addField(batFieldName, getPlayerTagWithLogs(battingTeam, 'batting', battingCap, batsman))
+            .addField(bowlFieldName, getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, bowler))
             .setColor(embedColor)
             .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
           let send = `The batsman hit ${content}, was bowled ${bowled}.`
@@ -543,8 +545,8 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         const embed = new Discord.MessageEmbed()
           .setTitle('TeamMatch')
           .setDescription(await commentry(bowled, rando))
-          .addField('Batting Team', getPlayerTagWithLogs(battingTeam, 'batting', battingCap, batsman))
-          .addField('Bowling Team', getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, bowler))
+          .addField(batFieldName, getPlayerTagWithLogs(battingTeam, 'batting', battingCap, batsman))
+          .addField(bowlFieldName, getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, bowler))
           .setColor(embedColor)
           .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
 
