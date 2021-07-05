@@ -624,7 +624,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
             `${username} (cap)` :
           `${username}`
         
-        let playerHistory = STRs[player.id || '0000']
+        let playerHistory = results.STRs[player.id || '0000']
         let balls = playerHistory ? playerHistory[1] :
                     (id === current.id ? logs.currentBalls : 0)
         playerAndLog.push(name + `     ${log[log.length -1] || 0} (${(balls/6).toFixed(0)}.${balls % 6})`)
