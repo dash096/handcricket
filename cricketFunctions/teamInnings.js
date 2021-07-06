@@ -36,7 +36,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
     for (let i = 0; i < battingTeam.length; i++) {
       logs.batting[battingTeam[i].id || '0000'] = [0]
     }
-    for (let index in bowlingTeam) {
+    for (let i = 0; i < bowlingTeam.length; i++) {
       logs.bowling[bowlingTeam[i].id || '0000'] = [0]
     }
     
