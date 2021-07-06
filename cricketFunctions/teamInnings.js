@@ -34,24 +34,6 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
       currentBalls: 0,
     };
 
-    //Push to Logs and get Tags
-    let battingTeamTags = [];
-    let bowlingTeamTags = [];
-    battingTeam.forEach(player => {
-      player.id === battingCap.id ?
-        battingTeamTags.push(player.tag + ' (captain)') :
-        battingTeamTags.push(player.tag || `${extraPlayer.username} (EW)`)
-
-      logs.batting[player.id || '0000'] = [0];
-    });
-    bowlingTeam.forEach(player => {
-      player.id === bowlingCap.id ?
-        bowlingTeamTags.push(player.tag + ' (captain)') :
-        bowlingTeamTags.push(player.tag || `${extraPlayer.username} (EW)`)
-
-      logs.bowling[player.id || '0000'] = [0];
-    });
-
     let totalBalls = (bowlingTeam.length) * 2 * 6;
     let remainingBalls = 12;
 
@@ -609,8 +591,11 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
       team.forEach(player => {
         let log = logs[type][player.id || '0000'];
         let { id, username } = player;
-        if (id === current.id) username = `__${username}__`
         
+        let playerOut = type === 'batting' && team.indexOf(player) < team.indexOf(current) ? true : false
+        if (id === current.id) username = `__${username}__`
+        else if (playerOut) username = `❌ ${username}`
+
         let name = 
           type === 'batting' && batExtra ?
             `${extraPlayer.username} (EW)` :
@@ -622,14 +607,16 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         let balls = playerHistory ? playerHistory[1] :
                     (id === current.id ? logs.currentBalls : 0)
         
+        console.log(playerHistory, balls)
+        
         playerAndLog.push(
           name +
-          `     ${log[log.length -1] || 0}/${battingTeam.length - battingTeam.indexOf(type === 'batting' && batExtra ? '0000' : current)} \`(${(balls/6).toFixed(0)}.${balls % 6})\``
+          `     ${log[log.length -1] || 0} \`(${(balls/6).toFixed(0)}.${balls % 6})\``
         )
       });
       
       if (type === 'batting' && oldLogs) {
-        playerAndLog.push(`**Target:** ${target}, more **${target - teamScore}** runs in ${(totalBalls/6).toFixed(0)}.${totalBalls%6}`);
+        playerAndLog.push(`**Target:** ${target}, more **${target - teamScore}** runs in **${(totalBalls/6).toFixed(0)}.${totalBalls%6}** overs.`);
       }
       return playerAndLog.join(`\n`);
     }
@@ -650,7 +637,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         if (isInnings2 == 'over') return;
 
         if (message.author.id === cap1.id || message.author.id === cap2.id) {
-          await respond(`forceEnd: ${message.author.tag} ended.`);
+          await respond(`forceEnd: ${message.author.username} ended.`);
           messageCollector.stop();
         } else if (players.find(player => player.id == message.author.id)) {
           await message.reply('Only captains can end a match!');
