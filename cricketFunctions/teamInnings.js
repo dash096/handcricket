@@ -129,7 +129,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           if (type === 'bat') {
             const embed = new Discord.MessageEmbed()
               .setTitle('TeamMatch')
-              .addField(batFieldName, getPlayerTagWithLogs(battingTeam, 'batting', battingCap, response))
+              .addField(batFieldName, getPlayerTagWithLogs(battingTeam, 'batting', battingCap, response, oldResponse))
               .addField(bowlFieldName, getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, responseX))
               .setColor(embedColor)
               .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
@@ -173,7 +173,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           if (type === 'bat') {
             const embed = new Discord.MessageEmbed()
               .setTitle('TeamMatch')
-              .addField(batFieldName, getPlayerTagWithLogs(battingTeam, 'batting', battingCap, response))
+              .addField(batFieldName, getPlayerTagWithLogs(battingTeam, 'batting', battingCap, response, oldResponse))
               .addField(bowlFieldName, getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, responseX))
               .setColor(embedColor)
               .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
@@ -592,7 +592,8 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
       });
     }
 
-    function getPlayerTagWithLogs(team, type, cap, current) {
+    function getPlayerTagWithLogs(team, type, cap, current, isWicket) {
+      console.log(current, isWicket)
       let playerAndLog = [];
       
       if(type === 'batting' && oldLogs) {
@@ -603,7 +604,8 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         let log = logs[type][player.id || '0000'];
         let { id, username } = player;
         
-        let playerOut = type === 'batting' && team.indexOf(player) < team.indexOf(current) ? true : false
+        let playerOut = isWicket?.id === player.id ? true :
+                        (type === 'batting' && team.indexOf(player) < team.indexOf(current) ? true : false)
         if (id === current.id) username = `__${username}__`
         else if (playerOut) username = `❌ ${username}`
 
@@ -618,13 +620,19 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         let balls = playerHistory ? playerHistory[1] :
                     (id === current.id ? logs.currentBalls : 0)
         
-        playerAndLog.push(
-          `${name}     ${log[log.length -1] || 0} \`(${parseInt(balls/6)}.${balls % 6})\``
-        )
+        if(type === 'bowling') {
+          playerAndLog.push(
+            `${name}     ${isInnings2 ? `${results.STRs[player.id || '0000']?.[0]} \`(${parseInt(results.STRs[player.id || '0000'][1]/6)}.${results.STRs[player.id || '0000'][1]%6})\`` || 0 : 0}`
+          )
+        } else {
+          playerAndLog.push(
+            `${name}     ${log[log.length -1] || 0} \`(${parseInt(balls/6)}.${balls % 6})\``
+          )
+        }
       });
       
       if (type === 'batting' && oldLogs) {
-        playerAndLog.push(`\n**Target:** ${target}, more **${target - teamScore}** runs in **${(totalBalls/6).toFixed(0)}.${totalBalls%6}** overs.`);
+        playerAndLog.push(`\n**Target:** ${target}, more **${target - teamScore > 0 ? target - teamScore : 0}** runs in **${parseInt(totalBalls/6)}.${totalBalls%6}** overs.`);
       }
       return playerAndLog.join(`\n`);
     }
