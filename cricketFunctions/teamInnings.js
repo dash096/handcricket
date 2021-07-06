@@ -608,13 +608,13 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         else if (playerOut) username = `❌ ${username}`
 
         let name = 
-          type === 'batting' && batExtra ?
+          batExtra ?
             `${extraPlayer.username} (EW)` :
           id === cap.id ?
             `${username} (cap)` :
           `${username}`
         
-        let playerHistory = results.STRs[type === 'batting' && batExtra ? '0000' : player.id]
+        let playerHistory = results.STRs[batExtra ? '0000' : player.id]
         let balls = playerHistory ? playerHistory[1] :
                     (id === current.id ? logs.currentBalls : 0)
         
