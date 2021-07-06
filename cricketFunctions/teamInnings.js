@@ -608,10 +608,10 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         else if (playerOut) username = `❌ ${username}`
 
         let name = 
-          batExtra ?
-            `${extraPlayer.username} (EW)` :
+          typeof(player) === 'string' ?
+          `${batExtra ? `__${extraPlayer.username}__` : extraPlayer.username} (EW)` :
           id === cap.id ?
-            `${username} (cap)` :
+          `${username} (cap)` :
           `${username}`
         
         let playerHistory = results.STRs[batExtra ? '0000' : player.id]
@@ -619,8 +619,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
                     (id === current.id ? logs.currentBalls : 0)
         
         playerAndLog.push(
-          name +
-          `     ${log[log.length -1] || 0} \`(${parseInt(balls/6)}.${balls % 6})\``
+          `${name}     ${log[log.length -1] || 0} \`(${parseInt(balls/6)}.${balls % 6})\``
         )
       });
       
