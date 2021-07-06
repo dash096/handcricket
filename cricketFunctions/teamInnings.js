@@ -33,6 +33,13 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
       bowling: {},
       currentBalls: 0,
     };
+    for (let i = 0; i < battingTeam.length; i++) {
+      logs.batting[battingTeam[i].id || '0000'] = [0]
+    }
+    for (let index in bowlingTeam) {
+      logs.bowling[bowlingTeam[i].id || '0000'] = [0]
+    }
+    
 
     let totalBalls = (bowlingTeam.length) * 2 * 6;
     let remainingBalls = 12;
