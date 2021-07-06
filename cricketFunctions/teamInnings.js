@@ -588,6 +588,10 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
     function getPlayerTagWithLogs(team, type, cap, current) {
       let playerAndLog = [];
       
+      if(type === 'batting' && oldLogs) {
+        playerAndLog.push(`**Teamscore:** ${teamScore}`)
+      }
+      
       team.forEach(player => {
         let log = logs[type][player.id || '0000'];
         let { id, username } = player;
@@ -607,16 +611,14 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         let balls = playerHistory ? playerHistory[1] :
                     (id === current.id ? logs.currentBalls : 0)
         
-        console.log(playerHistory, balls)
-        
         playerAndLog.push(
           name +
-          `     ${log[log.length -1] || 0} \`(${(balls/6).toFixed(0)}.${balls % 6})\``
+          `     ${log[log.length -1] || 0} \`(${parseInt(balls/6)}.${balls % 6})\``
         )
       });
       
       if (type === 'batting' && oldLogs) {
-        playerAndLog.push(`**Target:** ${target}, more **${target - teamScore}** runs in **${(totalBalls/6).toFixed(0)}.${totalBalls%6}** overs.`);
+        playerAndLog.push(`\n**Target:** ${target}, more **${target - teamScore}** runs in **${(totalBalls/6).toFixed(0)}.${totalBalls%6}** overs.`);
       }
       return playerAndLog.join(`\n`);
     }
