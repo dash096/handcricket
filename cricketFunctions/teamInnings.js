@@ -618,7 +618,6 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         
         let playerHistory = typeof(player) === 'string'
                             ? (
-                                //extrawicket
                                 batExtra
                                 ? [0, logs.currentBalls, 0]
                                 : (isInnings2 ? results.STRs['0000'] : [0, 0, 0])
@@ -629,7 +628,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
                                 player.id || '0000'
                             ] || []
                             
-        let balls = playerHistory?.[1] || logs.currentBalls || 0
+        let balls = playerHistory?.[1] || isInnings2 && type === 'bowling' ? 0 : logs.currentBalls || 0
         
         if(type === 'bowling') {
           playerAndLog.push(
