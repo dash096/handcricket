@@ -129,7 +129,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           if (type === 'bat') {
             const embed = new Discord.MessageEmbed()
               .setTitle('TeamMatch')
-              .addField(batFieldName, getPlayerTagWithLogs(battingTeam, 'batting', battingCap, response, oldResponse))
+              .addField(batFieldName, getPlayerTagWithLogs(battingTeam, 'batting', battingCap, response))
               .addField(bowlFieldName, getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, responseX))
               .setColor(embedColor)
               .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
@@ -173,7 +173,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           if (type === 'bat') {
             const embed = new Discord.MessageEmbed()
               .setTitle('TeamMatch')
-              .addField(batFieldName, getPlayerTagWithLogs(battingTeam, 'batting', battingCap, response, oldResponse))
+              .addField(batFieldName, getPlayerTagWithLogs(battingTeam, 'batting', battingCap, response))
               .addField(bowlFieldName, getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, responseX))
               .setColor(embedColor)
               .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
@@ -427,10 +427,11 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           const embed = new Discord.MessageEmbed()
             .setTitle('TeamMatch')
             .setDescription(await commentry(bowled, 'W'))
-            .addField(batFieldName, getPlayerTagWithLogs(battingTeam, 'batting', battingCap, batsman))
+            .addField(batFieldName, getPlayerTagWithLogs(battingTeam, 'batting', battingCap, batsman, response))
             .addField(bowlFieldName, getPlayerTagWithLogs(bowlingTeam, 'bowling', bowlingCap, bowler))
             .setColor(embedColor)
             .setFooter(`${totalBalls} balls more left, Bowler changes in ${remainingBalls} balls`);
+          
           let next = '☝️ Wicket!!' + whoIsNext(response, 'bat', extraPlayer, isInnings2);
           await batsman.send(next, {
             embed
@@ -603,9 +604,9 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         let log = isInnings2 && type === 'bowling' ? oldLogs['batting'][player.id || '0000'] : logs[type][player.id || '0000']
         let { id, username } = player;
         
-        let playerOut = isWicket?.id === player.id ? true :
-                        (type === 'batting' && team.indexOf(player) < team.indexOf(current) ? true : false)
-        if (id === current.id) username = `__${username}__`
+        let playerOut = isWicket === 'end' ? true :
+                        (type === 'batting' && team.indexOf(isWicket ? isWicket : player) < team.indexOf(current) ? true : false)
+        if (id === current.id && !playerOut) username = `__${username}__`
         else if (playerOut) username = `❌ ${username}`
 
         let name = 
@@ -623,7 +624,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
                               : (isInnings2 ? results.STRs['0000'] || [0, 0, 0] : [0, 0, 0])
                             )
                             : player.id === current.id
-                            ? logs.currentBalls
+                            ? [0, logs.currentBalls, 0]
                             : results.STRs[
                               player.id || '0000'
                             ]
