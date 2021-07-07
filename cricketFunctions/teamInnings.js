@@ -601,7 +601,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
       }
       
       team.forEach(player => {
-        let log = logs[type][player.id || '0000'];
+        let log = isInnings2 && type === 'bowling' ? oldLogs[type][player.id || '0000'] : logs[type][player.id || '0000']
         let { id, username } = player;
         
         let playerOut = isWicket?.id === player.id ? true :
@@ -616,16 +616,15 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           `${username} (cap)` :
           `${username}`
         
-        let playerHistory = typeof(current) === 'string' ? logs.currentBalls : results.STRs[batExtra ? '0000' : player.id]
+        let playerHistory = typeof(player) === 'string' && batExtra ? [0, logs.currentBalls] : results.STRs[batExtra ? '0000' : player.id]
         let balls = playerHistory?.[1] || logs.currentBalls || 0
         
         if(type === 'bowling') {
           playerAndLog.push(
             `${name}     ${
-              isInnings2 ?
-              `${results.STRs[player.id || '0000']?.[0] || 0} \`(${parseInt(balls/6)}.${balls%6})\`` || 0 :
-              `0 \`(0.0)\``}
-            `
+            isInnings2 ?
+            `${results.STRs[player.id || '0000']?.[0] || 0} \`(${parseInt(balls/6)}.${balls%6})\`` || 0 :
+            `0 \`(0.0)\``}`
           )
         } else {
           playerAndLog.push(
