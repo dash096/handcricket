@@ -620,8 +620,8 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
                             ? (
                                 //extrawicket
                                 batExtra
-                                ? logs.currentBalls || 0
-                                : oldLogs['batting']['0000']
+                                ? [0, logs.currentBalls, 0]
+                                : (isInnings2 ? results.STRs['0000'] : [0, 0, 0])
                             )
                             : type === 'batting' && team.indexOf(current) < team.indexOf(player)
                             ?  [0, 0, 0]
