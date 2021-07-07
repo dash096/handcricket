@@ -593,7 +593,6 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
     }
 
     function getPlayerTagWithLogs(team, type, cap, current, isWicket) {
-      console.log(current, isWicket)
       let playerAndLog = [];
       
       if(type === 'batting' && oldLogs) {
@@ -610,31 +609,32 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         else if (playerOut) username = `❌ ${username}`
 
         let name = 
-          typeof(player) === 'string' ?
-          `${batExtra ? `__${extraPlayer.username}__` : extraPlayer.username} (EW)` :
+          typeof(player) === 'string'
+          ? `${batExtra ? `__${extraPlayer.username}__`
+          : extraPlayer.username} (EW)` :
           id === cap.id ?
           `${username} (cap)` :
           `${username}`
         
         let playerHistory = typeof(player) === 'string'
                             ? (
-                                batExtra
-                                ? [0, logs.currentBalls, 0]
-                                : (isInnings2 ? results.STRs['0000'] : [0, 0, 0])
+                              batExtra
+                              ? [0, logs.currentBalls, 0]
+                              : (isInnings2 ? results.STRs['0000'] || [0, 0, 0] : [0, 0, 0])
                             )
-                            : type === 'batting' && team.indexOf(batExtra ? team[team.length - 1] : current) < team.indexOf(player)
-                            ?  [0, 0, 0]
+                            : player.id === current.id
+                            ? logs.currentBalls
                             : results.STRs[
-                                player.id || '0000'
-                            ] || []
+                              player.id || '0000'
+                            ]
                             
-        let balls = playerHistory?.[1] || isInnings2 && type === 'bowling' ? 0 : logs.currentBalls || 0
+        let balls = playerHistory?.[1] || 0
         
         if(type === 'bowling') {
           playerAndLog.push(
             isInnings2
             ? `${name}     ${log[log.length - 1] || 0} \`(${parseInt(balls/6)}.${balls%6})\``
-            : `0 \`(0.0)\``
+            : `${name}     0 \`(0.0)\``
           )
         } else {
           playerAndLog.push(
