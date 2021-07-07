@@ -623,7 +623,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
                                 ? [0, logs.currentBalls, 0]
                                 : (isInnings2 ? results.STRs['0000'] : [0, 0, 0])
                             )
-                            : type === 'batting' && team.indexOf(current) < team.indexOf(player)
+                            : type === 'batting' && team.indexOf(batExtra ? team[team.length - 1] : current) < team.indexOf(player)
                             ?  [0, 0, 0]
                             : results.STRs[
                                 player.id || '0000'
@@ -633,10 +633,9 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         
         if(type === 'bowling') {
           playerAndLog.push(
-            `${name}     ${
-            isInnings2 ?
-            `${results.STRs[player.id || '0000']?.[0] || 0} \`(${parseInt(balls/6)}.${balls%6})\`` || 0 :
-            `0 \`(0.0)\``}`
+            isInnings2
+            ? `${name}     ${log[log.length - 1] || 0} \`(${parseInt(balls/6)}.${balls%6})\``
+            : `0 \`(0.0)\``
           )
         } else {
           playerAndLog.push(
