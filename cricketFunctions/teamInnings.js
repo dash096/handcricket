@@ -601,7 +601,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
       }
       
       team.forEach(player => {
-        let log = isInnings2 && type === 'bowling' ? oldLogs[type][player.id || '0000'] : logs[type][player.id || '0000']
+        let log = isInnings2 && type === 'bowling' ? oldLogs['batting'][player.id || '0000'] : logs[type][player.id || '0000']
         let { id, username } = player;
         
         let playerOut = isWicket?.id === player.id ? true :
@@ -616,7 +616,19 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           `${username} (cap)` :
           `${username}`
         
-        let playerHistory = typeof(player) === 'string' && batExtra ? [0, logs.currentBalls] : results.STRs[batExtra ? '0000' : player.id]
+        let playerHistory = typeof(player) === 'string'
+                            ? (
+                                //extrawicket
+                                batExtra
+                                ? logs.currentBalls || 0
+                                : oldLogs['batting']['0000']
+                            )
+                            : type === 'batting' && team.indexOf(current) < team.indexOf(player)
+                            ?  [0, 0, 0]
+                            : results.STRs[
+                                player.id || '0000'
+                            ] || []
+                            
         let balls = playerHistory?.[1] || logs.currentBalls || 0
         
         if(type === 'bowling') {
@@ -672,8 +684,6 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
   }
 
   async function rewards(channel, wonTeam, lostTeam, i1Logs, i2Logs, randoCoins, results) {
-    console.log(i1Logs, i2Logs, results)
-    
     let coinEmoji = await getEmoji('coin');
     let ducks = results.ducks
     let STRs = results.STRs
