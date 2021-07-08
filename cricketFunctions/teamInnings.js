@@ -744,13 +744,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
       let data = await db.findOne({ _id: player.id });
       if (!data) return console.log('no data for ducks');
 
-      const quests = data.quests || {};
-      quests.duck = true;
-
       await db.findOneAndUpdate({ _id: player.id }, {
-        $set: {
-          quests: quests,
-        },
         $inc: {
           wickets: 1
         }
@@ -773,16 +767,12 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
       const data = await db.findOne({ _id: player.id });
       const bal = data.cc + randoCoins;
       const wins = (data.wins || 0) + 1;
-      const quests = data.quests || {};
-      quests.tripWin = [(quests.tripWin || [0, '123'])[0] + 1, '123'];
-      if (quests.tripWin[0] === 3) quests.tripWin = [true, '123'];
 
       if (!STRs[player.id]) {
         await db.findOneAndUpdate({ _id: player.id }, {
           $set: {
             cc: bal,
             wins: wins,
-            quests: quests,
             coinMulti: parseFloat(data.coinMulti + 0.0069),
             tossMulti: parseFloat(data.tossMulti - 0.0069),
           }
@@ -792,13 +782,10 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         const STR = (data.strikeRate + STRs[player.id][0] / STRs[player.id][1]) / 2;
         const pattern = changePattern(data, STRs[player.id][2]);
 
-        console.log(bal, wins, STR);
-
         const winnerSet = {
           cc: bal,
           wins: wins,
           strikeRate: STR,
-          quests: quests,
           coinMulti: parseFloat(data.coinMulti + 0.0069),
           tossMulti: parseFloat(data.tossMulti - 0.0069),
           totalScore: parseInt((data.totalScore || 0) + (STRs[player.id])[0]),
@@ -821,15 +808,12 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
 
       const data = await db.findOne({ _id: player.id });
       let loses = data.loses + 1;
-      let quests = data.quests || {};
       let bal = data.cc + parseInt(randoCoins / 3);
-      quests.tripWin = [0, '123'];
-
+      
       if (!STRs[player.id]) {
         await db.findOneAndUpdate({ _id: player.id }, {
           cc: bal,
           loses: loses,
-          quests: quests,
           tossMulti: parseFloat(data.tossMulti + 0.0069),
         });
         return;
@@ -837,13 +821,10 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         const STR = (data.strikeRate + STRs[player.id][0] / STRs[player.id][1]) / 2;
         const pattern = changePattern(data, STRs[player.id][2]);
 
-        console.log(loses, STR);
-
         const loserSet = {
           cc: bal,
           loses: loses,
           strikeRate: STR,
-          quests: quests,
           tossMulti: parseFloat(data.tossMulti + 0.0069),
           totalScore: parseInt((data.totalScore || 0) + (STRs[player.id])[0]),
           pattern: pattern,
@@ -907,7 +888,7 @@ async function changeStatus(a, boolean) {
 function changePattern(data, scores) {
   let pattern = data.pattern || {}
 
-  logs = []
+  let logs = []
   for (let i = 0; i < scores.length; i++) {
     if (i !== 0) logs.push(scores[i] - scores[i - 1])
   }
@@ -917,5 +898,6 @@ function changePattern(data, scores) {
     pattern[num] = (pattern[num] || 0) + 1
   }
 
+  console.log(pattern)
   return pattern
 }
