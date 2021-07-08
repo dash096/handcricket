@@ -385,8 +385,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         let message = messages.first();
         let content = message.content.trim().toLowerCase();
         let bowled = (logs.bowling[bowler.id])[(logs.bowling[bowler.id]).length - 1];
-        let oldScore = (logs.batting[batsman.id])[(logs.batting[batsman.id]).length - 1];
-        if (batExtra) oldScore = (logs.batting['0000'])[(logs.batting['0000']).length - 1];
+        let oldScore = (logs.batting[batExtra ? '0000' : batsman.id])[(logs.batting[batExtra ? '0000' : batsman.id]).length - 1];
 
         //End
         if (content === 'end' || content === 'cancel') {

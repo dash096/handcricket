@@ -254,7 +254,7 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
           const embed = new Discord.MessageEmbed()
             .setTitle("Cricket Match")
             .setDescription(comment)
-            .addField(batsman.username + " - Batting", `**Score:**      ${newScore} (${ballArray.length - 1})\n\n**Wickets Left:**     ${wickets}\n**Balls Left:**     ${remainingBalls}`, true)
+            .addField(batsman.username + " - Batting", `**Score:**      ${batArray[batArray.length - 1]} (${ballArray.length - 1})\n\n**Wickets Left:**     ${wickets}\n**Balls Left:**     ${remainingBalls}`, true)
             .addField(bowler.username + " - Bowling", `${target || 0} (${targetIn || 0})`, true)
             .setColor(embedColor);
           if (challenge) embed.setFooter(challenge.info)
