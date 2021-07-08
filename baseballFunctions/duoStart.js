@@ -12,7 +12,7 @@ module.exports = async (client, message, user, target) => {
   const { channel, content, author } = message;
   
   //Check Target's Will
-  await channel.send(`${target} do you want to play baseball with ${user.username}? Type \`y\`/\`n\` in 30s\n Append(add to the end) \`--post\` to the message to post the progress in this channel`);
+  await channel.send(`${target} do you want to play baseball with ${user.username}? Type \`y\`/\`n\` in 30s, flags exists.`);
   
   let post;
   if (content.toLowerCase().includes('--post')) post = true;

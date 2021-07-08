@@ -611,9 +611,10 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
 
         let name = 
           typeof(player) === 'string'
-          ? `${batExtra ? `__${extraPlayer.username}__`
-          : extraPlayer.username} (EW)` :
-          id === cap.id ?
+          ? `${batExtra 
+                        ? `__${extraPlayer.username}__`
+                        : extraPlayer.username} (EW)`
+                        : id === cap.id ?
           `${username} (cap)` :
           `${username}`
         
@@ -623,7 +624,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
                               ? [0, logs.currentBalls, 0]
                               : (isInnings2 ? results.STRs['0000'] || [0, 0, 0] : [0, 0, 0])
                             )
-                            : player.id === current.id
+                            : player.id === current.id && !batExtra && type === 'batting'
                             ? [0, logs.currentBalls, 0]
                             : results.STRs[
                               player.id || '0000'

@@ -50,7 +50,7 @@ module.exports = async (message, user, target) => {
   }
   
   //Execute check will
-  await channel.send(`${target} Do you wanna play cricket with **${user.username}**? Type \`y\`/\`n\` in 30s\n Append(add to the end) \`--post\` to the message to post the scores in this channel`);
+  await channel.send(`${target} Do you wanna play cricket with **${user.username}**? Type \`y\`/\`n\` in 30s, flags exists.`);
   
   let will = await checkWill(channel, target, flags.post, flags.max, flags.wickets || 1, flags.overs || 5);
   flags.post = will[1];
