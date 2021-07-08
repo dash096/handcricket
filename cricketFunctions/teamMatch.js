@@ -10,9 +10,23 @@ const rollToss = require('../functions/rollToss.js');
 module.exports = async (message, client) => {
   const { channel, content, author, mentions } = message;
   
-  let max = 6;
-  if(content.toLowerCase().includes('--ten')) max = 10;
-  
+  let flags = {
+    max: 6,
+    oversPerBowler: 2,
+  }
+  if(content.toLowerCase().includes('--ten')) flags.max = 10
+  if(content.toLowerCase().includes('--overs')) {
+    let overs = content[(/--overs/.exec(content)).index + 8];
+    if (!overs || isNaN(overs)) {
+      message.reply('Invalid Value for Flag Overs and it is set to 5 as default.');
+    } else if (overs > 5) {
+      flags.oversPerBowler = 5;
+      message.reply('Limited overs for a duoMatch is 1-5, it is now set to 5');
+    } else {
+      flags.oversPerBowler = overs;
+    }
+  }
+
   await getReactors();
   
   //Collect reactions from sent Embed and next Choose Caps.
@@ -409,7 +423,7 @@ module.exports = async (message, client) => {
       teams.splice(teams.indexOf(batTeam[0].team), 1)
       bowlTeam[0].team = teams[Math.floor(Math.random() * teams.length)]
       
-      executeTeamMatch(client, players, batOrder, bowlOrder, batTeam[0], bowlTeam[0], extraPlayer, message, max);
+      executeTeamMatch(client, players, batOrder, bowlOrder, batTeam[0], bowlTeam[0], extraPlayer, message, flags);
       
       async function pick(cap, team, type) {
         try {

@@ -7,7 +7,8 @@ const updateBags = require('../functions/updateBag.js');
 const commentry = require('./getCommentry.js');
 const gainExp = require('../functions/gainExp.js');
 
-module.exports = async function innings(client, players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, message, max, oldLogs, target) {
+module.exports = async function innings(client, players, battingTeam, bowlingTeam, battingCap, bowlingCap, extraPlayer, message, flags, oldLogs, target) {
+  let { max, oversPerBowler } = flags
   let { channel } = message;
   let isInnings2;
   
@@ -41,8 +42,8 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
     }
     
 
-    let totalBalls = (bowlingTeam.length) * 2 * 6;
-    let remainingBalls = 12;
+    let totalBalls = bowlingTeam.length * oversPerBowler * 6;
+    let remainingBalls = oversPerBowler * 6;
 
     function startInnings() {
       let batsman = battingTeam[0];
