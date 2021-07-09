@@ -595,6 +595,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
 
     function getPlayerTagWithLogs(team, type, cap, current, isWicket) {
       let playerAndLog = [];
+      console.log(typeof team)
       
       if(type === 'batting' && oldLogs) {
         playerAndLog.push(`**Teamscore:** ${teamScore}`)
@@ -845,6 +846,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
 }
 
 function getIndex(team, player) {
+  console.log(typeof team)
   return team.indexOf(player)
 }
 
