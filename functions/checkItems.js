@@ -44,9 +44,6 @@ module.exports = async function (message, filePath) {
   if(itemName === "dots" || itemName === "dot") {
     itemName = "dots";
   }
-  if(itemName === "magikball" || itemName === "magik") {
-    itemName = "magikball";
-  }
   if(itemName === "coin" || itemName === "coinboost" || itemName === 'cb') {
     itemName = "coinboost";
   }
@@ -56,17 +53,18 @@ module.exports = async function (message, filePath) {
   if(itemName === "lootbox" || itemName === "lb") {
     itemName = "lootbox";
   }
+  if(itemName === "cricketbox" || itemName === "cricbox" || itemName === 'cric') {
+    itemName = "cricketbox";
+  }
   
   const itemData = await db.findOne({name: itemName}).catch((e) => console.log(e));
   
   if(!itemData) {
     if(parseInt(args[0])) {
-      let error = 'syntax';
-      message.reply(getErrors({error, filePath}));
+      message.reply(getErrors({error: 'syntax', filePath}));
       return 'err';
     } else {
-      let error = 'item';
-      message.reply(getErrors({error, itemName}));
+      message.reply(getErrors({error: 'item', itemName}));
       return 'err';
     }
   }

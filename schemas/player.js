@@ -55,6 +55,10 @@ const player = new mongoose.Schema({
       tracks_black: 1,
     }
   },
+  cards: {
+    type: [],
+    default: [{'team': []}],
+  },
   coinBoost: Date,
   tossBoost: Date,
   startedOn: {
