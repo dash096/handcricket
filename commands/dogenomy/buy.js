@@ -19,7 +19,7 @@ module.exports = {
     
     //Get items
     const itemsArray = await checkItems(message, 'dogenomy/buy.js');
-    if(itemsArray == 'err') return;
+    if(itemsArray == 'err' || itemsArray[0] == 'cricketbox') return;
     
     //Item Info
     const name = itemsArray[0];
