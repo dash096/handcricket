@@ -13,6 +13,7 @@ const getDecors = require('../../functions/getDecors.js');
 const getCards = require('../../cardFunctions/getCards.js')
 const updateCards = require('../../cardFunctions/updateCards.js')
 const getCardImage = require('../../cardFunctions/getImage.js')
+const embedColor = require('../../functions/getEmbedColor.js')
 
 module.exports = {
   name: 'use',
@@ -70,6 +71,7 @@ module.exports = {
       
       const embed = new Discord.MessageEmbed()
         .setTitle(`Opening ${1} Cricket Box...`)
+        .setColor(embedColor)
       const msg = await message.reply(embed)
       
       setTimeout( async () => {
