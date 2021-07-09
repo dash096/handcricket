@@ -74,11 +74,12 @@ module.exports = {
         .setColor(embedColor)
       
       setTimeout( async () => {
+        let random = Math.random()
+        
         let cards = await getCards()
-        let card
-        let slicedCards = cards.slice(Math.floor(Math.random()), cards.length-1)
-        console.log(slicedCards)
-        card = slicedCards[Math.floor(Math.random() * slicedCards.length)]
+        let slicedCards = cards.slice(random < 0.8 ? Math.floor(random) : Math.floor(0.8), cards.length-1)
+        let card = slicedCards[Math.floor(Math.random() * slicedCards.length)]
+        
         let playerCards = playerData.cards || {}
         await updateCards(playerData, card)
         /*
