@@ -75,7 +75,11 @@ module.exports = {
       
       setTimeout( async () => {
         let cards = await getCards()
-        let card = cards[Math.floor(Math.random() * cards.length)]
+        let random = Math.random()
+        let card
+        let slicedCards = cards.slice(i, cards.length-1)
+        console.log(slicedCards)
+        card = slicedCards[Math.floor(Math.random() * slicedCards.length)]
         let playerCards = playerData.cards || {}
         await updateCards(playerData, card)
         /*
