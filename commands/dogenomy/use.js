@@ -87,8 +87,8 @@ module.exports = {
           embed.setImage(cachedCardURL)
         } else {
           embed.setTitle(`You got ${card.name.split('-').join(' ')}`)
-          embed.attachFiles(`assets/cards/${card.name}`)
-          embed.setImage(`attachment://${card.name}`)
+          embed.attachFiles(`./assets/cards/${card.name}.png`)
+          embed.setImage(`attachment://${card.name}.png`)
         }
         await msg.edit(embed)
         if(!cachedCardURL) getCardImage(
