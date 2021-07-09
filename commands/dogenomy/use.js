@@ -77,7 +77,7 @@ module.exports = {
         let cards = await getCards()
         let random = Math.random()
         let card
-        let slicedCards = cards.slice(i, cards.length-1)
+        let slicedCards = cards.slice(Math.floor(i), cards.length-1)
         console.log(slicedCards)
         card = slicedCards[Math.floor(Math.random() * slicedCards.length)]
         let playerCards = playerData.cards || {}
