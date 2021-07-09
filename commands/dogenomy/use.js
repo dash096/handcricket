@@ -81,7 +81,7 @@ module.exports = {
         TODO: check the slots left
         */
         let cachedCardURL = getCardImage(card.fullname) 
-        if (cachedCardURL) {
+        if (cachedCardURL !== 'err') {
           embed.setImage(cachedCardURL)
         } else {
           embed.setTitle(`You got ${card.name.split('-').join(' ')}`)
