@@ -64,7 +64,7 @@ module.exports = {
       if(e2 == 'err') return;
       await message.reply('Your Toss multiplier is now boosted twice!');
       return;
-    } else if (itemname === 'cricketbox') {
+    } else if (itemName === 'cricketbox') {
       const e1 = await updateBag(itemName, itemAmount, playerData, message);
       if(e1 == 'err') return;
       
