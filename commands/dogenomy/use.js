@@ -72,7 +72,6 @@ module.exports = {
       const embed = new Discord.MessageEmbed()
         .setTitle(`Opening ${1} Cricket Box...`)
         .setColor(embedColor)
-      const msg = await message.reply(embed)
       
       setTimeout( async () => {
         let cards = await getCards()
@@ -86,13 +85,12 @@ module.exports = {
         if (cachedCardURL !== 'err') {
           embed.setImage(cachedCardURL)
         } else {
-          console.log(card.name + '.png')
           embed
             .attachFiles(`./assets/cards/${card.name}.png`)
             .setImage(`attachment://${card.name}.png`)
-            .setTitle(`You got ${card.name.split('-').join(' ')}`)
+            .setTitle(`You gained, ${card.name.split('-').join(' ')}`)
         }
-        await msg.edit(embed)
+        let msg = await message.reply(embed)
         if(!cachedCardURL) getCardImage(
           card.fullname,
           msg.attachments.first().url
