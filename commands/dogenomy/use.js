@@ -86,9 +86,11 @@ module.exports = {
         if (cachedCardURL !== 'err') {
           embed.setImage(cachedCardURL)
         } else {
-          embed.setTitle(`You got ${card.name.split('-').join(' ')}`)
-          embed.attachFiles(`./assets/cards/${card.name}.png`)
-          embed.setImage(`attachment://${card.name}.png`)
+          console.log(card.name + '.png')
+          embed
+            .attachFiles(`./assets/cards/${card.name}.png`)
+            .setImage(`attachment://${card.name}.png`)
+            .setTitle(`You got ${card.name.split('-').join(' ')}`)
         }
         await msg.edit(embed)
         if(!cachedCardURL) getCardImage(
