@@ -10,6 +10,8 @@ module.exports = async (data, card, remove) => {
     data.cards.slice(1).length - 1
   ) return 'err'
   
+  console.log('c1')
+  
   if (remove) {
     let exists = cards.find(n => n == fullname)
     if(!exists) return 'err'
