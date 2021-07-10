@@ -2,11 +2,11 @@ const db = require('../schemas/player.js')
 
 module.exports = async (data, card, remove) => {
   let { fullname } = card
-  let cards = data.cards || {}
+  let cards = data.cards || []
   
   
-  console.log(data, card, cards, remove)
-  if ( !remove && data.cards[0].slots || 10 <= data.cards.slice(1).length - 1 ) {
+  if (!remove && cards[0]?.slots || 10 <= cards.slice(1).length - 1) {
+    console.log('in')
     return 'err'
   }
   
