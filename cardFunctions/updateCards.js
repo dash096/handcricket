@@ -12,7 +12,7 @@ module.exports = async (data, card, remove) => {
   
   if (remove) {
     let exists = cards.find(n => n == fullname)
-    if(!exists) return 'err'
+    if(!exists) return JSON.stringify(cards, card)
     
     exists
     ? cards.splice(cards.indexOf(fullname), 1)
