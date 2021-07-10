@@ -47,7 +47,7 @@ module.exports = {
     let max = Math.floor(text.length/15) + 1
     if (text.length > 15) loopPage()
     async function loopPage() {
-      if (counter === 3) return
+      if (counter === 5) return
       try {
         await cardsMessage.react('◀️')
         await cardsMessage.react('▶️')
