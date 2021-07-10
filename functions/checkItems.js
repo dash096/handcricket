@@ -56,6 +56,9 @@ module.exports = async function (message, filePath) {
   if(itemName === "cricketbox" || itemName === "cricbox" || itemName === 'cric') {
     itemName = "cricketbox";
   }
+  if(itemName == "slots" || itemName == 'slot') {
+    itemName = 'slots'
+  }
   
   const itemData = await db.findOne({name: itemName}).catch((e) => console.log(e));
   

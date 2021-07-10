@@ -4,6 +4,11 @@ module.exports = async (data, card, remove) => {
   let { fullname } = card
   let cards = data.cards || {}
   
+  if (
+    data.cards[0].slots <= 
+    data.cards.slice(0, data.cards.length).length
+  ) return 'err'
+  
   if (remove) {
     cards.find(n => n == fullname)
     ? cards.splice(cards.indexOf(fullname), 1)

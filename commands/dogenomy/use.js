@@ -77,14 +77,22 @@ module.exports = {
         let random = Math.random()
         
         let cards = await getCards()
-        let slicedCards = cards.slice(random < 0.8 ? Math.floor(random) : Math.floor(0.8), cards.length-1)
+        let sliceStart = random < 0.80
+                         ? 0
+                         : random < 0.95
+                         ? cards.length/5
+                         : random < 0.99
+                         ? cards.length/3
+                         : cards.length/2
+        let sliceEnd = random < 0.8
+                       ? cards.length - cards.length/3
+                       : random < 0.95
+                       ? cards.length - cards.length/5
+                       : cards.length
+        console.log(sliceStart, sliceEnd)
+        let slicedCards = cards.slice(sliceStart, sliceEnd)
         let card = slicedCards[Math.floor(Math.random() * slicedCards.length)]
         
-        let playerCards = playerData.cards || {}
-        await updateCards(playerData, card)
-        /*
-        TODO: check the slots left
-        */
         let cachedCardURL = getCardImage(card.fullname) 
         if (cachedCardURL !== 'err') {
           embed.setImage(cachedCardURL)
@@ -92,10 +100,39 @@ module.exports = {
           embed
             .attachFiles(`./assets/cards/${card.name}.png`)
             .setImage(`attachment://${card.name}.png`)
-            .setTitle(`You gained, ${card.name.split('-').join(' ')}`)
+            .setTitle(`You got, ${card.name.split('-').join(' ')}`)
         }
         let msg = await message.reply(embed)
-        if(!cachedCardURL) getCardImage(
+        let updateCard = await updateCards(playerData, card)
+        if (updateCard === 'err') {
+          await msg.reply(`${author}, You don't have enough card slots, do you want to spend coins buying one? Type \`y\`/\`n\` or any \`card name\` to remove it.`)
+          let res = await checkRes()
+          if (res != 'err') updateCards(playerData, card)
+          async function checkRes() {
+            try {
+              let reply = await channel.awaitMesssges(m => m.author.id === author.id, {
+                time: 60000,
+                max: 1,
+                errors: ['time']
+              })
+              if (reply == 'y') {
+                /*TODO BUY SLOTS*/
+              } else if (reply == 'n') {
+                await updateBag('cricketbox', 1, playerData, message)
+                await message.reply('Refunded the box.')
+                return 'err'
+              } else {
+               return await checkRes()
+              }
+            } catch (e) {
+              console.log(e)
+              await updateBag('cricketbox', 1, playerData, message)
+              return 'err'
+            }
+          }
+        }
+        
+        if (!cachedCardURL) getCardImage(
           card.fullname,
           msg.attachments.first().url
         )

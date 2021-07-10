@@ -19,7 +19,7 @@ module.exports = {
     
     //Get items
     const itemsArray = await checkItems(message, 'dogenomy/buy.js');
-    if(itemsArray == 'err' || itemsArray[0] == 'cricketbox') return;
+    if(itemsArray == 'err') return;
     
     //Item Info
     const name = itemsArray[0];
@@ -34,9 +34,20 @@ module.exports = {
     //Check Bal to buy.
     if(balance < cost) return message.reply('You arent rich enough to buy that much.');
     
-    await updateCoins(-parseInt(cost), data);
-    await updateBag(name, -(number), data, message);
-    
+    if (name == 'slots') {
+      function price(i) { return i ** 2 * 10 }
+      for (let i = 0; i < amount; i++) {
+        await updateCoins(-(price(data?.cards?.[0]?.slots || 11)))
+        await db.findOneAndUpdate({ _id: author.id }, {
+          $inc: {
+            "cards.$0.slots": (data?.cards?.[0].slots ? 1 : 11)
+          }
+        })
+      }
+    } else {
+      await updateCoins(-parseInt(cost), data);
+      await updateBag(name, -(number), data, message);
+    }
     message.reply(`You bought **${number} ${item.name}** for ${coinEmoji} ${cost} coins`);
     await gain(data, 1.7, message);
   }
