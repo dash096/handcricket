@@ -55,9 +55,12 @@ module.exports = {
           { max: 1, time: 30000 }
         )
         let reaction = collection.keys()[0]
+        console.log(reaction)
         if (reaction === '◀️') {
-          counter -= 1
-          embed.setDescription(text.slice(counter === 1 ? 0 : 15 * counter - 15, 15 * counter))
+          if (counter !== 1) {
+            counter -= 1
+            embed.setDescription(text.slice(counter === 1 ? 0 : 15 * counter - 15, 15 * counter))
+          }
         } else {
           if (counter !== max) {
             embed.setDescription(text.slice(15 * counter, 15 * counter + 15))
