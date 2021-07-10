@@ -54,8 +54,8 @@ module.exports = {
           (r, u) => ['▶️', '◀️'].includes(r.emoji.name) && u.id === author.id,
           { max: 1, time: 30000 }
         )
-        let reaction = collection.keys()[0]
-        console.log(reaction)
+        let reaction = Array.from(collection.keys())[0]
+        
         if (reaction === '◀️') {
           if (counter !== 1) {
             counter -= 1
