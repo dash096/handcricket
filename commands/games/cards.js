@@ -3,6 +3,7 @@ const db = require('../../schemas/player.js')
 const Discord = require('discord.js')
 const embedColor = require('../../functions/getEmbedColor.js')
 const gain = require('../../functions/gainExp.js')
+const cardsDB = require('../../schemas/card.js')
 
 module.exports = {
   name: 'cards',
