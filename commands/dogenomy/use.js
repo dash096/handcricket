@@ -9,6 +9,7 @@ const updateStamina = require('../../functions/updateStamina.js');
 const openBox = require('../../functions/openBox.js');
 const gain = require('../../functions/gainExp.js');
 const getEmoji = require('../../functions/getEmoji.js');
+const getError = require('../../functions/getErrors.js');
 const getDecors = require('../../functions/getDecors.js');
 const getCards = require('../../cardFunctions/getCards.js')
 const updateCards = require('../../cardFunctions/updateCards.js')
@@ -74,78 +75,76 @@ module.exports = {
         .setTitle(`Opening ${1} Cricket Box...`)
         .setColor(embedColor)
       
-      setTimeout( async () => {
-        let random = Math.random()
-        
-        let cards = await getCards()
-        let sliceStart = random < 0.80
-                         ? 0
-                         : random < 0.95
-                         ? cards.length/5
-                         : random < 0.99
-                         ? cards.length/3
-                         : cards.length/2
-        let sliceEnd = random < 0.8
-                       ? cards.length - cards.length/3
+      let random = Math.random()
+      
+      let cards = await getCards()
+      let sliceStart = random < 0.80
+                       ? 0
                        : random < 0.95
-                       ? cards.length - cards.length/5
-                       : cards.length
-        
-        console.log(sliceStart, sliceEnd)
-        let slicedCards = cards.slice(sliceStart, sliceEnd)
-        let card = slicedCards[Math.floor(Math.random() * slicedCards.length)]
-        
-        let cachedCardURL = getCardImage(card.fullname) 
-        if (cachedCardURL !== 'err') {
-          embed.setImage(cachedCardURL)
-        } else {
-          embed
-            .attachFiles(`./assets/cards/${card.name}.png`)
-            .setImage(`attachment://${card.name}.png`)
-            .setTitle(`You got, ${card.name.split('-').join(' ')}`)
-        }
-        let msg = await message.reply(embed)
-        let updateCard = await updateCards(playerData, card)
-        if (updateCard === 'err') {
-          await channel.send(`${author}, You don't have enough card slots, do you want to spend coins buying one? Type \`y\`/\`n\` or any \`card name\` to remove it.`)
-          let res = await checkRes()
-          if (res != 'err') updateCards(playerData, card)
-          async function checkRes() {
-            try {
-              let msg = (await channel.awaitMessages(m => m.author.id === author.id, {
-                time: 60000,
-                max: 1,
-                errors: ['time']
-              })).first()
-              let reply = msg.content.toLowerCase()
-              if (reply == 'y' || reply == 'yes') {
-                if (playerData.cc < (playerData?.cards?.[0]?.slots || 11) ** 2 * 10) {
-                  await msg.reply('Invalid Balance, \`n\` or type a name to remove from existing slots')
-                  return await checkRes()
-                } else {
-                  await buySlots(playerData, 1)
-                }
-                await updateSlots(playerData, 1, message)
-              } else if (reply == 'n' || reply == 'no') {
-                await updateBag('cricketbox', 1, playerData, message)
-                await message.reply('Refunded the box.')
-                return 'err'
-              } else {
+                       ? cards.length/5
+                       : random < 0.99
+                       ? cards.length/3
+                       : cards.length/2
+      let sliceEnd = random < 0.8
+                     ? cards.length - cards.length/3
+                     : random < 0.95
+                     ? cards.length - cards.length/5
+                     : cards.length
+      
+      let slicedCards = cards.slice(Math.floor(sliceStart), Math.floor(sliceEnd))
+      let card = slicedCards[Math.floor(Math.random() * slicedCards.length)]
+      
+      let cachedCardURL = getCardImage(card.fullname) 
+      if (cachedCardURL !== 'err') {
+        embed.setImage(cachedCardURL)
+      } else {
+        embed
+          .attachFiles(`./assets/cards/${card.name}.png`)
+          .setImage(`attachment://${card.name}.png`)
+          .setTitle(`You got, ${card.name.split('-').join(' ')}`)
+      }
+      let msg = await message.reply(embed)
+      let updateCard = await updateCards(playerData, card)
+      if (updateCard === 'err') {
+        await channel.send(`${author}, You don't have enough card slots, do you want to spend coins buying one? Type \`y\`/\`n\` or any \`card name\` to remove it.`)
+        let res = await checkRes()
+        if (res != 'err') updateCards(playerData, card)
+        async function checkRes() {
+          try {
+            let msg = await channel.awaitMessages(m => m.author.id === author.id, {
+              time: 60000,
+              max: 1,
+              errors: ['time']
+            }).first()
+            let reply = msg.content.toLowerCase()
+            if (reply == 'y' || reply == 'yes') {
+              if (playerData.cc < (playerData?.cards?.[0]?.slots || 11) ** 2 * 10) {
+                await msg.reply('Invalid Balance, \`n\` or type a name to remove from existing slots')
                 return await checkRes()
+              } else {
+                let price = await buySlots(playerData, 1)
+                await msg.reply(`You bought a slot for ${slots} and got the card!`)
               }
-            } catch (e) {
-              console.log(e)
-              await updateBag('cricketbox', 1, playerData, message)
+            } else if (reply == 'n' || reply == 'no') {
+              await updateBag('cricketbox', -1, playerData, message)
+              await message.reply('Refunded the box.')
               return 'err'
+            } else {
+              return await checkRes()
             }
+          } catch (e) {
+            console.log(e)
+            await channel.send(getError({ error: 'time' }))
+            await updateBag('cricketbox', 1, playerData, message)
+            return 'err'
           }
         }
-        
-        if (!cachedCardURL) getCardImage(
-          card.fullname,
-          msg.attachments.first().url
-        )
-      }, 5000)
+      }
+      
+      if (!cachedCardURL) getCardImage(
+        card.fullname,
+        msg.attachments.first().url
+      )
     } else if (itemName === 'lootbox' ) {
       const e1 = await updateBag(itemName, itemAmount, playerData, message);
       if(e1 == 'err') return;
