@@ -36,13 +36,8 @@ module.exports = {
     
     if (name == 'slots') {
       function price(i) { return i ** 2 * 10 }
-      for (let i = 0; i < amount; i++) {
-        await updateCoins(-(price(data?.cards?.[0]?.slots || 11)))
-        await db.findOneAndUpdate({ _id: author.id }, {
-          $inc: {
-            "cards.$0.slots": (data?.cards?.[0].slots ? 1 : 11)
-          }
-        })
+      for (let i = 0; i < number; i++) {
+        await buySlots(data, 1)
       }
     } else {
       await updateCoins(-parseInt(cost), data);

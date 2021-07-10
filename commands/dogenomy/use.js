@@ -14,6 +14,7 @@ const getCards = require('../../cardFunctions/getCards.js')
 const updateCards = require('../../cardFunctions/updateCards.js')
 const getCardImage = require('../../cardFunctions/getImage.js')
 const embedColor = require('../../functions/getEmbedColor.js')
+const buySlots = require('../../cardFunctions/buySlots.js')
 
 module.exports = {
   name: 'use',
@@ -89,6 +90,7 @@ module.exports = {
                        : random < 0.95
                        ? cards.length - cards.length/5
                        : cards.length
+        
         console.log(sliceStart, sliceEnd)
         let slicedCards = cards.slice(sliceStart, sliceEnd)
         let card = slicedCards[Math.floor(Math.random() * slicedCards.length)]
@@ -110,19 +112,26 @@ module.exports = {
           if (res != 'err') updateCards(playerData, card)
           async function checkRes() {
             try {
-              let reply = await channel.awaitMesssges(m => m.author.id === author.id, {
+              let msg = await channel.awaitMessages(m => m.author.id === author.id, {
                 time: 60000,
                 max: 1,
                 errors: ['time']
               })
-              if (reply == 'y') {
-                /*TODO BUY SLOTS*/
-              } else if (reply == 'n') {
+              let reply = msg.content.toLowerCase()
+              if (reply == 'y' || reply == 'yes') {
+                if (playerData.cc < (playerData?.cards?.[0]?.slots || 11) ** 2 * 10) {
+                  await msg.reply('Invalid Balance, \`n\` or type a name to remove from existing slots')
+                  return await checkRes()
+                } else {
+                  await buySlots(playerData, 1)
+                }
+                await updateSlots(playerData, 1, message)
+              } else if (reply == 'n' || reply == 'no') {
                 await updateBag('cricketbox', 1, playerData, message)
                 await message.reply('Refunded the box.')
                 return 'err'
               } else {
-               return await checkRes()
+                return await checkRes()
               }
             } catch (e) {
               console.log(e)
