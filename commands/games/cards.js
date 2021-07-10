@@ -54,21 +54,23 @@ module.exports = {
             (r, u) => ['▶️', '◀️'].includes(r.emoji.name) && u.id === author.id,
             { max: 1, time: 30000 }
           )
+          console.log(reaction)
           if (reaction.emoji.name === '◀️') {
             if (counter > 1) {
               embed.setDescription(text.slice(15 * counter - 15, 15 * counter))
               counter -= 1
             }
           } else {
-            if ((counter + 1) * 15 <= text.length) {
+            if (counter * 15 <= text.length) {
               embed.setDescription(text.slice(15 * counter, 15 * counter + 15))
               counter += 1
             }
           }
+          return loopPage()
         } catch (e) {
           return
         }
-        await cardsMessage.edit(embed)
+        await cardsMessage.edit(embed);
         return loopPage()
       }
     }
