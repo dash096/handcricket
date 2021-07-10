@@ -30,7 +30,7 @@ module.exports = {
     text = text.map(i => i[0])
     let i = 0
     text.map(x => {
-      text[i + 1] = `\`${i})\`  ` + text[i]
+      text[i] = `\`${i + 1})\`  ` + text[i]
       i += 1
     })
     const embed = new Discord.MessageEmbed()
