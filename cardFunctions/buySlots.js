@@ -5,7 +5,7 @@
 const db = require('../schemas/player.js')
 const updateCoins = require('../functions/updateCoins.js')
 
-module.exports = async (data, amount) => {
+module.exports = async (msg, data, amount) => {
   let cards = data.cards || []
   
   let slots = cards[0]?.slots || 10
