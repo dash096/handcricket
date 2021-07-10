@@ -43,6 +43,7 @@ module.exports = {
     let cardsMessage = await message.reply(embed)
     
     let counter = 1;
+    let max = Math.floor(text.length/15) + 1
     if (text.length > 15) loopPage()
     async function loopPage() {
       try {
@@ -55,11 +56,13 @@ module.exports = {
         )
         let reaction = collection.keys()[0]
         if (reaction === '◀️') {
-          embed.setDescription(text.slice(15 * counter - 15, 15 * counter))
           counter -= 1
+          embed.setDescription(text.slice(counter === 1 ? 0 : 15 * counter - 15, 15 * counter))
         } else {
-          embed.setDescription(text.slice(15 * counter, 15 * counter + 15))
-          counter += 1
+          if (counter !== max) {
+            embed.setDescription(text.slice(15 * counter, 15 * counter + 15))
+            counter += 1
+          }
         }
         await cardsMessage.edit(embed);
         return loopPage()
