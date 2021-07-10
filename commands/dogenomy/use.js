@@ -38,8 +38,7 @@ module.exports = {
     let itemAmount = itemArray[1];
     const itemName = itemArray[0];
     
-    const playerData = await db.findOne({_id: author.id});
-    
+    let playerData = await db.findOne({_id: author.id});
     
     if (itemName === 'nuts') {
       const e = await updateBag(itemName, itemAmount, playerData, message);
@@ -112,7 +111,7 @@ module.exports = {
         await channel.send(`${author}, You don't have enough card slots, do you want to spend coins buying one? Type \`y\`/\`n\` or any \`card name\` to replace`)
         
         let res = await checkRes()
-        if (res != 'err') console.log(await updateCards(playerData, card))
+        if (res != 'err') await updateCards(playerData, card)
         
         async function checkRes() {
           try {
@@ -127,9 +126,10 @@ module.exports = {
             if (reply == 'y' || reply == 'yes') {
               let price = await buySlots(msg, playerData, 1)
               if (price == 'err') {
-                await msg.reply(`Insufficient Ballence. You only have ${coinsEmoji} ${playerData.cc}`)
+                await msg.reply(`Insufficient Balance. You only have ${coinsEmoji} ${playerData.cc}`)
                 return await checkRes()
               } else {
+                playerData = await db.findOne({ _id: playerData._id })
                 await msg.reply(`You bought a card slot for ${coinsEmoji} ${price} and got the card!`)
                 return
               }
@@ -149,6 +149,7 @@ module.exports = {
                 }
                 
                 await updateCards(playerData, removeCard, true)
+                playerData = await db.findOne({ _id: playerData._id })
                 await msg.reply(`You replaced **${removeCard.fullname.split('_').join(' ')}** and got the card`)
                 return
               } else {
