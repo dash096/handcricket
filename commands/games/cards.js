@@ -26,7 +26,7 @@ module.exports = {
       card.name = card.name.split('-').join(' ')
       text.push([`${card.name.charAt(0).toUpperCase() + card.name.slice(1)}      \`${card.role.toUpperCase()}\`      ${card.ovr}`, card.ovr])
     }
-    text.sort(a, b => b[1] - a[1])
+    text.sort((a, b) => b[1] - a[1])
     text.map(elem => elem[0])
     
     const embed = new Discord.MessageEmbed()
