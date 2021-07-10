@@ -20,11 +20,11 @@ module.exports = {
     const targetCards = data.cards.slice(1)
     
     let text = []
-    for(let fullname in targetCards) {
-      fullname = targetCards[fullname]
+    for(let i in targetCards) {
+      let fullname = targetCards[i]
       let card = await cardsDB.findOne({ fullname: fullname })
       card.name = card.name.split('-').join(' ')
-      text.push([`${card.name.charAt(0).toUpperCase() + card.name.slice(1)}      \`${card.role.toUpperCase()}\`      ${card.ovr}`, card.ovr])
+      text.push([`\`${i})\`  ${card.name.charAt(0).toUpperCase() + card.name.slice(1)}   ┃   \`${card.role.toUpperCase()}\`   ┃   ${card.ovr}`, card.ovr])
     }
     text = text.sort((a, b) => b[1] - a[1])
     text = text.map(i => i[0])
