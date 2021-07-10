@@ -31,14 +31,8 @@ module.exports = {
     const balance = data.cc;
     const cost = item.price * number;
     
-    //Check Bal to buy.
-    if(balance < cost) return message.reply('You arent rich enough to buy that much.');
-    
     if (name == 'slots') {
-      function price(i) { return i ** 2 * 10 }
-      for (let i = 0; i < number; i++) {
-        await buySlots(data, 1)
-      }
+      await buySlots(message, data, number)
     } else {
       await updateCoins(-parseInt(cost), data);
       await updateBag(name, -(number), data, message);

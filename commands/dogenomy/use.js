@@ -106,7 +106,7 @@ module.exports = {
       let msg = await message.reply(embed)
       let updateCard = await updateCards(playerData, card)
       if (updateCard === 'err') {
-        await channel.send(`${author}, You don't have enough card slots, do you want to spend coins buying one? Type \`y\`/\`n\` or any \`card name\` to remove it.`)
+        await channel.send(`${author}, You don't have enough card slots, do you want to spend coins buying one? Type \`y\`/\`n\` or any \`card name\` to replace`)
         let res = await checkRes()
         if (res != 'err') updateCards(playerData, card)
         async function checkRes() {
@@ -117,20 +117,34 @@ module.exports = {
               errors: ['time']
             })).first()
             let reply = msg.content.toLowerCase()
+            //Buy the box
             if (reply == 'y' || reply == 'yes') {
-              if (playerData.cc < (playerData?.cards?.[0]?.slots || 11) ** 2 * 10) {
-                await msg.reply('Invalid Balance, \`n\` or type a name to remove from existing slots')
+              let price = await buySlots(msg, playerData, 1)
+              if (price == 'err') {
+                await msg.reply(`Insufficient Ballence. You only have ${coinsEmoji} ${playerData.cc}`)
                 return await checkRes()
               } else {
-                let price = await buySlots(playerData, 1)
-                await msg.reply(`You bought a slot for ${price} and got the card!`)
+                await msg.reply(`You bought a card slot for ${coinsEmoji} ${price} and got the card!`)
+                await updateCards(playerData, card)
               }
-            } else if (reply == 'n' || reply == 'no') {
+            } //Refund box
+            else if (reply == 'n' || reply == 'no') {
               await updateBag('cricketbox', -1, playerData, message)
-              await message.reply('Refunded the box.')
+              await message.reply('Refunded the cricketbox.')
               return 'err'
-            } else {
-              return await checkRes()
+            } //Check for names 
+            else {
+              let removeCard = cards.find(c => c.name == reply.split(/ +/).join('-'))
+              if (removeCard) {
+                let updateCard = await updateCards(playerData, removeCard, true)
+                if (updateCard == 'err') return await checkRes()
+                else {
+                  await msg.reply(`You replaced **${removeCard.fullname.split('_').join(' ')}** and got the card`)
+                  await updateCards(playerData, card)
+                }
+              } else {
+                return await checkRes()
+              }
             }
           } catch (e) {
             console.log(e)

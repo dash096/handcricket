@@ -15,6 +15,8 @@ module.exports = async (data, amount) => {
     price += slots ** 2 * 10
   }
   
+  if(data.cc < price) return 'err'
+  
   await updateCoins(-(price), data)
   await db.findOneAndUpdate({ _id: data._id }, {
     $set: {
