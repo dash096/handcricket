@@ -45,11 +45,11 @@ module.exports = {
     let counter = 1;
     function loopPage() {
       if (text.length > counter * 15) {
-        await cardsMessage.react('')
+        await cardsMessage.react('▶️')
         
         async function checkReactions() {
           let reaction, user = await cardsMessage.awaitReactions(
-            (r, u) => r.emoji.name === '' && u.id === author.id,
+            (r, u) => r.emoji.name === '▶️' && u.id === author.id,
             { max: 1, time: 30000 }
          )
           embed.setDescription(text.slice(15 * counter, 15 * counter + 15))
@@ -58,6 +58,7 @@ module.exports = {
         }
       }
     }
+    
     await gain(data, 0.5, message);
   }
 }
