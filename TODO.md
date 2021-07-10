@@ -12,6 +12,9 @@ open cricketLootbox
 update playerSchema (cards)
 getImage of cards (cache)
 auction
+display team11
+modify team11
+team11 on e.start
 remove mb, quests from everyone.
 
 

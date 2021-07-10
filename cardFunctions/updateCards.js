@@ -6,6 +6,7 @@ module.exports = async (data, card, remove) => {
   
   
   if (!remove && cards[0]?.slots || 10 <= cards.slice(1).length - 1) {
+    console.log('eh')
     return 'err'
   }
   
