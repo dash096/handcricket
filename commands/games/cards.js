@@ -20,7 +20,8 @@ module.exports = {
     
     let text = []
     for(let fullname in data.cards.slice(1)) {
-      let card = await cardsDB.findOne({ fullname})
+      let card = await cardsDB.findOne({ fullname: fullname })
+      console.log(fullname, card)
       text.push(`**${card.name.charAt(0) + card.name.slice(1)}** \`${card.role}\` *${card.ovr}*`)
     }
     
