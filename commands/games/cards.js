@@ -24,8 +24,10 @@ module.exports = {
       fullname = targetCards[fullname]
       let card = await cardsDB.findOne({ fullname: fullname })
       card.name = card.name.split('-').join(' ')
-      text.push(`__${card.name.charAt(0).toUpperCase() + card.name.slice(1)}__      \`${card.role.toUpperCase()}\`      ${card.ovr}`)
+      text.push([`${card.name.charAt(0).toUpperCase() + card.name.slice(1)}      \`${card.role.toUpperCase()}\`      ${card.ovr}`, card.ovr])
     }
+    text.sort(a, b => b[1] - a[1])
+    text.map(elem => elem[0])
     
     const embed = new Discord.MessageEmbed()
       .setTitle(`${target.displayName}'s Cards`)
