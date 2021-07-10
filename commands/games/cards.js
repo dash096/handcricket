@@ -46,14 +46,28 @@ module.exports = {
     loopPage()
     async function loopPage() {
       if (text.length > counter * 15) {
+        await cardsMessage.react('◀️')
         await cardsMessage.react('▶️')
         
-        let reaction, user = await cardsMessage.awaitReactions(
-          (r, u) => r.emoji.name === '▶️' && u.id === author.id,
-          { max: 1, time: 30000 }
-        )
-        embed.setDescription(text.slice(15 * counter, 15 * counter + 15))
-        counter += 1
+        try {
+          let reaction, user = await cardsMessage.awaitReactions(
+            (r, u) => ['▶️', '◀️'].includes(r.emoji.name) && u.id === author.id,
+            { max: 1, time: 30000 }
+          )
+          if (reaction.emoji.name === '◀️') {
+            if (counter > 1) {
+              embed.setDescription(text.slice(15 * counter - 15, 15 * counter))
+              counter -= 1
+            }
+          } else {
+            if ((counter + 1) * 15 <= text.length) {
+              embed.setDescription(text.slice(15 * counter, 15 * counter + 15))
+              counter += 1
+            }
+          }
+        } catch (e) {
+          return
+        }
         await cardsMessage.edit(embed)
         return loopPage()
       }
