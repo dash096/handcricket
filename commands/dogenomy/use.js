@@ -123,7 +123,7 @@ module.exports = {
                 return await checkRes()
               } else {
                 let price = await buySlots(playerData, 1)
-                await msg.reply(`You bought a slot for ${slots} and got the card!`)
+                await msg.reply(`You bought a slot for ${price} and got the card!`)
               }
             } else if (reply == 'n' || reply == 'no') {
               await updateBag('cricketbox', -1, playerData, message)

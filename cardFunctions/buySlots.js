@@ -24,4 +24,5 @@ module.exports = async (data, amount) => {
       }, ...cards.slice(1)]
     }
   })
+  return price
 }
