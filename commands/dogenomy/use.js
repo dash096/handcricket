@@ -118,6 +118,7 @@ module.exports = {
               errors: ['time']
             })).first()
             let reply = msg.content.toLowerCase()
+            
             //Buy the box
             if (reply == 'y' || reply == 'yes') {
               let price = await buySlots(msg, playerData, 1)
@@ -136,7 +137,7 @@ module.exports = {
             } //Check for names 
             else {
               let removeCard = allCards.find(c => c.name == reply.split(/ +/).join('-'))
-              console.log(removeCard, reply.split(/ +/).join('-'))
+              
               if (removeCard) {
                 let updateCard = await updateCards(playerData, removeCard, true)
                 if (updateCard == 'err') return await checkRes()

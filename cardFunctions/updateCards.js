@@ -5,6 +5,7 @@ module.exports = async (data, card, remove) => {
   let cards = data.cards || {}
   
   if (
+    !remove &&
     data.cards[0].slots <= 
     data.cards.slice(1).length - 1
   ) return 'err'
