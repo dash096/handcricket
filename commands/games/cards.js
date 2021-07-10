@@ -10,10 +10,10 @@ module.exports = {
   description: 'Show\'s all of your card slots.',
   category: 'Games',
   syntax: 'e.cards',
-  run: async ({ message }) => {
+  run: async ({ message, args, client }) => {
     const { channel, author, content } = message
     
-    const target = await getTarget(message)
+    const target = await getTarget(message, args, client)
     
     const data = await db.findOne({ _id: target.id })
     
