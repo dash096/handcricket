@@ -107,16 +107,16 @@ module.exports = {
         let msg = await message.reply(embed)
         let updateCard = await updateCards(playerData, card)
         if (updateCard === 'err') {
-          await msg.reply(`${author}, You don't have enough card slots, do you want to spend coins buying one? Type \`y\`/\`n\` or any \`card name\` to remove it.`)
+          await channel.send(`${author}, You don't have enough card slots, do you want to spend coins buying one? Type \`y\`/\`n\` or any \`card name\` to remove it.`)
           let res = await checkRes()
           if (res != 'err') updateCards(playerData, card)
           async function checkRes() {
             try {
-              let msg = await channel.awaitMessages(m => m.author.id === author.id, {
+              let msg = (await channel.awaitMessages(m => m.author.id === author.id, {
                 time: 60000,
                 max: 1,
                 errors: ['time']
-              })
+              })).first()
               let reply = msg.content.toLowerCase()
               if (reply == 'y' || reply == 'yes') {
                 if (playerData.cc < (playerData?.cards?.[0]?.slots || 11) ** 2 * 10) {
