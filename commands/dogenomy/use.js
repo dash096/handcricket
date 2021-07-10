@@ -111,11 +111,11 @@ module.exports = {
         if (res != 'err') updateCards(playerData, card)
         async function checkRes() {
           try {
-            let msg = await channel.awaitMessages(m => m.author.id === author.id, {
+            let msg = (await channel.awaitMessages(m => m.author.id === author.id, {
               time: 60000,
               max: 1,
               errors: ['time']
-            }).first()
+            })).first()
             let reply = msg.content.toLowerCase()
             if (reply == 'y' || reply == 'yes') {
               if (playerData.cc < (playerData?.cards?.[0]?.slots || 11) ** 2 * 10) {
