@@ -6,7 +6,7 @@ module.exports = async (data, card, remove) => {
   
   if (
     data.cards[0].slots <= 
-    data.cards.slice(1).length
+    data.cards.slice(1).length - 1
   ) return 'err'
   
   if (remove) {
@@ -14,9 +14,7 @@ module.exports = async (data, card, remove) => {
     ? cards.splice(cards.indexOf(fullname), 1)
     : false
   } else {
-    let exists = cards.find(name => name == fullname)
-    if (exists) return 'err'
-    else cards.push(fullname)
+    cards.push(fullname)
   }
   
   await db.findOneAndUpdate({ _id: data._id }, {

@@ -77,7 +77,7 @@ module.exports = {
       
       let random = Math.random()
       
-      let cards = await getCards()
+      let cards = (await getCards()).filter(card => !playerData.cards.includes(card.fullname))
       let sliceStart = random < 0.80
                        ? 0
                        : random < 0.95
