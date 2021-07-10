@@ -17,11 +17,12 @@ module.exports = {
     const target = await getTarget(message, args, client)
     
     const data = await db.findOne({ _id: target.id })
+    const targetCards = data.cards.slice(1)
     
     let text = []
-    for(let fullname in data.cards.slice(1)) {
+    for(let fullname in targetCards) {
+      fullname = targetCards[fullname]
       let card = await cardsDB.findOne({ fullname: fullname })
-      console.log(fullname, card)
       text.push(`**${card.name.charAt(0) + card.name.slice(1)}** \`${card.role}\` *${card.ovr}*`)
     }
     
