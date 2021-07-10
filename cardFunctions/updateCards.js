@@ -1,6 +1,6 @@
 const db = require('../schemas/player.js')
 
-module.exports = async (data, card, remove) => {
+module.exports = async (data, card, remove, msg) => {
   let { fullname } = card
   let cards = data.cards || {}
   
@@ -12,6 +12,7 @@ module.exports = async (data, card, remove) => {
   
   if (remove) {
     let exists = cards.find(n => n == fullname)
+    msg.reply(JSON.stringify(card) + remove)
     if(!exists) return 'err'
     
     exists

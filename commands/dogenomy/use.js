@@ -148,7 +148,7 @@ module.exports = {
                   return await checkRes()
                 }
                 
-                let updateCard = await updateCards(playerData, removeCard, true)
+                await updateCards(playerData, removeCard, true, msg)
                 await msg.reply(`You replaced **${removeCard.fullname.split('_').join(' ')}** and got the card`)
                 return
               } else {
