@@ -1,7 +1,3 @@
-
-
-
-
 const db = require('../schemas/player.js')
 const updateCoins = require('../functions/updateCoins.js')
 

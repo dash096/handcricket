@@ -77,7 +77,8 @@ module.exports = {
       
       let random = Math.random()
       
-      let cards = (await getCards()).filter(card => !playerData.cards.includes(card.fullname))
+      let allCards = await getCards()
+      let cards = allCards.filter(card => !playerData.cards.includes(card.fullname))
       let sliceStart = random < 0.80
                        ? 0
                        : random < 0.95
@@ -134,7 +135,7 @@ module.exports = {
               return 'err'
             } //Check for names 
             else {
-              let removeCard = cards.find(c => c.name == reply.split(/ +/).join('-'))
+              let removeCard = allCards.find(c => c.name == reply.split(/ +/).join('-'))
               if (removeCard) {
                 let updateCard = await updateCards(playerData, removeCard, true)
                 if (updateCard == 'err') return await checkRes()
@@ -148,8 +149,8 @@ module.exports = {
             }
           } catch (e) {
             console.log(e)
-            await channel.send(getError({ error: 'time' }))
-            await updateBag('cricketbox', 1, playerData, message)
+            await updateBag('cricketbox', -1, playerData, message)
+            await message.reply('Refunded the cricketbox.')
             return 'err'
           }
         }
