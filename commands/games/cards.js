@@ -53,6 +53,7 @@ module.exports = {
           { max: 1, time: 30000 }
         )
         embed.setDescription(text.slice(15 * counter, 15 * counter + 15))
+        counter += 1
         await cardsMessage.edit(embed)
         return loopPage()
       }
