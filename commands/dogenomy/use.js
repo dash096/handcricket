@@ -112,7 +112,7 @@ module.exports = {
         await channel.send(`${author}, You don't have enough card slots, do you want to spend coins buying one? Type \`y\`/\`n\` or any \`card name\` to replace`)
         
         let res = await checkRes()
-        if (res != 'err') updateCards(playerData, card)
+        if (res != 'err') console.log(await updateCards(playerData, card))
         
         async function checkRes() {
           try {
@@ -131,12 +131,12 @@ module.exports = {
                 return await checkRes()
               } else {
                 await msg.reply(`You bought a card slot for ${coinsEmoji} ${price} and got the card!`)
-                await updateCards(playerData, card)
+                return
               }
             } //refund used cricketbox
             else if (reply == 'n' || reply == 'no') {
               await updateBag('cricketbox', -1, playerData, message)
-              await message.reply('Refunded another the cricketbox.')
+              await message.reply('Refunded another cricketbox.')
               return 'err'
             } //check for replacement
             else {
@@ -149,11 +149,8 @@ module.exports = {
                 }
                 
                 let updateCard = await updateCards(playerData, removeCard, true)
-                if (updateCard == 'err') return await checkRes()
-                else {
-                  await msg.reply(`You replaced **${removeCard.fullname.split('_').join(' ')}** and got the card`)
-                  await updateCards(playerData, card)
-                }
+                await msg.reply(`You replaced **${removeCard.fullname.split('_').join(' ')}** and got the card`)
+                return
               } else {
                 return await checkRes()
               }
@@ -161,7 +158,7 @@ module.exports = {
           } catch (e) {
             console.log(e)
             await updateBag('cricketbox', -1, playerData, message)
-            await message.reply('Refunded the cricketbox.')
+            await message.reply('Refunded another cricketbox.')
             return 'err'
           }
         }

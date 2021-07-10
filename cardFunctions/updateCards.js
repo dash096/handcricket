@@ -11,7 +11,10 @@ module.exports = async (data, card, remove) => {
   ) return 'err'
   
   if (remove) {
-    cards.find(n => n == fullname)
+    let exists = cards.find(n => n == fullname)
+    if(!exists) return 'err'
+    
+    exists
     ? cards.splice(cards.indexOf(fullname), 1)
     : false
   } else {
