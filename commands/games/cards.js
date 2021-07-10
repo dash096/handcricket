@@ -20,15 +20,19 @@ module.exports = {
     const targetCards = data.cards.slice(1)
     
     let text = []
-    for(let i in targetCards) {
-      let fullname = targetCards[i]
+    for(let fullname in targetCards) {
+      fullname = targetCards[fullname]
       let card = await cardsDB.findOne({ fullname: fullname })
       card.name = card.name.split('-').join(' ')
-      text.push([`\`${i})\`  ${card.name.charAt(0).toUpperCase() + card.name.slice(1)}   ┃   \`${card.role.toUpperCase()}\`   ┃   ${card.ovr}`, card.ovr])
+      text.push([`${card.name.charAt(0).toUpperCase() + card.name.slice(1)}   |   \`${card.role.toUpperCase()}\`   |   ${card.ovr}`, card.ovr])
     }
     text = text.sort((a, b) => b[1] - a[1])
     text = text.map(i => i[0])
-    
+    let i = 0
+    text.map(x => {
+      text[i] = `\`${i})\`  ` + text[i]
+      i += 1
+    })
     const embed = new Discord.MessageEmbed()
       .setTitle(`${target.displayName}'s Cards`)
       .setDescription(text.join('\n'))
