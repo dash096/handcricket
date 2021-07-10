@@ -148,8 +148,8 @@ module.exports = {
                   return await checkRes()
                 }
                 
-                let r = await updateCards(playerData, removeCard, true)
-                await msg.reply(`You replaced ${r} **${removeCard.fullname.split('_').join(' ')}** and got the card`)
+                await updateCards(playerData, removeCard, true)
+                await msg.reply(`You replaced **${removeCard.fullname.split('_').join(' ')}** and got the card`)
                 return
               } else {
                 return await checkRes()
