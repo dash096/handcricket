@@ -33,13 +33,31 @@ module.exports = {
       text[i] = `\`${i + 1})\`  ` + text[i]
       i += 1
     })
+    
     const embed = new Discord.MessageEmbed()
       .setTitle(`${target.displayName}'s Cards`)
-      .setDescription(text.join('\n'))
+      .setDescription(text.slice(0, 15).join('\n'))
       .setColor(embedColor)
       .setFooter('"e.team" to view your team11.')
     
-    await message.reply(embed)
+    let cardsMessage = await message.reply(embed)
+    
+    let counter = 1;
+    function loopPage() {
+      if (text.length > counter * 15) {
+        await cardsMessage.react('')
+        
+        async function checkReactions() {
+          let reaction, user = await cardsMessage.awaitReactions(
+            (r, u) => r.emoji.name === '' && u.id === author.id,
+            { max: 1, time: 30000 }
+         )
+          embed.setDescription(text.slice(15 * counter, 15 * counter + 15))
+          await cardsMessage.edit(embed)
+          return loopPage()
+        }
+      }
+    }
     await gain(data, 0.5, message);
   }
 }
