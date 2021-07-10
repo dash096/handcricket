@@ -23,7 +23,7 @@ module.exports = {
     for(let fullname in targetCards) {
       fullname = targetCards[fullname]
       let card = await cardsDB.findOne({ fullname: fullname })
-      text.push(`**${card.name.charAt(0) + card.name.slice(1)}** \`${card.role}\` *${card.ovr}*`)
+      text.push(`__${card.name.charAt(0) + card.name.slice(1)}__ \`${card.role.toUpperCase()}\` ${card.ovr}`)
     }
     
     const embed = new Discord.MessageEmbed()
