@@ -28,7 +28,7 @@ module.exports = {
     }
     text.sort((a, b) => b[1] - a[1])
     text.map(elem => elem[0])
-    
+    console.log(text)
     const embed = new Discord.MessageEmbed()
       .setTitle(`${target.displayName}'s Cards`)
       .setDescription(text.join('\n'))
