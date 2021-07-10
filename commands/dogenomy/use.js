@@ -106,10 +106,14 @@ module.exports = {
       }
       let msg = await message.reply(embed)
       let updateCard = await updateCards(playerData, card)
+      
       if (updateCard === 'err') {
+        //slots full
         await channel.send(`${author}, You don't have enough card slots, do you want to spend coins buying one? Type \`y\`/\`n\` or any \`card name\` to replace`)
+        
         let res = await checkRes()
         if (res != 'err') updateCards(playerData, card)
+        
         async function checkRes() {
           try {
             let msg = (await channel.awaitMessages(m => m.author.id === author.id, {
@@ -119,7 +123,7 @@ module.exports = {
             })).first()
             let reply = msg.content.toLowerCase()
             
-            //Buy the box
+            //buy additional box
             if (reply == 'y' || reply == 'yes') {
               let price = await buySlots(msg, playerData, 1)
               if (price == 'err') {
@@ -129,16 +133,21 @@ module.exports = {
                 await msg.reply(`You bought a card slot for ${coinsEmoji} ${price} and got the card!`)
                 await updateCards(playerData, card)
               }
-            } //Refund box
+            } //refund used cricketbox
             else if (reply == 'n' || reply == 'no') {
               await updateBag('cricketbox', -1, playerData, message)
-              await message.reply('Refunded the cricketbox.')
+              await message.reply('Refunded another the cricketbox.')
               return 'err'
-            } //Check for names 
+            } //check for replacement
             else {
               let removeCard = allCards.find(c => c.name == reply.split(/ +/).join('-'))
               
               if (removeCard) {
+                if (cards.includes(removeCard)) {
+                  await msg.reply('Do you even own that?? Try again.')
+                  return await checkRes()
+                }
+                
                 let updateCard = await updateCards(playerData, removeCard, true)
                 if (updateCard == 'err') return await checkRes()
                 else {
