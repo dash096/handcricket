@@ -3,6 +3,7 @@ const Discord = require("discord.js");
 const getErrors = require("../../functions/getErrors.js");
 const getTarget = require("../../functions/getTarget.js");
 const executeDuoMatch = require("../../footballFunctions/duoStart.js");
+const gain = require('../../functions/gainExp.js')
 
 module.exports = {
   name: "handfootball",
@@ -46,6 +47,9 @@ module.exports = {
       //Change status
       await changeStatus(user, true);
       await changeStatus(target, true);
+      
+      await gain(userData, 0.3, message);
+      await gain(targetData, 0.3, message);
       
       executeDuoMatch(client, message, user, target)
     } catch (e) {

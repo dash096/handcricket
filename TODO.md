@@ -11,11 +11,16 @@ give cricketLootbox
 open cricketLootbox
 update playerSchema (cards)
 getImage of cards (cache)
-auction
-display team11
-modify team11
-team11 on e.start
-remove mb, quests from everyone.
+  display team11
+  modify team11
+  team11 on e.start
+  remove mb, quests from everyone.
+  auction
+
+**Pending**
+Next mode of classic
+Avengers decors
+Football teamMatch
 
 
 **Docs**
