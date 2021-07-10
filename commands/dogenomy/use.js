@@ -136,6 +136,7 @@ module.exports = {
             } //Check for names 
             else {
               let removeCard = allCards.find(c => c.name == reply.split(/ +/).join('-'))
+              console.log(removeCard, reply.split(/ +/).join('-'))
               if (removeCard) {
                 let updateCard = await updateCards(playerData, removeCard, true)
                 if (updateCard == 'err') return await checkRes()
