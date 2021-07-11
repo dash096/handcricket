@@ -45,8 +45,7 @@ module.exports = {
     const WR = getWR(data);
     const orangeCaps = data.orangeCaps || 0;
     
-    const characterPath = await new Promise(r => { return getCharacter(target, r) })
-    console.log('after')
+    const characterPath = await new Promise(async r => { return await getCharacter(target, r) })
     const characterAttachment = new Discord.MessageAttachment(characterPath);
     
     let description = userInfo();
@@ -214,7 +213,6 @@ async function getCharacter(target, resolve) {
     });
   }
   const image = await getImage(target, type, images)
-  console.log('before', resolve)
   return resolve(image)
 }
 
