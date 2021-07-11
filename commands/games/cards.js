@@ -26,17 +26,19 @@ module.exports = {
       
       let cards = await cardsDB.find({ fullname: { $regex: `(^${query[0]}|_${query[0]})` } })
       let card = cards.find(x => {
-        if (query == x.name || query == x.fullname || x.fullname.includes(query)) return true
+        if (
+          query == x.name.split('-').join('') ||
+          query == x.fullname.split('_').join('') ||
+          x.fullname.split('_').join('').includes(query)
+        ) return true
         
         let name = x.fullname.split('_')
         if(name[0][0] == query[0]) name = name[0]
         else name = name[1]
         
-        console.log(name)
-        
         let counter = 0
         for (let i = 0; i < query.length; i++) {
-          if (name.includes(i)) counter += 1
+          if (name.includes(query[i])) counter += 1
         }
         
         if (counter >= query.length) return true
