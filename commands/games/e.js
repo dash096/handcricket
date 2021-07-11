@@ -5,6 +5,7 @@
 
 const jimp = require('jimp')
 const teamPos = require('../../cardFunctions/teamPos.js')
+const Discord = require('discord.js')
 
 module.exports = {
   name: 'e',
@@ -20,8 +21,10 @@ module.exports = {
     await bgImg
           .composite(cardImg, teamPos['x'][row][col], teamPos['y'][col])
           .write('./temp/i.png')
-    await channel.send('text', {
-      files: ['./temp/i.png']
+    
+    let attachment = new Discord.MessageAttachment('./temp/i.png')
+    await message.channel.send('text', {
+      files: [attachment]
     })
   }
 }
