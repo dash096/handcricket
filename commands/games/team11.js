@@ -37,6 +37,7 @@ module.exports = {
       let cardImg = await jimp.read(cardPath)
       
       if (i === 11) {
+        console.log('write')
         await bgImg
           .composite(cardImg, xpx, ypx)
           .write(exportPath)
