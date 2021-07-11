@@ -212,7 +212,7 @@ async function getCharacter(target) {
       }
     });
   }
-  const image = await new Promise(r => {
+  const image = await new Promise(async r => {
     await getImage(target, type, images, r)
   })
   return image;
