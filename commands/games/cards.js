@@ -21,9 +21,27 @@ module.exports = {
     const targetCards = data.cards.slice(1)
     
     //Send Image of the Card if arguments exists
-    let cardData = await cardsDB.findOne({ $or: [{ name: args.join('-').toLowerCase() }, { fullname: args.join('_').toLowerCase() }] })
-    if (cardData) {
-      let card = cardData
+    if (args.length > 0 && target.id === author.id) {
+      let query = args.join('').toLowerCase()
+      let match = []
+      for (let i in query) {
+        match.push({"$regex": `${query[i]}`})
+      }
+      let card = await cardsDB.findOne({
+        $or: [
+          {
+            name: {
+              $and: [...match]
+            }
+          },
+          {
+            fullname: {
+              $and: [...match]
+            }
+          }
+        ]
+      })
+      
       let image = await getCardImage(card.fullname)
       let embed = new Discord.MessageEmbed()
         .setTitle(`${(card.fullname.charAt(0).toUpperCase() + card.fullname.slice(1)).split('_').join(' ')}`)
