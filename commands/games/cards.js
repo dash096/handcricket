@@ -24,7 +24,7 @@ module.exports = {
     let cardNo = parseInt(args[0]) || parseInt(args[1])
     if (cardNo) {
       if (targetCards.length >= cardNo) {
-        let card = cardsDB.findOne({ fullname: targetCards[cardNo - 1] })
+        let card = await cardsDB.findOne({ fullname: targetCards[cardNo - 1] })
         let image = await getCardImage(card.fullname)
         let embed = new Discord.MessageEmbed()
           .setTitle(`${card.fullname}`)
