@@ -26,30 +26,26 @@ module.exports = {
     
     async function writeImage(resolve) {
       let bgImg = await jimp.read(bgPath)
-      
-      let i = 0;
-      await team.slice(0, 11).forEach(async fullname => {
-        let card = cards.find(x => x.fullname == fullname)
-        let name = card.name
+      let exportPath = `./temp/${target.id}.png`;
         
-        let pos = teamPos[parseInt(i) + 1]
-        let xpx = pos[0]
-        let ypx = pos[1]
-        
-        let cardPath = `./assets/cards/${name}.png`
-        let cardImg = await jimp.read(cardPath)
-        
-        if (i === 10) {
-          await bgImg
-            .composite(cardImg, xpx, ypx)
-            .write(exportPath)
-          resolve()
-        } else {
-          await bgImg
-           .composite(cardImg, xpx, ypx)
-        }
-        i += 1
-      })
+      if (team.length > 0) {
+        let i = 0;
+        await team.forEach(async fullname => {
+          i += 1
+          let card = cards.find(x => x.fullname == fullname)
+          let path = `./assets/cards/${name}.png`
+          let name = card.name
+          if (i === team.length) {
+            bgImg
+              .composite(await jimp.read(path), teamPos[i-1][0], teamPos[i-1][1])
+              .write(exportPath);
+            resolve()
+          } else {
+            bgImg
+              .composite(await jimp.read(path), teamPos[i-1][0], teamPos[i-1][1])
+          }
+        })
+      }
     }
     
     await new Promise(async r => {
