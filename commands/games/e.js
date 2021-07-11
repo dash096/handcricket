@@ -12,12 +12,9 @@ module.exports = {
   run: async ({ message, args }) => {
     let name = args[0] || 'kohli'
     
-    let row = args[1] || 1
-    let col = args[2] || 1
-    let xpx = teamPos['x'][row][col - 1]
-    let ypx = teamPos['y'][row]
-    
-    console.log(xpx, ypx)
+    let pos = teamPos[args[1] || 5]
+    let xpx = pos[0]
+    let ypx = pos[1]
     
     let path = `./assets/cards/${name}.png`
     let bg = './assets/team11.jpg'
