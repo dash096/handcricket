@@ -14,7 +14,7 @@ module.exports = {
     
     let row = args[1] || 1
     let col = args[2] || 1
-    let xpx = teamPos['x'][row][col]
+    let xpx = teamPos['x'][row][col - 1]
     let ypx = teamPos['y'][row]
     
     console.log(xpx, ypx)
