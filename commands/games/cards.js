@@ -28,23 +28,27 @@ module.exports = {
     }
     text = text.sort((a, b) => b[1] - a[1])
     text = text.map(i => i[0])
-    let i = 0
-    text.map(x => {
+    text.map((x, i) => {
       text[i] = `\`${i + 1})\`  ` + text[i]
-      i += 1
     })
     
     const embed = new Discord.MessageEmbed()
       .setTitle(`${target.displayName}'s Cards`)
       .setDescription(text.slice(0, 15).join('\n'))
       .setColor(embedColor)
-      .setFooter('"e.team" to view your team11.')
-    
+      .setFooter(`'${data?.cards?.slice(1).length - 1 || 10}' free of '${data?.cards?.[0]?.slots || 10}'`)
     let cardsMessage = await message.reply(embed)
     
     let counter = 0
     let page = 1
     let max = Math.floor(text.length/15) + 1
+    
+    let goToPage = parseInt(args[0]) || parseInt(args[1])
+    if (goToPage) {
+      if (goToPage > max) page = max
+      else page = goToPage
+    }
+    
     if (text.length > 15) loopPage()
     async function loopPage() {
       if (counter === 5) return
@@ -61,7 +65,7 @@ module.exports = {
         if (reaction === '◀️') {
           if (page !== 1) {
             page -= 1
-            embed.setDescription(text.slice(page === 1 ? 0 : 15 * page - 15, 15 * page))
+            embed.setDescription(text.slice(15 * page - 15, 15 * page))
             await cardsMessage.edit(embed)
           }
         } else {
