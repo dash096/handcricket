@@ -29,13 +29,13 @@ module.exports = {
         
       if (team.length > 0) {
         let i = 0;
-        await team.forEach(async fullname => {
+        await team.slice(0, 11).forEach(async fullname => {
           i += 1
           let card = cards.find(x => x.fullname == fullname)
           let name = card.name
           let path = `./assets/cards/${name}.png`
-          let pos = teamPos[parseInt(i)-1]
-          console.log(pos, i)
+          let pos = teamPos[parseInt(i)]
+          
           if (i === team.length) {
             bgImg
               .composite(await jimp.read(path), pos[0], pos[1])
