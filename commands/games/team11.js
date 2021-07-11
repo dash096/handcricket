@@ -16,7 +16,7 @@ module.exports = {
   description: 'Show\'s your team11',
   category: 'Games',
   syntax: 'e.team',
-  run: async ({ message, args }) => {
+  run: async ({ message, args, client }) => {
     const { channel, content, author } = message
     
     const target = await getTarget(message, args, client)
