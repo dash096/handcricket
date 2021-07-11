@@ -23,19 +23,24 @@ module.exports = {
     //Send Image of the Card if arguments exists
     if (args.length > 0 && target.id === author.id) {
       let query = args.join('').toLowerCase()
-      let match = []
-      for (let i in query) {
-        match.push({
-          "fullname": {
-            "$regex": `${query[i]}`
-          }
-        })
-      }
-      let card = await cardsDB.findOne({
-        $and: [
-          ...match
-        ]
+      
+      let cards = await cardsDB.find({ fullname: { $regex: `_*${query[0]}` } })
+      let card = cards.find(x => {
+        let name = x.fullname.split('_')
+        if(name[0][0] == query[0]) name = name[0]
+        else name = name[1]
+        
+        let counter = 0
+        for (let i = 0; i < query.length; i++) {
+          if (query.includes(name[i])) counter += 1
+        }
+        if (counter === query.length) {
+          return true
+        } else {
+          return false
+        }
       })
+      if(!card) return message.reply('Couldn\'t find one in that name.')
       
       let image = await getCardImage(card.fullname)
       let embed = new Discord.MessageEmbed()
