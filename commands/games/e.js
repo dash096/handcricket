@@ -22,9 +22,9 @@ module.exports = {
           .composite(cardImg, teamPos['x'][row][col], teamPos['y'][col])
           .write('./temp/i.png')
     
-    let attachment = new Discord.MessageAttachment('./temp/i.png')
+    await new Promise(r => setTimeout(r, 2000))
     await message.channel.send('text', {
-      files: [attachment]
+      files: ['./temp/i.png']
     })
   }
 }
