@@ -25,6 +25,7 @@ module.exports = {
     let bgImg = await jimp.read(bg)
     
     for (let i in team.slice(0, 11)) {
+      console.log(i)
       let fullname = team[i]
       let card = cards.find(x => x.fullname == fullname)
       let name = card.name
@@ -36,8 +37,7 @@ module.exports = {
       let cardPath = `./assets/cards/${name}.png`
       let cardImg = await jimp.read(cardPath)
       
-      if (i === 11) {
-        console.log('write')
+      if (i === 10) {
         await bgImg
           .composite(cardImg, xpx, ypx)
           .write(exportPath)
