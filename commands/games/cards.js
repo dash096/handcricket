@@ -30,13 +30,13 @@ module.exports = {
       let card = await cardsDB.findOne({
         $or: [
           {
-            name: {
-              $and: [...match]
+            $and: {
+              name: [...match]
             }
           },
           {
-            fullname: {
-              $and: [...match]
+            $and: {
+              fullname: [...match]
             }
           }
         ]
