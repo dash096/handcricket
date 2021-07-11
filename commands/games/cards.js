@@ -4,6 +4,7 @@ const Discord = require('discord.js')
 const embedColor = require('../../functions/getEmbedColor.js')
 const gain = require('../../functions/gainExp.js')
 const cardsDB = require('../../schemas/card.js')
+const getCardImage = require('../../cardFunctions/getImage.js')
 
 module.exports = {
   name: 'cards',
@@ -18,6 +19,30 @@ module.exports = {
     
     const data = await db.findOne({ _id: target.id })
     const targetCards = data.cards.slice(1)
+    
+    //Send Image of the Card if arguments exists
+    let cardNo = parseInt(args[0]) || parseInt(args[1])
+    if (cardNo) {
+      if (targetCards.length >= cardNo) {
+        let card = allCards.findOne({ fullname: targetCards[cardNo - 1] })
+        let image = await getCardImage(card.fullname)
+        let embed = new Discord.MessageEmbed()
+          .setTitle(`${card.fullname}`)
+          .setFooter(`${author.displayName}'s card`)
+          .setColor(embedColor)
+        if (image == 'err') {
+          embed
+            .attachFiles(`./assets/cards/${card.name}.png`)
+            .setImage(`attachment://${card.name}.png`)
+          let msg = await message.reply(embed)
+          await getCardImage(card.fullname, msg.attachments.first().url)
+        } else {
+          embed.setImage(image)
+          await message.reply(embed)
+        }
+      }
+      return
+    }
     
     let text = []
     for(let fullname in targetCards) {
@@ -39,17 +64,10 @@ module.exports = {
       .setTitle(`${target.displayName}'s Cards`)
       .setDescription(text.slice(0, 15).join('\n'))
       .setColor(embedColor)
-      .setFooter(`Page ${page} of ${max}, '${data?.cards?.slice(1).length - 1 || 10}' free of '${data?.cards?.[0]?.slots || 10}'`)
+      .setFooter(`Page ${page} of ${max}, '${(targetCards?.[0]?.slots || 10) - (data?.cards?.slice(1).length - 1 || 10)}' free of '${data?.cards?.[0]?.slots || 10}' slots`)
     let cardsMessage = await message.reply(embed)
     
     if(text.length > 15) {
-      let goToPage = parseInt(args[0]) || parseInt(args[1])
-      if (goToPage && goToPage > 1) {
-        if (goToPage > max) page = max
-        else page = goToPage
-        embed.setDescription(text.slice(page * 15 - 15, page * 15))
-        await cardsMessage.edit(embed)
-      } 
       loopPage()
       async function loopPage() {
         if (counter > 5) return
