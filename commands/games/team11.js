@@ -21,10 +21,9 @@ module.exports = {
     const team = data.cards?.[0]?.team?.[0] || data.cards?.slice(1)
     const cards = await cardsDB.find()
     
-    let exportPath = `./temp/${target.id}.png`
-    let bgPath = './assets/team11.jpg'
     
     async function writeImage(resolve) {
+      let bgPath = './assets/team11.jpg'
       let bgImg = await jimp.read(bgPath)
       let exportPath = `./temp/${target.id}.png`;
         
@@ -33,8 +32,9 @@ module.exports = {
         await team.forEach(async fullname => {
           i += 1
           let card = cards.find(x => x.fullname == fullname)
-          let path = `./assets/cards/${name}.png`
           let name = card.name
+          let path = `./assets/cards/${name}.png`
+          
           if (i === team.length) {
             bgImg
               .composite(await jimp.read(path), teamPos[i-1][0], teamPos[i-1][1])
