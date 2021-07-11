@@ -5,6 +5,7 @@ const db = require('../../schemas/player.js')
 const cardsDB = require('../../schemas/card.js')
 const getTarget = require('../../functions/getTarget.js')
 const embedColor = require('../../functions/getEmbedColor.js')
+const fs = require('fs')
 
 module.exports = {
   name: 'team11',
@@ -21,12 +22,12 @@ module.exports = {
     const cards = await cardsDB.find()
     
     let exportPath = `./temp/${target.id}.png`
-    let bg = './assets/team11.jpg'
-    let bgImg = await jimp.read(bg)
+    let bgPath = './assets/team11.jpg'
     
     async function writeImage(resolve) {
-      let i = 0;
+      let bgImg = await jimp.read(bgPath)
       
+      let i = 0;
       await team.slice(0, 11).forEach(async fullname => {
         let card = cards.find(x => x.fullname == fullname)
         let name = card.name
@@ -42,7 +43,6 @@ module.exports = {
           await bgImg
             .composite(cardImg, xpx, ypx)
             .write(exportPath)
-          console.log('written')
           resolve()
         } else {
           await bgImg
