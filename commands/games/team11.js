@@ -36,7 +36,7 @@ module.exports = {
           let path = `./assets/cards/${name}.png`
           let pos = teamPos[parseInt(i)]
           
-          if (i === team.length) {
+          if (i === 11) {
             bgImg
               .composite(await jimp.read(path), pos[0], pos[1])
               .write(exportPath);
