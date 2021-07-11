@@ -19,7 +19,7 @@ module.exports = {
     let bgImg = await jimp.read(bg)
     let cardImg = await jimp.read(path)
     await bgImg
-          .composite(cardImg, teamPos['x'][row][col], teamPos['y'][col])
+          .composite(cardImg, teamPos['x'][row][col], teamPos['y'][row])
           .write('./temp/i.png')
     
     await new Promise(r => setTimeout(r, 2000))
