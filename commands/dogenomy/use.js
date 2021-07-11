@@ -167,7 +167,7 @@ module.exports = {
       
       if (!cachedCardURL) getCardImage(
         card.fullname,
-        msg.attachments.first().url
+        msg.embeds[0].image.url
       )
     } else if (itemName === 'lootbox' ) {
       const e1 = await updateBag(itemName, itemAmount, playerData, message);
