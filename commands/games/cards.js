@@ -21,25 +21,23 @@ module.exports = {
     const targetCards = data.cards.slice(1)
     
     //Send Image of the Card if arguments exists
-    let cardNo = parseInt(args[0]) || parseInt(args[1])
-    if (cardNo) {
-      if (targetCards.length >= cardNo) {
-        let card = await cardsDB.findOne({ fullname: targetCards[cardNo - 1] })
-        let image = await getCardImage(card.fullname)
-        let embed = new Discord.MessageEmbed()
-          .setTitle(`${card.fullname}`)
-          .setFooter(`${author.displayName}'s card`)
-          .setColor(embedColor)
-        if (image == 'err') {
-          embed
-            .attachFiles(`./assets/cards/${card.name}.png`)
-            .setImage(`attachment://${card.name}.png`)
-          let msg = await message.reply(embed)
-          await getCardImage(card.fullname, msg.attachments.first().url)
-        } else {
-          embed.setImage(image)
-          await message.reply(embed)
-        }
+    let cardData = await cardsDB.findOne({ fullname: args[0] })
+    if (cardData) {
+      let card = cardData
+      let image = await getCardImage(card.fullname)
+      let embed = new Discord.MessageEmbed()
+        .setTitle(`${card.fullname}`)
+        .setFooter(`${author.displayName}'s card`)
+        .setColor(embedColor)
+      if (image == 'err') {
+        embed
+          .attachFiles(`./assets/cards/${card.name}.png`)
+          .setImage(`attachment://${card.name}.png`)
+        let msg = await message.reply(embed)
+        await getCardImage(card.fullname, msg.attachments.first().url)
+      } else {
+        embed.setImage(image)
+        await message.reply(embed)
       }
       return
     }
@@ -65,6 +63,11 @@ module.exports = {
       .setDescription(text.slice(0, 15).join('\n'))
       .setColor(embedColor)
       .setFooter(`Page ${page} of ${max}, '${(targetCards?.[0]?.slots || 10) - (data?.cards?.slice(1).length - 1 || 10)}' free of '${data?.cards?.[0]?.slots || 10}' slots`)
+    let goToPage = parseInt(args[0]) || parseInt(args[1])
+    if (goToPage && goToPage > 1) {
+      page = goToPage > max ? max : goToPage
+      embed.setDescription(text.slice(15 * page - 15, 15 * page))
+    }
     let cardsMessage = await message.reply(embed)
     
     if(text.length > 15) {
