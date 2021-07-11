@@ -24,7 +24,7 @@ module.exports = {
     let bg = './assets/team11.jpg'
     let bgImg = await jimp.read(bg)
     
-    for (let i = 0; i < 11; i++) {
+    for (let i in team.slice(0, 11)) {
       let fullname = team[i]
       let card = cards.find(x => x.fullname == fullname)
       let name = card.name
