@@ -45,9 +45,6 @@ module.exports = {
     const WR = getWR(data);
     const orangeCaps = data.orangeCaps || 0;
     
-    let waitMessage;
-    if(target.id === author.id) waitMessage = await message.reply('Wearing your clothes... ' + `${await getEmoji('swag')}`);
-    else waitMessage = await message.reply(`Wearing ${target.displayName}'s clothes`);
     const characterPath = await getCharacter(target);
     const characterAttachment = new Discord.MessageAttachment(characterPath);
     
@@ -62,14 +59,14 @@ module.exports = {
       .setImage(`attachment://${characterPath.split('/').pop()}`)
       .setColor(embedColor);
     
-    setTimeout(async () => {
-      await waitMessage.delete();
-      await message.reply(embed);
-      await gain(data, 1, message);
+    await message.reply(embed);
+    await gain(data, 1, message);
+      
+    setTimeout(() => {
       await fs.unlink(`${characterPath}`, (e) => {
         if(e) console.log(e);
       });
-    }, 1999);
+    }, 5000);
     
     function userInfo() {
       let text =
@@ -215,11 +212,13 @@ async function getCharacter(target) {
       }
     });
   }
-  const image = await getImage(target, type, images);
+  const image = await new Promise(r => {
+    await getImage(target, type, images, r)
+  })
   return image;
 }
 
-async function getImage(target, type, paths) {
+async function getImage(target, type, paths, resolve) {
   let character = await jimp.read(`./assets/decors/${type}/character.png`);
   let exportPath = `./temp/${target.id}.png`;
   
@@ -230,15 +229,16 @@ async function getImage(target, type, paths) {
       if(i === paths.length) {
         character
           .composite(await jimp.read(path), 0, 0)
-          .write(exportPath);
+          .write(exportPath)
       } else {
         character
-          .composite(await jimp.read(path), 0, 0);
+          .composite(await jimp.read(path), 0, 0)
       }
     });
   } else {
     await character.write(exportPath);
   }
   
+  resolve(exportPath)
   return exportPath;
 }
