@@ -1,7 +1,6 @@
 const db = require("../schemas/player.js");
 const fs = require('fs');
 const Discord = require("discord.js");
-const jimp = require('jimp');
 const getErrors = require('../functions/getErrors.js');
 const getEmoji = require('../functions/getEmoji.js');
 const embedColor = require('../functions/getEmbedColor.js');
@@ -11,11 +10,8 @@ module.exports = async (client, message, attacker, defender, post) => {
   const { content, channel, mentions, author } = message;
   let firstPair = [attacker, defender];
   
-  let exportPath = `./temp/${attacker.id}_${defender.id}.jpg`;
   let goalpostRedYellowPath = './assets/goalpost_ry.jpg';
-  let goalpostRedYellowImage = await jimp.read(goalpostRedYellowPath);
   let goalpostYellowRedPath = './assets/goalpost_yr.jpg';
-  let goalpostYellowRedImage = await jimp.read(goalpostYellowRedPath);
   let redFlame = await getEmoji('redflame');
   let blueFlame = await getEmoji('yellowflame');
   
@@ -36,13 +32,12 @@ module.exports = async (client, message, attacker, defender, post) => {
   logs.scores[`${attacker.id}`] = 0;
   logs.scores[`${defender.id}`] = 0;
   
-  await getGoalpostImage();
   const embed = new Discord.MessageEmbed()
     .setTitle('Football Match')
     .addField('Attacker', `${getFlame('atk')} ${attacker.username} (\`Goals:\` ${logs.scores[attacker.id]})`)
     .addField('Defender', `${getFlame('def')} ${defender.username} (\`Goals:\` ${logs.scores[defender.id]})`)
-    .attachFiles(exportPath)
-    .setImage(`attachment://${exportPath.split('/').pop()}`)
+    .attachFiles(getGoalpostImage())
+    .setImage(`attachment://${getGoalpostImage().split('/').pop()}`)
     .setFooter('The person who breaks the goal lead after 5 chances wins.')
     .setColor(embedColor)
   
@@ -89,8 +84,8 @@ module.exports = async (client, message, attacker, defender, post) => {
         .setTitle('Football Match')
         .addField('Current Attacker', `${getFlame('atk')} ${attacker.username} (\`Goals:\` ${logs.scores[attacker.id]})\n    ${getPenaltyHistory('atk')}`)
         .addField('Current Defender', `${getFlame('def')} ${defender.username} (\`Goals:\` ${logs.scores[defender.id]})\n    ${getPenaltyHistory('def')}`)
-        .attachFiles(await getGoalpostImage())
-        .setImage(`attachment://${exportPath.split('/').pop()}`)
+        .attachFiles(getGoalpostImage())
+        .setImage(`attachment://${getGoalpostImage().split('/').pop()}`)
         .setFooter('The person who breaks the goal lead after 5 chances wins.')
         .setColor(embedColor)
         
@@ -251,13 +246,10 @@ module.exports = async (client, message, attacker, defender, post) => {
   
   async function getGoalpostImage() {
     if(firstPair[0].id === attacker.id) {
-      await goalpostRedYellowImage
-        .write(exportPath);
+      return goalpostRedYellowPath
     } else {
-      await goalpostYellowRedImage
-        .write(exportPath);
+      return goalpostYellowRedPath
     }
-    return exportPath;
   }
   
   async function executeConversation(user, target) {

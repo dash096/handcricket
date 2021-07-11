@@ -43,8 +43,6 @@ module.exports = {
           })
         })
         
-        console.log(compositeObjs)
-        
         await sharp(bgPath)
           .composite(compositeObjs)
           .toFile(exportPath)

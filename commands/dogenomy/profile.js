@@ -1,7 +1,7 @@
 const fs = require('fs');
 const Discord = require("discord.js");
 const db = require("../../schemas/player.js");
-const jimp = require('jimp');
+const sharp = require('sharp');
 const getEmoji = require('../../functions/getEmoji.js');
 const gain = require('../../functions/gainExp.js');
 const getLevels = require('../../functions/getLevels.js');
@@ -209,9 +209,17 @@ async function getCharacter(target) {
   if(equippedDecors.length > 0) {
     await equippedDecors.forEach(decor => {
       if(decor.startsWith('decor') || decor.startsWith('head')) {
-        images.push(`./assets/decors/${type}/${decor}.png`);
+        images.push({
+          input: `./assets/decors/${type}/${decor}.png`,
+          left: 0,
+          top: 0,
+        });
       } else {
-        images.unshift(`./assets/decors/${type}/${decor}.png`);
+        images.unshift({
+          input: `./assets/decors/${type}/${decor}.png`,
+          left: 0,
+          top: 0,
+        });
       }
     });
   }
@@ -220,24 +228,16 @@ async function getCharacter(target) {
 }
 
 async function getImage(target, type, paths) {
-  let character = await jimp.read(`./assets/decors/${type}/character.png`);
+  let character = `./assets/decors/${type}/character.png`
   let exportPath = `./temp/${target.id}.png`;
   
   if(paths.length > 0) {
-    let i = 0;
-    await paths.forEach(async path => {
-      i += 1;
-      if(i === paths.length) {
-        character
-          .composite(await jimp.read(path), 0, 0)
-          .write(exportPath);
-      } else {
-        character
-          .composite(await jimp.read(path), 0, 0);
-      }
-    });
+    await sharp(character)
+      .composite(paths)
+      .toFile(exportPath)
   } else {
-    await character.write(exportPath);
+    await sharp(character)
+      .toFile(exportPath);
   }
   
   return exportPath;
