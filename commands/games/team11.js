@@ -1,4 +1,4 @@
-const jimp = require('jimp')
+const sharp = require('sharp')
 const teamPos = require('../../cardFunctions/teamPos.js')
 const Discord = require('discord.js')
 const db = require('../../schemas/player.js')
@@ -22,11 +22,12 @@ module.exports = {
     const cards = await cardsDB.find()
     
     let exportPath = `./temp/${target.id}.png`;
+    let bgPath = './assets/team11.jpg'
+    
     async function writeImage(resolve) {
-      let bgPath = './assets/team11.jpg'
-      let bgImg = await jimp.read(bgPath)
-      
       if (team.length > 0) {
+        let compositeObjs = []
+        
         let i = 0;
         await team.slice(0, 11).forEach(async fullname => {
           i += 1
@@ -35,16 +36,19 @@ module.exports = {
           let path = `./assets/cards/${name}.png`
           let pos = teamPos[parseInt(i)]
           
-          if (i === 11) {
-            bgImg
-              .composite(await jimp.read(path), pos[0], pos[1])
-              .write(exportPath);
-            resolve()
-          } else {
-            bgImg
-              .composite(await jimp.read(path), pos[0], pos[1])
-          }
+          compositeObjs.push({
+            input: path,
+            left: pos[0],
+            top: pos[1],
+          })
         })
+        
+        console.log(compositeObjs)
+        
+        await sharp(bgPath)
+          .composite(compositeObjs)
+          .toFile(exportPath)
+        resolve()
       }
     }
     
