@@ -24,7 +24,7 @@ module.exports = {
     let bg = './assets/team11.jpg'
     let bgImg = await jimp.read(bg)
     
-    async function writeImage() {
+    async function writeImage(resolve) {
       let i = 0;
       
       await team.slice(0, 11).forEach(async fullname => {
@@ -43,6 +43,7 @@ module.exports = {
             .composite(cardImg, xpx, ypx)
             .write(exportPath)
           console.log('written')
+          resolve()
         } else {
           await bgImg
            .composite(cardImg, xpx, ypx)
@@ -52,8 +53,7 @@ module.exports = {
     }
     
     await new Promise(async r => {
-      await writeImage
-      r()
+      await writeImage(r)
     })
     
     const embed = new Discord.MessageEmbed()
