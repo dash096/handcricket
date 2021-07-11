@@ -56,7 +56,7 @@ module.exports = {
           .attachFiles(`./assets/cards/${card.name}.png`)
           .setImage(`attachment://${card.name}.png`)
         let msg = await message.reply(embed)
-        console.log(msg.attachments)
+        console.log(msg.id, JSON.stringify(msg.attachments))
         await getCardImage(card.fullname, msg.attachments.first().url)
       } else {
         embed.setImage(image)
