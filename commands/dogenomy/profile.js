@@ -45,10 +45,10 @@ module.exports = {
     const WR = getWR(data);
     const orangeCaps = data.orangeCaps || 0;
     
-    let waitMessage;
-    if(target.id === author.id) waitMessage = await message.reply('Wearing your clothes... ' + `${await getEmoji('swag')}`);
-    else waitMessage = await message.reply(`Wearing ${target.displayName}'s clothes`);
-    const characterPath = await getCharacter(target);
+    const characterPath = await new Promise(async r => {
+      await getCharacter(target, r);
+    })
+    
     const characterAttachment = new Discord.MessageAttachment(characterPath);
     
     let description = userInfo();
@@ -62,14 +62,11 @@ module.exports = {
       .setImage(`attachment://${characterPath.split('/').pop()}`)
       .setColor(embedColor);
     
-    setTimeout(async () => {
-      await waitMessage.delete();
-      await message.reply(embed);
-      await gain(data, 1, message);
-      await fs.unlink(`${characterPath}`, (e) => {
-        if(e) console.log(e);
-      });
-    }, 1999);
+    await message.reply(embed);
+    await gain(data, 0.8, message);
+    await fs.unlink(`${characterPath}`, (e) => {
+      if(e) console.log(e);
+    });
     
     function userInfo() {
       let text =
@@ -195,7 +192,7 @@ function getWR(data) {
   return WR;
 }
 
-async function getCharacter(target) {
+async function getCharacter(target, resolve) {
   const userData = await db.findOne({_id: target.id});
   
   let type = 'type1';
@@ -224,6 +221,7 @@ async function getCharacter(target) {
     });
   }
   const image = await getImage(target, type, images);
+  resolve(image)
   return image;
 }
 
