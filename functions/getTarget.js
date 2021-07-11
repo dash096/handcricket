@@ -12,9 +12,8 @@ module.exports = async (message, args, client) => {
                );
     
     if(!member || member.user.bot) {
-      message.reply('Invalid Target, ping or give their ID.');
-      return;
-    }
+      member = message.author
+    } 
     
     const data = await db.findOne({ _id: member.user.id });
     if(!data) {
