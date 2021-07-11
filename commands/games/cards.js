@@ -21,12 +21,12 @@ module.exports = {
     const targetCards = data.cards.slice(1)
     
     //Send Image of the Card if arguments exists
-    let cardData = await cardsDB.findOne({ $or: [{ name: args.join('_').toLowerCase() }, { fullname: args.join('_').toLowerCase()}] })
+    let cardData = await cardsDB.findOne({ $or: [{ name: args.join('-').toLowerCase() }, { fullname: args.join('_').toLowerCase() }] })
     if (cardData) {
       let card = cardData
       let image = await getCardImage(card.fullname)
       let embed = new Discord.MessageEmbed()
-        .setTitle(`${card.fullname}`)
+        .setTitle(`${(card.fullname.charAt(0).toUpperCase() + card.fullname.slice(1)).split('_').join(' ')}`)
         .setFooter(`${author.displayName}'s card`)
         .setColor(embedColor)
       if (image == 'err') {
