@@ -45,11 +45,10 @@ module.exports = {
     const WR = getWR(data);
     const orangeCaps = data.orangeCaps || 0;
     
-    const characterPath = async () => {
-      return await new Promise(async r => {
-        return await getCharacter(target, r)
-      })
-    }
+    let waitMessage;
+    if(target.id === author.id) waitMessage = await message.reply('Wearing your clothes... ' + `${await getEmoji('swag')}`);
+    else waitMessage = await message.reply(`Wearing ${target.displayName}'s clothes`);
+    const characterPath = await getCharacter(target);
     const characterAttachment = new Discord.MessageAttachment(characterPath);
     
     let description = userInfo();
@@ -63,14 +62,14 @@ module.exports = {
       .setImage(`attachment://${characterPath.split('/').pop()}`)
       .setColor(embedColor);
     
-    await message.reply(embed);
-    await gain(data, 1, message);
-      
     setTimeout(async () => {
+      await waitMessage.delete();
+      await message.reply(embed);
+      await gain(data, 1, message);
       await fs.unlink(`${characterPath}`, (e) => {
         if(e) console.log(e);
       });
-    }, 5000);
+    }, 1999);
     
     function userInfo() {
       let text =
@@ -196,7 +195,7 @@ function getWR(data) {
   return WR;
 }
 
-async function getCharacter(target, resolve) {
+async function getCharacter(target) {
   const userData = await db.findOne({_id: target.id});
   
   let type = 'type1';
@@ -216,15 +215,11 @@ async function getCharacter(target, resolve) {
       }
     });
   }
-  const image = async () => {
-    return await new Promise(r => {
-      return await getImage(target, type, images, r)
-    })
-  }
-  return resolve(image)
+  const image = await getImage(target, type, images);
+  return image;
 }
 
-async function getImage(target, type, paths, resolve) {
+async function getImage(target, type, paths) {
   let character = await jimp.read(`./assets/decors/${type}/character.png`);
   let exportPath = `./temp/${target.id}.png`;
   
@@ -235,14 +230,15 @@ async function getImage(target, type, paths, resolve) {
       if(i === paths.length) {
         character
           .composite(await jimp.read(path), 0, 0)
-          .write(exportPath)
+          .write(exportPath);
       } else {
         character
-          .composite(await jimp.read(path), 0, 0)
+          .composite(await jimp.read(path), 0, 0);
       }
     });
   } else {
     await character.write(exportPath);
   }
-  return resolve(exportPath);
+  
+  return exportPath;
 }
