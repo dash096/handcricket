@@ -30,7 +30,7 @@ module.exports = {
           query == x.name.split('-').join('') ||
           query == x.fullname.split('_').join('') ||
           x.fullname.split('_').join('').includes(query)
-        ) return true
+          ) return true
         
         let name = x.fullname.split('_')
         if(name[0][0] == query[0]) name = name[0]
@@ -56,6 +56,7 @@ module.exports = {
           .attachFiles(`./assets/cards/${card.name}.png`)
           .setImage(`attachment://${card.name}.png`)
         let msg = await message.reply(embed)
+        console.log(msg.attachments)
         await getCardImage(card.fullname, msg.attachments.first().url)
       } else {
         embed.setImage(image)
