@@ -21,12 +21,11 @@ module.exports = {
     const team = data.cards?.[0]?.team?.[0] || data.cards?.slice(1)
     const cards = await cardsDB.find()
     
-    
+    let exportPath = `./temp/${target.id}.png`;
     async function writeImage(resolve) {
       let bgPath = './assets/team11.jpg'
       let bgImg = await jimp.read(bgPath)
-      let exportPath = `./temp/${target.id}.png`;
-        
+      
       if (team.length > 0) {
         let i = 0;
         await team.slice(0, 11).forEach(async fullname => {
