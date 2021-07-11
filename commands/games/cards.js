@@ -47,7 +47,7 @@ module.exports = {
       if (goToPage && goToPage > 1) {
         if (goToPage > max) page = max
         else page = goToPage
-        embed.setDescription(text.slice(page * 15, page * 15 + 15))
+        embed.setDescription(text.slice(page * 15 - 15, page * 15))
         await cardsMessage.edit(embed)
       } 
       loopPage()
