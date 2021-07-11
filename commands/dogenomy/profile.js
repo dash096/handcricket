@@ -214,7 +214,7 @@ async function getCharacter(target, resolve) {
     });
   }
   const image = await getImage(target, type, images)
-  console.log(before, resolve)
+  console.log('before', resolve)
   return resolve(image)
 }
 
