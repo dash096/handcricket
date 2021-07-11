@@ -25,20 +25,15 @@ module.exports = {
       let query = args.join('').toLowerCase()
       let match = []
       for (let i in query) {
-        match.push({"$regex": `${query[i]}`})
+        match.push({
+          "fullname": {
+            "$regex": `${query[i]}`
+          }
+        })
       }
       let card = await cardsDB.findOne({
-        $or: [
-          {
-            $and: {
-              name: [...match]
-            }
-          },
-          {
-            $and: {
-              fullname: [...match]
-            }
-          }
+        $and: [
+          ...match
         ]
       })
       
