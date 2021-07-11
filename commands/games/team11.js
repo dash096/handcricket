@@ -25,7 +25,7 @@ module.exports = {
     let bgImg = await jimp.read(bg)
     
     let i = 0;
-    await team.slice(0, 11).forEach(fullname => {
+    await team.slice(0, 11).forEach(async fullname => {
       let card = cards.find(x => x.fullname == fullname)
       let name = card.name
       
@@ -47,8 +47,6 @@ module.exports = {
       }
       i += 1
     })
-    console.log('after loop')
-    await new Promise(r => setTimeout(r, 5000))
     
     const embed = new Discord.MessageEmbed()
       .setTitle(`${target.displayName}'s Team11`)
