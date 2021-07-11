@@ -1,14 +1,10 @@
-
-
-
-
-
 const jimp = require('jimp')
 const teamPos = require('../../cardFunctions/teamPos.js')
 const Discord = require('discord.js')
 const db = require('../../schemas/player.js')
 const cardsDB = require('../../schemas/card.js')
 const getTarget = require('../../functions/getTarget.js')
+const embedColor = require('../../functions/getEmbedColor.js')
 
 module.exports = {
   name: 'team11',
@@ -51,8 +47,12 @@ module.exports = {
     }
     
     await new Promise(r => setTimeout(r, 2000))
-    await message.channel.send('text', {
-      files: [expotPath]
-    })
+    const embed = new Discord.MessageEmbed()
+      .setTitle(`${target.displayName}'s Team11`)
+      .attachFiles(exportPath)
+      .setImage(`attachment://${exportPath.split('/').pop()}`)
+      .setFooter('"e.cards" to view your cards.')
+      .setColor(embedColor)
+    await message.channel.send(embed)
   }
 }
