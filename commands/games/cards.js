@@ -44,13 +44,15 @@ module.exports = {
     
     if(text.length > 15) {
       let goToPage = parseInt(args[0]) || parseInt(args[1])
-      if (goToPage) {
+      if (goToPage && goToPage > 1) {
         if (goToPage > max) page = max
         else page = goToPage
-      }
-      
+        embed.setDescription(text.slice(page * 15, page * 15 + 15))
+        await cardsMessage.edit(embed)
+      } 
+      loopPage()
       async function loopPage() {
-        if (counter === 5) return
+        if (counter > 5) return
         try {
           await cardsMessage.react('◀️')
           await cardsMessage.react('▶️')
@@ -61,18 +63,14 @@ module.exports = {
           )).keys())[0]
           counter += 1
           
-          if (reaction === '◀️') {
-            if (page !== 1) {
-              page -= 1
-              embed.setDescription(text.slice(15 * page - 15, 15 * page))
-              await cardsMessage.edit(embed)
-            }
-          } else {
-            if (page !== max) {
-              embed.setDescription(text.slice(15 * page, 15 * page + 15))
-              page += 1
-              await cardsMessage.edit(embed)
-            }
+          if (reaction === '◀️' && page !== 1) {
+            page -= 1
+            embed.setDescription(text.slice(15 * page - 15, 15 * page))
+            await cardsMessage.edit(embed)
+          } else if (reaction === '▶️' && page !== max) {
+            embed.setDescription(text.slice(15 * page, 15 * page + 15))
+            page += 1
+            await cardsMessage.edit(embed)
           }
           return loopPage()
         } catch (e) {
