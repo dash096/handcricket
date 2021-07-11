@@ -51,7 +51,7 @@ module.exports = {
       })
     }
     
-    await new Promise(r => await writeImage)
+    await new Promise(async r => { await writeImage })
     
     const embed = new Discord.MessageEmbed()
       .setTitle(`${target.displayName}'s Team11`)
