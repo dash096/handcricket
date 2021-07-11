@@ -21,7 +21,7 @@ module.exports = {
     
     const target = await getTarget(message, args, client)
     const data = await db.findOne({ _id: target.id })
-    const team = data.cards?.[0]?.team
+    const team = data.cards?.[0]?.team || data.cards?.slice(1)
     const cards = await cardsDB.find()
     
     let exportPath = `./temp/${target.id}.png`
