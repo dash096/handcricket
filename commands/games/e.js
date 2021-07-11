@@ -10,15 +10,15 @@ module.exports = {
   name: 'e',
   run: async ({ message, args }) => {
     let name = args[0] || 'kohli'
-    let x = args[1] || 1
-    let y = args[2] || 1
+    let row = args[1] || 1
+    let col = args[2] || 1
     let path = `./assets/cards/${name}.png`
-    let bg = './assets/team11.png'
+    let bg = './assets/team11.jpg'
     
     let bgImg = await jimp.read(bg)
     let cardImg = await jimp.read(path)
     await bgImg
-          .composite(cardImg, teamPos['x'][x], teamPos[y])
+          .composite(cardImg, teamPos['x'][row][col], teamPos['y'][col])
           .write('./temp/i.png')
     await channel.send('text', {
       files: ['./temp/i.png']
