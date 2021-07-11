@@ -62,7 +62,7 @@ module.exports = {
     await message.reply(embed);
     await gain(data, 1, message);
       
-    setTimeout(() => {
+    setTimeout(async () => {
       await fs.unlink(`${characterPath}`, (e) => {
         if(e) console.log(e);
       });
