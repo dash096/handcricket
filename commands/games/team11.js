@@ -34,16 +34,16 @@ module.exports = {
           let card = cards.find(x => x.fullname == fullname)
           let name = card.name
           let path = `./assets/cards/${name}.png`
-          let pos = parseInt(i)-1
-          
+          let pos = teamPos[parseInt(i)-1]
+          console.log(pos, i)
           if (i === team.length) {
             bgImg
-              .composite(await jimp.read(path), teamPos[pos][0], teamPos[pos][1])
+              .composite(await jimp.read(path), pos[0], pos[1])
               .write(exportPath);
             resolve()
           } else {
             bgImg
-              .composite(await jimp.read(path), teamPos[pos][0], teamPos[pos][1])
+              .composite(await jimp.read(path), pos[0], pos[1])
           }
         })
       }
