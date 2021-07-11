@@ -12,7 +12,7 @@ module.exports = async (message, args, client) => {
                );
     
     if(!member || member.user.bot) {
-      member = message.author
+      member = message.member
     } 
     
     const data = await db.findOne({ _id: member.user.id });
