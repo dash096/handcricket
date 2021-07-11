@@ -24,8 +24,8 @@ module.exports = {
     let bg = './assets/team11.jpg'
     let bgImg = await jimp.read(bg)
     
-    for (let i in team.slice(0, 11)) {
-      let fullname = team[i]
+    let i = 0;
+    await team.slice(0, 11).forEach(fullname => {
       let card = cards.find(x => x.fullname == fullname)
       let name = card.name
       
@@ -45,9 +45,9 @@ module.exports = {
         await bgImg
           .composite(cardImg, xpx, ypx)
       }
-    }
-    console.log('after return')
-    
+      i += 1
+    })
+    console.log('after loop')
     await new Promise(r => setTimeout(r, 5000))
     
     const embed = new Discord.MessageEmbed()
