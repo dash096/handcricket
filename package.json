@@ -12,7 +12,7 @@
     "jimp": "^0.16.1",
     "mongoose": "^5.12.12",
     "nodemon": "^2.0.7",
-    "sharp": "^0.28.3",
+    "sharp": "^0.28.3"
   },
   "scripts": {
     "test": "ping",
