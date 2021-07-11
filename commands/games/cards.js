@@ -24,7 +24,7 @@ module.exports = {
     if (args.length > 0 && target.id === author.id) {
       let query = args.join('').toLowerCase()
       
-      let cards = await cardsDB.find({ fullname: { $regex: `_*${query[0]}` } })
+      let cards = await cardsDB.find({ fullname: { $regex: `(^${query[0]}|_${query[0]})` } })
       let card = cards.find(x => {
         let name = x.fullname.split('_')
         if(name[0][0] == query[0]) name = name[0]
@@ -32,7 +32,7 @@ module.exports = {
         
         let counter = 0
         for (let i = 0; i < query.length; i++) {
-          if (query.includes(name[i])) counter += 1
+          if (name.includes(i)) counter += 1
         }
         if (counter === query.length) {
           return true
