@@ -25,6 +25,7 @@ module.exports = {
     let bgImg = await jimp.read(bg)
     
     for (let i in team.slice(0, 11)) {
+      console.log(i)
       let fullname = team[i]
       let card = cards.find(x => x.fullname == fullname)
       let name = card.name
@@ -46,7 +47,7 @@ module.exports = {
       }
     }
     
-    await new Promise(r => setTimeout(r, 2000))
+    await new Promise(r => setTimeout(r, 5000))
     const embed = new Discord.MessageEmbed()
       .setTitle(`${target.displayName}'s Team11`)
       .attachFiles(exportPath)
