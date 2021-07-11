@@ -24,29 +24,34 @@ module.exports = {
     let bg = './assets/team11.jpg'
     let bgImg = await jimp.read(bg)
     
-    let i = 0;
-    await team.slice(0, 11).forEach(async fullname => {
-      let card = cards.find(x => x.fullname == fullname)
-      let name = card.name
+    async function writeImage() {
+      let i = 0;
       
-      let pos = teamPos[parseInt(i) + 1]
-      let xpx = pos[0]
-      let ypx = pos[1]
-      
-      let cardPath = `./assets/cards/${name}.png`
-      let cardImg = await jimp.read(cardPath)
-      
-      if (i === 10) {
-        await bgImg
-          .composite(cardImg, xpx, ypx)
-          .write(exportPath)
-        console.log('written')
-      } else {
-        await bgImg
-          .composite(cardImg, xpx, ypx)
-      }
-      i += 1
-    })
+      await team.slice(0, 11).forEach(async fullname => {
+        let card = cards.find(x => x.fullname == fullname)
+        let name = card.name
+        
+        let pos = teamPos[parseInt(i) + 1]
+        let xpx = pos[0]
+        let ypx = pos[1]
+        
+        let cardPath = `./assets/cards/${name}.png`
+        let cardImg = await jimp.read(cardPath)
+        
+        if (i === 10) {
+          await bgImg
+            .composite(cardImg, xpx, ypx)
+            .write(exportPath)
+          console.log('written')
+        } else {
+          await bgImg
+           .composite(cardImg, xpx, ypx)
+        }
+        i += 1
+      })
+    }
+    
+    await new Promise(r => await writeImage)
     
     const embed = new Discord.MessageEmbed()
       .setTitle(`${target.displayName}'s Team11`)
