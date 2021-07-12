@@ -16,7 +16,7 @@ module.exports = {
     if (args.length > 0) {
       let cmds = commands [4]
       let queryWords = args.map(x => x.toLowerCase())
-      let query = args.join('').toLowerCase()
+      let query = queryWords.join('')
       
       let cmd = cmds.find(x => x.name == query || x.aliases?.includes(query))
       if(cmd) {
@@ -56,7 +56,7 @@ module.exports = {
             for (let x in query) {
               if (chaos.includes(x)) counter += 1
             }
-            if (query.length/2 <= counter) {
+            if (query.length/1.75 <= counter) {
               return true
             }
           }
