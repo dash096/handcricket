@@ -5,6 +5,7 @@ const embedColor = require('../../functions/getEmbedColor.js')
 const gain = require('../../functions/gainExp.js')
 const cardsDB = require('../../schemas/card.js')
 const getCardImage = require('../../cardFunctions/getImage.js')
+const cardSearch = require('../../cardFunctions/cardSearch.js')
 
 module.exports = {
   name: 'cards',
@@ -22,28 +23,7 @@ module.exports = {
     
     //Send Image of the Card if arguments exists
     if (args.length > 0 && target.id === author.id) {
-      let query = args.join('').toLowerCase()
-      
-      let cards = await cardsDB.find({ fullname: { $regex: `(^${query[0]}|_${query[0]})` } })
-      let card = cards.find(x => {
-        if (
-          query == x.name.split('-').join('') ||
-          query == x.fullname.split('_').join('') ||
-          x.fullname.split('_').join('').includes(query)
-          ) return true
-        
-        let name = x.fullname.split('_')
-        if(name[0][0] == query[0]) name = name[0]
-        else name = name[1]
-        
-        let counter = 0
-        for (let i = 0; i < query.length; i++) {
-          if (name.includes(query[i])) counter += 1
-        }
-        
-        if (counter >= query.length) return true
-        else return false
-      })
+      let card = await cardSearch(args)
       if(!card) return message.reply('Couldn\'t find one in that name.')
       
       let image = await getCardImage(card.fullname)
