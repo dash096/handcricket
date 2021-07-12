@@ -5,7 +5,7 @@ const getErrors = require('../../functions/getErrors.js');
 module.exports = {
   name: 'equip',
   aliases: ['wear', 'drop', 'unequip'],
-  description: 'Equip your fav decoration, it toggles equip or unequip.',
+  description: 'Equip your favourite decoration, it toggles equip or unequip.',
   syntax: 'e.equip <the_item_name_in_your bag>',
   category: 'Dogenomy',
   cooldown: 30,

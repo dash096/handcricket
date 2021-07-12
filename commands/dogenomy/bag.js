@@ -8,7 +8,7 @@ const embedColor = require('../../functions/getEmbedColor.js');
 module.exports = {
   name: 'bag',
   aliases: ['decors', 'pack'],
-  description: 'Shows your backpack',
+  description: 'Shows your bag which contains your items and decors(decorations)',
   category: 'Dogenomy',
   syntax: 'e.bag [@user/userID]',
   cooldown: 5,

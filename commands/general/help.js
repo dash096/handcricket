@@ -11,30 +11,71 @@ module.exports = {
   syntax: 'e.help [name]',
   run: async ({message, args, prefix}) => {
     const { content, author, member, channel, mentions } = message;
+    const commands = await getCommands();
     
     if (args.length > 0) {
-      let query = args[0].toLowerCase()
-      let queryInfo
-      let categories = fs.readdirSync('commands')
-      categories.forEach(category => {
-        let commands = fs.readdirSync(`commands/${category}`)
-        commands.forEach(command => {
-          let cmd = require(`../${category}/${command}`)
-          if (cmd.name === query || cmd.aliases?.includes(query)) {
-            queryInfo = new Discord.MessageEmbed()
-              .setTitle(cmd.name + 'command')
-              .setDescription([cmd.description, cmd.flags].join('\n\n'))
-              .addField('Syntax', cmd.syntax)
-              .addField('Cooldown', cmd.cooldown || 0 + 's')
-              .setFooter(`Requested by ${member.displayName}`)
+      let cmds = commands [4]
+      let queryWords = args.map(x => x.toLowerCase())
+      let query = args.join('').toLowerCase()
+      
+      if(query.length < 9) {
+        let cmd = cmds.find(x => x.name == query || x.aliases?.includes(query))
+        if (cmd) {
+          const send = new Discord.MessageEmbed()
+            .setTitle(`${cmd.name.charAt(0).toUpperCase() + cmd.name.slice(1)} Command`)
+            .setDescription([cmd.description, cmd.flags || ''].join('\n\n'))
+            .addField('Syntax',cmd.syntax) 
+            .addField('Cooldown', cmd.cooldown + 's')
+            .setFooter('Requested by ' + member.displayName)
+            .setColor(embedColor)
+          return await message.reply(embed)
+        }
+      } else {
+        let possible = cmds.filter(cmd => {
+          if(
+            cmd.description.includes(query) ||
+            queryWords.find(q =>
+              cmd.syntax.includes(q) ||
+              cmd.flags?.includes(q) ||
+              cmd.subcommands?.includes(q)
+            )
+          ) {
+            return true
+          } else {
+            let counter = 0
+            let chaos = [
+              cmd.description,
+              cmd.syntax,
+              cmd.flags || cmd.subcommands || '',
+              cmd.aliases.join('')
+            ].join('')
+            for (let x in query) {
+              if (chaos.includes(x)) counter += 1
+            }
+            if (query.length/2 <= counter) {
+              return true
+            }
           }
         })
-      })
-      if (queryInfo) return await message.reply(queryInfo)
+        
+        let embed = new Discord.MessageEmbed()
+          .setTitle('Matching Results')
+          .setFooter(`Requested by ${member.displayName}`)
+          .setColor(embedColor)
+        if (possible.length > 0) {
+          let text = ''
+          for (let x in possible) {
+            text += `**${x.cmd}** \`${cmd.syntax}\`\n${cmd.description}\n\n`
+          }
+          embed.setDescription(text)
+          await message.reply(embed)
+        } else {
+          await message.reply('No results')
+        }
+      }
     }
     
     try {
-      const commands = await getCommands();
       const general = commands[0];
       const dogenomy = commands[1];
       const games = commands[2];
@@ -177,11 +218,15 @@ function getCommands() {
   let dogenomy = '';
   let games = '';
   let minigames = '';
+  
+  const commands = [];
+  
   const folders = fs.readdirSync('./commands');
   for(const folder of folders) {
     const files = fs.readdirSync(`./commands/${folder}`);
     for(const file of files) {
       const command = require(`../${folder}/${file}`);
+      commands.push(command)
       if(folder.toLowerCase() == 'games') {
         games += `**${command.name}** - \`${command.syntax}\`\n ${command.description}\n**Flags**\n${command.flags ? command.flags : 'None'}\n\n`;
       } else if (folder.toLowerCase() == 'general') {
@@ -194,6 +239,6 @@ function getCommands() {
     }
   }
   return [
-    general, dogenomy, games, minigames
+    general, dogenomy, games, minigames, commands
   ];
 }

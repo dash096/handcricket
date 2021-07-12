@@ -9,7 +9,7 @@ const updateCoins = require('../../functions/updateCoins.js');
 
 module.exports = {
   name: 'sell',
-  description: 'Sell items and get coins back, not 100% cashback ofc.',
+  description: 'Sell items and get coins back, not 100% cashback ofcourse.',
   category: 'Dogenomy',
   syntax: 'e.sell <itemName> <amount>',
   cooldown: 10,

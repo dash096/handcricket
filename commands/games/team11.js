@@ -16,7 +16,7 @@ module.exports = {
   description: 'Show\'s your team11 or you can modify your team with the subcommands.',
   category: 'Games',
   syntax: 'e.team [subcommands]',
-  flags: '`replace [one word toBeReplaced name] [one word toReplace name]`: Swap two players mentioned in the arguments.',
+  subcommands: '`replace [toBeReplaced] [toReplace]`: Swap two players mentioned in the arguments.',
   run: async ({ message, args, client }) => {
     const { channel, content, author } = message
     

@@ -6,7 +6,7 @@ const getTarget = require('../../functions/getTarget.js');
 module.exports = {
   name: 'balance',
   aliases: ['bal', 'cash', 'wallet'],
-  description: 'Shows balance of a user.',
+  description: 'Shows balance(leftout dogecoins) of a user.',
   category: 'Dogenomy',
   syntax: 'e.balance [@user/userID]',
   cooldown: 5,

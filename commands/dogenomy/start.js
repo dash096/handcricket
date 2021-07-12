@@ -5,7 +5,7 @@ const getEmoji = require('../../functions/getEmoji.js');
 module.exports = {
   name: "start",
   aliases: ["play"],
-  description: "Creates a Database",
+  description: "Creates a Database and you can start to play Dispo!",
   category: 'Dogenomy',
   syntax: 'e.start',
   cooldown: 30,
