@@ -45,6 +45,7 @@ module.exports = {
         
         await sharp(bgPath)
           .composite(compositeObjs)
+          .sharpen()
           .toFile(exportPath)
         resolve()
       }
