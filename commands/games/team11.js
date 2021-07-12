@@ -21,7 +21,17 @@ module.exports = {
     const { channel, content, author } = message
     
     const target = await getTarget(message, args, client)
-    const data = await db.findOne({ _id: target.id })
+    let data = await db.findOne({ _id: target.id })
+    
+    if (!data.cards?.[0]?.team || data.cards[0].team.length < 11) {
+      for (let i = 0; i < 11; i++) {
+        await updateCard(data, await openBox(1, data, message, 'cricket'), 'team11', -75)
+        data = await db.findOne({ _id: target.id })
+      }
+      await message.reply('You have been given 11 starter cards!')
+      return
+    }
+    
     const team = data.cards?.[0]?.team || data.cards?.slice(1)
     const cards = await cardsDB.find()
     
