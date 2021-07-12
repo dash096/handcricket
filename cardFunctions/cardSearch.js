@@ -1,4 +1,4 @@
-const cardsDB = require('../../schemas/card.js')
+const cardsDB = require('../schemas/card.js')
 
 module.exports = async (args) => {
   let query = args.join('').toLowerCase()
