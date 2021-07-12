@@ -10,7 +10,28 @@ module.exports = {
   category: 'General',
   syntax: 'e.help [name]',
   run: async ({message, args, prefix}) => {
-    const { content, author, channel, mentions } = message;
+    const { content, author, member, channel, mentions } = message;
+    
+    if (args.length > 0) {
+      let query = args[0].toLowerCase()
+      let queryInfo
+      let categories = fs.readdirSync('commands')
+      categories.forEach(category => {
+        let commands = fs.readdirSync(`commands/${category}`)
+        commands.forEach(command => {
+          let cmd = require(`commands/${category}/${command}`)
+          if (cmd.name === query || cmd.aliases.includes(query)) {
+            queryInfo = new Discord.MessageEmbed()
+              .setTitle(cmd.name + 'command')
+              .setDescription([cmd.description, cmd.flags].join('\n\n'))
+              .addField('Syntax', cmd.syntax)
+              .addField('Cooldown', cmd.cooldown || 0 + 's')
+              .setFooter(`Requested by ${member.displayName}`)
+          }
+        })
+      })
+      if (queryInfo) return await message.reply(queryInfo)
+    }
     
     try {
       const commands = await getCommands();
@@ -25,7 +46,7 @@ module.exports = {
         .addField('Navigate via the pages of the guide by Reacting', 
           '1) 🏏 - **__Cricket Info__**\n2) ⚽ - **__Football Info__**\n3) ⚾ - **__Baseball Info__**\n4) 👀 - **__General Conmands__**\n5) 💰 - **__Dogenomy Commands__**\n6) 🔫 - **__Games Commands__**\n7) 🎲 - **__MiniGames Commands__**')
         .addField('Links', `[Add the bot](${process.env.INVITE_URL})\n[Support Server](${process.env.COMMUNITY_URL})`)
-        .setFooter('Requested by ' + author.tag)
+        .setFooter('Requested by ' + member.displayName)
         .setColor(embedColor);
       
       const helpEmbed = await channel.send(send);
@@ -91,7 +112,7 @@ module.exports = {
             'If the batsman and the bowler type the same number before the score is reached, bolwer wins, else if the batsman crosses the target, batsman wins.'
           )
           .setColor(embedColor)
-          .setFooter('Requested by ' + author.username);
+          .setFooter('Requested by ' + member.displayName);
         const footballEmbed = new Discord.MessageEmbed()
           .setTitle('About Football')
           .setDescription('Cheems can\'t run all over the pitch so he likes taking penalties.')
@@ -100,7 +121,7 @@ module.exports = {
             'To keep things fair if all 5 goals on either side are scored then the game becomes a sudden death match. The person who misses the next goal loses the game.'
           )
           .setColor(embedColor)
-          .setFooter('Requested by ' + author.username);
+          .setFooter('Requested by ' + member.displayName);
         const baseballEmbed = new Discord.MessageEmbed()
           .setTitle('About Baseball')
           .setDescription('Cheems was bored by the normal play, here\'s a modified version.')
@@ -115,27 +136,27 @@ module.exports = {
             'This adds the run counter and once the run counter reaches 4 a bonus 10 runs are added to the score.\n'
           )
           .setColor(embedColor)
-          .setFooter('Requested by ' + author.username);
+          .setFooter('Requested by ' + member.displayName);
         const generalEmbed = new Discord.MessageEmbed()
           .setTitle('General Commands')
           .setDescription(general)
           .setColor(embedColor)
-          .setFooter('Requested by ' + author.username);
+          .setFooter('Requested by ' + member.displayName);
         const dogenomyEmbed = new Discord.MessageEmbed()
           .setTitle('Dogenomy Commands')
           .setDescription(dogenomy)
           .setColor(embedColor)
-          .setFooter('Requested by ' + author.username);
+          .setFooter('Requested by ' + member.displayName);
         const gamesEmbed = new Discord.MessageEmbed()
           .setTitle('Games Commands')
           .setDescription(games)
           .setColor(embedColor)
-          .setFooter('Requested by ' + author.username);
+          .setFooter('Requested by ' + member.displayName);
         const minigamesEmbed = new Discord.MessageEmbed()
           .setTitle('Minigames Commands')
           .setDescription(minigames)
           .setColor(embedColor)
-          .setFooter('Requested by ' + author.username);
+          .setFooter('Requested by ' + member.displayName);
         
         if(name == 'cricket') return cricketEmbed;
         else if(name == 'football') return footballEmbed;
