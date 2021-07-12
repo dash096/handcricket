@@ -233,7 +233,7 @@ function getCommands() {
       const command = require(`../${folder}/${file}`);
       commands.push(command)
       if(folder.toLowerCase() == 'games') {
-        games += `**${command.name}** - \`${command.syntax}\`\n ${command.description}\n**Flags**\n${command.flags ? command.flags : 'None'}\n\n`;
+        games += `**${command.name}** - \`${command.syntax}\`\n ${command.description}\n${command.subcommands ? `**Subcommands**\n ${command.subcommands}` : ''}\n${command.flags ? `**Flags**\n${command.flags}` : ''}\n\n`;
       } else if (folder.toLowerCase() == 'general') {
         general += `**${command.name}** - \`${command.syntax}\`\n ${command.description}\n\n`;
       } else if (folder.toLowerCase() == 'dogenomy') {
