@@ -26,7 +26,7 @@ module.exports = {
     
     if (!data.cards?.[0]?.team || data.cards[0].team.length < 11) {
       for (let i = 0; i < 11; i++) {
-        let card = await openBox(1, data, message, 'cricket')
+        let card = await openBox(1, data, message, 'cricket', -75)
         console.log(card)
         await updateCard(data, card, 'team11', -75)
         data = await db.findOne({ _id: target.id })
