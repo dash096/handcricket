@@ -73,6 +73,7 @@ module.exports = {
     }
     let cardsMessage = await message.reply(embed)
     
+    //Page switching
     if(text.length > 15) {
       loopPage()
       async function loopPage() {
