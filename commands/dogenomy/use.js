@@ -11,7 +11,7 @@ const gain = require('../../functions/gainExp.js');
 const getEmoji = require('../../functions/getEmoji.js');
 const getError = require('../../functions/getErrors.js');
 const getDecors = require('../../functions/getDecors.js');
-const getCards = require('../../cardFunctions/getCards.js')
+const cardsDB = require('../../schemas/card.js')
 const updateCards = require('../../cardFunctions/updateCards.js')
 const getCardImage = require('../../cardFunctions/getImage.js')
 const embedColor = require('../../functions/getEmbedColor.js')
@@ -76,23 +76,9 @@ module.exports = {
       
       let random = Math.random()
       
-      let allCards = await getCards()
+      let allCards = await cardsDB.find()
       let cards = allCards.filter(card => !playerData.cards.includes(card.fullname))
-      let sliceStart = random < 0.80
-                       ? 0
-                       : random < 0.95
-                       ? cards.length/5
-                       : random < 0.99
-                       ? cards.length/3
-                       : cards.length/2
-      let sliceEnd = random < 0.8
-                     ? cards.length - cards.length/3
-                     : random < 0.95
-                     ? cards.length - cards.length/5
-                     : cards.length
-      
-      let slicedCards = cards.slice(Math.floor(sliceStart), Math.floor(sliceEnd))
-      let card = slicedCards[Math.floor(Math.random() * slicedCards.length)]
+      let card = await openBox(1, playerData, message, 'cricket')
       
       let cachedCardURL = getCardImage(card.fullname) 
       if (cachedCardURL !== 'err') {

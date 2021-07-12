@@ -44,6 +44,7 @@ module.exports = {
       return
     }
     
+    //Send a list of slots
     let text = []
     for(let fullname in targetCards) {
       fullname = targetCards[fullname]

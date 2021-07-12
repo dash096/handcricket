@@ -32,7 +32,8 @@ module.exports = {
     const cost = item.price * number;
     
     if (name == 'slots') {
-      await buySlots(message, data, number)
+      let slots = await buySlots(message, data, number)
+      if (slots == 'err') return message.reply('Insufficient Balance.')
     } else {
       await updateCoins(-parseInt(cost), data);
       await updateBag(name, -(number), data, message);

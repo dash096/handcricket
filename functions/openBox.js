@@ -1,4 +1,5 @@
 const db = require("../schemas/items.js");
+const getCards = require('../../cardFunctions/getCards.js')
 
 module.exports = async function (amount, data, msg, name) {
   if (name === 'loot') {
@@ -33,5 +34,24 @@ module.exports = async function (amount, data, msg, name) {
      }
       return reward;
     }
+  } else if (name === 'cricketbox') {
+    let allCards = await getCards()
+    let cards = allCards.filter(card => !data.cards?.includes(card.fullname))
+    
+    let sliceStart = random < 0.80
+                     ? 0
+                     : random < 0.95
+                     ? cards.length/5
+                     : random < 0.99
+                     ? cards.length/3
+                     : cards.length/2
+    let sliceEnd = random < 0.8
+                   ? cards.length - cards.length/3
+                   : random < 0.95
+                   ? cards.length - cards.length/5
+                   : cards.length
+    
+    let slicedCards = cards.slice(Math.floor(sliceStart), Math.floor(sliceEnd))
+    return slicedCards[Math.floor(Math.random() * slicedCards.length)]
   }
 };

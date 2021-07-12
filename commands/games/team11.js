@@ -25,6 +25,7 @@ module.exports = {
     const team = data.cards?.[0]?.team || data.cards?.slice(1)
     const cards = await cardsDB.find()
     
+    //Replace 1 card in team11 with 1 in slots
     let replaceAlias = ['replace', 'rep', 'swap', 'r']
     if (replaceAlias.includes(args[0])) {
       let replace = [args[1], args[2]]
@@ -46,6 +47,7 @@ module.exports = {
     let exportPath = `./temp/${target.id}.png`;
     let bgPath = './assets/team11.jpg'
     
+    //Write the Image temporarily
     async function writeImage(resolve) {
       if (team.length > 0) {
         let compositeObjs = []
