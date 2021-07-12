@@ -1,11 +1,5 @@
 const db = require('../schemas/player.js')
 
-
-
-
-
-
-
 module.exports = async (data, card, mode, remove, add = []) => {
   let { fullname } = card
   let cards = mode === 'team11'
@@ -26,8 +20,9 @@ module.exports = async (data, card, mode, remove, add = []) => {
     cards.push(fullname)
   }
   
+  console.log(cards)
   await db.findOneAndUpdate({ _id: data._id }, {
-    $set: type === 'team11' 
+    $set: mode === 'team11' 
           ? {
             "cards.1": {
               team: cards,
