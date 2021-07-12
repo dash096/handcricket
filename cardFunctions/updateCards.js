@@ -1,10 +1,16 @@
 const db = require('../schemas/player.js')
 
+
+
+
+
+
+
 module.exports = async (data, card, mode, remove, add = []) => {
   let { fullname } = card
-  let cards = mode === 'team11' ? (data.cards?.[0]?.team || [{ team: [], slots: 10 }]) : (data.cards?.slice(1) || [])
-  
-  console.log(add)
+  let cards = mode === 'team11'
+              ? (data.cards?.[0]?.team || [{ team: [], slots: 10 }, ...data.cards.slice(1)])
+              : (data.cards?.slice(1) || [])
   
   if (!remove && mode !== 'team11' && (cards?.[0]?.slots || 10) <= cards.slice(1).length - 1) {
     return 'err'
@@ -21,13 +27,15 @@ module.exports = async (data, card, mode, remove, add = []) => {
   }
   
   await db.findOneAndUpdate({ _id: data._id }, {
-    $set: mode === 'team11' ? {
-      "cards.0.content": {
-        team: cards,
-        slots: (data.cards?.[0]?.slots || 10)
-      }
-    } : {
-      cards: cards
-    }
+    $set: type === 'team11' 
+          ? {
+            "cards.1": {
+              team: cards,
+              slots: data.cards?.[0]?.slots || 10
+            }
+          }
+          : {
+            "cards": cards,
+          }
   })
 }
