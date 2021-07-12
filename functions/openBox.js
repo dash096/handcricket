@@ -1,5 +1,5 @@
 const db = require("../schemas/items.js");
-const cardsDB = require('../../schemas/card.js')
+const cardsDB = require('../schemas/card.js')
 
 module.exports = async function (amount, data, msg, name) {
   if (name === 'loot') {
