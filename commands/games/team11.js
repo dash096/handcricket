@@ -29,6 +29,7 @@ module.exports = {
         let card = await openBox(1, data, message, 'cricket', -75)
         await updateCard(data, card, 'team11')
         data = await db.findOne({ _id: target.id })
+        console.log(data.cards)
       }
       await message.reply('You have been given 11 starter cards!')
       return
