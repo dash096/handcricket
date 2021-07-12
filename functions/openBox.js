@@ -34,7 +34,7 @@ module.exports = async function (amount, data, msg, name) {
      }
       return reward;
     }
-  } else if (name === 'cricketbox') {
+  } else if (name === 'cricket') {
     let allCards = await cardsDB.find()
     let cards = allCards.filter(card => !data.cards?.includes(card.fullname))
     
