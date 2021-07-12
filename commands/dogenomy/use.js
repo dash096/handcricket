@@ -104,14 +104,14 @@ module.exports = {
           .setTitle(`You got, ${card.name.split('-').join(' ')}`)
       }
       let msg = await message.reply(embed)
-      let updateCard = await updateCards(playerData, card)
+      let updateCard = await updateCards(playerData, card, 'slots')
       
       if (updateCard === 'err') {
         //slots full
         await channel.send(`${author}, You don't have enough card slots, do you want to spend coins buying one? Type \`y\`/\`n\` or any \`card name\` to replace`)
         
         let res = await checkRes()
-        if (res != 'err') await updateCards(playerData, card)
+        if (res != 'err') await updateCards(playerData, card, 'slots')
         
         async function checkRes() {
           try {
@@ -148,7 +148,7 @@ module.exports = {
                   return await checkRes()
                 }
                 
-                await updateCards(playerData, removeCard, true)
+                await updateCards(playerData, removeCard, 'slots', true)
                 playerData = await db.findOne({ _id: playerData._id })
                 await msg.reply(`You replaced **${removeCard.fullname.split('_').join(' ')}** and got the card`)
                 return

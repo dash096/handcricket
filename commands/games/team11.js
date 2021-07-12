@@ -38,7 +38,7 @@ module.exports = {
       if (!team.find(x => x == toBeReplaced.fullname)) return message.reply(`Cannot find card \`${toBeReplaced.name}\` in your team`)
       if (!data.cards?.find(x => x == toReplace.fullname)) return message.reply(`Cannot find card \`${toReplace.name}\` in your slots`)
       
-      await updateCard(data, toBeReplaced, true, [toReplace])
+      await updateCard(data, toBeReplaced, 'team11', true, [toReplace])
       await message.reply(`Replaced \`${toBeReplaced.name}\` with \`${toReplace.name}\``)
       return
     }
