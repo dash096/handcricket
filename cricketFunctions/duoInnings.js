@@ -349,7 +349,7 @@ function dot(c, bowled) {
 
 let swapCounter = 0
 async function cpuBowl(batsman, batArray) {
-  let pattern = batsman.pattern
+  let pattern = batsman.pattern || {5: 0, 6: 0, 3: 0, 4: 0, 1: 0, 2: 0}
   let arr = batArray
   arr = arr.slice(-4).map((v, i, a) => v - (a[i - 1] || 0))
   arr = arr.slice(-3)
@@ -391,11 +391,11 @@ async function cpuBowl(batsman, batArray) {
     } 
   } 
   
-  return random < 0.100 ? arr.slice(-1) :
+  return (random < 0.100 ? arr.slice(-1) :
          random < 0.400 ? pattern[0] :
          random < 0.600 ? pattern[1] :
          random < 0.750 ? pattern[2] :
          random < 0.870 ? pattern[3] :
          random < 0.950 ? pattern[4] :
-         pattern[5]
+         pattern[5]) || [3, 6, 4, 5, 6, 1][Math.floor(Math.random() * [3, 6, 4, 5, 6, 1].length)]
 }

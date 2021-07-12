@@ -99,8 +99,8 @@ module.exports = {
           }
           
           challenge.player.data = userData
-          challenge.player.pattern = userData.pattern
-          challenge.player.pattern = Object.entries(challenge.player.pattern || {1:0, 2:0, 3:0, 4:0, 5:0, 6:0}).sort((a, b) => b[1] - a[1])
+          challenge.player.pattern = userData.pattern || {5: 0, 6: 0, 3: 0, 4: 0, 1: 0, 2: 0}
+          challenge.player.pattern = Object.entries(challenge.player.pattern || {5: 0, 6: 0, 3: 0, 4: 0, 1: 0, 2: 0}).sort((a, b) => b[1] - a[1])
           challenge.player.pattern = challenge.player.pattern.map(x => x[0])
           
           await channel.send(`Solo Match started, get to DMs.`)
