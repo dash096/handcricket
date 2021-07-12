@@ -22,7 +22,10 @@ module.exports = async (data, card, mode, remove, add = []) => {
   
   await db.findOneAndUpdate({ _id: data._id }, {
     $set: mode === 'team11' ? {
-      "cards.0.content.team": cards
+      "cards.0.content": {
+        team: cards,
+        slots: (data.cards?.[0]?.slots || 10)
+      }
     } : {
       cards: cards
     }
