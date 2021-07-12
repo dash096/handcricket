@@ -39,7 +39,7 @@ module.exports = {
       if (!data.cards?.find(x => x == toReplace.fullname)) return message.reply(`Cannot find card \`${toReplace.name}\` in your slots`)
       
       await updateCard(data, toBeReplaced, true, [toReplace])
-      await message.reply(`Replaced \`${toBeReplaced}\` with \`${toReplace}\``)
+      await message.reply(`Replaced \`${toBeReplaced.name}\` with \`${toReplace.name}\``)
       return
     }
     
