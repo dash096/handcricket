@@ -49,7 +49,7 @@ module.exports = {
       let image = await getCardImage(card.fullname)
       let embed = new Discord.MessageEmbed()
         .setTitle(`${(card.fullname.charAt(0).toUpperCase() + card.fullname.slice(1)).split('_').join(' ')}`)
-        .setFooter(targetCards.includes(card) ? `${author.displayName}'s card` : `${author.displayName} doesn\'t own this card`)
+        .setFooter(targetCards.includes(card.fullname) ? `${author.displayName}'s card` : `${author.displayName} doesn\'t own this card`)
         .setColor(embedColor)
       if (image == 'err') {
         embed
