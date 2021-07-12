@@ -615,9 +615,9 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           ? `${batExtra 
                         ? `__${extraPlayer.username}__`
                         : extraPlayer.username} (EW)`
-                        : id === cap.id ?
-          `${username} (cap)` :
-          `${username}`
+          : id === cap.id
+          ? `${username} (cap)`
+          : `${username}`
         
         let playerHistory = typeof(player) === 'string'
                             ? (
