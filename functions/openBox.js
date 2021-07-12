@@ -1,7 +1,12 @@
 const db = require("../schemas/items.js");
 const cardsDB = require('../schemas/card.js')
 
-module.exports = async function (amount, data, msg, name, ovr) {
+
+
+
+
+
+module.exports = async function (amount, data, msg, name, ovr = 1) {
   if (name === 'loot') {
     const random = Math.random();
     
@@ -36,7 +41,7 @@ module.exports = async function (amount, data, msg, name, ovr) {
     }
   } else if (name === 'cricket') {
     let allCards = await cardsDB.find()
-    let cards = allCards.filter(card => !data.cards?.includes(card.fullname) && ovr < 0 ? card.ovr < ovr : card.ovr > ovr)
+    let cards = allCards.filter(card => !data.cards?.includes(card.fullname) && ovr < 0 ? card.ovr < Math.abs(ovr) : card.ovr > ovr)
     
     let random = Math.random()
     let sliceStart = random < 0.80
