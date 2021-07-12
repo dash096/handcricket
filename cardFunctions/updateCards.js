@@ -21,10 +21,10 @@ module.exports = async (data, card, mode, remove, add = []) => {
   }
   
   Promise.all(
-    [await db.findOneAndUpdate({ _id: data._id }, {
+    [await db.findOneAndUpdate({ _id: data._id, cards: { $exists: true } }, {
       $set: (mode === 'team11' 
           ? {
-            "cards.$1": {
+            "cards.$": {
               team: cards,
               slots: data.cards?.[0]?.slots || 10
             }
