@@ -21,7 +21,7 @@ module.exports = {
       if(query.length < 9) {
         let cmd = cmds.find(x => x.name == query || x.aliases?.includes(query))
         if (cmd) {
-          const send = new Discord.MessageEmbed()
+          const embed = new Discord.MessageEmbed()
             .setTitle(`${cmd.name.charAt(0).toUpperCase() + cmd.name.slice(1)} Command`)
             .setDescription([cmd.description, cmd.flags || ''].join('\n\n'))
             .addField('Syntax',cmd.syntax) 
