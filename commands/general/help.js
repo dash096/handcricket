@@ -69,13 +69,14 @@ module.exports = {
         if (possible.length > 0) {
           let text = ''
           for (let cmd in possible) {
-            text += `**${cmd.name}** \`${cmd.syntax}\`\n${cmd.description}\n\n`
+            text += `**${possible[cmd].name}** \`${possible[cmd].syntax}\`\n${possible[cmd].description}\n\n`
           }
           embed.setDescription(text)
           await message.reply(embed)
         } else {
           await message.reply('No results')
         }
+        return
       }
     }
     
