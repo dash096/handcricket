@@ -38,6 +38,7 @@ module.exports = async function (amount, data, msg, name) {
     let allCards = await cardsDB.find()
     let cards = allCards.filter(card => !data.cards?.includes(card.fullname))
     
+    let random = Math.random()
     let sliceStart = random < 0.80
                      ? 0
                      : random < 0.95
