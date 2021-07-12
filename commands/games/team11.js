@@ -9,6 +9,7 @@ const embedColor = require('../../functions/getEmbedColor.js')
 const fs = require('fs')
 const cardSearch = require('../../cardFunctions/cardSearch.js')
 const updateCard = require('../../cardFunctions/updateCards.js')
+const openBox = require('../../functions/openBox.js')
 
 module.exports = {
   name: 'team11',
