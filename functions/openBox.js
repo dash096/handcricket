@@ -1,5 +1,5 @@
 const db = require("../schemas/items.js");
-const getCards = require('../../cardFunctions/getCards.js')
+const cardsDB = require('../../schemas/card.js')
 
 module.exports = async function (amount, data, msg, name) {
   if (name === 'loot') {
@@ -35,7 +35,7 @@ module.exports = async function (amount, data, msg, name) {
       return reward;
     }
   } else if (name === 'cricketbox') {
-    let allCards = await getCards()
+    let allCards = await cardsDB.find()
     let cards = allCards.filter(card => !data.cards?.includes(card.fullname))
     
     let sliceStart = random < 0.80
