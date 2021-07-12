@@ -51,7 +51,7 @@ module.exports = {
               cmd.description,
               cmd.syntax,
               cmd.flags || cmd.subcommands || '',
-              cmd.aliases.join('')
+              cmd.aliases?.join('')
             ].join('')
             for (let x in query) {
               if (chaos.includes(x)) counter += 1
