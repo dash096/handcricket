@@ -12,7 +12,7 @@ const embedColor = require('../../functions/getEmbedColor.js');
 module.exports = {
   name: 'profile',
   aliases: ['pf', 'stat'],
-  description: 'Shows the profile of a user.',
+  description: 'Shows the entire profile of a user.',
   category: 'Dogenomy',
   syntax: 'e.profile [@user/userID]',
   cooldown: 6,

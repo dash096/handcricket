@@ -6,7 +6,7 @@ const embedColor = require('../../functions/getEmbedColor.js');
 module.exports = {
   name: 'leaderboard',
   aliases: ['lb', 'rank'],
-  description: 'Check the leaderboard of StrikeRate, Wins, Xp and Balance',
+  description: 'Check the leaderboard of StrikeRate, Wins, Xp and Dogecoins balance',
   category: 'Dogenomy',
   syntax: 'e.leaderboard <strike/wins/coin/xp/orange/highscore/totalscore/wickets>',
   cooldown: 20,

@@ -7,7 +7,7 @@ const serverID = process.env.SERVERID;
 module.exports = {
   name: 'train',
   aliases: ['coach'],
-  description: 'Exercise, Fitness, Be Firm',
+  description: 'Sends a random minigame and gives you rewards if you win so!',
   category: 'Games',
   syntax: 'e.train',
   status: true,

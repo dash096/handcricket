@@ -20,7 +20,7 @@ const buySlots = require('../../cardFunctions/buySlots.js')
 module.exports = {
   name: 'use',
   aliases: ['open'],
-  description: 'Use an item in your bag',
+  description: 'Use an item in your bag.',
   category: 'Dogenomy',
   syntax: 'e.use <itemName>',
   cooldown: 7,

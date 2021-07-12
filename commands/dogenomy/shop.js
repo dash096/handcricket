@@ -8,7 +8,7 @@ const embedColor = require('../../functions/getEmbedColor.js');
 module.exports = {
   name: "shop",
   aliases: ["market"],
-  description: 'Displays the items that are for sale in the shop',
+  description: 'Displays the items that are for sale in exchange of dogecoins in the shop',
   category: 'Dogenomy',
   syntax: 'e.shop',
   cooldown: 5,

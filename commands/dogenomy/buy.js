@@ -9,7 +9,7 @@ const updateCoins = require('../../functions/updateCoins.js');
 
 module.exports = {
   name: 'buy',
-  description: 'Buy an item from the shop',
+  description: 'Buy an item from the shop using dogecoins',
   category: 'Dogenomy',
   syntax: 'e.buy <itemName> <amount>',
   cooldown: 10,

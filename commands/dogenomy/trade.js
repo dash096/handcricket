@@ -9,9 +9,9 @@ const getTarget = require('../../functions/getTarget.js');
 module.exports = {
   name: 'send',
   aliases: ['give'],
-  description: 'Send some pc or items to another user, mercy.',
+  description: 'Send some Dogecoins or items to another user, mercy.',
   category: 'Dogenomy',
-  syntax: 'e.send <@user/userId> <itemName> <amount>',
+  syntax: 'e.send <@user/userId> <coin/itemName> <amount>',
   cooldown: 10,
   run: async ({message, args, client}) => {
     const { content, author, channel, mentions } = message;

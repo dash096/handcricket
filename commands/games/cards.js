@@ -10,7 +10,7 @@ const cardSearch = require('../../cardFunctions/cardSearch.js')
 module.exports = {
   name: 'cards',
   aliases: ['card'],
-  description: 'Show\'s all of your card slots.',
+  description: 'Show\'s all of your card slots that aren\'t in your team11.',
   category: 'Games',
   syntax: 'e.cards',
   run: async ({ message, args, client }) => {

@@ -6,7 +6,7 @@ module.exports = {
   name: 'equip',
   aliases: ['wear', 'drop', 'unequip'],
   description: 'Equip your favourite decoration, it toggles equip or unequip.',
-  syntax: 'e.equip <the_item_name_in_your bag>',
+  syntax: 'e.equip <decor name>',
   category: 'Dogenomy',
   cooldown: 30,
   run: async ({message, client, prefix, args}) => {
