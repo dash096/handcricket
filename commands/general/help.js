@@ -68,8 +68,8 @@ module.exports = {
           .setColor(embedColor)
         if (possible.length > 0) {
           let text = ''
-          for (let x in possible) {
-            text += `**${x.cmd}** \`${cmd.syntax}\`\n${cmd.description}\n\n`
+          for (let cmd in possible) {
+            text += `**${cmd.name}** \`${cmd.syntax}\`\n${cmd.description}\n\n`
           }
           embed.setDescription(text)
           await message.reply(embed)
