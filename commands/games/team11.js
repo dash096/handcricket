@@ -26,12 +26,14 @@ module.exports = {
     
     if (!data.cards?.[0]?.team || data.cards[0].team.length < 11) {
       for (let i = 0; i < 11; i++) {
-        let card = await openBox(1, data, message, 'cricket', -75)
-        await updateCard(data, card, 'team11')
         data = await db.findOne({ _id: target.id })
+        await updateCard(data, await openBox(1, data, message, 'cricket', -75), 'team11')
         console.log(data.cards)
+        
+        if (i === 10) {
+          await message.reply('You have been given 11 starter cards!')
+        }
       }
-      await message.reply('You have been given 11 starter cards!')
       return
     }
     
