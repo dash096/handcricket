@@ -19,7 +19,7 @@ module.exports = {
       categories.forEach(category => {
         let commands = fs.readdirSync(`commands/${category}`)
         commands.forEach(command => {
-          let cmd = require(`commands/${category}/${command}`)
+          let cmd = require(`../${category}/${command}`)
           if (cmd.name === query || cmd.aliases.includes(query)) {
             queryInfo = new Discord.MessageEmbed()
               .setTitle(cmd.name + 'command')
