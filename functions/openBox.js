@@ -66,7 +66,7 @@ module.exports = async function (amount, data, msg, name, ovr = 1) {
       if (amount === 1) return reward
       else rewards.push(reward)
       
-      allCards.splice(allCards.indexOf(card), 1)
+      allCards.splice(allCards.indexOf(reward), 1)
     }
     
     return rewards
