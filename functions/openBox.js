@@ -86,6 +86,7 @@ module.exports = async function (amount, data, msg, name, ovr = 1) {
         else starters.wkc.push(c)
         return c
       })
+      let { batc, bowlc, arc, wkc } = starters
       for (let i = 0; i < 11; i++) {
         if (i < 4) rewards.push(batc[Math.floor(Math.random() * batc.length)])
         else if (i < 7) rewards.push(bowlc[Math.floor(Math.random() * bowlc.length)])
@@ -93,6 +94,7 @@ module.exports = async function (amount, data, msg, name, ovr = 1) {
         else rewards.push(wkc[Math.floor(Math.random() * wkc.length)])
       }
     }
+    console.log(rewards)
     return rewards
   }
 };
