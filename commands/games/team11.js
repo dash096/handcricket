@@ -17,6 +17,7 @@ module.exports = {
   category: 'Games',
   syntax: 'e.team [subcommands]',
   subcommands: '`replace [toBeReplaced] [toReplace]`: Swap two players mentioned in the arguments.',
+  cooldown: 10,
   run: async ({ message, args, client }) => {
     const { channel, content, author, member } = message
     
@@ -69,6 +70,8 @@ module.exports = {
           name: name || `${author.displayName}'s team`
         }, ...data.cards.slice(1)]
       })
+      await message.reply(`Team name set to \`${name}\``)
+      return
     }
     
     let exportPath = `./temp/${target.id}.png`;
@@ -107,7 +110,7 @@ module.exports = {
     })
     
     const embed = new Discord.MessageEmbed()
-      .setTitle(`${data.cards?.[0]?.name || target.displayName + 's Team11'}`)
+      .setTitle(`${data.cards?.[0]?.name + 'Team' || target.displayName + 's Team11'}`)
       .attachFiles(exportPath)
       .setImage(`attachment://${exportPath.split('/').pop()}`)
       .setFooter('"e.cards" to view your cards.')
