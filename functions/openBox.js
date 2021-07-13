@@ -44,7 +44,16 @@ module.exports = async function (amount, data, msg, name, ovr = 1) {
     let allCards = await cardsDB.find()
     
     for (let i = 0; i < amount; i++) {
-      let cards = allCards.filter(card => !rewards.includes(card) && !data.cards?.includes(card.fullname) && ovr < 0 ? card.ovr < Math.abs(ovr) : card.ovr > ovr)
+      let cards = allCards.filter(card => { 
+                    console.log(rewards.includes(card))
+                    if (
+                      !rewards.includes(card) &&
+                      !data.cards?.includes(card.fullname) &&
+                      ovr < 0
+                        ? card.ovr < Math.abs(ovr)
+                        : card.ovr > ovr
+                    ) return true
+                  })
       
       let random = Math.random()
       let sliceStart = random < 0.80
@@ -62,7 +71,7 @@ module.exports = async function (amount, data, msg, name, ovr = 1) {
       
       let slicedCards = cards.slice(Math.floor(sliceStart), Math.floor(sliceEnd))
       let reward = slicedCards[Math.floor(Math.random() * slicedCards.length)]
-      console.log(cards.map(x => x.fullname), reward)
+      
       if (amount === 1) return reward
       else rewards.push(reward)
     }
