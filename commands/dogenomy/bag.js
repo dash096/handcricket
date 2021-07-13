@@ -68,7 +68,7 @@ module.exports = {
         for(const item of items) {
           const text = item;
           const emoji = await getEmoji(item[0]);
-          fieldText += `**${emoji} ${text[0].charAt(0).toUpperCase() + text[0].slice(1)}** (${text[1]}) \n`;
+          fieldText += `**${emoji} ${text[0].caps()}** (${text[1]}) \n`;
         }
       }
       return fieldText;

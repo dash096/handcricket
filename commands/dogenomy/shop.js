@@ -30,7 +30,7 @@ module.exports = {
       .setColor(embedColor);
         
     docs.forEach(async doc => {
-      const title = doc.name.charAt(0).toUpperCase() + doc.name.slice(1);
+      const title = doc.name.caps();
       const itemEmoji = await getEmoji(doc.name);
       text += `** ${itemEmoji} ${title}** - [${doc.price}](https://egal)`;
       text += `\n${doc.description}\n\n`;

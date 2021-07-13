@@ -29,7 +29,7 @@ module.exports = {
       
       let image = await getCardImage(card.fullname)
       let embed = new Discord.MessageEmbed()
-        .setTitle(`${(card.fullname.charAt(0).toUpperCase() + card.fullname.slice(1)).split('_').join(' ')}`)
+        .setTitle(`${(card.fullname.caps()).split('_').join(' ')}`)
         .setFooter(targetCards.includes(card.fullname) ? `${author.displayName}'s card` : `${author.displayName} doesn\'t own this card`)
         .setColor(embedColor)
       if (image == 'err') {
@@ -51,7 +51,7 @@ module.exports = {
       fullname = targetCards[fullname]
       let card = await cardsDB.findOne({ fullname: fullname })
       card.name = card.name.split('-').join(' ')
-      text.push([`${card.name.charAt(0).toUpperCase() + card.name.slice(1)}   |   \`${card.role.toUpperCase()}\`   |   ${card.ovr}`, card.ovr])
+      text.push([`${card.name.caps()}   |   \`${card.role.toUpperCase()}\`   |   ${card.ovr}`, card.ovr])
     }
     text = text.sort((a, b) => b[1] - a[1])
     text = text.map(i => i[0])

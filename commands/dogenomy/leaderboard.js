@@ -51,7 +51,7 @@ module.exports = {
     let leaderboardText = await getLeaderboardText(datas, type, args[0]);
     
     let embed = new Discord.MessageEmbed()
-      .setTitle(`Global ${args[0].charAt(0).toUpperCase() + args[0].slice(1).toLowerCase()} Leaderboard`)
+      .setTitle(`Global ${args[0].caps()} Leaderboard`)
       .setDescription(leaderboardText)
       .setColor(embedColor)
       .setFooter(`Requested by ${author.username}`);
@@ -92,7 +92,7 @@ module.exports = {
     function getType(type) {
       if (type == 'orange') return 'OrangeCaps'
       else if (type == 'strike') return 'StrikeRate'
-      else return type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
+      else return type.caps();
     }
     
     function fixDecimal(n, type) {
