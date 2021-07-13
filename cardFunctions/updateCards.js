@@ -17,7 +17,11 @@ module.exports = async (data, card, mode, remove, add = []) => {
     add = add.map(x => x.fullname)
     cards.splice(cards.indexOf(fullname), 1, ...add)
   } else {
-    cards.push(fullname)
+    if (Array.isArray(card)) {
+      cards.push(...card)
+    } else {
+      cards.push(card)
+    }
   }
   
   await db.findOneAndUpdate({ _id: data._id }, {

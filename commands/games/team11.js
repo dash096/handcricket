@@ -25,11 +25,13 @@ module.exports = {
     let data = await db.findOne({ _id: target.id })
     
     if (!data.cards?.[0]?.team || data.cards[0].team.length < 11) {
-      for (let i = 0; i < 11; i++) {
-        data = await db.findOne({ _id: target.id })
-        Promise.all([await updateCard(data, await openBox(1, data, message, 'cricket', -75), 'team11')])
-        if (i === 10) await message.reply('You have been given 11 starter cards!')
-      }
+      let starters = await openBox(11, data, message, 'cricket', -75)
+      console.log(starters)
+      Promise.all([
+        await updateCard(data, starters, 'team11')
+      ])
+      await updateCard(data, starters, 'slots')
+      await message.reply('You have been given 11 starter cards!')
       return
     }
     
@@ -50,7 +52,10 @@ module.exports = {
       if (!team.find(x => x == toBeReplaced.fullname)) return message.reply(`Cannot find card \`${toBeReplaced.name}\` in your team`)
       if (!data.cards?.find(x => x == toReplace.fullname)) return message.reply(`Cannot find card \`${toReplace.name}\` in your slots`)
       
-      await updateCard(data, toBeReplaced, 'team11', true, [toReplace])
+      Promise.all([
+        updateCard(data, toBeReplaced, 'team11', true, [toReplace]),
+        updateCard(data, toBeReplaced, 'cards')
+      ])
       await message.reply(`Replaced \`${toBeReplaced.name}\` with \`${toReplace.name}\``)
       return
     }
