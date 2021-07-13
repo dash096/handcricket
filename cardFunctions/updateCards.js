@@ -21,7 +21,7 @@ module.exports = async (data, card, mode, remove, add = []) => {
   }
   
   Promise.all(
-    [await db.findOneAndUpdate({ _id: data._id, cards: { $exist: false } }, {
+    [await db.findOneAndUpdate({ _id: data._id, cards: { $exists: false } }, {
       $set: (mode === 'team11' 
           ? {
             "cards.$": {
