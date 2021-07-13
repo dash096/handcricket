@@ -86,15 +86,27 @@ module.exports = async function (amount, data, msg, name, ovr = 1) {
         else starters.wkc.push(c)
         return c
       })
+      console.log(starters)
+      
       let { bat, bowl, ar, wk, batc, bowlc, arc, wkc } = starters
+      
       for (let i = 0; i < 11; i++) {
-        if (i < bat) rewards.push(batc[Math.floor(Math.random() * batc.length)])
-        else if (i < bowl) rewards.push(bowlc[Math.floor(Math.random() * bowlc.length)])
-        else if (i < ar) rewards.push(arc[Math.floor(Math.random() * arc.length)])
-        else rewards.push(wkc[Math.floor(Math.random() * wkc.length)])
+        let reward
+        if (i < bat) {
+          reward = batc[Math.floor(Math.random() * batc.length)]
+          batc.splice(batc.indexOf(reward), 1)
+        } else if (i < bowl) {
+          reward = bowlc[Math.floor(Math.random() * bowlc.length)]
+          bowlc.splice(bowlc.indexOf(reward), 1)
+        } else if (i < ar) {
+          reward = arc[Math.floor(Math.random() * arc.length)]
+          arc.splice(arc.indexOf(reward), 1)
+        } else {
+          reward = wkc[Math.floor(Math.random() * wkc.length)]
+          wkc.splice(wkc.indexOf(reward), 1)
+        }
       }
     }
-    console.log(rewards)
     return rewards
   }
 };
