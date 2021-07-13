@@ -46,7 +46,7 @@ module.exports = async function (amount, data, msg, name, ovr = 1) {
     })).filter(card => !data.cards?.includes(card.fullname))
     
     let starters = amount === 11 ? {
-      'bat': 4, 'bowl': 3, 'ar': 2, 'wk': 2,
+      'bat': 5, 'bowl': 3, 'ar': 2, 'wk': 1,
       'batc': [], 'bowlc': [], 'arc': [], 'wkc': [],
     } : false
     if (starters) {
@@ -86,11 +86,11 @@ module.exports = async function (amount, data, msg, name, ovr = 1) {
         else starters.wkc.push(c)
         return c
       })
-      let { batc, bowlc, arc, wkc } = starters
+      let { bat, bowl, ar, wk, batc, bowlc, arc, wkc } = starters
       for (let i = 0; i < 11; i++) {
-        if (i < 4) rewards.push(batc[Math.floor(Math.random() * batc.length)])
-        else if (i < 7) rewards.push(bowlc[Math.floor(Math.random() * bowlc.length)])
-        else if (i < 9) rewards.push(arc[Math.floor(Math.random() * arc.length)])
+        if (i < bat) rewards.push(batc[Math.floor(Math.random() * batc.length)])
+        else if (i < bowl) rewards.push(bowlc[Math.floor(Math.random() * bowlc.length)])
+        else if (i < ar) rewards.push(arc[Math.floor(Math.random() * arc.length)])
         else rewards.push(wkc[Math.floor(Math.random() * wkc.length)])
       }
     }
