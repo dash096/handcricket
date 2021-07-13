@@ -3,9 +3,11 @@ const cardsDB = require('../schemas/card.js')
 module.exports = async (args) => {
   let query = args.join('').toLowerCase()
   
-  let cards = await cardsDB.find({ fullname: { $regex: `(^${query[0]}|_${query[0]})` } })
+  let cards = await cardsDB.find({
+    fullname: { $regex: `(^${query[0]}|_${query[0]}|${query})` }
+  })
+  
   let card = cards.find(x => {
-    console.log(x.fullname.split('_').join(''))
     if (
       query === x.name.split('-').join('') ||
       query === x.fullname.split('_').join('') ||
