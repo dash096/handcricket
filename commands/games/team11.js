@@ -17,7 +17,7 @@ module.exports = {
   category: 'Games',
   syntax: 'e.team [subcommands]',
   subcommands: '`replace [toBeReplaced] [toReplace]`: Swap two players mentioned in the arguments.',
-  cooldown: 10,
+  cooldown: 15,
   run: async ({ message, args, client }) => {
     const { channel, content, author, member } = message
     
@@ -110,7 +110,7 @@ module.exports = {
     })
     
     const embed = new Discord.MessageEmbed()
-      .setTitle(`${data.cards?.[0]?.name + ' Team' || target.displayName + 's Team11'}`)
+      .setTitle(`${data.cards?.[0]?.name || target.displayName} Team11`)
       .attachFiles(exportPath)
       .setImage(`attachment://${exportPath.split('/').pop()}`)
       .setFooter('"e.cards" to view your cards.')
