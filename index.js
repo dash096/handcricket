@@ -23,7 +23,7 @@ module.exports = client;
 /* Bot READY EVENT */
 client.on("ready", async () => {
   /* Custom Funcs */
-  String.prototype.caps = () => { return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase() }
+  String.prototype.caps = function () { return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase() }
   
   try {
     console.log("Logged in as ", client.user.username);
