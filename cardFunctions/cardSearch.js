@@ -5,14 +5,15 @@ module.exports = async (args) => {
   
   let cards = await cardsDB.find({ fullname: { $regex: `(^${query[0]}|_${query[0]})` } })
   let card = cards.find(x => {
+    console.log(x.fullname.split('_').join(''))
     if (
-      query == x.name.split('-').join('') ||
-      query == x.fullname.split('_').join('') ||
+      query === x.name.split('-').join('') ||
+      query === x.fullname.split('_').join('') ||
       x.fullname.split('_').join('').includes(query)
     ) return true
     
     let name = x.fullname.split('_')
-    if(name[0][0] == query[0]) name = name[0]
+    if(name[0][0] === query[0]) name = name[0]
     else name = name[1]
     
     let counter = 0
