@@ -113,7 +113,13 @@ module.exports = {
     const embed = new Discord.MessageEmbed()
       .setTitle(`${data.cards?.[0]?.name || target.displayName} Team11`)
       .attachFiles(exportPath)
-      .setDescription(`**Roles:**\nBatsmen: ${roles.bat.join(', ')}\nBowlers: ${roles.bowl.join(', ')}\nAllRounders: ${roles.ar.join(', ')}\nWicketKeepers: ${roles.wk.join(', ')}`)
+      .setDescription([
+        `**__Roles:__**`,
+        `**BAT:**  ${roles.bat.join(', ')}`,
+        `**BOWL:**   ${roles.bowl.join(', ')}`,
+        `**AR:**       ${roles.ar.join(', ')}`,
+        `**WK:**       ${roles.wk.join(', ')}`
+      ].join('\n'))
       .setImage(`attachment://${exportPath.split('/').pop()}`)
       .setFooter('"e.cards" to view your cards.')
       .setColor(embedColor)
@@ -136,14 +142,14 @@ module.exports = {
       }
       data.cards[0].team.map(fullname => {
         let card = cards.find(dbc => dbc.fullname === fullname)
-        let r = card.role
-        r === 'bat'
-        ? roles.bat.push(fullname)
-        : r === 'bowl'
-        ? roles.bowl.push(fullname)
-        : r === 'ar'
-        ? roles.ar.push(fullname)
-        : roles.wk.push(fullname)
+        let { role, name } = card
+        role === 'bat'
+        ? roles.bat.push(name)
+        : role === 'bowl'
+        ? roles.bowl.push(name)
+        : role === 'ar'
+        ? roles.ar.push(name)
+        : roles.wk.push(name)
       })
       return roles
     }
