@@ -20,7 +20,7 @@ module.exports = async (data, card, mode, remove, add = []) => {
     if (Array.isArray(card)) {
       cards.push(...card)
     } else {
-      cards.push(card)
+      cards.push(fullname)
     }
   }
   

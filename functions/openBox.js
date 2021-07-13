@@ -66,5 +66,7 @@ module.exports = async function (amount, data, msg, name, ovr = 1) {
       if (amount === 1) return reward
       else rewards.push(reward)
     }
+    
+    return rewards
   }
 };
