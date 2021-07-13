@@ -47,10 +47,10 @@ module.exports = async function (amount, data, msg, name, ovr = 1) {
     
     let starters = amount === 11 ? {
       'bat': 4, 'bowl': 3, 'ar': 2, 'wk': 2,
-      'batc': [], 'bowlc': [], 'arc': [], 'wk': [],
+      'batc': [], 'bowlc': [], 'arc': [], 'wkc': [],
     } : false
     if (starters) {
-      await pickStarts()
+      await pickStarters()
       return rewards
     }
     
@@ -78,12 +78,13 @@ module.exports = async function (amount, data, msg, name, ovr = 1) {
       allCards.splice(allCards.indexOf(reward), 1)
     }
     
-    function pickStarts() {
+    function pickStarters() {
       allCards.map(c => {
         if (c.role === 'bat') starters.batc.push(c)
         else if (c.role === 'bowl') starters.bowlc.push(c)
         else if (c.role === 'ar') starters.arc.push(c)
         else starters.wkc.push(c)
+        return c
       })
       for (let i = 0; i < 11; i++) {
         if (i < 4) rewards.push(batc[Math.floor(Math.random() * batc.length)])
