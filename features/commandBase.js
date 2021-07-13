@@ -53,9 +53,9 @@ module.exports = ({client, prefix}) => {
           let text = '';
           perms.forEach(perm => {
             let arr = perm.split('_');
-            let word1 = arr[0].charAt(0) + arr[0].slice(1).toLowerCase();
-            let word2 = arr[1].charAt(0) + arr[1].slice(1).toLowerCase();
-            if(arr[2]) word2 += ` ${arr[2].charAt(0)}${arr[2].slice(1).toLowerCase()}`;
+            let word1 = arr[0].caps();
+            let word2 = arr[1].caps();
+            if(arr[2]) word2 += ` ${arr[2].caps()}`;
             if(perms.indexOf(perm) === perm.length - 1) {
               text += `\`${word1} ${word2}\``;
             } else {

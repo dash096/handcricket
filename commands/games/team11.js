@@ -143,12 +143,12 @@ module.exports = {
         let card = cards.find(dbc => dbc.fullname === fullname)
         let { role, name } = card
         role === 'bat'
-        ? roles.bat.push(name)
+        ? roles.bat.push(name.caps())
         : role === 'bowl'
-        ? roles.bowl.push(name)
+        ? roles.bowl.push(name.caps())
         : role === 'ar'
-        ? roles.ar.push(name)
-        : roles.wk.push(name)
+        ? roles.ar.push(name.caps())
+        : roles.wk.push(name.caps())
       })
       return roles
     }
