@@ -49,14 +49,14 @@ module.exports = async function (amount, data, msg, name, ovr = 1) {
       let random = Math.random()
       let sliceStart = random < 0.80
                        ? 0
-                       : random < 0.95
+                       : random < 0.97
                        ? allCards.length/5
                        : random < 0.99
                        ? allCards.length/3
                        : allCcards.length/2
-      let sliceEnd = random < 0.8
+      let sliceEnd = random < 0.80
                      ? allCards.length - allCards.length/3
-                     : random < 0.95
+                     : random < 0.97
                      ? allCards.length - allCards.length/5
                      : allCards.length
       

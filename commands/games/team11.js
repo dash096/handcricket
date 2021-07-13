@@ -2,7 +2,7 @@ const sharp = require('sharp')
 const teamPos = require('../../cardFunctions/teamPos.js')
 const Discord = require('discord.js')
 const db = require('../../schemas/player.js')
-const cardsDB = require('../../schemas/card.js')
+const getCardsDB = require('../../cardFunctions/getData.js')
 const getError = require('../../functions/getErrors.js')
 const embedColor = require('../../functions/getEmbedColor.js')
 const fs = require('fs')
@@ -38,7 +38,7 @@ module.exports = {
     }
     
     const team = data.cards?.[0]?.team || data.cards?.slice(1)
-    const cards = await cardsDB.find()
+    const cards = await getCardsDB()
     
     //Replace 1 card in team11 with 1 in slots
     let nicknameAlias = ['nick', 'nickname', 'name']
