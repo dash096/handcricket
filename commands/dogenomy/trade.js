@@ -54,5 +54,9 @@ module.exports = {
       }
     }
     await gain(userData, 2, message);
+    //Set cooldown
+    const timestamps = client.cooldowns.get('send');
+    timestamps.set(author.id, Date.now());
+    setTimeout(() => timestamps.delete(author.id), 60 * 10 * 1000);
   }
 };

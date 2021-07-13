@@ -13,6 +13,7 @@ module.exports = {
   description: 'Show\'s all of your card slots that aren\'t in your team11.',
   category: 'Games',
   syntax: 'e.cards',
+  cooldown: 5,
   run: async ({ message, args, client }) => {
     const { channel, author, content } = message
     
@@ -72,6 +73,10 @@ module.exports = {
       embed.setDescription(text.slice(15 * page - 15, 15 * page))
     }
     let cardsMessage = await message.reply(embed)
+    //Set cooldown
+    const timestamps = client.cooldowns.get('cards');
+    timestamps.set(author.id, Date.now());
+    setTimeout(() => timestamps.delete(author.id), 60 * 10 * 1000);
     
     //Page switching
     if(text.length > 15) {

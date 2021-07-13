@@ -9,7 +9,7 @@ module.exports = {
   description: 'Check the leaderboard of StrikeRate, Wins, Xp and Dogecoins balance',
   category: 'Dogenomy',
   syntax: 'e.leaderboard <strike/wins/coin/xp/orange/highscore/totalscore/wickets>',
-  cooldown: 20,
+  cooldown: 15,
   run: async ({ message, args, client }) => {
     const { guild, content, mentions, channel, author } = message;
     
@@ -57,6 +57,11 @@ module.exports = {
       .setFooter(`Requested by ${author.username}`);
       
     await message.reply(embed);
+    //Set cooldown
+    const timestamps = client.cooldowns.get('leaderboard');
+    timestamps.set(author.id, Date.now());
+    setTimeout(() => timestamps.delete(author.id), 60 * 10 * 1000);
+    
     
     async function getLeaderboardText(datas, type, typeArgs) {
       let text = '\n**__💥  Top 10  💥__**\n\n';

@@ -110,12 +110,17 @@ module.exports = {
     })
     
     const embed = new Discord.MessageEmbed()
-      .setTitle(`${data.cards?.[0]?.name + 'Team' || target.displayName + 's Team11'}`)
+      .setTitle(`${data.cards?.[0]?.name + ' Team' || target.displayName + 's Team11'}`)
       .attachFiles(exportPath)
       .setImage(`attachment://${exportPath.split('/').pop()}`)
       .setFooter('"e.cards" to view your cards.')
       .setColor(embedColor)
     await message.channel.send(embed)
+    
+    //Set cooldown
+    const timestamps = client.cooldowns.get('team11');
+    timestamps.set(author.id, Date.now());
+    setTimeout(() => timestamps.delete(author.id), 60 * 10 * 1000);
     
     await new Promise(r => setTimeout(r, 5000))
     await fs.unlink(exportPath, (e) => e ? console.log(e) : false)

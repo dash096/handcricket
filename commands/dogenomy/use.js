@@ -23,7 +23,7 @@ module.exports = {
   description: 'Use an item in your bag.',
   category: 'Dogenomy',
   syntax: 'e.use <itemName>',
-  cooldown: 7,
+  cooldown: 15,
   run: async ({message, args, prefix}) => {
     const { content, author, channel, mentions } = message;
     const coinsEmoji = await getEmoji('coin');
@@ -188,5 +188,10 @@ module.exports = {
       }, 5000);
     }
     await gain(playerData, 2, message);
+    
+    //Set cooldown
+    const timestamps = client.cooldowns.get('use');
+    timestamps.set(author.id, Date.now());
+    setTimeout(() => timestamps.delete(author.id), 60 * 10 * 1000);
   }
 };
