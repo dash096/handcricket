@@ -20,26 +20,17 @@ module.exports = async (data, card, mode, remove, add = []) => {
     cards.push(fullname)
   }
   
-  Promise.all(
-    [await db.findOneAndUpdate({ _id: data._id, cards: { $exists: false } }, {
-      $set: (mode === 'team11' 
-          ? {
-            "cards.$": {
-              team: cards,
-              slots: data.cards?.[0]?.slots || 10
-            }
-          }
-          : {
-            "cards": [
-              {
-                team: data.cards[0].team || [],
-                slots: data.cards[0].slots || 10,
-              },
-              ...cards,
-            ]
-          })
-    })
-  ])
+  await db.findOneAndUpdate({ _id: data._id }, {
+    $set: {
+      "cards": [
+        {
+          team: mode === 'team11' ? cards : data.cards?.[0]?.team || [],
+          slots: data.cards?.[0]?.slots || 10
+        },
+        ...(mode === 'team11' ? data.cards?.slice(1) || [] : cards)
+      ]
+    }
+  })
   
   return
 }
