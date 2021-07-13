@@ -86,7 +86,6 @@ module.exports = async function (amount, data, msg, name, ovr = 1) {
         else starters.wkc.push(c)
         return c
       })
-      console.log(starters)
       
       let { bat, bowl, ar, wk, batc, bowlc, arc, wkc } = starters
       
@@ -105,6 +104,7 @@ module.exports = async function (amount, data, msg, name, ovr = 1) {
           reward = wkc[Math.floor(Math.random() * wkc.length)]
           wkc.splice(wkc.indexOf(reward), 1)
         }
+        rewards.push(reward)
       }
     }
     return rewards
