@@ -114,10 +114,9 @@ module.exports = {
       .setTitle(`${data.cards?.[0]?.name || target.displayName} Team11`)
       .attachFiles(exportPath)
       .setDescription([
-        `**__Roles:__**`,
-        `**BAT:**  ${roles.bat.join(', ')}`,
+        `**BAT:**    ${roles.bat.join(', ')}`,
         `**BOWL:**   ${roles.bowl.join(', ')}`,
-        `**AR:**       ${roles.ar.join(', ')}`,
+        `**AR:**        ${roles.ar.join(', ')}`,
         `**WK:**       ${roles.wk.join(', ')}`
       ].join('\n'))
       .setImage(`attachment://${exportPath.split('/').pop()}`)

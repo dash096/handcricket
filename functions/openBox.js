@@ -45,6 +45,12 @@ module.exports = async function (amount, data, msg, name, ovr = 1) {
       ovr: ovr < 0 ? { $lte: Math.abs(ovr) } : { $gte: ovr }
     })).filter(card => !data.cards?.includes(card.fullname))
     
+    let starters = amount === 11 ? {
+      'bat': 4, 'bowl': 3, 'ar': 2, 'wk': 2,
+      batc: [], bowlc: [], arc: [], wkc: [],
+    } : false
+    if (starters) return await pickStarters()
+    
     for (let i = 0; i < amount; i++) {
       let random = Math.random()
       let sliceStart = random < 0.80
@@ -67,6 +73,27 @@ module.exports = async function (amount, data, msg, name, ovr = 1) {
       else rewards.push(reward)
       
       allCards.splice(allCards.indexOf(reward), 1)
+    }
+    
+    function pickStarters() {
+      allCards = allCards.map(c => {
+        if (c.role === 'bat') starters.batc.push(c)
+        else if (c.role === 'bowl') starters.bowlc.push(c)
+        else if (c.role === 'ar') starters.arc.push(c)
+        else starters.wkc.push(c)
+      })
+      
+      for (let i = 0; i < amount; i++) {
+        if (i < 4) {
+          rewards.push(starters.batc[Math.floor(Math.random() * starters.batc.length)])
+        } else if (i < 7) {
+          
+        } else if (i < 9) {
+          
+        } else {
+          
+        }
+      }
     }
     
     return rewards
