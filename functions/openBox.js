@@ -62,7 +62,7 @@ module.exports = async function (amount, data, msg, name, ovr = 1) {
       
       let slicedCards = cards.slice(Math.floor(sliceStart), Math.floor(sliceEnd))
       let reward = slicedCards[Math.floor(Math.random() * slicedCards.length)]
-      
+      console.log(cards.map(x => x.fullname), reward)
       if (amount === 1) return reward
       else rewards.push(reward)
     }
