@@ -134,8 +134,8 @@ module.exports = {
         'ar': [],
         'wk': []
       }
-      data.cards[0].team.slice(1).map(x => {
-        let card = cards.find(x => x.fullname === fullname)
+      data.cards[0].team.map(fullname => {
+        let card = cards.find(dbc => dbc.fullname === fullname)
         let r = card.role
         r === 'bat'
         ? roles.bat.push(fullname)
