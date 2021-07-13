@@ -94,10 +94,10 @@ module.exports = async function (amount, data, msg, name, ovr = 1) {
         if (i < bat) {
           reward = batc[Math.floor(Math.random() * batc.length)]
           batc.splice(batc.indexOf(reward), 1)
-        } else if (i < bowl) {
+        } else if (i < bat + bowl) {
           reward = bowlc[Math.floor(Math.random() * bowlc.length)]
           bowlc.splice(bowlc.indexOf(reward), 1)
-        } else if (i < ar) {
+        } else if (i < bat + bowl + ar) {
           reward = arc[Math.floor(Math.random() * arc.length)]
           arc.splice(arc.indexOf(reward), 1)
         } else {
