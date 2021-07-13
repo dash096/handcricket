@@ -109,9 +109,11 @@ module.exports = {
       await writeImage(r)
     })
     
+    let roles = getRoles()
     const embed = new Discord.MessageEmbed()
       .setTitle(`${data.cards?.[0]?.name || target.displayName} Team11`)
       .attachFiles(exportPath)
+      .setDescription(`**Roles:**\nBatsmen: ${roles.bat.join(', ')}\nBowlers: ${roles.bowl.join(', ')}\nAllRounders: ${roles.ar.join(', ')}\nWicketKeepers: ${roles.wk.join(', ')}`)
       .setImage(`attachment://${exportPath.split('/').pop()}`)
       .setFooter('"e.cards" to view your cards.')
       .setColor(embedColor)
@@ -124,5 +126,26 @@ module.exports = {
     
     await new Promise(r => setTimeout(r, 5000))
     await fs.unlink(exportPath, (e) => e ? console.log(e) : false)
+    
+    function getRoles() {
+      let roles = {
+        'bat': [],
+        'bowl': [],
+        'ar': [],
+        'wk': []
+      }
+      data.cards[0].team.slice(1).map(x => {
+        let card = cards.find(x => x.fullname === fullname)
+        let r = card.role
+        r === 'bat'
+        ? roles.bat.push(fullname)
+        : r === 'bowl'
+        ? roles.bowl.push(fullname)
+        : r === 'ar'
+        ? roles.ar.push(fullname)
+        : roles.wk.push(fullname)
+      })
+      return roles
+    }
   }
 }
