@@ -18,6 +18,7 @@ module.exports = async (data, card, mode, remove, add = []) => {
     cards.splice(cards.indexOf(fullname), 1, ...add)
   } else {
     if (Array.isArray(card)) {
+      card = card.map(x => x.fullname || x)
       cards.push(...card)
     } else {
       cards.push(fullname)
