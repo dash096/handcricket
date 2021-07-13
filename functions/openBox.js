@@ -50,15 +50,15 @@ module.exports = async function (amount, data, msg, name, ovr = 1) {
       let sliceStart = random < 0.80
                        ? 0
                        : random < 0.95
-                       ? cards.length/5
+                       ? allCards.length/5
                        : random < 0.99
-                       ? cards.length/3
-                       : cards.length/2
+                       ? allCards.length/3
+                       : allCcards.length/2
       let sliceEnd = random < 0.8
-                     ? cards.length - cards.length/3
+                     ? allCards.length - allCards.length/3
                      : random < 0.95
-                     ? cards.length - cards.length/5
-                     : cards.length
+                     ? allCards.length - allCards.length/5
+                     : allCards.length
       
       let slicedCards = allCards.slice(Math.floor(sliceStart), Math.floor(sliceEnd))
       let reward = slicedCards[Math.floor(Math.random() * slicedCards.length)]
