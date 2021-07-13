@@ -3,7 +3,6 @@ const teamPos = require('../../cardFunctions/teamPos.js')
 const Discord = require('discord.js')
 const db = require('../../schemas/player.js')
 const cardsDB = require('../../schemas/card.js')
-const getTarget = require('../../functions/getTarget.js')
 const getError = require('../../functions/getErrors.js')
 const embedColor = require('../../functions/getEmbedColor.js')
 const fs = require('fs')
@@ -19,9 +18,11 @@ module.exports = {
   syntax: 'e.team [subcommands]',
   subcommands: '`replace [toBeReplaced] [toReplace]`: Swap two players mentioned in the arguments.',
   run: async ({ message, args, client }) => {
-    const { channel, content, author } = message
+    const { channel, content, author, member } = message
     
-    const target = await getTarget(message, args, client)
+    const target = author
+    target.displayName = member.displayName
+    
     let data = await db.findOne({ _id: target.id })
     
     if (!data.cards?.[0]?.team || data.cards[0].team.length < 11) {
@@ -39,6 +40,7 @@ module.exports = {
     const cards = await cardsDB.find()
     
     //Replace 1 card in team11 with 1 in slots
+    let nicknameAlias = ['nick', 'nickname', 'name']
     let replaceAlias = ['replace', 'rep', 'swap', 'r']
     if (replaceAlias.includes(args[0])) {
       let replace = [args[1], args[2]]
@@ -58,6 +60,15 @@ module.exports = {
       ])
       await message.reply(`Replaced \`${toBeReplaced.name}\` with \`${toReplace.name}\``)
       return
+    } else if (nicknameAlias.includes(args[0])) {
+      let name = args.slice(1).join(' ')
+      await db.findOneAndUpdate({ _id: target.id }, {
+        "cards": [{
+          team: data.cards?.[0].team || [],
+          slots: data.cards?.[0].slots || 10,
+          name: name || `${author.displayName}'s team`
+        }, ...data.cards.slice(1)]
+      })
     }
     
     let exportPath = `./temp/${target.id}.png`;
@@ -96,7 +107,7 @@ module.exports = {
     })
     
     const embed = new Discord.MessageEmbed()
-      .setTitle(`${target.displayName}'s Team11`)
+      .setTitle(`${data.cards?.[0]?.name || target.displayName + 's Team11'}`)
       .attachFiles(exportPath)
       .setImage(`attachment://${exportPath.split('/').pop()}`)
       .setFooter('"e.cards" to view your cards.')
