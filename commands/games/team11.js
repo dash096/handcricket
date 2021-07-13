@@ -114,7 +114,7 @@ module.exports = {
       .setTitle(`${data.cards?.[0]?.name || target.displayName} Team11`)
       .attachFiles(exportPath)
       .setDescription([
-        `**BAT:**    ${roles.bat.join(', ')}`,
+        `**BAT:**     ${roles.bat.join(', ')}`,
         `**BOWL:**   ${roles.bowl.join(', ')}`,
         `**AR:**        ${roles.ar.join(', ')}`,
         `**WK:**       ${roles.wk.join(', ')}`
@@ -143,12 +143,12 @@ module.exports = {
         let card = cards.find(dbc => dbc.fullname === fullname)
         let { role, name } = card
         role === 'bat'
-        ? roles.bat.push(name.caps())
+        ? roles.bat.push(name.charAt(0).toUpperCase() + name.slice(1).toLowerCase())
         : role === 'bowl'
-        ? roles.bowl.push(name.caps())
+        ? roles.bowl.push(name.charAt(0).toUpperCase() + name.slice(1).toLowerCase())
         : role === 'ar'
-        ? roles.ar.push(name.caps())
-        : roles.wk.push(name.caps())
+        ? roles.ar.push(name.charAt(0).toUpperCase() + name.slice(1).toLowerCase())
+        : roles.wk.push(name.charAt(0).toUpperCase() + name.slice(1).toLowerCase())
       })
       return roles
     }

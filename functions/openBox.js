@@ -47,9 +47,12 @@ module.exports = async function (amount, data, msg, name, ovr = 1) {
     
     let starters = amount === 11 ? {
       'bat': 4, 'bowl': 3, 'ar': 2, 'wk': 2,
-      batc: [], bowlc: [], arc: [], wkc: [],
+      'batc': [], 'bowlc': [], 'arc': [], 'wk': [],
     } : false
-    if (starters) return await pickStarters()
+    if (starters) {
+      await pickStarts()
+      return rewards
+    }
     
     for (let i = 0; i < amount; i++) {
       let random = Math.random()
@@ -75,27 +78,20 @@ module.exports = async function (amount, data, msg, name, ovr = 1) {
       allCards.splice(allCards.indexOf(reward), 1)
     }
     
-    function pickStarters() {
-      allCards = allCards.map(c => {
+    function pickStarts() {
+      allCards.map(c => {
         if (c.role === 'bat') starters.batc.push(c)
         else if (c.role === 'bowl') starters.bowlc.push(c)
         else if (c.role === 'ar') starters.arc.push(c)
         else starters.wkc.push(c)
       })
-      
-      for (let i = 0; i < amount; i++) {
-        if (i < 4) {
-          rewards.push(starters.batc[Math.floor(Math.random() * starters.batc.length)])
-        } else if (i < 7) {
-          
-        } else if (i < 9) {
-          
-        } else {
-          
-        }
+      for (let i = 0; i < 11; i++) {
+        if (i < 4) rewards.push(batc[Math.floor(Math.random() * batc.length)])
+        else if (i < 7) rewards.push(bowlc[Math.floor(Math.random() * bowlc.length)])
+        else if (i < 9) rewards.push(arc[Math.floor(Math.random() * arc.length)])
+        else rewards.push(wkc[Math.floor(Math.random() * wkc.length)])
       }
     }
-    
     return rewards
   }
 };
