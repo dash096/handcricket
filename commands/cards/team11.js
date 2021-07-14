@@ -16,7 +16,7 @@ module.exports = {
   description: 'Show\'s your team11 or you can modify your team with the subcommands.',
   category: 'Games',
   syntax: 'e.team [subcommands]',
-  subcommands: '`replace [toBeReplaced] [toReplace]`: Swap two players mentioned in the arguments.',
+  subcommands: '`replace [toBeReplaced] [toReplace]`: Swap two players mentioned in the arguments.\n`swap [name1] [name2]:` Swaps the position in the team of the two cards mentioned in the arguments.',
   cooldown: 20,
   run: async ({ message, args, client }) => {
     const { channel, content, author, member } = message
