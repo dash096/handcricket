@@ -48,10 +48,10 @@ module.exports = {
     if (replaceAlias.includes(args[0]) || swapAlias.includes(args[0])) {
       if (args.length < 3) return message.reply(getError({ error: 'syntax', filePath: 'games/team11.js' }))
       
-      let toReplace = await cardSearch(args[1])
-      let toBeReplaced = await cardSearch(args[2])
+      let toReplace = await cardSearch(args[2])
+      let toBeReplaced = await cardSearch(args[1])
       // Card Existence Validation
-      if (!toReplace || !toBeReplaced) return message.reply(`Cannot find card: \`${toReplace ? args[1] : args[2]}\``)
+      if (!toReplace || !toBeReplaced) return message.reply(`Cannot find card: \`${toReplace ? args[2] : args[1]}\``)
       
       if (swapAlias.includes(args[0])) {
         //Card Existence in team
