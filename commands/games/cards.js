@@ -64,7 +64,7 @@ module.exports = {
       .setTitle(`${target.displayName}'s Cards`)
       .setDescription(text.slice(0, 15).join('\n'))
       .setColor(embedColor)
-      .setFooter(`Page ${page} of ${max}, '${(targetCards?.[0]?.slots || 10) - (data?.cards?.slice(1).length - 1 || 10)}' free of '${data?.cards?.[0]?.slots || 10}' slots`)
+      .setFooter(`Page ${page} of ${max}, '${(targetCards?.[0]?.slots || 21) - (data?.cards?.slice(1).length || 21)}' free of '${data?.cards?.[0]?.slots || 21}' slots`)
     let goToPage = parseInt(args[0]) || parseInt(args[1])
     if (goToPage && goToPage > 1) {
       page = goToPage > max ? max : goToPage

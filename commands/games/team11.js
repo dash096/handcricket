@@ -79,7 +79,7 @@ module.exports = {
       await db.findOneAndUpdate({ _id: target.id }, {
         "cards": [{
           team: data.cards?.[0].team || [],
-          slots: data.cards?.[0].slots || 10,
+          slots: data.cards?.[0].slots || 21,
           name: name || `${author.displayName}'s team`
         }, ...data.cards.slice(1)]
       })

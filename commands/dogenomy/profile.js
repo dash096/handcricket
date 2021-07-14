@@ -37,7 +37,7 @@ module.exports = {
     
     const levels = getLevels();
     let level = (await getPreceedingPair(levels, data.xp))[0] || 'Nab (0)';
-    let targetXP = levels[level + 1] || 10;
+    let targetXP = levels[level + 1] || 21;
     const XPLine = await getXPLine(data.xp);
     const staminaLine = await getStaminaLine(data.stamina || 0);
     const xpFixed = data.xp.toFixed(0);

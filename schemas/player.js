@@ -59,7 +59,7 @@ const player = new mongoose.Schema({
     type: [],
     default: [{
       'team': [],
-      'slots': 10
+      'slots': 21,
     }],
   },
   coinBoost: Date,
