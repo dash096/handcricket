@@ -1,6 +1,6 @@
 const db = require('../schemas/player.js')
 
-module.exports = async (data, card, mode, remove, add = []) => {
+module.exports = async (data, card, mode, remove, add = [], swap) => {
   let cards = mode === 'team11'
               ? data.cards?.[0]?.team || []
               : data.cards?.slice(1) || []
@@ -17,6 +17,9 @@ module.exports = async (data, card, mode, remove, add = []) => {
       1,
       ...add
     )
+    if (swap) {
+      cards.splice(swap, 0, card)
+    }
   } else {
     if (Array.isArray(card)) {
       cards.push(...card)

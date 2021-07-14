@@ -26,6 +26,7 @@ module.exports = {
     
     let data = await db.findOne({ _id: target.id })
     
+    //No team, give starters
     if (!data.cards?.[0]?.team || data.cards[0].team.length < 11) {
       let starters = await openBox(11, data, message, 'cricket', -75)
       Promise.all([
@@ -39,42 +40,55 @@ module.exports = {
     const team = data.cards?.[0]?.team || data.cards?.slice(1)
     const cards = await cardsDB.find()
     
-    //Replace 1 card in team11 with 1 in slots
     let nicknameAlias = ['nick', 'nickname', 'name']
-    let replaceAlias = ['replace', 'swap', 'r']
-    if (replaceAlias.includes(args[0])) {
-      let replace = [args[1], args[2]]
-      
+    let replaceAlias = ['replace', 'r']
+    let swapAlias = ['pos', 'swap', 's']
+    
+    //Replace and Swap
+    if (replaceAlias.includes(args[0]) || swapAlias.includes(args[0])) {
       if (args.length < 3) return message.reply(getError({ error: 'syntax', filePath: 'games/team11.js' }))
       
-      let toReplace = await cardSearch([replace[1]])
-      let toBeReplaced = await cardSearch([replace[0]])
-      
-      // Validations
-      let max = {'bat': 5, 'bowl': 3, 'ar': 2, 'wk': 2}
-      let min = {'bat': 4, 'bowl': 3, 'ar': 1, 'wk': 1}
-      // card exists?
+      let toReplace = await cardSearch([args[1]])
+      let toBeReplaced = await cardSearch([args[0]])
+      // Card Existence Validation
       if (!toReplace || !toBeReplaced) return message.reply(`Cannot find card: \`${toReplace ? replace[0] : replace[1]}\``)
-      else if (!team.find(card => card._id === toBeReplaced._id)) return message.reply(`Cannot find card \`${toBeReplaced.name}\` in your team`)
-      else if (!data.cards?.find(card => card._id === toReplace._id)) return message.reply(`Cannot find card \`${toReplace.name}\` in your slots`)
-      // obeys min and max?
-      else if (team.filter(card => {
-          if (card.role === toReplace.role) return true
-        }).length >= max[toReplace.role]
-      ) return message.reply(`The maximum amount of \`${toReplace.role.toUpperCase()}\` players in team is ${max[toReplace.role]}`)
-      else if (team.filter(card => {
-          if (card.role === toBeReplaced.role) return true
-        }).length <= min[toBeReplaced.role]
-      ) return message.reply(`The minimum amount of \`${toBeReplaced.role.toUpperCase()}\` players in team is ${min[toBeReplaced.role]}`)
       
-      //UpdateCards
-      Promise.all([
-        updateCard(data, toBeReplaced, 'team11', true, [toReplace]),
-        updateCard(data, toBeReplaced, 'cards')
-      ])
-      await message.reply(`Replaced \`${toBeReplaced.name}\` with \`${toReplace.name}\``)
-      return
-    } else if (nicknameAlias.includes(args[0])) {
+      if (swapAlias.includes(args[0])) {
+        //Card Existence in team
+        if (!team.find(c => c._id === toBeReplaced._id)) return message.reply(`Can\'t find ${toBeReplaced.name} in your team.`)
+        else if (!team.find(c => c._id === toReplace._id)) return message.reply(`Can\'t find ${toReplace.name} in your team.`)
+        
+        await updateCard(data, toBeReplaced, 'team11', true, [toReplace], team.findIndex(card => card._id === toReplace._id))
+      } else {
+        //Card Existence in team and slots
+        if (!team.find(card => card._id === toReplace._id)) return message.reply(`Cannot find card \`${toReplace.name}\` in your slots`)
+        else if (!team.find(card => card._id === toBeReplaced._id)) return message.reply(`\`${toReplace.name}\` already exists in your team, you \`e.team swap\` to swap positions`)
+        else if (!data.cards?.find(card => card._id === toBeReplaced._id)) return message.reply(`Cannot find card \`${toBeReplaced.name}\` in your slots`)
+        
+        // Min and Max Role Validations
+        let max = {'bat': 5, 'bowl': 3, 'ar': 2, 'wk': 2}
+        let min = {'bat': 4, 'bowl': 3, 'ar': 1, 'wk': 1}
+        if (team.filter(card => {
+            if (card.role === toReplace.role) return true
+          }).length >= max[toReplace.role]
+        ) return message.reply(`The maximum amount of \`${toReplace.role.toUpperCase()}\` players in team is ${max[toReplace.role]}`)
+        else if (team.filter(card => {
+            if (card.role === toBeReplaced.role) return true
+          }).length <= min[toBeReplaced.role]
+        ) return message.reply(`The minimum amount of \`${toBeReplaced.role.toUpperCase()}\` players in team is ${min[toBeReplaced.role]}`)
+        
+        //UpdateCards
+        Promise.all([
+          updateCard(data, toBeReplaced, 'team11', true, [toReplace]),
+          updateCard(data, toBeReplaced, 'cards')
+        ])
+        await message.reply(`Replaced \`${toBeReplaced.name}\` with \`${toReplace.name}\``)
+        return
+      }
+    }
+    
+    //Nickname
+    else if (nicknameAlias.includes(args[0])) {
       let name = args.slice(1).join(' ')
       await db.findOneAndUpdate({ _id: target.id }, {
         "cards": [{
@@ -87,6 +101,7 @@ module.exports = {
       return
     }
     
+    //Image
     let exportPath = `./temp/${target.id}.png`;
     let bgPath = './assets/team11.jpg'
     
