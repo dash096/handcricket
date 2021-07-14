@@ -33,15 +33,16 @@ module.exports = {
       if (args.length < 4) message.reply(getError({ error: 'syntax', filePath: 'cards/auction.js' }))
       let card = await cardSearch([args[1]])
       let startPrice = parseInt(args[2])
-      let time = ms(args[3]) || ms('24h')
+      let time = ms(args[3] || '24h')
       
       // validations
-      if (!card) message.reply(`Could not find card \`${args[1]}\``)
-      else if (isNaN(startPrice)) message.reply(`Could not parse \`${args[2]}\` as price.`)
-      else if (!time || time < 0) message.reply(`Could not parse \`${args[3]}\` as time`)
-      else if (time < 60 * 60 * 1000) message.reply('Time must atleast be greater than 1 minute')
+      if (!card) return message.reply(`Could not find card \`${args[1]}\``)
+      else if (isNaN(startPrice)) return message.reply(`Could not parse \`${args[2]}\` as price.`)
+      else if (!time || time < 0) return message.reply(`Could not parse \`${args[3]}\` as time`)
+      else if (time < 60 * 60 * 1000) return message.reply('Time must atleast be greater than 1 minute')
+      else if (!data.cards.some(c => c._id === card._id)) return message.reply(`You do not own \`${card.name}\`.`)
       
-      let id = (await auctionsDB.find()).sort((a, b) => b._id - a._id)[0]._id
+      let id = (await auctionsDB.find()).sort((a, b) => b._id - a._id)?.[0]?._id || 1
       let auctionData = auctionsDB({
         _id: id,
         owner: author,
