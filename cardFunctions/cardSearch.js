@@ -23,7 +23,7 @@ module.exports = async (args) => {
       if (name.includes(query[i])) counter += 1
     }
     
-    if (counter >= query.length) return true
+    if (counter > 5 && counter >= query.length) return true
     else return false
   })
   return card
