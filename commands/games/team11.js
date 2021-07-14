@@ -63,17 +63,17 @@ module.exports = {
       } else {
         //Card Existence in team and slots
         if (team.find(card => card._id === toReplace._id)) return message.reply(`\`${toReplace.name}\` already exists in your team, you \`e.team swap\` to swap positions`)
-        else if (!team.find(card => card._id === toBeReplaced._id)) return message.reply(`Cannot find card \`${toBeReplaced.name}\` in your slots`)
-        else if (!data.cards?.find(card => card._id === toBeReplaced._id)) return message.reply(`Cannot find card \`${toBeReplaced.name}\` in your slots`)
+        else if (!team.find(card => card._id === toBeReplaced._id)) return message.reply(`Cannot find card \`${toBeReplaced.name}\` in your team`)
+        else if (!data.cards?.find(card => card._id === toReplace._id)) return message.reply(`Cannot find card \`${toBeReplaced.name}\` in your slots`)
         
         // Min and Max Role Validations
         let max = {'bat': 5, 'bowl': 3, 'ar': 2, 'wk': 2}
         let min = {'bat': 4, 'bowl': 3, 'ar': 1, 'wk': 1}
-        if (team.filter(card => {
+        if (toBeReplaced.role !== toReplace.role && team.filter(card => {
             if (card.role === toReplace.role) return true
           }).length >= max[toReplace.role]
         ) return message.reply(`The maximum amount of \`${toReplace.role.toUpperCase()}\` players in team is ${max[toReplace.role]}`)
-        else if (team.filter(card => {
+        else if (toBeReplaced.role !== toReplace.role && team.filter(card => {
             if (card.role === toBeReplaced.role) return true
           }).length <= min[toBeReplaced.role]
         ) return message.reply(`The minimum amount of \`${toBeReplaced.role.toUpperCase()}\` players in team is ${min[toBeReplaced.role]}`)
@@ -81,7 +81,6 @@ module.exports = {
         //UpdateCards
         Promise.all([
           updateCard(data, toBeReplaced, 'team11', true, [toReplace]),
-          updateCard(data, toBeReplaced, 'cards')
         ])
         await message.reply(`Replaced \`${toBeReplaced.name}\` with \`${toReplace.name}\``)
       }
