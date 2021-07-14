@@ -17,9 +17,8 @@ module.exports = async (data, card, mode, remove, add = [], swap) => {
       1,
       ...add
     )
-    if (swap) {
-      cards.splice(swap, 0, card)
-    }
+    console.log(swap)
+    if (swap) cards.splice(swap, 0, card)
   } else {
     if (Array.isArray(card)) {
       cards.push(...card)

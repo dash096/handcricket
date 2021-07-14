@@ -83,8 +83,8 @@ module.exports = {
           updateCard(data, toBeReplaced, 'cards')
         ])
         await message.reply(`Replaced \`${toBeReplaced.name}\` with \`${toReplace.name}\``)
-        return
       }
+      return
     }
     
     //Nickname
