@@ -55,8 +55,8 @@ module.exports = {
       let min = {'bat': 4, 'bowl': 3, 'ar': 1, 'wk': 1}
       // card exists?
       if (!toReplace || !toBeReplaced) return message.reply(`Cannot find card: \`${toReplace ? replace[0] : replace[1]}\``)
-      else if (!team.find(card => card === toBeReplaced)) return message.reply(`Cannot find card \`${toBeReplaced.name}\` in your team`)
-      else if (!data.cards?.find(card => card === toReplace)) return message.reply(`Cannot find card \`${toReplace.name}\` in your slots`)
+      else if (!team.find(card => card._id === toBeReplaced._id)) return message.reply(`Cannot find card \`${toBeReplaced.name}\` in your team`)
+      else if (!data.cards?.find(card => card._id === toReplace._id)) return message.reply(`Cannot find card \`${toReplace.name}\` in your slots`)
       // obeys min and max?
       else if (team.filter(card => {
           if (card.role === toReplace.role) return true

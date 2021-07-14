@@ -12,7 +12,11 @@ module.exports = async (data, card, mode, remove, add = []) => {
     let exists = cards.find(c => c === card)
     if (!exists) return 'err'
     
-    cards.splice(cards.indexOf(card), 1, ...add)
+    cards.splice(
+      cards.findIndex(c => c._id === card._id),
+      1,
+      ...add
+    )
   } else {
     if (Array.isArray(card)) {
       cards.push(...card)
