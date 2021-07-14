@@ -47,9 +47,7 @@ module.exports = {
     
     //Send a list of slots
     let text = []
-    for(let fullname in targetCards) {
-      fullname = targetCards[fullname]
-      let card = await cardsDB.findOne({ fullname: fullname })
+    for(let card in targetCards) {
       card.name = card.name.split('-').join(' ')
       text.push([`${card.name.charAt(0).toUpperCase() + card.name.slice(1).toLowerCase()}   |   \`${card.role.toUpperCase()}\`   |   ${card.ovr}`, card.ovr])
     }

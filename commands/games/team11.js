@@ -56,16 +56,14 @@ module.exports = {
       let min = {'bat': 4, 'bowl': 3, 'ar': 1, 'wk': 1}
       // card exists?
       if (!toReplace || !toBeReplaced) return message.reply(`Cannot find card: \`${toReplace ? replace[0] : replace[1]}\``)
-      else if (!team.find(x => x == toBeReplaced.fullname)) return message.reply(`Cannot find card \`${toBeReplaced.name}\` in your team`)
-      else if (!data.cards?.find(x => x == toReplace.fullname)) return message.reply(`Cannot find card \`${toReplace.name}\` in your slots`)
+      else if (!team.find(card => card === toBeReplaced)) return message.reply(`Cannot find card \`${toBeReplaced.name}\` in your team`)
+      else if (!data.cards?.find(card => card === toReplace)) return message.reply(`Cannot find card \`${toReplace.name}\` in your slots`)
       // obeys min and max?
-      else if (team.filter(fullname => {
-          let card = cards.find(c => c.fullname === fullname)
+      else if (team.filter(card => {
           if (card.role === toReplace.role) return true
         }).length >= max[toReplace.role]
       ) return message.reply(`The maximum amount of \`${toReplace.role.toUpperCase()}\` players in team is ${max[toReplace.role]}`)
-      else if (team.filter(fullname => {
-          let card = cards.find(c => c.fullname === fullname)
+      else if (team.filter(card => {
           if (card.role === toBeReplaced.role) return true
         }).length <= min[toBeReplaced.role]
       ) return message.reply(`The minimum amount of \`${toBeReplaced.role.toUpperCase()}\` players in team is ${min[toBeReplaced.role]}`)

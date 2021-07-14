@@ -1,7 +1,6 @@
 const db = require('../schemas/player.js')
 
 module.exports = async (data, card, mode, remove, add = []) => {
-  let { fullname } = card
   let cards = mode === 'team11'
               ? data.cards?.[0]?.team || []
               : data.cards?.slice(1) || []
@@ -10,17 +9,15 @@ module.exports = async (data, card, mode, remove, add = []) => {
   }
   
   if (remove) {
-    let exists = cards.find(n => n == fullname)
+    let exists = cards.find(c => c === card)
     if (!exists) return 'err'
     
-    add = add.map(x => x.fullname)
-    cards.splice(cards.indexOf(fullname), 1, ...add)
+    cards.splice(cards.indexOf(card), 1, ...add)
   } else {
     if (Array.isArray(card)) {
-      card = card.map(x => x.fullname || x)
       cards.push(...card)
     } else {
-      cards.push(fullname)
+      cards.push(card)
     }
   }
   
