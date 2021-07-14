@@ -9,7 +9,7 @@ module.exports = async (data, card, mode, remove, add = [], swap) => {
   }
   
   if (remove) {
-    let exists = cards.find(c => c === card)
+    let exists = cards.find(c => c._id === card._id)
     if (!exists) return 'err'
     
     cards.splice(
@@ -17,7 +17,6 @@ module.exports = async (data, card, mode, remove, add = [], swap) => {
       1,
       ...add
     )
-    console.log(swap)
     if (swap) cards.splice(swap, 0, card)
   } else {
     if (Array.isArray(card)) {
