@@ -10,7 +10,15 @@ module.exports = ({error, user, itemName, filePath}) => {
     return `Invalid Item - \`${itemName}\`, check it in the shop first..` + tip;
   } else if( error == 'syntax') {
     let file = require(`../commands/${filePath}`);
-    return `Incorrect Syntax. Use this syntax: \`${file.syntax}\`` + tip;
+    return `Incorrect Syntax. Use this syntax: \`${
+      file.flags || flags.subcommands
+      ? `${file.syntax}\n${
+          flags.subcommands
+          ? `**Subcommands**\n ${file.subcommands}`
+          : `**Flags**\n ${file.flags}`
+        }`
+      : file.syntax
+    }\`` + tip;
   } else if( error == 'data') {
     return `**${user.username}** is not a player, Do \`${prefix}start\`` + tip;
   } else if( error == 'lessAssets') {
