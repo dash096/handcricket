@@ -21,6 +21,7 @@ module.exports = {
     
     const data = await db.findOne({ _id: target.id })
     const targetCards = data.cards?.slice(1)
+    const targetTeam = data.cards?.[0]?.team
     
     //Send Image of the Card if arguments exists
     if (args.length > 0 && target.id === author.id) {
@@ -49,7 +50,7 @@ module.exports = {
     let text = []
     targetCards.forEach(card => {
       card.name = card.name.split('-').join(' ')
-      text.push([`${card.name.charAt(0).toUpperCase() + card.name.slice(1).toLowerCase()}   |   \`${card.role.toUpperCase()}\`   |   ${card.ovr}`, card.ovr])
+      text.push([`${card.name.charAt(0).toUpperCase() + card.name.slice(1).toLowerCase()}   |   \`${card.role.toUpperCase()}\`   |   ${card.ovr}${team.find(x => x._id === card._id) ? '    ⚔️' : ''}`, card.ovr])
     })
     text = text.sort((a, b) => b[1] - a[1])
     text = text.map(i => i[0])

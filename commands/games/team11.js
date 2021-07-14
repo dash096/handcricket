@@ -54,13 +54,12 @@ module.exports = {
       if (!toReplace || !toBeReplaced) return message.reply(`Cannot find card: \`${toReplace ? args[2] : args[1]}\``)
       
       if (swapAlias.includes(args[0])) {
-        console.log('swapin')
         //Card Existence in team
         if (!team.find(c => c._id === toBeReplaced._id)) return message.reply(`Can\'t find ${toBeReplaced.name} in your team.`)
         else if (!team.find(c => c._id === toReplace._id)) return message.reply(`Can\'t find ${toReplace.name} in your team.`)
         
         await updateCard(data, toBeReplaced, 'team11', true, [toReplace], team.findIndex(card => card._id === toReplace._id))
-        await message.reply(`Positions swapped, \`${toBeReplaced.name}\` <-> \`${toReplace.name}\``)
+        await message.reply(`Positions swapped, \`${toBeReplaced.name}\` <--> \`${toReplace.name}\``)
       } else {
         //Card Existence in team and slots
         if (team.find(card => card._id === toReplace._id)) return message.reply(`\`${toReplace.name}\` already exists in your team, you \`e.team swap\` to swap positions`)
