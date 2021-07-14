@@ -16,7 +16,7 @@ module.exports = {
     const userDecors = data.decors || {};
     const decorsData = getDecors(type);
     
-    if (args.length < 0) {
+    if (args.length < 1) {
       return message.reply(getErrors({ error: 'syntax', filePath: 'dogenomy/equip.js' }))
     }
     

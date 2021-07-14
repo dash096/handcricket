@@ -11,9 +11,9 @@ module.exports = ({error, user, itemName, filePath}) => {
   } else if( error == 'syntax') {
     let file = require(`../commands/${filePath}`);
     return `Incorrect Syntax. Use this syntax: \`${
-      file.flags || flags.subcommands
+      file.flags || file.subcommands
       ? `${file.syntax}\n${
-          flags.subcommands
+          file.subcommands
           ? `**Subcommands**\n ${file.subcommands}`
           : `**Flags**\n ${file.flags}`
         }`
