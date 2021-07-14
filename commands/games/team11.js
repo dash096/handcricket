@@ -28,7 +28,6 @@ module.exports = {
     
     if (!data.cards?.[0]?.team || data.cards[0].team.length < 11) {
       let starters = await openBox(11, data, message, 'cricket', -75)
-      console.log(starters)
       Promise.all([
         await updateCard(data, starters, 'team11')
       ])
@@ -42,7 +41,7 @@ module.exports = {
     
     //Replace 1 card in team11 with 1 in slots
     let nicknameAlias = ['nick', 'nickname', 'name']
-    let replaceAlias = ['replace', 'rep', 'swap', 'r']
+    let replaceAlias = ['replace', 'swap', 'r']
     if (replaceAlias.includes(args[0])) {
       let replace = [args[1], args[2]]
       
@@ -91,15 +90,17 @@ module.exports = {
     let exportPath = `./temp/${target.id}.png`;
     let bgPath = './assets/team11.jpg'
     
+    let roles = {
+      'bat': [], 'bowl': [], 'ar': [], 'wk': []
+    }
     //Write the Image temporarily
     async function writeImage(resolve) {
       if (team.length > 0) {
         let compositeObjs = []
         
         let i = 0;
-        await team.slice(0, 11).forEach(async fullname => {
+        await team.slice(0, 11).forEach(async card => {
           i += 1
-          let card = cards.find(x => x.fullname == fullname)
           let name = card.name
           let path = `./assets/cards/${name}.png`
           let pos = teamPos[parseInt(i)]
@@ -109,6 +110,8 @@ module.exports = {
             left: pos[0],
             top: pos[1],
           })
+          
+          roles[card.role].push(card.name.charAt(0).toUpperCase() + card.name.slice(1).toLowerCase())
         })
         
         await sharp(bgPath)
@@ -123,15 +126,14 @@ module.exports = {
       await writeImage(r)
     })
     
-    let roles = getRoles()
     const embed = new Discord.MessageEmbed()
       .setTitle(`${data.cards?.[0]?.name || target.displayName} Team11`)
       .attachFiles(exportPath)
       .setDescription([
         `**BAT:**     ${roles.bat.join(', ')}`,
+        `**WK:**       ${roles.wk.join(', ')}`,
         `**BOWL:**   ${roles.bowl.join(', ')}`,
         `**AR:**        ${roles.ar.join(', ')}`,
-        `**WK:**       ${roles.wk.join(', ')}`
       ].join('\n'))
       .setImage(`attachment://${exportPath.split('/').pop()}`)
       .setFooter('"e.cards" to view your cards.')
@@ -145,26 +147,5 @@ module.exports = {
     
     await new Promise(r => setTimeout(r, 5000))
     await fs.unlink(exportPath, (e) => e ? console.log(e) : false)
-    
-    function getRoles() {
-      let roles = {
-        'bat': [],
-        'bowl': [],
-        'ar': [],
-        'wk': []
-      }
-      data.cards[0].team.map(fullname => {
-        let card = cards.find(dbc => dbc.fullname === fullname)
-        let { role, name } = card
-        role === 'bat'
-        ? roles.bat.push(name.charAt(0).toUpperCase() + name.slice(1).toLowerCase())
-        : role === 'bowl'
-        ? roles.bowl.push(name.charAt(0).toUpperCase() + name.slice(1).toLowerCase())
-        : role === 'ar'
-        ? roles.ar.push(name.charAt(0).toUpperCase() + name.slice(1).toLowerCase())
-        : roles.wk.push(name.charAt(0).toUpperCase() + name.slice(1).toLowerCase())
-      })
-      return roles
-    }
   }
 }
