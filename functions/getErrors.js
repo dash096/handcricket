@@ -12,15 +12,15 @@ module.exports = ({error, user, itemName, filePath}) => {
     let file = require(`../commands/${filePath}`);
     return `Incorrect Syntax. Use this syntax: ${
       file.flags || file.subcommands
-      ? `\`\`\`\n
-          ${file.syntax}\n
-          ${
-            file.subcommands
-            ? `\nSubcommands\n ${file.subcommands}`
-            : `\nFlags\n ${file.flags}`
-          }
-        \`\`\``
-      : `\`file.syntax\``
+      ? [
+        `\`\`\``,
+        `${file.syntax}`,
+        file.subcommands
+          ? `\nSubcommands\n ${file.subcommands}`
+          : `\nFlags\n ${file.flags}`,
+        `\`\`\``
+      ].join('\n')
+      : `\`${file.syntax}\``
     }` + tip;
   } else if( error == 'data') {
     return `**${user.username}** is not a player, Do \`${prefix}start\`` + tip;
