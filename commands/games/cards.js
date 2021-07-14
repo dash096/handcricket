@@ -20,7 +20,7 @@ module.exports = {
     const target = await getTarget(message, args, client)
     
     const data = await db.findOne({ _id: target.id })
-    const targetCards = data.cards.slice(1)
+    const targetCards = data.cards?.slice(1)
     
     //Send Image of the Card if arguments exists
     if (args.length > 0 && target.id === author.id) {
@@ -48,6 +48,7 @@ module.exports = {
     //Send a list of slots
     let text = []
     for(let card in targetCards) {
+      console.log(card)
       card.name = card.name.split('-').join(' ')
       text.push([`${card.name.charAt(0).toUpperCase() + card.name.slice(1).toLowerCase()}   |   \`${card.role.toUpperCase()}\`   |   ${card.ovr}`, card.ovr])
     }

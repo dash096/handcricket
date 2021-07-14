@@ -24,7 +24,7 @@ module.exports = {
   category: 'Dogenomy',
   syntax: 'e.use <itemName>',
   cooldown: 15,
-  run: async ({message, args, prefix}) => {
+  run: async ({ message, args, prefix, client }) => {
     const { content, author, channel, mentions } = message;
     const coinsEmoji = await getEmoji('coin');
     
