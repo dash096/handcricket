@@ -64,13 +64,23 @@ module.exports = {
       await message.reply(`Auction started for \`${card.name}\` at ${await getEmoji('coin')} ${startPrice} for \`${args[3]}\``)
       return
     } else if (searchAlias.includes(args[0])) {
-      const matches  = allAuctions
+      const matches  = allAuctions.slice(0, 50)
       const filters = {
         'role': /\s--role\s(\w+)/.exec(content)?.[1],
-        'ovr': /\s--ovr\s(\w+)\s(\w+)/.exec(content)?.[0]?.split(/ +/)?.slice(1),
+        'ovr': /\s--ovr\s(\W+\w+|\w+)+/.exec(content)?.[1]?.split(' '),
         'name': /\s--name\s(\w+)/.exec(content)?.[1]
       }
-      console.log(filters)
+      matches.filter(auc => {
+        let tests = 0
+        let passed = 0
+        for(let x in Object.keys(filters)) {
+          if (filters[x]) tests += 1
+          if (auc.card[x] === filters[x]) passed += 1
+        }
+        console.log(tests, passed)
+        if (tests === passed) return true
+      })
+      console.log(matches)
     } else if (bidAlias.includes(args[0])) {
       if (args.length < 3) message.reply(getError({ error: 'syntax', filePath: 'cards/auction.js' }))
 
