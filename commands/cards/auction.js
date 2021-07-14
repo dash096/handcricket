@@ -66,9 +66,9 @@ module.exports = {
     } else if (searchAlias.includes(args[0])) {
       const matches  = allAuctions
       const filters = {
-        'role': /\b--role\s(\w+)/.exec(content)?.[1],
-        'ovr': /\b--ovr\s(\w+)\s(\w+)/.exec(content)?.[1]?.split(/ +/)?.slice(1),
-        'name': /\b--name\s(\w+)/.exec(content)?.[1]
+        'role': /\s--role\s(\w+)/.exec(content)?.[1],
+        'ovr': /\s--ovr\s(\w+)\s(\w+)/.exec(content)?.[0]?.split(/ +/)?.slice(1),
+        'name': /\s--name\s(\w+)/.exec(content)?.[1]
       }
       console.log(filters)
     } else if (bidAlias.includes(args[0])) {
