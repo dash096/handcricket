@@ -42,7 +42,7 @@ module.exports = {
       else if (time < 60 * 60 * 1000) return message.reply('Time must atleast be greater than 1 minute')
       else if (!data.cards.some(c => c._id === card._id)) return message.reply(`You do not own \`${card.name}\`.`)
 
-      let id = (await auctionsDB.find()).sort((a, b) => b._id - a._id) ? . [0] ? ._id || 1
+      let id = (await auctionsDB.find()).sort((a, b) => b._id - a._id)?.[0]?._id || 1
       let auctionData = auctionsDB({
         _id: id,
         owner: author,
