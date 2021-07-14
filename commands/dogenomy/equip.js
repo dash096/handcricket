@@ -16,6 +16,10 @@ module.exports = {
     const userDecors = data.decors || {};
     const decorsData = getDecors(type);
     
+    if (args.length < 0) {
+      return message.reply(getErrors({ error: 'syntax', filePath: 'dogenomy/equip.js' }))
+    }
+    
     let decor = 
     decorsData.find(
       decor => decor.toLowerCase() == args.join('_').toLowerCase()

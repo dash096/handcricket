@@ -46,7 +46,7 @@ module.exports = {
     
     //Replace and Swap
     if (replaceAlias.includes(args[0]) || swapAlias.includes(args[0])) {
-      if (args.length < 3) return message.reply(getError({ error: 'syntax', filePath: 'games/team11.js' }))
+      if (args.length < 3) return message.reply(getError({ error: 'syntax', filePath: 'cards/team11.js' }))
       
       let toReplace = await cardSearch([args[2]])
       let toBeReplaced = await cardSearch([args[1]])
@@ -89,6 +89,7 @@ module.exports = {
     
     //Nickname
     else if (nicknameAlias.includes(args[0])) {
+      if (args.length < 1) return message.reply(getError({ error: 'syntax', filePath: 'cards/team11.js' }))
       let name = args.slice(1).join(' ')
       await db.findOneAndUpdate({ _id: target.id }, {
         "cards": [{

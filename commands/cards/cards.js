@@ -11,7 +11,7 @@ module.exports = {
   name: 'cards',
   aliases: ['card'],
   description: 'Show\'s all of your card slots that aren\'t in your team11.',
-  category: 'Games',
+  category: 'Cards',
   syntax: 'e.cards',
   cooldown: 5,
   run: async ({ message, args, client }) => {

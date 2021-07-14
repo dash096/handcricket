@@ -24,8 +24,7 @@ module.exports = {
     if(!target) return;
     
     if(user.id === target.id) {
-      let error = 'syntax'; let filePath = 'dogenomy/trade.js';
-      message.reply(getErrors({error, filePath}));
+      message.reply(getErrors({ error: 'syntax', filePath: 'dogenomy/trade.js' }));
       return;
     }
     
