@@ -61,8 +61,8 @@ module.exports = {
         await updateCard(data, toBeReplaced, 'team11', true, [toReplace], team.findIndex(card => card._id === toReplace._id))
       } else {
         //Card Existence in team and slots
-        if (!team.find(card => card._id === toReplace._id)) return message.reply(`Cannot find card \`${toReplace.name}\` in your slots`)
-        else if (!team.find(card => card._id === toBeReplaced._id)) return message.reply(`\`${toReplace.name}\` already exists in your team, you \`e.team swap\` to swap positions`)
+        if (team.find(card => card._id === toReplace._id)) return message.reply(`\`${toReplace.name}\` already exists in your team, you \`e.team swap\` to swap positions`)
+        else if (!team.find(card => card._id === toBeReplaced._id)) return message.reply(`Cannot find card \`${toBeReplaced.name}\` in your slots`)
         else if (!data.cards?.find(card => card._id === toBeReplaced._id)) return message.reply(`Cannot find card \`${toBeReplaced.name}\` in your slots`)
         
         // Min and Max Role Validations
