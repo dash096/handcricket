@@ -43,7 +43,7 @@ module.exports = async function (amount, data, msg, name, ovr = 1) {
     let rewards = []
     let allCards = (await cardsDB.find({
       ovr: ovr < 0 ? { $lte: Math.abs(ovr) } : { $gte: ovr }
-    })).filter(card => !data.cards?.includes(card.fullname))
+    })).filter(card => !data.cards.some(c => c._id === card._id))
     
     let starters = amount === 11 ? {
       'bat': 5, 'bowl': 3, 'ar': 2, 'wk': 1,
