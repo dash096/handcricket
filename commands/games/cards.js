@@ -47,11 +47,10 @@ module.exports = {
     
     //Send a list of slots
     let text = []
-    for(let card in targetCards) {
-      console.log(card)
+    targetCards.forEach(card => {
       card.name = card.name.split('-').join(' ')
       text.push([`${card.name.charAt(0).toUpperCase() + card.name.slice(1).toLowerCase()}   |   \`${card.role.toUpperCase()}\`   |   ${card.ovr}`, card.ovr])
-    }
+    })
     text = text.sort((a, b) => b[1] - a[1])
     text = text.map(i => i[0])
     text.map((x, i) => {
