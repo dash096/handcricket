@@ -17,7 +17,7 @@ module.exports = {
   category: 'Games',
   syntax: 'e.team [subcommands]',
   subcommands: '`replace [toBeReplaced] [toReplace]`: Swap two players mentioned in the arguments.',
-  cooldown: 15,
+  cooldown: 20,
   run: async ({ message, args, client }) => {
     const { channel, content, author, member } = message
     
@@ -51,10 +51,26 @@ module.exports = {
       let toReplace = await cardSearch([replace[1]])
       let toBeReplaced = await cardSearch([replace[0]])
       
+      // Validations
+      let max = {'bat': 5, 'bowl': 3, 'ar': 2, 'wk': 2}
+      let min = {'bat': 4, 'bowl': 3, 'ar': 1, 'wk': 1}
+      // card exists?
       if (!toReplace || !toBeReplaced) return message.reply(`Cannot find card: \`${toReplace ? replace[0] : replace[1]}\``)
-      if (!team.find(x => x == toBeReplaced.fullname)) return message.reply(`Cannot find card \`${toBeReplaced.name}\` in your team`)
-      if (!data.cards?.find(x => x == toReplace.fullname)) return message.reply(`Cannot find card \`${toReplace.name}\` in your slots`)
+      else if (!team.find(x => x == toBeReplaced.fullname)) return message.reply(`Cannot find card \`${toBeReplaced.name}\` in your team`)
+      else if (!data.cards?.find(x => x == toReplace.fullname)) return message.reply(`Cannot find card \`${toReplace.name}\` in your slots`)
+      // obeys min and max?
+      else if (team.filter(fullname => {
+          let card = cards.find(c => c.fullname === fullname)
+          if (card.role === toReplace.role) return true
+        }).length >= max[toReplace.role]
+      ) return message.reply(`The maximum amount of \`${toReplace.role.toUpperCase()}\` players in team is ${max[toReplace.role]}`)
+      else if (team.filter(fullname => {
+          let card = cards.find(c => c.fullname === fullname)
+          if (card.role === toBeReplaced.role) return true
+        }).length <= min[toBeReplaced.role]
+      ) return message.reply(`The minimum amount of \`${toBeReplaced.role.toUpperCase()}\` players in team is ${min[toBeReplaced.role]}`)
       
+      //UpdateCards
       Promise.all([
         updateCard(data, toBeReplaced, 'team11', true, [toReplace]),
         updateCard(data, toBeReplaced, 'cards')
