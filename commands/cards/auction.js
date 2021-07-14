@@ -24,25 +24,25 @@ module.exports = {
   run: async ({ message, args, client }) => {
     const { channel, author, content } = message
     const data = await db.findOne({ _id: author.id })
-    
+
     const startAlias = ['start', '+', 'add']
     const searchAlias = ['search', 'find', '?']
     const bidAlias = ['bid', 'buy']
-    
+
     if (startAlias.includes(args[0])) {
       if (args.length < 4) message.reply(getError({ error: 'syntax', filePath: 'cards/auction.js' }))
       let card = await cardSearch([args[1]])
       let startPrice = parseInt(args[2])
       let time = ms(args[3] || '24h')
-      
+
       // validations
       if (!card) return message.reply(`Could not find card \`${args[1]}\``)
       else if (isNaN(startPrice)) return message.reply(`Could not parse \`${args[2]}\` as price.`)
       else if (!time || time < 0) return message.reply(`Could not parse \`${args[3]}\` as time`)
       else if (time < 60 * 60 * 1000) return message.reply('Time must atleast be greater than 1 minute')
       else if (!data.cards.some(c => c._id === card._id)) return message.reply(`You do not own \`${card.name}\`.`)
-      
-      let id = (await auctionsDB.find()).sort((a, b) => b._id - a._id)?.[0]?._id || 1
+
+      let id = (await auctionsDB.find()).sort((a, b) => b._id - a._id) ? . [0] ? ._id || 1
       let auctionData = auctionsDB({
         _id: id,
         owner: author,
@@ -57,10 +57,10 @@ module.exports = {
       await message.reply(`Auction started for \`${name}\` at ${await getEmoji('coin')} ${startPrice} for \`${args[3]}\``)
       return
     } else if (searchAlias.includes(args[0])) {
-      
+
     } else if (bidAlias.includes(args[0])) {
       if (args.length < 3) message.reply(getError({ error: 'syntax', filePath: 'cards/auction.js' }))
-      
+
     } else {
       await message.reply(getError({ error: 'syntax', filePath: 'cards/auction.js' }))
       return
