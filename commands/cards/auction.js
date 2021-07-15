@@ -164,9 +164,9 @@ module.exports = {
       const embed = new Discord.MessageEmbed()
         .setTitle(`Auction Card - ${card.name.charAt(0).toUpperCase() + card.name.split('-').join(' ').slice(1)}`)
         .setDescription([
-          `**ID**:                ${auction._id}`,
+          `**ID**:                   ${auction._id}`,
           `**Current Bid:**   ${coinsEmoji} ${auction.currentBid}`,
-          `**Ends In:**           ${ms(auction.end.getTime() - Date.now(), { long: true })}`,
+          `**Ends In:**            ${ms(auction.end.getTime() - Date.now(), { long: true })}`,
         ])
         .setFooter('To bid use, "e.bid <id> <dogecoins>')
         .setColor(embedColor)
