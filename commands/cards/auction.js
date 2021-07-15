@@ -164,7 +164,7 @@ module.exports = {
       if (isNaN(bid)) return message.reply('Invalid value for bid')
       let auctionData = allAuctions.find(auc => auc._id === id)
       if (!auctionData) return message.reply('Could not find an auction with that ID')
-      if (author.id === auctionData.owner) return nessage.reply('You cant bid on your own auction.')
+      if (author.id === auctionData.owner) return message.reply('You cant bid on your own auction.')
       if (auctionData.currentBid >= bid) return message.reply(`Bid must be greater than the current bid which is ${coinsEmoji} ${auctionData.currentBid}`)
       if (bid > data.cc) return message.reply(`Insufficient Balance, it is lower than the ${bid}.`)
       let card = auctionData.card
