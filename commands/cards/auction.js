@@ -102,9 +102,10 @@ module.exports = {
           : auc.card.ovr === parseInt(filters.ovr)
         ) passed += 1
         
-        console.log(passed, tests)
+        if (passed === tests) return true
       })
-      console.log(filters, matching)
+      message.reply(mathing.length > 0 ? JSON.stringify(matching) : "No results")
+      return
     } else if (bidAlias.includes(args[0])) {
       if (args.length < 3) message.reply(getError({ error: 'syntax', filePath: 'cards/auction.js' }))
 
