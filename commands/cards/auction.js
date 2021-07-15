@@ -112,16 +112,16 @@ module.exports = {
         `\`${match._id}\``,
         `${match.card.name.charAt(0).toUpperCase() + match.card.name.slice(1)}`,
         `\`${match.card.role.toUpperCase()}\``,
-        `${match.card.ovr}`,
+        `\`${match.card.ovr}\``,
         `${coinsEmoji} ${match.currentBid}`,
-        `${ms(match.end.getTime() - Date.now())}`
+        `\`${ms(match.end.getTime() - Date.now())}\``
       ].join('  |  '))
       let counter = 0
       let page = 1
       const embed = new Discord.MessageEmbed()
         .setTitle('Auctions')
         .setColor(embedColor)
-        .setDescription(`**Id) Name | Role | OVR | Price | EndsIn**\n` + matching.slice(0, 15).join('\n'))
+        .setDescription(`\`Id\` | Name | \`Role\` | OVR | Price | \`EndsIn\`**\n` + matching.slice(0, 15).join('\n'))
         .setFooter(`Page ${page} of ${Math.floor(matching.length/15) + 1}, you can bid "e.auc bid <id> <dogecoins>"`)
       await message.reply(embed)
       return 
