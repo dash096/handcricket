@@ -105,14 +105,16 @@ module.exports = {
         if (passed === tests) return true
       })
       
-      matching = matching.reverse().map((match, index) => `${index + 1})  ${match.card.name.charAt(0).toUpperCase() + match.card.name.slice(1)}   |   ${match.card.role.toUpperCase()}   |   ${match.card.ovr}`)
+      if (matching.length < 1) return message.reply('No results!')
+      
+      matching = matching.reverse().map((match, index) => `\`${index + 1})\`  ${match.card.name.charAt(0).toUpperCase() + match.card.name.slice(1)}  |  \`${match.card.role.toUpperCase()}\`  |  ${match.card.ovr}`)
       let counter = 0
       let page = 1
       const embed = new Discord.MessageEmbed()
         .setTitle('Auctions')
         .setColor(embedColor)
         .setDescription(matching.slice(0, 15).join('\n'))
-        .setFooter(`Page ${page} of ${matching.length/15 + 1}`)
+        .setFooter(`Page ${page} of ${Math.floor(matching.length/15) + 1}`)
       await message.reply(embed)
       return 
     } else if (bidAlias.includes(args[0])) {
