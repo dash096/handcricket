@@ -104,8 +104,15 @@ module.exports = {
         
         if (passed === tests) return true
       })
-      message.reply(mathing.length > 0 ? JSON.stringify(matching) : "No results")
-      return
+      
+      let counter = 0
+      let page = 1
+      const embed = new Discord.MessageEmbed()
+        .setTitle('Auctions')
+        .setColor(embedColor)
+        .setFooter(`Page ${page} of ${matching/15 + 1}`)
+      await message.reply(embed)
+      return 
     } else if (bidAlias.includes(args[0])) {
       if (args.length < 3) message.reply(getError({ error: 'syntax', filePath: 'cards/auction.js' }))
 
