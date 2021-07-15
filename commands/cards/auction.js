@@ -77,7 +77,7 @@ module.exports = {
       await auctionData.save(e => console.log(e || auctionData._id))
       await message.reply(`Auction started for \`${card.name}\` at ${coinsEmoji} ${startPrice} for \`${args[3]}\``)
       setTimeout(async function timeout() {
-        const auctionData = await auctionsDB.find({ _id: id + 1})
+        const auctionData = await auctionsDB.findOne({ _id: id + 1})
         const remainingTime = Date.now() - auctionData.end.getTime()
         console.log(auctionData.end.getTime(), remainingTime)
         if (remainingTime < 30 * 1000) {
@@ -87,7 +87,7 @@ module.exports = {
           await updateCard(data, auctionData.card, 'slots')
           await winner.send(`You won the auction for \`${auctionData.card.name}\``)
         }
-      }, Date.now() + time)
+      }, time)
       return
     }
     
