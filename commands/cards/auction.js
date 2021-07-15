@@ -59,6 +59,15 @@ module.exports = {
         start: Date.now(),
         end: (Date.now() + time),
       })
+      
+      //Confirmation
+      try {
+        await channel.send(`${author}, Do you want to auction \`${card.fullname.split('_').join(' ')}\` at ${coinsEmoji} \`${startPrice}\` for \`${args[3] || '24h'}\``)
+        let will = (await channel.awaitMessages({ max: 1, time: 15000 }, m => m.author.id === author.id)).first().content.toLowerCase()
+        if (will !== 'y' && will !== 'yes') return message.reply('Aborted.')
+      } catch (e) {
+        return channel.send(getError({ error: 'time' }))
+      }
 
       await updateCard(data, card, 'cards', true)
       await auctionData.save(e => console.log(e || auctionData._id))
@@ -121,13 +130,19 @@ module.exports = {
       const embed = new Discord.MessageEmbed()
         .setTitle('Auctions')
         .setColor(embedColor)
-        .setDescription(`\`Id\` | Name | \`Role\` | OVR | Price | \`EndsIn\`**\n` + matching.slice(0, 15).join('\n'))
+        .setDescription(`\`id | name | role | ovr | bid | time\`\n` + matching.slice(0, 15).join('\n'))
         .setFooter(`Page ${page} of ${Math.floor(matching.length/15) + 1}, you can bid "e.auc bid <id> <dogecoins>"`)
       await message.reply(embed)
       return 
     } else if (bidAlias.includes(args[0])) {
       if (args.length < 3) message.reply(getError({ error: 'syntax', filePath: 'cards/auction.js' }))
-
+      let id = parseInt(args[1])
+      let bid = parseInt(args[2])
+      if (isNaN(id)) return message.reply('Invalid ID for auction')
+      if (isNaN(bid)) return message.reply('Invalid value for bid')
+      let auction = allAuctions.find(auc => auc._id === id)
+      if (!auction) return message.reply('Could not find an auction with that ID')
+      console.log(auction, bid)
     } else {
       await message.reply(getError({ error: 'syntax', filePath: 'cards/auction.js' }))
       return
