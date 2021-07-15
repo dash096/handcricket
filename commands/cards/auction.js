@@ -64,23 +64,46 @@ module.exports = {
       await message.reply(`Auction started for \`${card.name}\` at ${await getEmoji('coin')} ${startPrice} for \`${args[3]}\``)
       return
     } else if (searchAlias.includes(args[0])) {
-      const matches  = allAuctions.slice(0, 50)
       const filters = {
-        'role': /\s--role\s(\w+)/.exec(content)?.[1],
+        'role': (/\s--role\s(\w+)/.exec(content)?.[1])?.toLowerCase(),
         'ovr': /\s--ovr\s(\W+\w+|\w+)+/.exec(content)?.[1]?.split(' '),
-        'name': /\s--name\s(\w+)/.exec(content)?.[1]
+        'name': /\s--name\s(\w+)/.exec(content)?.[1],
+        'card': async function () { if (this.name) return await cardSearch([this.name]) }
       }
-      matches.filter(auc => {
+      let queryCard = filters.card()
+      
+      // Validations
+      if (filters.role && !['bat', 'bowl', 'wk', 'ar'].includes(filters.role)) return message.reply(`Valid roles are \`${validRoles.join(', ')}\``)
+      if (!queryCard && filters.name) return message.reply(`Could not find card \`${filters.name}\``)
+      if (!(
+        filters.ovr && (
+          parseInt(filter.ovr) ||
+          ( parseInt(filters.ovr.slice(2)) && (
+            filters.ovr[0] === '>' ||
+            filters.ovr[0] === '<'
+          ))
+        )
+      )) return message.reply(`Invalid value for ovr filter, use it like \`--ovr > 70\`, \`--ovr < 70\`, \`--ovr 70\``)
+      
+      let matching = allAuctions.slice(0, 75).filter(auc => {
         let tests = 0
-        let passed = 0
-        for(let x in Object.keys(filters)) {
-          if (filters[x]) tests += 1
-          if (auc.card[x] === filters[x]) passed += 1
+        let keys = Object.keys(filters)
+        for(let i in keys) {
+          if(filters[keys[i]]) tests += 1
         }
-        console.log(tests, passed)
-        if (tests === passed) return true
+        let passed = 0
+        
+        if (filters?.card?._id && filters.card._id === auc.card._id) passed += 1
+        if (filters?.role && filters.role === auc.card.role) passed += 1
+        if (filters?.ovr &&
+          filters.ovr[0] === '>'
+          ? auc.card.ovr > parseInt(filters.ovr.slice(2))
+          : filters.ovr[0] === '<'
+          ? auc.card.ovr < parseInt(filters.ovr.slice(2))
+          : auc.card.ovr === parseInt(filters.ovr)
+        ) passed += 1
       })
-      console.log(matches)
+      console.log(filters, matching)
     } else if (bidAlias.includes(args[0])) {
       if (args.length < 3) message.reply(getError({ error: 'syntax', filePath: 'cards/auction.js' }))
 
