@@ -10,6 +10,7 @@ const ms = require('ms')
 const auctionsDB = require('../../schemas/auction.js')
 const getEmoji = require('../../functions/getEmoji.js')
 const updateCard = require('../../cardFunctions/updateCards.js')
+const updateCoins = require('../../functions/updateCoins.js')
 
 module.exports = {
   name: 'auction',
@@ -149,11 +150,23 @@ module.exports = {
       let bid = parseInt(args[2])
       if (isNaN(id)) return message.reply('Invalid ID for auction')
       if (isNaN(bid)) return message.reply('Invalid value for bid')
-      let auction = allAuctions.find(auc => auc._id === id)
-      if (!auction) return message.reply('Could not find an auction with that ID')
-      if (auction.currentBid >= bid) return message.reply(`Bid must be greater than the current bid which is ${coinsEmoji} ${auction.currentBid}`)
+      let auctionData = allAuctions.find(auc => auc._id === id)
+      if (!auctionData) return message.reply('Could not find an auction with that ID')
+      if (auctionData.currentBid >= bid) return message.reply(`Bid must be greater than the current bid which is ${coinsEmoji} ${auctionData.currentBid}`)
+      if (bid > data.cc) return message.reply(`Insufficient Balance, it is lower than the ${bid}.`)
+      let card = auctionData.card
       
-      message.reply(`Bid on ${auction.card.name}`)
+      if (auctionData.currentBidder !== auctionData.owner) (await client.users.fetch(auctionData.currentBidder)).send(`You have been outbid on the auction \`${auctionData._id}\` for \`${card.name.charAt(0).toUpperCase() + card.name.split('-').join(' ').slice(1)}\``)
+      await updateCoins(-bid, data)
+      await auctionsDB.findOneAndUpdate({ _id: auction._id }, {
+        $set: {
+          currentBidder: author,
+          currentBid: bid,
+          end: auctionData.end.getTime() < 2 * 60 * 1000 ? Date.now() + (5 * 60 * 1000) : auctionData.end.getTime()
+        }
+      })
+      await message.reply(`Bidded on Auction ${auctionData._id} for ${card.name.charAt(0).toUpperCase() + card.name.split('-').join(' ').slice(1)}`)
+      return
     }
     
     
