@@ -36,7 +36,7 @@ module.exports = {
     const allAuctions = await auctionsDB.find()
     
     
-    if (startAlias.includes(args[0])) {
+    if (startAlias.includes(args[0].toLowerCase())) {
       if (args.length < 3) return message.reply(getError({ error: 'syntax', filePath: 'cards/auction.js' }))
       let card = await cardSearch([args[1]])
       let startPrice = parseInt(args[2])
@@ -78,7 +78,7 @@ module.exports = {
     }
     
     
-    else if (searchAlias.includes(args[0])) {
+    else if (searchAlias.includes(args[0].toLowerCase())) {
       const filters = {
         'role': (/\s--role\s(\w+)/.exec(content)?.[1])?.toLowerCase(),
         'ovr': /\s--ovr\s(\W+\w+|\w+)+/.exec(content)?.[1]?.split(' '),
@@ -142,7 +142,7 @@ module.exports = {
     }
     
     
-    else if (bidAlias.includes(args[0])) {
+    else if (bidAlias.includes(args[0].toLowerCase())) {
       if (args.length < 3) return message.reply(getError({ error: 'syntax', filePath: 'cards/auction.js' }))
       let id = parseInt(args[1])
       let bid = parseInt(args[2])
@@ -156,7 +156,7 @@ module.exports = {
     }
     
     
-    else if (infoAlias.includes(args[0])) {
+    else if (infoAlias.includes(args[0].toLowerCase())) {
       if (args.length < 2) return message.reply(getError({ error: 'syntax', filePath: 'cards/auction.js' }))
       let auction = allAuctions.find(x => x._id === parseInt(args[1]))
       if (!auction) return message.reply(`Could not find auction with the Id \`${args[1]}\``)
