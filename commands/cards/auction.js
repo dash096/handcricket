@@ -107,7 +107,14 @@ module.exports = {
       
       if (matching.length < 1) return message.reply('No results!')
       
-      matching = matching.reverse().map((match, index) => `\`${match._id})\`  ${match.card.name.charAt(0).toUpperCase() + match.card.name.slice(1)}  |  \`${match.card.role.toUpperCase()}\`  |  ${match.card.ovr}  |  ${await getEmoji('coin')} ${match.currentBid}  |  ${ms(match.end.getTime() - Date.now())}`)
+      matching = matching.reverse().map(async (match, index) => [
+        `\`${match._id}\``,
+        `${match.card.name.charAt(0).toUpperCase() + match.card.name.slice(1)}`,
+        `\`${match.card.role.toUpperCase()}\``,
+        `${match.card.ovr}`,
+        `${await getEmoji('coin')} ${match.currentBid}`,
+        `${ms(match.end.getTime() - Date.now())}`
+      ].join('  |  '))
       let counter = 0
       let page = 1
       const embed = new Discord.MessageEmbed()
