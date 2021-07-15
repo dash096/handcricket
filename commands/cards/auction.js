@@ -73,19 +73,29 @@ module.exports = {
         return channel.send(getError({ error: 'time' }))
       }
 
-      await updateCard(data, card, 'cards', true)
+      await updateCard(data, card, 'slots', true)
       await auctionData.save(e => console.log(e || auctionData._id))
       await message.reply(`Auction started for \`${card.name}\` at ${coinsEmoji} ${startPrice} for \`${args[3]}\``)
+      
+      //Timeout to finish auction
       setTimeout(async function timeout() {
-        const auctionData = await auctionsDB.findOne({ _id: id + 1})
+        const auctionData = await auctionsDB.findOne({ _id: id + 1 })
         const remainingTime = Date.now() - auctionData.end.getTime()
-        console.log(auctionData.end.getTime(), remainingTime)
-        if (remainingTime < 30 * 1000) {
+        
+        if (remainingTime > 20 * 1000) {
           Promise.all([setTimeout(timeout, Math.abs(remainingTime))])
-        } else {
+        } //Finish auction
+        else {
+          const owner = client.users.fetch(auctionData.owner)
+          const ownerData = data
           const winner = await client.users.fetch(auctionData.currentBidder)
-          await updateCard(data, auctionData.card, 'slots')
+          const winnerData = await db.findOne({ _id: winner.id })
+          const card = auctionData.card
+          
+          await updateCard(winnerData, card, 'slots')
+          if (auctionData.currentBidder !== auctionData.owner) await updateCoins(auctionData.currentBid, winnerData)
           await winner.send(`You won the auction for \`${auctionData.card.name}\``)
+          await auctionsDB.deleteOne({ _id: id + 1 })
         }
       }, time)
       return
@@ -169,14 +179,16 @@ module.exports = {
       if (bid > data.cc) return message.reply(`Insufficient Balance, it is lower than the ${bid}.`)
       let card = auctionData.card
       
-      if (auctionData.currentBidder !== auctionData.owner) (await client.users.fetch(auctionData.currentBidder)).send(`You have been outbid on the auction \`${auctionData._id}\` for \`${card.name.charAt(0).toUpperCase() + card.name.split('-').join(' ').slice(1)}\``)
-      await updateCoins(auctionData.currentBid, await db.findOne({ _id: currentBidder }))
+      if (auctionData.currentBidder !== auctionData.owner) {
+        (await client.users.fetch(auctionData.currentBidder)).send(`You have been outbid on the auction \`${auctionData._id}\` for \`${card.name.charAt(0).toUpperCase() + card.name.split('-').join(' ').slice(1)}\``)
+        await updateCoins(auctionData.currentBid, await db.findOne({ _id: currentBidder }))
+      }
       await updateCoins(-bid, data)
       await auctionsDB.findOneAndUpdate({ _id: auctionData._id }, {
         $set: {
           currentBidder: author,
           currentBid: bid,
-          end: auctionData.end.getTime() < 2 * 60 * 1000 ? Date.now() + (5 * 60 * 1000) : auctionData.end.getTime()
+          end: Date.now() - auctionData.end.getTime() < 2 * 60 * 1000 ? Date.now() + (5 * 60 * 1000) : auctionData.end.getTime()
         }
       })
       await message.reply(`Bidded on Auction \`${auctionData._id}\` for \`${card.name.charAt(0).toUpperCase() + card.name.split('-').join(' ').slice(1)}\``)
