@@ -84,7 +84,7 @@ module.exports = {
         )
       ) return message.reply(`Invalid value for ovr filter, use it like \`--ovr > 70\`, \`--ovr < 70\`, \`--ovr 70\``)
       
-      let matching = allAuctions.slice(0, 75).filter(auc => {
+      let matching = allAuctions.slice(0, 75).filter(async auc => {
         let tests = 0
         let keys = Object.keys(filters)
         for(let i in keys) {
