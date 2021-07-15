@@ -29,10 +29,12 @@ module.exports = {
     const data = await db.findOne({ _id: author.id })
 
     const startAlias = ['start', '+', 'add']
-    const searchAlias = ['search', 'find', '?']
+    const searchAlias = ['search', 's', 'find', '?']
     const bidAlias = ['bid', 'buy']
+    const infoAlias = ['info', 'i', 'information']
 
     const allAuctions = await auctionsDB.find()
+    
     
     if (startAlias.includes(args[0])) {
       if (args.length < 3) return message.reply(getError({ error: 'syntax', filePath: 'cards/auction.js' }))
@@ -73,7 +75,10 @@ module.exports = {
       await auctionData.save(e => console.log(e || auctionData._id))
       await message.reply(`Auction started for \`${card.name}\` at ${coinsEmoji} ${startPrice} for \`${args[3]}\``)
       return
-    } else if (searchAlias.includes(args[0])) {
+    }
+    
+    
+    else if (searchAlias.includes(args[0])) {
       const filters = {
         'role': (/\s--role\s(\w+)/.exec(content)?.[1])?.toLowerCase(),
         'ovr': /\s--ovr\s(\W+\w+|\w+)+/.exec(content)?.[1]?.split(' '),
@@ -130,20 +135,55 @@ module.exports = {
       const embed = new Discord.MessageEmbed()
         .setTitle('Auctions')
         .setColor(embedColor)
-        .setDescription(`\`id | name | role | ovr | bid | time\`\n` + matching.slice(0, 15).join('\n'))
+        .setDescription(`\`Id | Name | Role | Ovr | CurrentBid | Time\`\n` + matching.slice(0, 15).join('\n'))
         .setFooter(`Page ${page} of ${Math.floor(matching.length/15) + 1}, you can bid "e.auc bid <id> <dogecoins>"`)
       await message.reply(embed)
       return 
-    } else if (bidAlias.includes(args[0])) {
-      if (args.length < 3) message.reply(getError({ error: 'syntax', filePath: 'cards/auction.js' }))
+    }
+    
+    
+    else if (bidAlias.includes(args[0])) {
+      if (args.length < 3) return message.reply(getError({ error: 'syntax', filePath: 'cards/auction.js' }))
       let id = parseInt(args[1])
       let bid = parseInt(args[2])
       if (isNaN(id)) return message.reply('Invalid ID for auction')
       if (isNaN(bid)) return message.reply('Invalid value for bid')
       let auction = allAuctions.find(auc => auc._id === id)
       if (!auction) return message.reply('Could not find an auction with that ID')
-      console.log(auction, bid)
-    } else {
+      if (auction.currentBid >= bid) return message.reply(`Bid must be greater than the current bid which is ${coinsEmoji} ${auction.currentBid}`)
+      
+      message.reply(`Bid on ${auction.card.name}`)
+    }
+    
+    
+    else if (infoAlias.includes(args[0])) {
+      if (args.length < 2) return message.reply(getError({ syntax: 'cards/auction.js' }))
+      let auction = allAuctions.find(x => x._id === parseInt(args[1]))
+      if (!auction) return message.reply(`Could not find auction with the Id \`${args[1]}\``)
+      let { card } = auction
+      const embed = new Discord.MessageEmbed()
+        .setTitle(`Auction Card - ${card.name.charAt(0).toUpperCase() + card.name.split('-').join(' ').slice(1)}`)
+        .setDescription([
+          `**ID**:                ${auction._id}`,
+          `**Current Bid:**   ${coinsEmoji} ${auction.currentBid}`,
+          `**Ends In:**           ${ms(auction.end.getTime() - Date.now(), { long: true })}`,
+        ])
+        .setFooter('To bid use, "e.bid <id> <dogecoins>')
+        .setColor(embedColor)
+      
+      let cardImage = getCardImage(card.fullname)
+      if (cardImage) embed.setImage(cardImage)
+      else {
+        embed
+          .attachFiles(`./assets/cards/${card.name}.png`)
+          .setImage(`attachment://${card.name}.png`)
+      }
+      let infoMessage = await message.reply(embed)
+      if (!cardImage) getCardImage(card.fullname, infoMessage.attachments.first().url)
+    }
+    
+    
+    else {
       await message.reply(getError({ error: 'syntax', filePath: 'cards/auction.js' }))
       return
     }
