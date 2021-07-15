@@ -76,6 +76,18 @@ module.exports = {
       await updateCard(data, card, 'cards', true)
       await auctionData.save(e => console.log(e || auctionData._id))
       await message.reply(`Auction started for \`${card.name}\` at ${coinsEmoji} ${startPrice} for \`${args[3]}\``)
+      setTimeout(async function timeout() {
+        const auctionData = await auctionsDB.find({ _id: id + 1})
+        const remainingTime = Date.now() - auctionData.end.getTime()
+        console.log(auctionData.end.getTime(), remainingTime)
+        if (remainingTime < 30 * 1000) {
+          Promise.all([setTimeout(timeout, Math.abs(remainingTime))])
+        } else {
+          const winner = await client.users.fetch(auctionData.currentBidder)
+          await updateCard(data, auctionData.card, 'slots')
+          await winner.send(`You won the auction for \`${auctionData.card.name}\``)
+        }
+      }, Date.now() + time)
       return
     }
     
@@ -158,6 +170,7 @@ module.exports = {
       let card = auctionData.card
       
       if (auctionData.currentBidder !== auctionData.owner) (await client.users.fetch(auctionData.currentBidder)).send(`You have been outbid on the auction \`${auctionData._id}\` for \`${card.name.charAt(0).toUpperCase() + card.name.split('-').join(' ').slice(1)}\``)
+      await updateCoins(auctionData.currentBid, await db.findOne({ _id: currentBidder }))
       await updateCoins(-bid, data)
       await auctionsDB.findOneAndUpdate({ _id: auctionData._id }, {
         $set: {
