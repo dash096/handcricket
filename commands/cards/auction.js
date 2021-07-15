@@ -172,14 +172,14 @@ module.exports = {
         .setColor(embedColor)
       
       let cardImage = getCardImage(card.fullname)
-      if (cardImage) embed.setImage(cardImage)
+      if (cardImage !== 'err') embed.setImage(cardImage)
       else {
         embed
           .attachFiles(`./assets/cards/${card.name}.png`)
           .setImage(`attachment://${card.name}.png`)
       }
       let infoMessage = await message.reply(embed)
-      if (!cardImage) getCardImage(card.fullname, infoMessage.attachments.first().url)
+      if (cardImage === 'err') getCardImage(card.fullname, infoMessage.attachments.first().url)
     }
     
     
