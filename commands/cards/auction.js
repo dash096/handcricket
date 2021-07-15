@@ -17,8 +17,9 @@ module.exports = {
   description: 'Auction is where you buy/sell your cards.',
   subcommands: [
     '`start <name> <start-price> [time = 1h 1d]`: Start an auction',
-    '`search [filters = --role, --ovr >|<|number`: Shows a list of cards ordered by descending date.',
+    '`search [filters = --name, --role, --ovr >|<|number`: Shows a list of cards ordered by descending date.',
     '`bid <ID> <dogecoins>`: Bid on a card and you will get the card when the time ends.',
+    '`info <ID>`: Shows info of an auction.'
   ].join('\n'),
   category: 'Cards',
   syntax: 'e.auction [subcommands]',
@@ -81,7 +82,7 @@ module.exports = {
     else if (searchAlias.includes(args[0].toLowerCase())) {
       const filters = {
         'role': (/\s--role\s(\w+)/.exec(content)?.[1])?.toLowerCase(),
-        'ovr': /\s--ovr\s(\W+\w+|\w+)+/.exec(content)?.[1]?.split(' '),
+        'ovr': /\s--ovr\s(\W+\w+|\w+)/.exec(content)?.[1],
         'name': /\s--name\s(\w+)/.exec(content)?.[1],
       }
       let queryCard = filters.name ? await cardSearch([filters.name]) : undefined
