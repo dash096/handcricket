@@ -25,6 +25,7 @@ module.exports = {
   cooldown: 5,
   run: async ({ message, args, client }) => {
     const { channel, author, content } = message
+    const coinsEmoji = await getEmoji('coin')
     const data = await db.findOne({ _id: author.id })
 
     const startAlias = ['start', '+', 'add']
@@ -61,7 +62,7 @@ module.exports = {
 
       await updateCard(data, card, 'cards', true)
       await auctionData.save(e => console.log(e || auctionData._id))
-      await message.reply(`Auction started for \`${card.name}\` at ${await getEmoji('coin')} ${startPrice} for \`${args[3]}\``)
+      await message.reply(`Auction started for \`${card.name}\` at ${coinsEmoji} ${startPrice} for \`${args[3]}\``)
       return
     } else if (searchAlias.includes(args[0])) {
       const filters = {
@@ -84,7 +85,7 @@ module.exports = {
         )
       ) return message.reply(`Invalid value for ovr filter, use it like \`--ovr > 70\`, \`--ovr < 70\`, \`--ovr 70\``)
       
-      let matching = allAuctions.slice(0, 75).filter(async auc => {
+      let matching = allAuctions.slice(0, 75).filter(auc => {
         let tests = 0
         let keys = Object.keys(filters)
         for(let i in keys) {
@@ -107,12 +108,12 @@ module.exports = {
       
       if (matching.length < 1) return message.reply('No results!')
       
-      matching = matching.reverse().map(async (match, index) => [
+      matching = matching.reverse().map((match, index) => [
         `\`${match._id}\``,
         `${match.card.name.charAt(0).toUpperCase() + match.card.name.slice(1)}`,
         `\`${match.card.role.toUpperCase()}\``,
         `${match.card.ovr}`,
-        `${await getEmoji('coin')} ${match.currentBid}`,
+        `${coinsEmoji} ${match.currentBid}`,
         `${ms(match.end.getTime() - Date.now())}`
       ].join('  |  '))
       let counter = 0
