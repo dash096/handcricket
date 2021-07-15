@@ -66,8 +66,8 @@ module.exports = {
       
       //Confirmation
       try {
-        await channel.send(`${author}, Do you want to auction \`${card.fullname.split('_').join(' ')}\` at ${coinsEmoji} \`${startPrice}\` for \`${args[3] || '24h'}\``)
-        let will = (await channel.awaitMessages({ max: 1, time: 15000 }, m => m.author.id === author.id)).first().content.toLowerCase()
+        await channel.send(`${author}, Do you want to auction \`${card.fullname.split('_').join(' ')}\` at ${coinsEmoji} \`${startPrice}\` for \`${args[3] || '24h'}\`, type \`y\`/\`n\``)
+        let will = (await channel.awaitMessages(m => m.author.id === author.id, { max: 1, time: 15000 })).first().content.toLowerCase()
         if (will !== 'y' && will !== 'yes') return message.reply('Aborted.')
       } catch (e) {
         return channel.send(getError({ error: 'time' }))
