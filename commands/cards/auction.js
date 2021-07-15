@@ -96,9 +96,9 @@ module.exports = {
         if (filters?.card?._id && filters.card._id === auc.card._id) passed += 1
         if (filters?.role && filters.role === auc.card.role) passed += 1
         if (filters.ovr &&
-          filters.ovr[0] === '>'
+          filters.ovr?.[0] === '>'
           ? auc.card.ovr > parseInt(filters.ovr.slice(2))
-          : filters.ovr[0] === '<'
+          : filters.ovr?.[0] === '<'
           ? auc.card.ovr < parseInt(filters.ovr.slice(2))
           : auc.card.ovr === parseInt(filters.ovr)
         ) passed += 1
