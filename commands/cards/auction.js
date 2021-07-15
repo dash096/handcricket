@@ -75,15 +75,15 @@ module.exports = {
       // Validations
       if (filters.role && !['bat', 'bowl', 'wk', 'ar'].includes(filters.role)) return message.reply(`Valid roles are \`${validRoles.join(', ')}\``)
       if (!queryCard && filters.name) return message.reply(`Could not find card \`${filters.name}\``)
-      if (!(
-        filters.ovr && (
-          parseInt(filter.ovr) ||
+      if (
+        filters.ovr && !(
+          parseInt(filters.ovr) ||
           ( parseInt(filters.ovr.slice(2)) && (
             filters.ovr[0] === '>' ||
             filters.ovr[0] === '<'
           ))
         )
-      )) return message.reply(`Invalid value for ovr filter, use it like \`--ovr > 70\`, \`--ovr < 70\`, \`--ovr 70\``)
+      ) return message.reply(`Invalid value for ovr filter, use it like \`--ovr > 70\`, \`--ovr < 70\`, \`--ovr 70\``)
       
       let matching = allAuctions.slice(0, 75).filter(auc => {
         let tests = 0
