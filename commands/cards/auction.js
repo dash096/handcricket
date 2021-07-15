@@ -157,7 +157,7 @@ module.exports = {
     
     
     else if (infoAlias.includes(args[0])) {
-      if (args.length < 2) return message.reply(getError({ syntax: 'cards/auction.js' }))
+      if (args.length < 2) return message.reply(getError({ error: 'syntax', filePath: 'cards/auction.js' }))
       let auction = allAuctions.find(x => x._id === parseInt(args[1]))
       if (!auction) return message.reply(`Could not find auction with the Id \`${args[1]}\``)
       let { card } = auction
