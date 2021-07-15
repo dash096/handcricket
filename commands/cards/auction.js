@@ -48,7 +48,7 @@ module.exports = {
       if (!card) return message.reply(`Could not find card \`${args[1]}\``)
       else if (isNaN(startPrice)) return message.reply(`Could not parse \`${args[2]}\` as price.`)
       else if (!time || time < 0) return message.reply(`Could not parse \`${args[3]}\` as time`)
-      else if (time < 60 * 60 * 1000) return message.reply('Time must atleast be greater than 1 minute')
+      else if (time < 60 * 1000) return message.reply('Time must atleast be greater than 1 minute')
       else if (!data.cards.some(c => c._id === card._id)) return message.reply(`You do not own \`${card.name}\`.`)
       else if (data.cards?.[0]?.team?.some(c => c._id === card._id)) return message.reply(`Cards in your team can't be auctioned.`)
 
