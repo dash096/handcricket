@@ -34,7 +34,7 @@ module.exports = {
     const allAuctions = await auctionsDB.find()
     
     if (startAlias.includes(args[0])) {
-      if (args.length < 4) message.reply(getError({ error: 'syntax', filePath: 'cards/auction.js' }))
+      if (args.length < 3) return message.reply(getError({ error: 'syntax', filePath: 'cards/auction.js' }))
       let card = await cardSearch([args[1]])
       let startPrice = parseInt(args[2])
       let time = ms(args[3] || '24h')
@@ -47,9 +47,9 @@ module.exports = {
       else if (!data.cards.some(c => c._id === card._id)) return message.reply(`You do not own \`${card.name}\`.`)
       else if (data.cards?.[0]?.team?.some(c => c._id === card._id)) return message.reply(`Cards in your team can't be auctioned.`)
 
-      let id = allAuctions.sort((a, b) => b._id - a._id)?.[0]?._id || 1
+      let id = allAuctions.sort((a, b) => b._id - a._id)?.[0]?._id || 1070000
       let auctionData = auctionsDB({
-        _id: id,
+        _id: (id + 1),
         owner: author,
         card: card,
         startBid: startPrice,
@@ -107,14 +107,14 @@ module.exports = {
       
       if (matching.length < 1) return message.reply('No results!')
       
-      matching = matching.reverse().map((match, index) => `\`${index + 1})\`  ${match.card.name.charAt(0).toUpperCase() + match.card.name.slice(1)}  |  \`${match.card.role.toUpperCase()}\`  |  ${match.card.ovr}`)
+      matching = matching.reverse().map((match, index) => `\`${match._id})\`  ${match.card.name.charAt(0).toUpperCase() + match.card.name.slice(1)}  |  \`${match.card.role.toUpperCase()}\`  |  ${match.card.ovr}`)
       let counter = 0
       let page = 1
       const embed = new Discord.MessageEmbed()
         .setTitle('Auctions')
         .setColor(embedColor)
         .setDescription(matching.slice(0, 15).join('\n'))
-        .setFooter(`Page ${page} of ${Math.floor(matching.length/15) + 1}`)
+        .setFooter(`Page ${page} of ${Math.floor(matching.length/15) + 1}, you can bid "e.auc bid <id> <dogecoins>"`)
       await message.reply(embed)
       return 
     } else if (bidAlias.includes(args[0])) {
