@@ -68,9 +68,8 @@ module.exports = {
         'role': (/\s--role\s(\w+)/.exec(content)?.[1])?.toLowerCase(),
         'ovr': /\s--ovr\s(\W+\w+|\w+)+/.exec(content)?.[1]?.split(' '),
         'name': /\s--name\s(\w+)/.exec(content)?.[1],
-        'card': async function () { if (this.name) return await cardSearch([this.name]) }
       }
-      let queryCard = filters.card()
+      let queryCard = filters.name ? await cardSearch([filters.name]) : undefined
       
       // Validations
       if (filters.role && !['bat', 'bowl', 'wk', 'ar'].includes(filters.role)) return message.reply(`Valid roles are \`${validRoles.join(', ')}\``)
@@ -93,8 +92,8 @@ module.exports = {
         }
         let passed = 0
         
-        if (filters?.card?._id && filters.card._id === auc.card._id) passed += 1
-        if (filters?.role && filters.role === auc.card.role) passed += 1
+        if (queryCard?._id === auc.card._id) passed += 1
+        if (filters.role === auc.card.role) passed += 1
         if (filters.ovr &&
           filters.ovr?.[0] === '>'
           ? auc.card.ovr > parseInt(filters.ovr.slice(2))
@@ -102,6 +101,8 @@ module.exports = {
           ? auc.card.ovr < parseInt(filters.ovr.slice(2))
           : auc.card.ovr === parseInt(filters.ovr)
         ) passed += 1
+        
+        console.log(passed, tests)
       })
       console.log(filters, matching)
     } else if (bidAlias.includes(args[0])) {
