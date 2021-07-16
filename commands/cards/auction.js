@@ -95,7 +95,7 @@ module.exports = {
         await updateCard(winnerData, card, 'slots')
         if (auctionData.currentBidder !== auctionData.owner) {
           await updateCoins(auctionData.currentBid, ownerData)
-          await owner.send(`Your auction has been sold for ${coinsEmoji} \`${auctionData.currentBid}\``)
+          await owner.send(`Your auction for \`${card.name.charAt(0).toUpperCase() + card.namd.split('-').join(' ').slice(1)}\` has ended, and you recieved ${coinsEmoji} \`${auctionData.currentBid}\``)
         }
         await winner.send(`You won the auction for \`${card.name.charAt(0).toUpperCase() + card.name.split('-').join(' ').slice(1)}\` for ${coinsEmoji} \`${auctionData.currentBid}\``)
         await auctionsDB.deleteOne({ _id: (id + 1) })
