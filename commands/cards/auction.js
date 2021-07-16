@@ -82,21 +82,16 @@ module.exports = {
         const auctionData = await auctionsDB.findOne({ _id: id + 1 })
         const remainingTime = Date.now() - auctionData.end.getTime()
         
-        if (remainingTime > 20 * 1000) {
-          Promise.all([setTimeout(timeout, Math.abs(remainingTime))])
-        } //Finish auction
-        else {
-          const owner = client.users.fetch(auctionData.owner)
-          const ownerData = data
-          const winner = await client.users.fetch(auctionData.currentBidder)
-          const winnerData = await db.findOne({ _id: winner.id })
-          const card = auctionData.card
-          
-          await updateCard(winnerData, card, 'slots')
-          if (auctionData.currentBidder !== auctionData.owner) await updateCoins(auctionData.currentBid, winnerData)
-          await winner.send(`You won the auction for \`${auctionData.card.name}\``)
-          await auctionsDB.deleteOne({ _id: id + 1 })
-        }
+        const owner = await client.users.fetch(auctionData.owner)
+        const ownerData = await db.findOne({ _id: owner.id })
+        const winner = await client.users.fetch(auctionData.currentBidder)
+        const winnerData = await db.findOne({ _id: winner.id })
+        const card = auctionData.card
+        
+        await updateCard(winnerData, card, 'slots')
+        if (auctionData.currentBidder !== auctionData.owner) await updateCoins(auctionData.currentBid, ownerData)
+        await winner.send(`You won the auction for \`${card.name.charAt(0).toUpperCase() + card.name.split('-').join(' ').slice(1)}\``)
+        await auctionsDB.deleteOne({ _id: id + 1 })
       }, time)
       return
     }
