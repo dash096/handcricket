@@ -12,9 +12,7 @@ const getEmoji = require('./getEmoji.js')
 
 module.exports = async ({ client }) => {
   const coinsEmoji = await getEmoji('coin')
-  const brokeDatas = await auctionsDB.find({ end: { $exists: true } })
-  
-  console.log(brokeDatas)
+  const brokeDatas = await auctionsDB.find()
   
   for (let i in brokeDatas) {
     const auctionData = brokeDatas[i]
@@ -34,6 +32,6 @@ module.exports = async ({ client }) => {
       }
       await winner.send(`You won the auction for \`${card.name.charAt(0).toUpperCase() + card.name.split('-').join(' ').slice(1)}\``)
       await auctionsDB.deleteOne({ _id: auctionData._id })
-    }, remainingTime < 0 ? 5 * 1000 : remainingTime)
+    }, remainingTime > 0 ? 5 * 1000 : remainingTime)
   }
 }
