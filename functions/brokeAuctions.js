@@ -13,6 +13,7 @@ const getEmoji = require('./getEmoji.js')
 module.exports = async ({ client }) => {
   const coinsEmoji = await getEmoji('coin')
   const brokeDatas = await auctionsDB.find({ end: { $exists: true } })
+  console.log(brokeDatas)
   for (let i in brokeDatas) {
     const auctionData = brokeDatas[i]
     const remainingTime = Date.now() - auctionData.end.getTime()
