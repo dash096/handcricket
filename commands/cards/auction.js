@@ -79,18 +79,19 @@ module.exports = {
       
       //Timeout to finish auction
       setTimeout(async function timeout() {
-        const auctionData = await auctionsDB.findOne({ _id: (id + 1) })
-        const remainingTime = Date.now() - auctionData.end.getTime()
-        
-        const owner = await client.users.fetch(auctionData.owner)
-        const ownerData = await db.findOne({ _id: owner.id })
+        const auctionData = await auctionsDB.find({ _id: (id + 1) })
+        const owner = author
+        const ownerData = data
         const winner = await client.users.fetch(auctionData.currentBidder)
         const winnerData = await db.findOne({ _id: winner.id })
         const card = auctionData.card
-        
+
         await updateCard(winnerData, card, 'slots')
-        if (auctionData.currentBidder !== auctionData.owner) await updateCoins(auctionData.currentBid, ownerData)
-        await winner.send(`You won the auction for \`${card.name.charAt(0).toUpperCase() + card.name.split('-').join(' ').slice(1)}\``)
+        if (auctionData.currentBidder !== auctionData.owner) {
+          await updateCoins(auctionData.currentBid, ownerData)
+          await owner.send(`Your auction has been sold for ${coinsEmoji} \`${auctionData.currentBid}\``)
+        }
+        await winner.send(`You won the auction for \`${card.name.charAt(0).toUpperCase() + card.name.split('-').join(' ').slice(1)}\` for ${coinsEmoji} \`${auctionData.currentBid}\``)
         await auctionsDB.deleteOne({ _id: (id + 1) })
       }, time)
       return
