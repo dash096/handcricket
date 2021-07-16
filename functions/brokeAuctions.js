@@ -6,6 +6,7 @@
 
 const auctionsDB = require('../schemas/auction.js')
 const db = require('../schemas/player.js')
+const updateCard = require('../cardFunctions/updateCards.js')
 
 module.exports = async ({ client }) => {
   const brokeDatas = await auctionsDB.find({ end: { $exists: true } })
