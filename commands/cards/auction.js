@@ -37,8 +37,12 @@ module.exports = {
 
     const allAuctions = await auctionsDB.find()
     
+    if (!args[0]) {
+      await message.reply(getError({ error: 'syntax', filePath: 'cards/auction.js' }))
+      return
+    }
     
-    if (startAlias.includes(args[0].toLowerCase())) {
+    else if (startAlias.includes(args[0].toLowerCase())) {
       if (args.length < 3) return message.reply(getError({ error: 'syntax', filePath: 'cards/auction.js' }))
       let card = await cardSearch([args[1]])
       let startPrice = parseInt(args[2])
@@ -218,12 +222,6 @@ module.exports = {
       }
       let infoMessage = await message.reply(embed)
       if (cardImage === 'err') getCardImage(card.fullname, infoMessage.embeds[0].image.url)
-    }
-    
-    
-    else {
-      await message.reply(getError({ error: 'syntax', filePath: 'cards/auction.js' }))
-      return
     }
   }
 }
