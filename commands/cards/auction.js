@@ -79,7 +79,7 @@ module.exports = {
       
       //Timeout to finish auction
       setTimeout(async function timeout() {
-        const auctionData = await auctionsDB.findOne({ _id: id + 1 })
+        const auctionData = await auctionsDB.findOne({ _id: (id + 1) })
         const remainingTime = Date.now() - auctionData.end.getTime()
         
         const owner = await client.users.fetch(auctionData.owner)
@@ -91,7 +91,7 @@ module.exports = {
         await updateCard(winnerData, card, 'slots')
         if (auctionData.currentBidder !== auctionData.owner) await updateCoins(auctionData.currentBid, ownerData)
         await winner.send(`You won the auction for \`${card.name.charAt(0).toUpperCase() + card.name.split('-').join(' ').slice(1)}\``)
-        await auctionsDB.deleteOne({ _id: id + 1 })
+        await auctionsDB.deleteOne({ _id: (id + 1) })
       }, time)
       return
     }
@@ -214,7 +214,7 @@ module.exports = {
           .setImage(`attachment://${card.name}.png`)
       }
       let infoMessage = await message.reply(embed)
-      if (cardImage === 'err') getCardImage(card.fullname, infoMessage.attachments.first().url)
+      if (cardImage === 'err') getCardImage(card.fullname, infoMessage.embeds[0].image.url)
     }
     
     
