@@ -1,9 +1,3 @@
-
-
-
-
-
-
 const auctionsDB = require('../schemas/auction.js')
 const db = require('../schemas/player.js')
 const updateCard = require('../cardFunctions/updateCards.js')

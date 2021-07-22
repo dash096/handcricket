@@ -183,7 +183,7 @@ module.exports = {
       
       if (auctionData.currentBidder !== auctionData.owner) {
         (await client.users.fetch(auctionData.currentBidder)).send(`You have been outbid on the auction \`${auctionData._id}\` for \`${card.name.charAt(0).toUpperCase() + card.name.split('-').join(' ').slice(1)}\``)
-        await updateCoins(auctionData.currentBid, await db.findOne({ _id: currentBidder }))
+        await updateCoins(auctionData.currentBid, await db.findOne({ _id: auctionData.currentBidder }))
       }
       await updateCoins(-bid, data)
       await auctionsDB.findOneAndUpdate({ _id: auctionData._id }, {
