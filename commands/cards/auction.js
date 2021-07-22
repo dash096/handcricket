@@ -88,7 +88,7 @@ module.exports = {
         
         const owner = author
         const ownerData = await db.findOne({ _id: author.id })
-        const winner = await client.users.fetch(auctionData.currentBidder)
+        const winner = client.users.cache.get(auctionData.currentBidder) || await client.users.fetch(auctionData.currentBidder)
         const winnerData = await db.findOne({ _id: winner.id })
         const card = auctionData.card
 
