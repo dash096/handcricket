@@ -1,0 +1,197 @@
+const db = require('../../schemas/player.js');
+const Discord = require('discord.js');
+const checkItems = require('../../functions/checkItems.js');
+const updateBag = require('../../functions/updateBag.js');
+const updateMulti = require('../../functions/updateMulti.js');
+const updateDecor = require('../../functions/updateDecor.js');
+const updateCoins = require('../../functions/updateCoins.js');
+const updateStamina = require('../../functions/updateStamina.js');
+const openBox = require('../../functions/openBox.js');
+const gain = require('../../functions/gainExp.js');
+const getEmoji = require('../../functions/getEmoji.js');
+const getError = require('../../functions/getErrors.js');
+const getDecors = require('../../functions/getDecors.js');
+const cardsDB = require('../../schemas/card.js')
+const updateCards = require('../../cardFunctions/updateCards.js')
+const getCardImage = require('../../cardFunctions/getImage.js')
+const embedColor = require('../../functions/getEmbedColor.js')
+const buySlots = require('../../cardFunctions/buySlots.js')
+
+module.exports = {
+  name: 'use',
+  aliases: ['open'],
+  description: 'Use an item in your bag.',
+  category: 'Dogenomy',
+  syntax: 'e.use <itemName>',
+  cooldown: 15,
+  run: async ({ message, args, prefix, client }) => {
+    const { content, author, channel, mentions } = message;
+    const coinsEmoji = await getEmoji('coin');
+    
+    if((content.slice(prefix.length).trim().toLowerCase().split(/ +/))[0] === 'open') {
+      if(args[0] !== 'lb' && args[0] !== 'lootbox' && args[0] !== 'loot') return;
+    }
+    
+    const itemArray = await checkItems(message, 'dogenomy/use.js');
+    
+    if(itemArray == 'err') return;
+    let itemAmount = itemArray[1];
+    const itemName = itemArray[0];
+    
+    let playerData = await db.findOne({_id: author.id});
+    
+    if (itemName === 'nuts') {
+      const e = await updateBag(itemName, itemAmount, playerData, message);
+      if(e == 'err') return;
+      await updateStamina(author, 2);
+      await message.reply('You ate some nuts and got 2 stamina!');
+      return;
+    } else if (itemName === 'redbull') {
+      const e = await updateBag(itemName, itemAmount, playerData, message);
+      if(e == 'err') return;
+      await updateStamina(author, 5);
+      await message.reply('You drank a redbull and got 5 stamina!');
+      return;
+    } else if (itemName === 'coinboost') {
+      const e1 = await updateBag(itemName, 1, playerData, message);
+      if (e1 == 'err') return;
+      const e2 = await updateMulti(itemName, playerData, message);
+      if(e2 == 'err') return;
+      await message.reply('Your Coin multiplier is now boosted twice!');
+      return;
+    } else if (itemName === 'tossboost') {
+      const e1 = await updateBag(itemName, 1, playerData, message);
+      if (e1 == 'err') return;
+      const e2 = await updateMulti(itemName, playerData, message);
+      if(e2 == 'err') return;
+      await message.reply('Your Toss multiplier is now boosted twice!');
+      return;
+    } else if (itemName === 'cricketbox') {
+      const e1 = await updateBag(itemName, itemAmount, playerData, message);
+      if(e1 == 'err') return;
+      
+      const embed = new Discord.MessageEmbed()
+        .setTitle(`Opening ${1} Cricket Box...`)
+        .setColor(embedColor)
+      
+      let random = Math.random()
+      
+      let allCards = await cardsDB.find()
+      let cards = allCards.filter(card => !playerData.cards.includes(card.fullname))
+      let card = await openBox(1, playerData, message, 'cricket')
+      
+      let cachedCardURL = getCardImage(card.fullname) 
+      if (cachedCardURL !== 'err') {
+        embed.setImage(cachedCardURL)
+      } else {
+        embed
+          .attachFiles(`./assets/cards/${card.name}.png`)
+          .setImage(`attachment://${card.name}.png`)
+          .setTitle(`You got, ${card.name.split('-').join(' ')}`)
+      }
+      let msg = await message.reply(embed)
+      let updateCard = await updateCards(playerData, card, 'slots')
+      
+      if (updateCard === 'err') {
+        //slots full
+        await channel.send(`${author}, You don't have enough card slots, do you want to spend coins buying one? Type \`y\`/\`n\` or any \`card name\` to replace`)
+        
+        let res = await checkRes()
+        if (res != 'err') await updateCards(playerData, card, 'slots')
+        
+        async function checkRes() {
+          try {
+            let msg = (await channel.awaitMessages(m => m.author.id === author.id, {
+              time: 60000,
+              max: 1,
+              errors: ['time']
+            })).first()
+            let reply = msg.content.toLowerCase()
+            
+            //buy additional box
+            if (reply == 'y' || reply == 'yes') {
+              let price = await buySlots(msg, playerData, 1)
+              if (price == 'err') {
+                await msg.reply(`Insufficient Balance. You only have ${coinsEmoji} ${playerData.cc}`)
+                return await checkRes()
+              } else {
+                playerData = await db.findOne({ _id: playerData._id })
+                await msg.reply(`You bought a card slot for ${coinsEmoji} ${price} and got the card!`)
+                return
+              }
+            } //refund used cricketbox
+            else if (reply == 'n' || reply == 'no') {
+              await updateBag('cricketbox', -1, playerData, message)
+              await message.reply('Refunded another cricketbox.')
+              return 'err'
+            } //check for replacement
+            else {
+              let removeCard = allCards.find(c => c.name == reply.split(/ +/).join('-'))
+              
+              if (removeCard) {
+                if (cards.includes(removeCard)) {
+                  await msg.reply('Do you even own that?? Try again.')
+                  return await checkRes()
+                }
+                
+                await updateCards(playerData, removeCard, 'slots', true)
+                playerData = await db.findOne({ _id: playerData._id })
+                await msg.reply(`You replaced **${removeCard.fullname.split('_').join(' ')}** and got the card`)
+                return
+              } else {
+                return await checkRes()
+              }
+            }
+          } catch (e) {
+            console.log(e)
+            await updateBag('cricketbox', -1, playerData, message)
+            await message.reply('Refunded another cricketbox.')
+            return 'err'
+          }
+        }
+      }
+      
+      if (!cachedCardURL) getCardImage(
+        card.fullname,
+        msg.embeds[0].image.url
+      )
+    } else if (itemName === 'lootbox' ) {
+      const e1 = await updateBag(itemName, itemAmount, playerData, message);
+      if(e1 == 'err') return;
+          
+      const msg = await message.reply(`Opening ${itemAmount || 1} lootBox!!!`);
+      setTimeout( async () => {
+        let text = '';
+        for(var i = 0; i < itemAmount; i++) {
+          let e2 = await openBox(itemAmount, playerData, message, 'loot');
+          if(e2 == 'err') return;
+          
+          //decor
+          if(e2 == 'decor') {
+            const decors = getDecors('type1');
+            let decor = decors[Math.floor(Math.random() * decors.length)];
+            if(decor.includes('suit')) decor = decors[Math.floor(Math.random() * decors.length)];
+            text += `You got a ${await getEmoji(decor, true)} ${decor.split('_').join(' ')}!\n`;
+            await updateDecor(decor, 1, playerData, message);
+          } //item
+          else if(isNaN(e2)) {
+            const emoji = await getEmoji(e2);
+            text += `You got a **${emoji} ${e2}**\n`;
+            await updateBag(e2, -1, playerData, message);
+          } //coins
+          else if(parseInt(e2)) {
+            text += 'You got a grand amount of ' + `**${coinsEmoji} ${e2} coins!**\n`;
+            await updateCoins(parseInt(e2), playerData, message);
+          }
+        }
+        await msg.edit(text);
+      }, 5000);
+    }
+    await gain(playerData, 2, message);
+    
+    //Set cooldown
+    const timestamps = client.cooldowns.get('use');
+    timestamps.set(author.id, Date.now());
+    setTimeout(() => timestamps.delete(author.id), 60 * 10 * 1000);
+  }
+};
