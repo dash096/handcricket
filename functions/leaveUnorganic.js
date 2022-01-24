@@ -12,6 +12,8 @@ module.exports = async (client, guild) => {
     else humans += 1
   }
   
+  console.log(bots, humans)
+  
   let left
   if (bots >= humans) {
     left = true

@@ -1,6 +1,6 @@
 require('./extendedMessage.js');
-const config = require("./config.json");
 const fs = require('fs');
+const config = fs.readdirSync("./").includes("config.json") ? require("./config.json") : null;
 const mongoose = require("mongoose");
 const db = require('./schemas/player.js');
 const Discord = require("discord.js");
