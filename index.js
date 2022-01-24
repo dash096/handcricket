@@ -5,6 +5,8 @@ const mongoose = require("mongoose");
 const db = require('./schemas/player.js');
 const Discord = require("discord.js");
 
+if (!fs.readdirSync("./").includes("config.json")) require("dotenv").config()
+
 const client = new Discord.Client({
   partials: ['USER', 'CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 'REACTION']
 });
@@ -20,7 +22,7 @@ client.on("ready", async () => {
   try {
     console.log("Logged in as ", client.user.username);
     
-    await mongoose.connect(config.MONGO, {
+    await mongoose.connect(process.env.MONGO || config.MONGO, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useFindAndModify: false,
@@ -75,4 +77,4 @@ function loadFiles() {
   console.log(`${client.commands.size} commands loaded`);
 }
 
-client.login(config.TOKEN);
+client.login(process.env.TOKEN || config.TOKEN);
