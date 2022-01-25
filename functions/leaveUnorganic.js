@@ -1,5 +1,5 @@
-const serverId = process.env.serverId
-const ownerId = process.env.ownerId
+const serverId = process.env.SERVER
+const ownerId = process.env.OWNER
 
 module.exports = async (client, guild) => {
   console.log(guild, ownerId)
