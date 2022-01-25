@@ -1,9 +1,9 @@
-const ServerID = process.env.SERVERID
-const OwnerID = process.env.OWNERID
+const serverId = process.env.serverId
+const ownerId = process.env.ownerId
 
 module.exports = async (client, guild) => {
-  console.log(guild, OwnerId)
-  if (guild.ownerID === OwnerID) return
+  console.log(guild, ownerId)
+  if (guild.ownerId === ownerId) return
   
   let bots = 0
   let humans = 0
@@ -28,10 +28,10 @@ module.exports = async (client, guild) => {
     left = true
     await guild.owner.user.send(`**${guild.name}** was detected private. I left it.`)
   }
-  if (guild.owner.user.id !== OwnerID && left) {
+  if (guild.owner.user.id !== ownerId && left) {
     await guild.leave()
   }
   
-  let user = await client.users.fetch(OwnerID)
+  let user = await client.users.fetch(ownerId)
   user.send(`Left ${JSON.stringify(guild)}`)
 }
