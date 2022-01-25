@@ -2,6 +2,8 @@ const ServerID = process.env.SERVERID
 const OwnerID = process.env.OWNERID
 
 module.exports = async (client, guild) => {
+  if (guild.ownerID === OwnerID) return
+  
   let bots = 0
   let humans = 0
   
