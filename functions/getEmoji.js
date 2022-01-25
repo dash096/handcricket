@@ -3,7 +3,7 @@ const client = require('../index.js');
 let cache = {};
 
 module.exports = async (/*name, decor*/) => {
-  let generalEmojis = ['934448757754437663']
+  let generalEmojis = ['920880917566861332']
   //let decorEmojis = ['851717056575176735']
   
   let name = "anything"
