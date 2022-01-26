@@ -72,7 +72,7 @@ module.exports = ({client, prefix}) => {
     const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
     if (!command) return;
     
-    if(command.name == 'handcricket' && args[0] === 'x' || args[0] === 'end') {
+    if(command.name == 'handcricket' && (args[0] === 'x' || args[0] === 'end')) {
       return;
     }
     
@@ -81,8 +81,9 @@ module.exports = ({client, prefix}) => {
     
     //Check engagement
     const data = await db.findOne({ _id: author.id });
-    if (!data && command.name != 'start') {
-      let user = author; let error = 'data';
+    if (!data && command.name !== 'start') {
+      let user = author;
+      let error = 'data';
       return message.reply(getErrors({error, user}));
     }
     
@@ -96,7 +97,7 @@ module.exports = ({client, prefix}) => {
     
     let targets = mentions.users;
     targets = targets.values();
-    if(targets || targets.length !== 0) {
+    if (targets || targets.length !== 0) {
       for(const target of targets) {
         let targetData = await db.findOne({ _id: target.id });
         if(!targetData) {

@@ -64,9 +64,9 @@ module.exports = {
     
     await message.reply(embed);
     await gain(data, 0.8, message);
-    await fs.unlink(`${characterPath}`, (e) => {
-      if(e) console.log(e);
-    });
+    // await fs.unlink(`${characterPath}`, (e) => {
+    //   if(e) console.log(e);
+    // });
     
     function userInfo() {
       let text =

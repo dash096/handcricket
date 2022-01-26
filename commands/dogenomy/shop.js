@@ -7,7 +7,7 @@ const embedColor = require('../../functions/getEmbedColor.js');
 
 module.exports = {
   name: "shop",
-  aliases: ["market"],
+  aliases: [],
   description: 'Displays the items that are for sale in exchange of dogecoins in the shop',
   category: 'Dogenomy',
   syntax: 'e.shop',
@@ -29,17 +29,16 @@ module.exports = {
       .setFooter(`Requested by ${member.displayName}`)
       .setColor(embedColor);
         
-    docs.forEach(async doc => {
+    for (let doc of docs) {
       const title = doc.name.charAt(0).toUpperCase() + doc.name.slice(1).toLowerCase();
       const itemEmoji = await getEmoji(doc.name);
       text += `** ${itemEmoji} ${title}** - [${doc.price}](https://egal)`;
       text += `\n${doc.description}\n\n`;
       embed.setDescription(text);
       i += 1;
-      if(i === docs.length) {
-        await message.reply(embed);
-        await gain(data, 1, message);
-      }
-    });
+    }
+    
+    await message.reply(embed);
+    await gain(data, 1, message);
   }
 };
