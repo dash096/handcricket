@@ -43,7 +43,7 @@ module.exports = ({client, prefix}) => {
       let hasPerm = guild.me.permissionsIn(channel).has(perm);
       if(hasPerm === false && perm === 'SEND_MESSAGES') {
         try {
-          author.send('I do not have send messages perms to execute that command in that channel.');
+          await author.send('I do not have send messages perms to execute that command in that channel.');
         } catch(e) {
           return;
         }
@@ -61,7 +61,7 @@ module.exports = ({client, prefix}) => {
           });
           return text;
         }
-        return message.reply('I dont have all of my perms in that channel, My required Permissions are:\n' + getPerms());
+        return message.reply(`I dont have all of my perms in <#${channel.id}>, My required Permissions are:\n` + getPerms());
       }
     };
     

@@ -2,7 +2,6 @@ const serverId = process.env.SERVER
 const ownerId = process.env.OWNER
 
 module.exports = async (client, guild) => {
-  console.log(guild, ownerId)
   if (guild.ownerId === ownerId) return
   
   let bots = 0
@@ -14,8 +13,6 @@ module.exports = async (client, guild) => {
     if (members[i].user.bot) bots += 1
     else humans += 1
   }
-  
-  console.log(bots, humans)
   
   let left
   if (bots >= humans) {
@@ -32,6 +29,6 @@ module.exports = async (client, guild) => {
     await guild.leave()
   }
   
-  let user = await client.users.fetch(ownerId)
-  user.send(`Left ${JSON.stringify(guild)}`)
+  let owner = await client.users.fetch(ownerId)
+  owner.send(`Left ${JSON.stringify(guild)}`)
 }

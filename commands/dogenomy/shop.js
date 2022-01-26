@@ -12,7 +12,7 @@ module.exports = {
   category: 'Dogenomy',
   syntax: 'e.shop',
   cooldown: 5,
-  run: async ({message}) => {
+  run: async ({ message }) => {
     const { content, member, author, channel, mentions } = message;
     const coinsEmoji = await getEmoji('coin');
 
