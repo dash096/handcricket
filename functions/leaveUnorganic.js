@@ -14,7 +14,7 @@ module.exports = async (client, guild) => {
     else humans += 1
   }
   
-  let left
+  /*let left
   if (bots >= humans) {
     left = true
     await guild.owner.user.send(`Seems like too many bots as compared to humans in **${guild.name}**, I left it...`)
@@ -25,9 +25,11 @@ module.exports = async (client, guild) => {
     left = true
     await guild.owner.user.send(`**${guild.name}** was detected private. I left it.`)
   }
-  if (guild.owner.user.id !== ownerId && left) {
+  if (guild.owner.user.id?
+  ownerId && left) {
+  ownerId && left) {
     await guild.leave()
-  }
+  }*/
   
   let owner = await client.users.fetch(ownerId)
   owner.send(`Left ${JSON.stringify(guild)}`)
