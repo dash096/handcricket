@@ -48,6 +48,8 @@ module.exports = {
       datas = (await db.find().sort({ wickets: -1})).slice(0, 10);
     }
 
+    console.log(datas, type);
+
     let leaderboardText = await getLeaderboardText(datas, type, args[0]);
     
     let embed = new Discord.MessageEmbed()
@@ -66,6 +68,8 @@ module.exports = {
     async function getLeaderboardText(datas, type, typeArgs) {
       let text = '\n**__💥  Top 10  💥__**\n\n';
       let i = 0;
+
+      if (!datas.length) text += "N/A";
 
       while(i < datas.length) {
         try {
