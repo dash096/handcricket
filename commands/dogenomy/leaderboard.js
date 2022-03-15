@@ -48,8 +48,6 @@ module.exports = {
       datas = (await db.find().sort({ wickets: -1})).slice(0, 10);
     }
 
-    console.log(datas, type);
-
     let leaderboardText = await getLeaderboardText(datas, type, args[0]);
     
     let embed = new Discord.MessageEmbed()
@@ -86,6 +84,7 @@ module.exports = {
           }
           
           i += 1;
+          console.log(i);
           if(i === 10) return text;
         } catch (e) {
           console.log(e);
