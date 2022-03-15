@@ -84,8 +84,7 @@ module.exports = {
           }
           
           i += 1;
-          console.log(i);
-          if(i === 10) return text;
+          if(i === datas.length) return text;
         } catch (e) {
           console.log(e);
         }
