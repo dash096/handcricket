@@ -1,4 +1,4 @@
-//const sharp = require('sharp')
+const sharp = require('sharp')
 const teamPos = require('../../cardFunctions/teamPos.js')
 const Discord = require('discord.js')
 const db = require('../../schemas/player.js')
@@ -19,7 +19,7 @@ module.exports = {
   subcommands: '`replace [toBeReplaced] [toReplace]`: Swap two players mentioned in the arguments.\n`swap [name1] [name2]:` Swaps the position in the team of the two cards mentioned in the arguments.',
   cooldown: 20,
   run: async ({ message, args, client }) => {
-    /*const { channel, content, author, member } = message
+    const { channel, content, author, member } = message
     
     const target = author
     target.displayName = member.displayName
@@ -162,6 +162,6 @@ module.exports = {
     setTimeout(() => timestamps.delete(author.id), 60 * 10 * 1000);
     
     await new Promise(r => setTimeout(r, 5000))
-    await fs.unlink(exportPath, (e) => e ? console.log(e) : false)*/
+    await fs.unlink(exportPath, (e) => e ? console.log(e) : false)
   }
 }

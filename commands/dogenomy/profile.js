@@ -1,7 +1,7 @@
 const fs = require('fs');
 const Discord = require("discord.js");
 const db = require("../../schemas/player.js");
-//const sharp = require('sharp');
+const sharp = require('sharp');
 const getEmoji = require('../../functions/getEmoji.js');
 const gain = require('../../functions/gainExp.js');
 const getLevels = require('../../functions/getLevels.js');
@@ -45,11 +45,11 @@ module.exports = {
     const WR = getWR(data);
     const orangeCaps = data.orangeCaps || 0;
     
-    /*const characterPath = await new Promise(async r => {
+    const characterPath = await new Promise(async r => {
       await getCharacter(target, r);
     })
     
-    const characterAttachment = new Discord.MessageAttachment(characterPath);*/
+    const characterAttachment = new Discord.MessageAttachment(characterPath);
     
     let description = userInfo();
     
@@ -58,15 +58,15 @@ module.exports = {
       .setThumbnail(target.displayAvatarURL({size: 64}))
       .setDescription(description)
       .setFooter("Your Character looks cool! Use `e.equip <name>` to wear a decor for your character")
-      //.attachFiles(characterAttachment)
-      //.setImage(`attachment://${characterPath.split('/').pop()}`)
+      .attachFiles(characterAttachment)
+      .setImage(`attachment://${characterPath.split('/').pop()}`)
       .setColor(embedColor);
     
     await message.reply(embed);
     await gain(data, 0.8, message);
-    // await fs.unlink(`${characterPath}`, (e) => {
-    //   if(e) console.log(e);
-    // });
+     await fs.unlink(`${characterPath}`, (e) => {
+       if(e) console.log(e);
+    });
     
     function userInfo() {
       let text =
