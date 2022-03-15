@@ -2,11 +2,10 @@ const client = require('../index.js');
 
 let cache = {};
 
-module.exports = async (/*name, decor*/) => {
+module.exports = async (name/*, decor*/) => {
   let generalEmojis = ['920880917566861332']
   //let decorEmojis = ['851717056575176735']
   
-  let name = "anything"
   let decor = false
   
   if(cache[name]) {
@@ -30,7 +29,8 @@ module.exports = async (/*name, decor*/) => {
     return decorEmoji;
   } else {
     const emojiGuild = await client.guilds.fetch(generalEmojis[0]);
-    const emoji = emojiGuild.emojis.cache.find(emoji => emoji.name == name);
+    const emoji = emojiGuild.emojis.cache.find(emoji => emoji.name == name) ||
+      emojiGuild.emojis.cache.find(emoji => emoji.name == "anything");
     
     if(emoji) {
       cache[name] = emoji;
