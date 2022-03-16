@@ -2,11 +2,9 @@ const client = require('../index.js');
 
 let cache = {};
 
-module.exports = async (name/*, decor*/) => {
+module.exports = async (name, decor) => {
   let generalEmojis = ['920880917566861332']
-  //let decorEmojis = ['851717056575176735']
-  
-  let decor = false
+  let decorEmojis = ['953616925009784882']
   
   if(cache[name]) {
     return cache[name];
