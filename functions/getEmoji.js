@@ -11,7 +11,6 @@ module.exports = async (name, decor) => {
   }
   
   if (decor) {
-    return ''
     let decorEmoji;
     for(const guild of decorEmojis) {
       const emojiGuild = await client.guilds.fetch(guild);
