@@ -14,7 +14,7 @@ module.exports = {
     const commands = await getCommands();
     
     if (args.length > 0) {
-      let cmds = commands[4]
+      let cmds = commands[5]
       let queryWords = args.map(x => x.toLowerCase())
       let query = queryWords.join('')
       
@@ -263,8 +263,6 @@ function getCommands() {
   const tr = [
     general, dogenomy, games, minigames, cards, commands
   ];
-  
-  console.log(tr);
   
   return tr;
 }
