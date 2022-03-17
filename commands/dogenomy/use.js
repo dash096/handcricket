@@ -67,7 +67,7 @@ module.exports = {
       await message.reply('Your Toss multiplier is now boosted twice!');
       return;
     } else if (itemName === 'cricketbox') {
-      const e1 = await updateBag(itemName, itemAmount, playerData, message);
+      const e1 = await updateBag(itemName, 1, playerData, message);
       if(e1 == 'err') return;
       
       const embed = new Discord.MessageEmbed()
