@@ -91,7 +91,7 @@ module.exports = {
         .setTitle('Help')
         .setDescription('**__The prefix is `e.` forever and ever!__**\n\nHere\'s an Interactive GUIDE for you!\n\n')
         .addField('Navigate via the pages of the guide by Reacting', 
-          '1) 🏏 - **__Cricket Info__**\n2) ⚽ - **__Football Info__**\n3) ⚾ - **__Baseball Info__**\n4) 👀 - **__General Conmands__**\n5) 💰 - **__Dogenomy Commands__**\n6) 🔫 - **__Games Commands__**\n7) 🎲 - **__MiniGames Commands__**')
+          '1) 🏏 - **__Cricket Info__**\n2) ⚽ - **__Football Info__**\n3) ⚾ - **__Baseball Info__**\n4) 👀 - **__General Conmands__**\n5) 💰 - **__Dogenomy Commands__**\n6) 🔫 - **__Games Commands__**\n7) 🎲 - **__MiniGames Commands__**\n8) 🃏 - **__Cards Commands__**')
         .addField('Links', `[Add the bot](${process.env.INVITE_URL})\n[Support Server](${process.env.COMMUNITY_URL})`)
         .setFooter('Requested by ' + member.displayName)
         .setColor(embedColor);
