@@ -85,7 +85,8 @@ module.exports = {
       const dogenomy = commands[1];
       const games = commands[2];
       const minigames = commands[3];
-      
+      const cards = commands[4];
+
       const send = new Discord.MessageEmbed()
         .setTitle('Help')
         .setDescription('**__The prefix is `e.` forever and ever!__**\n\nHere\'s an Interactive GUIDE for you!\n\n')
@@ -104,6 +105,7 @@ module.exports = {
       await helpEmbed.react('💰');
       await helpEmbed.react('🔫');
       await helpEmbed.react('🎲');
+      await helpEmbed.react('🃏');
       await helpEmbed.react('❌');
       
       function checkReaction() {
@@ -137,6 +139,9 @@ module.exports = {
             return checkReaction();
           } else if (reaction == '🎲') {
             helpEmbed.edit(getEmbed('minigames'));
+            return checkReaction();
+          } else if (reaction == '🃏') {
+            helpEmbed.edit(getEmbed('cards'));
             return checkReaction();
           } else {
             helpEmbed.delete();
@@ -194,22 +199,28 @@ module.exports = {
           .setColor(embedColor)
           .setFooter('Requested by ' + member.displayName);
         const gamesEmbed = new Discord.MessageEmbed()
-          .setTitle('Games Commands')
+          .setTitle('Game Commands')
           .setDescription(games)
           .setColor(embedColor)
           .setFooter('Requested by ' + member.displayName);
         const minigamesEmbed = new Discord.MessageEmbed()
-          .setTitle('Minigames Commands')
+          .setTitle('Minigame Commands')
           .setDescription(minigames)
           .setColor(embedColor)
           .setFooter('Requested by ' + member.displayName);
-        
+        const cardsEmbed = new Discord.MessageEmbed()
+          .setTitle('Card Commands')
+          .setDescription(cards)
+          .setColor(embedColor)
+          .setFooter('Requested by ' + member.displayName);
+
         if(name == 'cricket') return cricketEmbed;
         else if(name == 'football') return footballEmbed;
         else if(name == 'baseball') return baseballEmbed;
         else if(name == 'general') return generalEmbed;
         else if(name == 'dogenomy') return dogenomyEmbed;
         else if(name == 'games') return gamesEmbed;
+        else if(name == 'cards') return cardsEmbed
         else return minigamesEmbed;
       }
     } catch (e) {
@@ -223,7 +234,7 @@ function getCommands() {
   let dogenomy = '';
   let games = '';
   let minigames = '';
-  
+  let cards = '';
   const commands = [];
   
   const folders = fs.readdirSync('./commands');
@@ -243,12 +254,14 @@ function getCommands() {
         dogenomy += `**${command.name}** - \`${command.syntax}\`\n ${command.description}\n\n`;
       } else if (folder.toLowerCase() == 'minigames') {
         minigames += `**${command.name}** - \`${command.syntax}\`\n ${command.description}\n\n`;
+      } else if (folder.toLowerCase() == 'cards') {
+        cards += `**${command.name}** - \`${command.syntax}\`\n ${command.description}\n\n`;
       }
     }
   }
   
   const tr = [
-    general, dogenomy, games, minigames, commands
+    general, dogenomy, games, minigames, cards, commands
   ];
   
   console.log(tr);
