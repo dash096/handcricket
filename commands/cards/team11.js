@@ -118,7 +118,7 @@ module.exports = {
         await team.slice(0, 11).forEach(async card => {
           i += 1
           let name = card.name
-          let path = `./assets/cards/${name}.png`
+          let path = `./assets/cards/${name.split('_').join('-')}.png`
           let pos = teamPos[parseInt(i)]
           
           compositeObjs.push({
@@ -130,15 +130,13 @@ module.exports = {
           roles[card.role].push(card.name.charAt(0).toUpperCase() + card.name.slice(1).toLowerCase())
         })
         
-        console.log(compositeObjs)
-
         try {
           await sharp(bgPath)
             .composite(compositeObjs)
             .sharpen()
             .toFile(exportPath)
         } catch (e) {
-          console.log("while writing, ", e)
+          console.log("while writing team pic, ", e)
         }
 
         resolve()
