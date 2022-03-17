@@ -49,7 +49,6 @@ module.exports = {
     //Send a list of slots
     let text = []
     targetCards.forEach(card => {
-      console.log(targetCards, card)
       card.name = card.name.split('-').join(' ')
       text.push([`${card.name.charAt(0).toUpperCase() + card.name.slice(1).toLowerCase()}   |   \`${card.role.toUpperCase()}\`   |   ${card.ovr}${targetTeam.some(x => x._id === card._id) ? '    🗡️' : ''}`, card.ovr])
     })
