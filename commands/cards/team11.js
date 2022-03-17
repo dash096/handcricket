@@ -130,10 +130,17 @@ module.exports = {
           roles[card.role].push(card.name.charAt(0).toUpperCase() + card.name.slice(1).toLowerCase())
         })
         
-        await sharp(bgPath)
-          .composite(compositeObjs)
-          .sharpen()
-          .toFile(exportPath)
+        console.log(compositeObjs)
+
+        try {
+          await sharp(bgPath)
+            .composite(compositeObjs)
+            .sharpen()
+            .toFile(exportPath)
+        } catch (e) {
+          console.log("while writing, ", e)
+        }
+
         resolve()
       }
     }
