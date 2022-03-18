@@ -24,6 +24,10 @@ module.exports = {
         return;
       } else {
         message.reply(`Created a profile! You got a ${await getEmoji('tracks_black')} black tracks, try \`e.pf\` to view, join community server to get a helmet!`);
+        
+        author.createDM().then(dm => {
+          dm.send('Welcome to Dispo! Use the command `e.help` to start the adventure.')
+        })
       }
     });
   }
