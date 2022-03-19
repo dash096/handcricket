@@ -632,7 +632,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
                               player.id || '0000'
                             ]
                             
-        let balls = playerHistory && playerHistory[1] || 0
+        let balls = playerHistory?.[1] || 0
         
         if(type === 'bowling') {
           playerAndLog.push(

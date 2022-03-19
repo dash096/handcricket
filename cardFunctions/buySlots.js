@@ -4,7 +4,7 @@ const updateCoins = require('../functions/updateCoins.js')
 module.exports = async (msg, data, amount) => {
   let cards = data.cards || []
   
-  let slots = cards[0] && cards[0].slots || 21
+  let slots = cards[0]?.slots || 21
   let price = 0
   for (let i = 0; i < amount; i++) {
     slots += 1

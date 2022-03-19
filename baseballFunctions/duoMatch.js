@@ -14,7 +14,7 @@ module.exports = async (client, message, striker, pitcher, post) => {
   
   start(striker, pitcher);
   async function start(striker, pitcher, target) {
-    if (isInnings2 == 'over' || isInnings2 && !target) return;
+    if (isInnings2 == 'over' || (isInnings2 && !target)) return;
     
     let strikes = 0;
     let base = 0;
@@ -44,7 +44,7 @@ module.exports = async (client, message, striker, pitcher, post) => {
           errors: ['time']
         }
       ).then(async collected => {
-        if (isInnings2 == 'over' || isInnings2 && !target) return;
+        if (isInnings2 == 'over' || (isInnings2 && !target)) return;
         
         const msg = collected.first();
         let { content } = msg;
@@ -94,7 +94,7 @@ module.exports = async (client, message, striker, pitcher, post) => {
           errors: ['time']
         }
       ).then(async collected => {
-        if (isInnings2 == 'over' || isInnings2 && !target) return;
+        if (isInnings2 == 'over' || (isInnings2 && !target)) return;
         
         const msg = collected.first();
         

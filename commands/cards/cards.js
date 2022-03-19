@@ -20,8 +20,8 @@ module.exports = {
     const target = await getTarget(message, args, client)
     
     const data = await db.findOne({ _id: target.id })
-    const targetCards = data.cards && data.cards.slice(1)
-    const targetTeam = data.cards && data.cards[0] && data.cards[0].team
+    const targetCards = data.cards?.slice(1)
+    const targetTeam = data.cards?.[0]?.team
     
     //Send Image of the Card if arguments exists
     if (args.length > 0 && target.id === author.id) {
@@ -65,7 +65,7 @@ module.exports = {
       .setTitle(`${target.displayName}'s Cards`)
       .setDescription(text.slice(0, 15).join('\n'))
       .setColor(embedColor)
-      .setFooter(`Page ${page} of ${max}, '${((targetCards && targetCards[0] && targetCards[0].slots) || 21) - ((data && data.cards && data.cards.slice(1).length) || 21)}' free of '${(data && data.cards && data.cards[0] && data.cards[0].slots) || 21}' slots`)
+      .setFooter(`Page ${page} of ${max}, '${((targetCards?.[0]?.slots) || 21) - ((data?.cards?.slice(1).length) || 21)}' free of '${(data?.cards?.[0]?.slots) || 21}' slots`)
     let goToPage = parseInt(args[0]) || parseInt(args[1])
     if (goToPage && goToPage > 1) {
       page = goToPage > max ? max : goToPage

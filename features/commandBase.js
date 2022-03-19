@@ -25,7 +25,7 @@ module.exports = ({client, prefix}) => {
     
     //BlackLists
     let miscBlacklists = (await misc.findOne({ name: 'blacklist' }));
-    if(miscBlacklists && miscBlacklists.blacklists.find(user => user === author.id)) return;
+    if(miscBlacklists?.blacklists?.find(user => user === author.id)) return;
     
     const perms = [
     'ADD_REACTIONS',
@@ -69,7 +69,7 @@ module.exports = ({client, prefix}) => {
     const commandName = args.shift().toLowerCase();
     
     //Check Aliases
-    const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+    const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases?.includes(commandName));
     if (!command) return;
     
     if(command.name == 'handcricket' && (args[0] === 'x' || args[0] === 'end')) {

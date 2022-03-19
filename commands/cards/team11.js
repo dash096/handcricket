@@ -27,7 +27,7 @@ module.exports = {
     let data = await db.findOne({ _id: target.id })
     
     //No team, give starters
-    if (!(data.cards && data.cards[0] && data.cards[0].team) || data.cards[0].team.length < 11) {
+    if (!(data.cards?.[0]?.team) || data.cards[0].team.length < 11) {
       let starters = await openBox(11, data, message, 'cricket', -75)
       Promise.all([
         await updateCard(data, starters, 'team11')
@@ -37,7 +37,7 @@ module.exports = {
       return
     }
     
-    const team = (data.cards && data.cards[0] && data.cards[0].team) || (data.cards && data.cards.slice(1))
+    const team = (data.cards?.[0]?.team) || (data.cards?.slice(1))
     const cards = await cardsDB.find()
     
     let nicknameAlias = ['nick', 'nickname', 'name']
@@ -93,8 +93,8 @@ module.exports = {
       let name = args.slice(1).join(' ')
       await db.findOneAndUpdate({ _id: target.id }, {
         "cards": [{
-          team: (data.cards && data.cards[0].team) || [],
-          slots: (data.cards && data.cards[0].slots) || 21,
+          team: (data.cards?.[0]?.team) || [],
+          slots: (data.cards?.[0]?.slots) || 21,
           name: name || `${author.displayName}'s team`
         }, ...data.cards.slice(1)]
       })
@@ -148,7 +148,7 @@ module.exports = {
     })
     
     const embed = new Discord.MessageEmbed()
-      .setTitle(`${(data.cards && data.cards[0] && data.cards[0].name) || target.displayName} Team11`)
+      .setTitle(`${(data.cards?.[0]?.name) || target.displayName} Team11`)
       .attachFiles(exportPath)
       .setDescription([
         `**BAT:**     ${roles.bat.join(', ')}`,

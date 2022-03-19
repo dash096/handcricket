@@ -54,7 +54,7 @@ module.exports = {
       else if (!time || time < 0) return message.reply(`Could not parse \`${args[3]}\` as time`)
       else if (time < 60 * 1000) return message.reply('Time must atleast be greater than 1 minute')
       else if (!data.cards.some(c => c._id === card._id)) return message.reply(`You do not own \`${card.name}\`.`)
-      else if (data.cards && data.cards[0] && data.cards[0].team && data.cards[0].team.some(c => c._id === card._id)) return message.reply(`Cards in your team can't be auctioned.`)
+      else if (data.cards?.[0]?.team?.some(c => c._id === card._id)) return message.reply(`Cards in your team can't be auctioned.`)
 
       let sorted = allAuctions.sort((a, b) => b._id - a._id)
       let id = sorted.length ? sorted[0]._id : 1070000
@@ -140,7 +140,7 @@ module.exports = {
         if (filters.ovr &&
           filters.ovr[0] === '>'
           ? auc.card.ovr > parseInt(filters.ovr.slice(2))
-          : filters.ovr && filters.ovr[0] === '<'
+          : filters.ovr?.[0] === '<'
           ? auc.card.ovr < parseInt(filters.ovr.slice(2))
           : auc.card.ovr === parseInt(filters.ovr)
         ) passed += 1

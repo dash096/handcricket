@@ -12,10 +12,10 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
   let isInnings2
   
   // flags
-  let post = (challenge && challenge.post) || flags.post || false
-  let max = (challenge && challenge.max) || flags.max || 6
-  let wckts = (challenge && challenge.wickets) || flags.wickets || 1
-  let ovrs = (challenge && challenge.overs) || flags.overs || 5
+  let post = (challenge?.post) || flags.post || false
+  let max = (challenge?.max) || flags.max || 6
+  let wckts = (challenge?.wickets) || flags.wickets || 1
+  let ovrs = (challenge?.overs) || flags.overs || 5
   
   function sleep(ms) {
     return new Promise(r => setTimeout(r, ms))
@@ -54,7 +54,7 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
 
     const embed = new Discord.MessageEmbed()
       .setTitle("Cricket Match")
-      .addField(batsman.username + " - Batting", `**Score:**      ${challenge && challenge.currentScore || 0} (${ballArray.length - 1})\n\n**Wickets Left:**     ${wickets}\n**Balls Left:**     ${remainingBalls}`, true)
+      .addField(batsman.username + " - Batting", `**Score:**      ${challenge?.currentScore || 0} (${ballArray.length - 1})\n\n**Wickets Left:**     ${wickets}\n**Balls Left:**     ${remainingBalls}`, true)
       .addField(bowler.username + " - Bowling", `${target || 0} (${targetIn || 0})`, true)
       .setColor(embedColor);
     if (challenge) embed.setFooter(challenge.info)
@@ -118,7 +118,7 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
             bowler.send(`${ovrs} overs over. Second Innings starts!`);
             batsman.send(`${ovrs} overs over. Second Innings starts!`);
             if (post === true) channel.send(`${ovrs} overs over. Second Innings starts!`);
-            if (!challenge || (challenge && challenge.doubleInnings)) return start(bowler, batsman, {
+            if (!challenge || (challenge?.doubleInnings)) return start(bowler, batsman, {
               'batArray': batArray,
               'ballArray': ballArray,
             });
@@ -265,7 +265,7 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
               await batsman.send("☝️ Wicket! Second Innings starts. The bowler bowled " + ballArray[ballArray.length - 1], embed);
               await bowler.send(`☝️ Wicket! Second Innings statts. The batsman hit ${c}${dot(c, bowled)}`, embed);
               if (post === true) await channel.send(`☝️ Wicket! Second Innings starts. He hit ${c}${dot(c, bowled)}, and was bowled ${ballArray[ballArray.length - 1]}`, embed);
-              if (!challenge || challenge && challenge.doubleInnings) return start(bowler, batsman, {
+              if (!challenge || challenge?.doubleInnings) return start(bowler, batsman, {
                 'batArray': batArray,
                 'ballArray': ballArray,
               });

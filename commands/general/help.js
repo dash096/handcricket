@@ -18,7 +18,7 @@ module.exports = {
       let queryWords = args.map(x => x.toLowerCase())
       let query = queryWords.join('')
       
-      let cmd = cmds.find(x => x.name == query || (x.aliases && x.aliases.includes(query)))
+      let cmd = cmds.find(x => x.name == query || (x.aliases?.includes(query)))
       if(cmd) {
         const embed = new Discord.MessageEmbed()
           .setTitle(`${cmd.name.charAt(0).toUpperCase() + cmd.name.slice(1).toLowerCase()} Command`)
@@ -39,9 +39,9 @@ module.exports = {
           if(
             cmd.description.includes(query) ||
             queryWords.find(q =>
-              cmd.syntax.includes(q) ||
-              (cmd.flags && cmd.flags.includes(q)) ||
-              (cmd.subcommands && cmd.subcommands.includes(q))
+              ((cmd.syntax?.includes(q)) ||
+              (cmd.flags?.includes(q)) ||
+              (cmd.subcommands?.includes(q)))
             )
           ) {
             return true
@@ -51,7 +51,7 @@ module.exports = {
               cmd.description,
               cmd.syntax,
               cmd.flags || cmd.subcommands || '',
-              cmd.aliases && cmd.aliases.join('')
+              cmd.aliases?.join('')
             ].join('')
             for (let x in query) {
               if (chaos.includes(x)) counter += 1

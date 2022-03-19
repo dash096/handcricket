@@ -4,7 +4,7 @@ const updateBag = require('./updateBag.js');
 
 module.exports = async (data, amt, msg, user) => {
   if(!data) {
-    if(user && user.id) data = await db.findOne({_id: user.id});
+    if(user?.id) data = await db.findOne({_id: user.id});
     else data = await db.findOne({_id: msg.author.id});
   } else {
     data = await db.findOne({_id: msg.author.id});

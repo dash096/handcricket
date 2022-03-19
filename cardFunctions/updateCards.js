@@ -2,9 +2,9 @@ const db = require('../schemas/player.js')
 
 module.exports = async (data, card, mode, remove, add = [], swap) => {
   let cards = mode === 'team11'
-              ? data.cards && data.cards[0] && data.cards[0].team || []
-              : data.cards && data.cards.slice(1) || []
-  if (!remove && mode !== 'team11' && (cards && cards[0] && cards[0].slots || 21) <= cards.slice(1).length - 1) {
+              ? data.cards?.[0]?.team || []
+              : data.cards?.slice(1) || []
+  if (!remove && mode !== 'team11' && (cards?.[0]?.slots || 21) <= cards?.slice(1).length - 1) {
     return 'err'
   }
   
@@ -31,10 +31,10 @@ module.exports = async (data, card, mode, remove, add = [], swap) => {
     $set: {
       "cards": [
         {
-          team: mode === 'team11' ? cards : data.cards && data.cards[0] && data.cards[0].team || [],
-          slots: data.cards && data.cards[0] && data.cards[0].slots || 21
+          team: mode === 'team11' ? cards : data.cards?.[0]?.team || [],
+          slots: data.cards?.[0]?.slots || 21
         },
-        ...(mode === 'team11' ? data.cards && data.cards.slice(1) || [] : cards)
+        ...(mode === 'team11' ? data.cards?.slice(1) || [] : cards)
       ]
     }
   })
