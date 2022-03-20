@@ -244,7 +244,7 @@ module.exports = async (client, message, attacker, defender, post) => {
     await msg.react('↗️');
   }
   
-  async function getGoalpostImage() {
+  function getGoalpostImage() {
     if(firstPair[0].id === attacker.id) {
       return goalpostRedYellowPath
     } else {
