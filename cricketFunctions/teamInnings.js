@@ -619,7 +619,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           ? `${username} (cap)`
           : `${username}`
         
-        console.log(STRs)
+        console.log(results.STRs)
         let playerHistory = typeof(player) === 'string'
                             ? (
                               batExtra
