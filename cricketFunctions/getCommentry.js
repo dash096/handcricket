@@ -1,6 +1,9 @@
 module.exports = (ball, bat) => {
   
   const batting = {
+    0: [
+      'Used a dot to face the ball.'
+    ],
     1: [
       'Defended for a single by the batsman.',
       'Struck away gently to the side.',
