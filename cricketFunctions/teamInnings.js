@@ -125,6 +125,8 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
             logs.bowling[bowler] = [0];
           });
 
+          console.log(bowlingTeam, battingTeam)
+
           return start(players, bowlingTeam, battingTeam, bowlingCap, battingCap, extraPlayer, channel, logs, teamScore);
         } else {
           if (type === 'bat') {
