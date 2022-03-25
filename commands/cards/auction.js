@@ -85,7 +85,6 @@ module.exports = {
       //Timeout to finish auction
       setTimeout(async function timeout() {
         const auctionData = await auctionsDB.findOne({ _id: (id + 1) })
-        console.log(auctionData)
         
         const owner = author
         const ownerData = await db.findOne({ _id: author.id })

@@ -101,8 +101,6 @@ module.exports = async (message, client) => {
       
       let reactors = [];
       
-      console.log(collectedReactions)
-      
       await collectedReactions.forEach(reaction => {
         if (reaction.emoji.name === 'enter') {
           reactors = (Array.from(reaction.users.cache.values())).filter(user => user.bot === false);

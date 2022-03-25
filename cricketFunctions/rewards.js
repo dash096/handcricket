@@ -143,6 +143,6 @@ function changePattern(data, scores) {
     pattern[num] = (pattern[num] || 0) + 1
   }
   
-  console.log(pattern)
+  console.log("here", pattern)
   return pattern
 }

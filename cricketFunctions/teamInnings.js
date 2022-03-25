@@ -125,8 +125,6 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
             logs.bowling[bowler] = [0];
           });
 
-          console.log(bowlingTeam, battingTeam)
-
           return start(players, bowlingTeam, battingTeam, bowlingCap, battingCap, extraPlayer, channel, logs, teamScore);
         } else {
           if (type === 'bat') {
@@ -597,7 +595,6 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
 
     function getPlayerTagWithLogs(team, type, cap, current, isWicket) {
       let playerAndLog = [];
-      console.log(typeof team)
       
       if(type === 'batting' && oldLogs) {
         playerAndLog.push(`**Teamscore:** ${teamScore}`)
@@ -621,7 +618,6 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           ? `${username} (cap)`
           : `${username}`
         
-        console.log(results.STRs)
         let playerHistory = typeof(player) === 'string'
                             ? (
                               batExtra
@@ -704,7 +700,6 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
             orangeCaps: oldCaps + 1
           }
         });
-        console.log('orange', orangeCapHolder);
       }
 
       let rewardsEmbed = new Discord.MessageEmbed()
@@ -747,7 +742,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
 
     await ducks.forEach(async player => {
       let data = await db.findOne({ _id: player.id });
-      if (!data) return console.log('no data for ducks');
+      if (!data) return;
 
       await db.findOneAndUpdate({ _id: player.id }, {
         $inc: {
@@ -849,7 +844,6 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
 }
 
 function getIndex(team, player) {
-  console.log(typeof team)
   return team.indexOf(player)
 }
 
@@ -904,6 +898,6 @@ function changePattern(data, scores) {
     pattern[num] = (pattern[num] || 0) + 1
   }
 
-  console.log(pattern)
+  console.log("here", pattern)
   return pattern
 }
