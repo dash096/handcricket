@@ -35,6 +35,8 @@ module.exports = {
       let slots = await buySlots(message, data, number)
       if (slots == 'err') return message.reply('Insufficient Balance.')
     } else {
+      if (balance < cost) return message.reply('Insufficient Balance.')
+      
       await updateCoins(-parseInt(cost), data);
       await updateBag(name, -(number), data, message);
     }
