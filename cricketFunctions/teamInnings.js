@@ -124,8 +124,16 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           bowlers.forEach(bowler => {
             logs.bowling[bowler] = [0];
           });
+          
+          let revBowlingTeam = bowlingTeam.find(x => typeof(x) === "string")
+            ? [...bowlingTeam.slice(0, -1), ...bowlingTeam.slice(-1)]
+            : bowlingTeam.reverse();
+          
+          let revBattingTeam = battingTeam.find(x => typeof(x) === "string")
+            ? [...battingTeam.slice(0, -1), ...battingTeam.slice(-1)]
+            : battingTeam.reverse();
 
-          return start(players, bowlingTeam, battingTeam, bowlingCap, battingCap, extraPlayer, channel, logs, teamScore);
+          return start(players, revBowlingTeam, revBattingTeam, bowlingCap, battingCap, extraPlayer, channel, logs, teamScore);
         } else {
           if (type === 'bat') {
             const embed = new Discord.MessageEmbed()
