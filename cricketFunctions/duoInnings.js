@@ -236,11 +236,13 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
           return loopBatCollect();
         } //Dot
         else if (parseInt(c) === 0) {
+          if (noOfUsedDots === 3) {
+            batsman.send('Only 3 dots can be used in a match and you are left with 0!');
+            return loopBatCollect();
+          }
+          
           const bal = await updateBag('dots', 1, await db.findOne({_id: batsman.id}), { channel: batsman });
           if (bal == 'err') {
-            return loopBatCollect();
-          } else if (noOfUsedDots === 3) {
-            batsman.send('Only 3 dots can be used in a match and you are left with 0!');
             return loopBatCollect();
           } else {
             noOfUsedDots += 1;
