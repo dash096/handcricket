@@ -126,11 +126,11 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           });
           
           let revBowlingTeam = bowlingTeam.find(x => typeof(x) === "string")
-            ? [...bowlingTeam.slice(0, -1).reverse(), bowlingTeam.slice(-1)[0]]
+            ? [...bowlingTeam.slice(0, -1).reverse(), ...bowlingTeam.slice(-1)]
             : bowlingTeam.slice().reverse();
           
           let revBattingTeam = battingTeam.find(x => typeof(x) === "string")
-            ? [...battingTeam.slice(0, -1).reverse(), battingTeam.slice(-1)[0]]
+            ? [...battingTeam.slice(0, -1).reverse(), ...battingTeam.slice(-1)]
             : battingTeam.slice().reverse();
 
           return start(players, revBowlingTeam, revBattingTeam, bowlingCap, battingCap, extraPlayer, channel, logs, teamScore);
@@ -906,6 +906,6 @@ function changePattern(data, scores) {
     pattern[num] = (pattern[num] || 0) + 1
   }
 
-  console.log("here", cores, pattern)
+  console.log("here", scores, pattern)
   return pattern
 }
