@@ -126,12 +126,12 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           });
           
           let revBowlingTeam = bowlingTeam.find(x => typeof(x) === "string")
-            ? [...bowlingTeam.slice(0, -1), ...bowlingTeam.slice(-1)]
-            : bowlingTeam.reverse();
+            ? [...bowlingTeam.slice(0, -1).reverse(), bowlingTeam.slice(-1)[0]]
+            : bowlingTeam.slice().reverse();
           
           let revBattingTeam = battingTeam.find(x => typeof(x) === "string")
-            ? [...battingTeam.slice(0, -1), ...battingTeam.slice(-1)]
-            : battingTeam.reverse();
+            ? [...battingTeam.slice(0, -1).reverse(), battingTeam.slice(-1)[0]]
+            : battingTeam.slice().reverse();
 
           return start(players, revBowlingTeam, revBattingTeam, bowlingCap, battingCap, extraPlayer, channel, logs, teamScore);
         } else {
@@ -714,8 +714,8 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         .setTitle('Rewards')
         .addField(
           'Coins',
-          `${coinEmoji} ${randoCoins} for ${wonTeam[0].username}'s team\n` +
-          `${coinEmoji} ${parseInt(randoCoins/3)} for ${lostTeam[0].username}'s team`
+          `${coinEmoji} ${randoCoins} for ${wonTeam.slice(-1)[0].username}'s team\n` +
+          `${coinEmoji} ${parseInt(randoCoins/3)} for ${lostTeam.slice(-1)[0].username}'s team`
         )
         .addField('OrangeCap Holder', (await client.users.fetch(orangeCapHolder)).username)
         .setFooter('Legends say that they have noticed many other rewards!')
@@ -906,6 +906,6 @@ function changePattern(data, scores) {
     pattern[num] = (pattern[num] || 0) + 1
   }
 
-  console.log("here", pattern)
+  console.log("here", cores, pattern)
   return pattern
 }
