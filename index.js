@@ -11,7 +11,7 @@ const client = new Discord.Client({
   partials: ['USER', 'CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 'REACTION']
 });
 
-const prefix = 'e.';
+const prefix = process.env.PREFIX || 'e.';
 const { commands, cooldowns } = client;
 client.commands = new Discord.Collection();
 client.cooldowns = new Discord.Collection();
