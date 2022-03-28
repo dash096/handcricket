@@ -92,19 +92,22 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         oldResponse.id
 
       if (type === 'bat') {
-        let finalScore = logs.batting[batsmanID][logs.batting[batsmanID].length - 1];
+        let finalScore = logs.batting[batsmanID].slice(-1)[0];
 
-        // if duck else wickets
-        if (logs.batting[batsmanID].length === 1) results.ducks.push(responseX);
-        else results.wickets.push(responseX)
+        if (typeof(response) !== "string") {
+          results.wickets.push(responseX)
+          // if duck
+          if (logs.batting[batsmanID].length === 1) results.ducks.push(responseX);
+        }
 
         // update strikeRate logs
-        if (logs.batting[batsmanID].length === 1) results.STRs[batsmanID] = [logs.batting[batsmanID].length - 1, logs.currentBalls, logs.batting[batsmanID]];
+        results.STRs[batsmanID] = [finalScore, logs.currentBalls, logs.batting[batsmanID]];
+        
         logs.batting[batsmanID] = [finalScore];
         logs.bowling[bowlerID] = [0]
         logs.currentBalls = 0
       } else {
-        let finalScore = logs.batting[batsmanID][logs.batting[batsmanID].length - 1];
+        let finalScore = logs.batting[batsmanID].slice(-1)[0];
 
         logs.batting[batsmanID] = [finalScore];
         logs.bowling[bowlerID] = [0]
@@ -119,7 +122,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           let batsmen = Object.keys(logs.batting);
           let bowlers = Object.keys(logs.bowling);
           batsmen.forEach(batsman => {
-            logs.batting[batsman] = [logs.batting[batsman][logs.batting[batsman].length - 1]];
+            logs.batting[batsman] = logs.batting[batsman].slice(-1);
           });
           bowlers.forEach(bowler => {
             logs.bowling[bowler] = [0];
@@ -277,6 +280,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
               batsman = batSwap;
               batSwap = undefined;
             }
+            
             return respond(response, batsman, bowler, 'bowl');
           }
         }
@@ -386,7 +390,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
 
         //Clear Timeup logs
         if (checkTimeup.find(player => player === batsman.id)) {
-          battingTeam = 45000;
+          battingTime = 45000;
           checkTimeup.splice(checkTimeup.indexOf(batsman.id), 1);
         }
 
@@ -626,7 +630,26 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           ? `${username} (cap)`
           : `${username}`
         
-        let playerHistory = typeof(player) === 'string'
+        let playerHistory = batExtra
+          ? [
+            log[log.length - 1] || 0, 
+            logs.currentBalls || 0,
+            log || [0]
+          ]
+          : bowlExtra
+          ? (
+            isInnings2
+            ? results.STRs["0000"] || [0, 0, 0]
+            : [0, 0, 0]
+          )
+          : results.STRs[id] || (
+            id === current.id && type === "batting"
+            ?
+            [log[log.length - 1], logs.currentBalls, log]
+            : [0, 0, 0]
+          )
+        
+        /*let playerHistory = typeof(player) === 'string'
                             ? (
                               batExtra
                               ? [0, logs.currentBalls, 0]
@@ -636,8 +659,10 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
                             ? [0, logs.currentBalls, 0]
                             : results.STRs[
                               player.id || '0000'
-                            ]
-                            
+                            ]*/
+         
+        console.log(username, playerHistory);
+        
         let balls = playerHistory?.[1] || 0
         
         if(type === 'bowling') {
@@ -693,9 +718,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
 
   async function rewards(channel, wonTeam, lostTeam, i1Logs, i2Logs, randoCoins, results) {
     let coinEmoji = await getEmoji('coin');
-    let ducks = results.ducks
-    let STRs = results.STRs
-    let wickets = results.wickets
+    let { ducks, STRs, wickets } = results;
     
     //PurpleCaps
     let orangeCapHolder = await getOrangeCapHolder();
@@ -754,7 +777,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
 
       await db.findOneAndUpdate({ _id: player.id }, {
         $inc: {
-          wickets: 1
+          ducksTaken: 1
         }
       });
     });

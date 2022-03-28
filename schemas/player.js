@@ -25,6 +25,10 @@ const player = new mongoose.Schema({
   wickets: {
     type: Number, default: 0
   },
+  ducksTaken: {
+    type: Number,
+    default: 0
+  },
   wins: {
     type: Number, default: 0
   },
