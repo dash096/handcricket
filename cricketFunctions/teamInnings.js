@@ -92,19 +92,22 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         oldResponse.id
 
       if (type === 'bat') {
-        let finalScore = logs.batting[batsmanID][logs.batting[batsmanID].length - 1];
+        let finalScore = logs.batting[batsmanID].slice(-1)[0];
 
-        // if duck else wickets
-        if (logs.batting[batsmanID].length === 1) results.ducks.push(responseX);
-        else results.wickets.push(responseX)
+        if (typeof(response) !== "string") {
+          results.wickets.push(responseX)
+          // if duck
+          if (logs.batting[batsmanID].length === 1) results.ducks.push(responseX);
+        }
 
         // update strikeRate logs
-        if (logs.batting[batsmanID].length === 1) results.STRs[batsmanID] = [logs.batting[batsmanID].length - 1, logs.currentBalls, logs.batting[batsmanID]];
+        results.STRs[batsmanID] = [finalScore, logs.currentBalls, logs.batting[batsmanID]];
+        
         logs.batting[batsmanID] = [finalScore];
         logs.bowling[bowlerID] = [0]
         logs.currentBalls = 0
       } else {
-        let finalScore = logs.batting[batsmanID][logs.batting[batsmanID].length - 1];
+        let finalScore = logs.batting[batsmanID].slice(-1)[0];
 
         logs.batting[batsmanID] = [finalScore];
         logs.bowling[bowlerID] = [0]
@@ -119,7 +122,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           let batsmen = Object.keys(logs.batting);
           let bowlers = Object.keys(logs.bowling);
           batsmen.forEach(batsman => {
-            logs.batting[batsman] = [logs.batting[batsman][logs.batting[batsman].length - 1]];
+            logs.batting[batsman] = logs.batting[batsman].slice(-1);
           });
           bowlers.forEach(bowler => {
             logs.bowling[bowler] = [0];
@@ -277,6 +280,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
               batsman = batSwap;
               batSwap = undefined;
             }
+            
             return respond(response, batsman, bowler, 'bowl');
           }
         }
@@ -292,13 +296,15 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
       ).then(async messages => {
         if (isInnings2 === 'over') return;
         if (!oldLogs && isInnings2) return;
-
+        
+        console.log("p1")
+        
         //Clear Timeup logs
         if (checkTimeup.find(player => player === bowler.id)) {
           bowlingTime = 45000;
           checkTimeup.splice(checkTimeup.indexOf(bowler.id), 1);
         }
-
+        
         let message = messages.first();
         let content = message.content.trim().toLowerCase();
 
@@ -337,11 +343,15 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         //Push timeup and check timeups
         if (checkTimeup.length === 2) {
           return respond(`forceEnd: Both ${batsman.username} and ${bowler.username} were afk.`);
-        } else if (checkTimeup.find(player => player === bowler.id)) {
-          bowlingTime = 5000;
-          channel.send(`Looks like **${bowler.username}** is afk, CPU is going to instant bowl.`);
-        } else {
-          checkTimeup.push(bowler.id);
+        }
+        
+        if (bowlingTime !== 5000) {
+          if (checkTimeup.find(player => player === bowler.id)) {
+            bowlingTime = 5000;
+            channel.send(`Looks like **${bowler.username}** is afk, CPU is going to instant bowl.`);
+          } else {
+            checkTimeup.push(bowler.id);
+          }
         }
 
         if (isInnings2 === 'over') return;
@@ -355,7 +365,9 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         //CPU auto bowl
         remainingBalls -= 1;
         totalBalls -= 1;
-        let rando = ([1, 2, 3, 4, 5, 6])[Math.floor([Math.random() * ([1, 2, 3, 4, 5, 6]).length])];
+        
+        let rando = ([1, 2, 3, 4, 6])[Math.floor([Math.random() * ([1, 2, 3, 4, 6]).length])];
+        
         await logs.bowling[bowler.id].push(parseInt(rando));
         await bowler.send(`CPU bowled ${rando}`);
         await batsman.send('Ball is coming (CPU), hit it by typing a number');
@@ -386,14 +398,14 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
 
         //Clear Timeup logs
         if (checkTimeup.find(player => player === batsman.id)) {
-          battingTeam = 45000;
+          battingTime = 45000;
           checkTimeup.splice(checkTimeup.indexOf(batsman.id), 1);
         }
 
         let message = messages.first();
         let content = message.content.trim().toLowerCase();
-        let bowled = (logs.bowling[bowler.id])[(logs.bowling[bowler.id]).length - 1];
-        let oldScore = (logs.batting[batExtra ? '0000' : batsman.id])[(logs.batting[batExtra ? '0000' : batsman.id]).length - 1];
+        let bowled = logs.bowling[bowler.id].slice(-1)[0];
+        let oldScore = logs.batting[batExtra ? '0000' : batsman.id].slice(-1)[0];
 
         //End
         if (content === 'end' || content === 'cancel') {
@@ -512,14 +524,18 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
 
         if (checkTimeup.length === 2) {
           return respond(`forceEnd: Both ${batsman.username} and ${bowler.username} were afk.`);
-        } else if (checkTimeup.find(player => player === batsman.id)) {
-          battingTime = 5000;
-          channel.send(`Looks like **${batsman.username}** is afk, CPU is going to instant hit the balls.`);
-        } else {
-          checkTimeup.push(batsman.id);
         }
-
-        let bowled = (logs.bowling[bowler.id])[(logs.bowling[bowler.id]).length - 1];
+        
+        if (battingTime !== 5000) {
+          if (checkTimeup.find(player => player === batsman.id)) {
+            battingTime = 5000;
+            channel.send(`Looks like **${batsman.username}** is afk, CPU is going to instant hit the balls.`);
+          } else {
+            checkTimeup.push(batsman.id);
+          }
+        }
+        
+        let bowled = logs.bowling[bowler.id].slice(-1)[0];
 
         if (isInnings2 && !oldLogs) return;
         if (isInnings2 === 'over') return;
@@ -531,9 +547,10 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
 
         logs.currentBalls += 1;
         //CPU auto hit
-        let rando = ([1, 2, 3, 4, 5, 6])[Math.floor([Math.random() * ([1, 2, 3, 4, 5, 6]).length])];
-        let oldScore = (logs.batting[batsman.id])[(logs.batting[batsman.id]).length - 1];
-        oldScore = logs.batting[batExtra ? '0000' : batsman.id].slice(-1)[0];
+        let rando = ([1, 2, 3, 4, 6])[Math.floor([Math.random() * ([1, 2, 3, 4, 6]).length])];
+        
+        let oldScore = logs.batting[batExtra ? '0000' : batsman.id].slice(-1)[0];
+        
         logs.batting[batExtra ? '0000' : batsman.id].push(oldScore + parseInt(rando));
         
         teamScore += parseInt(rando);
@@ -573,7 +590,6 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         else if (oldLogs && teamScore + parseInt(rando) >= target) {
           logs.batting[batExtra ? '0000' : batsman.id].push(oldScore + parseInt(rando));
           
-          const embed = new Discord.MessageEmbed()
           let next = '🔥 Batting Team Won';
           batsman.send(next, {
             embed
@@ -604,6 +620,12 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
     function getPlayerTagWithLogs(team, type, cap, current, isWicket) {
       let playerAndLog = [];
       
+      let currentIsExtra = type === "batting" && batExtra
+        ? true
+        : type === "bowling" && bowlExtra
+        ? true
+        : false
+      
       if(type === 'batting' && oldLogs) {
         playerAndLog.push(`**Teamscore:** ${teamScore}`)
       }
@@ -614,30 +636,40 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         
         let playerOut = isWicket === 'end' ? true :
                         (type === 'batting' && team.indexOf(isWicket ? isWicket : player) < team.indexOf(current) ? true : false)
-        if (id === current.id && !playerOut) username = `__${username}__`
+        if (
+          (!currentIsExtra && id === current.id) &&
+          !playerOut
+        ) username = `__${username}__`
         else if (playerOut) username = `❌ ${username}`
 
         let name = 
           typeof(player) === 'string'
           ? `${batExtra 
-                        ? `__${extraPlayer.username}__`
-                        : extraPlayer.username} (EW)`
+            ? `__${extraPlayer.username}__`
+            : extraPlayer.username} (EW)`
           : id === cap.id
           ? `${username} (cap)`
           : `${username}`
         
-        let playerHistory = typeof(player) === 'string'
-                            ? (
-                              batExtra
-                              ? [0, logs.currentBalls, 0]
-                              : (isInnings2 ? results.STRs['0000'] || [0, 0, 0] : [0, 0, 0])
-                            )
-                            : player.id === current.id && !batExtra && type === 'batting'
-                            ? [0, logs.currentBalls, 0]
-                            : results.STRs[
-                              player.id || '0000'
-                            ]
-                            
+        let playerHistory = batExtra && !id
+          ? [
+            log[log.length - 1] || 0, 
+            logs.currentBalls || 0,
+            log || [0]
+          ]
+          : bowlExtra
+          ? (
+            isInnings2
+            ? results.STRs["0000"] || [0, 0, [0]]
+            : [0, 0, [0]]
+          )
+          : results.STRs[id || "0000"] || (
+            id === current.id && type === "batting"
+            ?
+            [log[log.length - 1], logs.currentBalls, log]
+            : [0, 0, [0]]
+          )
+        
         let balls = playerHistory?.[1] || 0
         
         if(type === 'bowling') {
@@ -693,9 +725,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
 
   async function rewards(channel, wonTeam, lostTeam, i1Logs, i2Logs, randoCoins, results) {
     let coinEmoji = await getEmoji('coin');
-    let ducks = results.ducks
-    let STRs = results.STRs
-    let wickets = results.wickets
+    let { ducks, STRs, wickets } = results;
     
     //PurpleCaps
     let orangeCapHolder = await getOrangeCapHolder();
@@ -743,7 +773,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           scores.push(log[log.length - 1]);
         });
         let highScore = Math.max(...scores);
-        let capHolderId = Object.keys(iLogs).find(key => (iLogs[key])[iLogs[key].length - 1] == highScore);
+        let capHolderId = Object.keys(iLogs).find(key => iLogs[key].slice(-1)[0] == highScore);
         return [capHolderId, highScore];
       }
     }
@@ -754,7 +784,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
 
       await db.findOneAndUpdate({ _id: player.id }, {
         $inc: {
-          wickets: 1
+          ducksTaken: 1
         }
       });
     });
