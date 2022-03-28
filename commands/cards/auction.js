@@ -80,7 +80,7 @@ module.exports = {
 
       await updateCard(data, card, 'slots', true)
       await auctionData.save(e => console.log(e || auctionData._id))
-      await message.reply(`Auction started for \`${card.name}\` at ${coinsEmoji} ${startPrice} for \`${args[3]}\``)
+      await message.reply(`Auction started for \`${card.name}\` at ${coinsEmoji} ${startPrice} for \`${args[3] || "24h"}\``)
       
       //Timeout to finish auction
       setTimeout(async function timeout() {
@@ -105,12 +105,19 @@ module.exports = {
     
     
     else if (searchAlias.includes(args[0].toLowerCase())) {
-      const filters = {
+      let filters = {
         'role': /\s--role\s(\w+)/.exec(content),
         'ovr': /\s--ovr\s(\W+\w+|\w+)/.exec(content),
         'name': /\s--name\s(\w+)/.exec(content),
       }
-      Object.fromEntries(Object.entries(filters).map(([k,v]) => ([k, v && v[1] && v[1].toLowerCase()])))
+      
+      filters = Object.fromEntries(Object
+        .entries(filters)
+        .map(
+          ([k,v]) => ([k, v?.[1]?.toLowerCase()])
+        )
+        )
+      
       let queryCard = filters.name ? await cardSearch([filters.name]) : undefined
       
       // Validations
@@ -191,7 +198,7 @@ module.exports = {
         $set: {
           currentBidder: author,
           currentBid: bid,
-          end: Date.now() - auctionData.end.getTime() < 2 * 60 * 1000 ? Date.now() + (5 * 60 * 1000) : auctionData.end.getTime()
+          end: (auctionData.end.getTime() - Date.now()) < 2 * 60 * 1000 ? Date.now() + (5 * 60 * 1000) : auctionData.end.getTime()
         }
       })
       await message.reply(`Bidded on Auction \`${auctionData._id}\` for \`${card.name.charAt(0).toUpperCase() + card.name.split('-').join(' ').slice(1)}\``)
