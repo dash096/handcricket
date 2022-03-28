@@ -11,7 +11,7 @@ const client = new Discord.Client({
   partials: ['USER', 'CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 'REACTION']
 });
 
-const prefix = 'e.';
+const prefix = process.env.PREFIX || 'e.';
 const { commands, cooldowns } = client;
 client.commands = new Discord.Collection();
 client.cooldowns = new Discord.Collection();
@@ -31,11 +31,6 @@ client.on("ready", async () => {
     console.log('Mongo Connected');
     
     console.log(`Total ${client.guilds.cache.size} Servers and ${(await db.find()).length} users have a profile.`);
-    
-    const leaveUnorganic = require('./functions/leaveUnorganic.js')
-    Array.from(client.guilds.cache).forEach(async guild => {
-      await leaveUnorganic(client, guild[1])
-    });
     
     await loadFiles();
     
