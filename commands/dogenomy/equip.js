@@ -55,9 +55,11 @@ module.exports = {
       }
     }
     
-    console.log(decor)
+    console.log(decor, userDecors.equipped.find(x => x === decor))
     
-    if(Object.keys(userDecors.equipped || []).find(d => d == decor)) {
+    if(Object.keys(userDecors.equipped || []).find(d => d === decor)) {
+      console.log("yes")
+      
       userDecors.equipped.splice(equipped.indexOf(decor), 1);
       await db.findOneAndUpdate({_id: data.id}, {$set: {decors: userDecors}});
       message.reply('You removed ' + args.join(' '));
