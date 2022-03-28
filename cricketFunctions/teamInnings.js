@@ -363,7 +363,9 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         //CPU auto bowl
         remainingBalls -= 1;
         totalBalls -= 1;
-        let rando = ([1, 2, 3, 4, 5, 6])[Math.floor([Math.random() * ([1, 2, 3, 4, 5, 6]).length])];
+        
+        let rando = ([1, 2, 3, 4, 6])[Math.floor([Math.random() * ([1, 2, 3, 4, 6]).length])];
+        
         await logs.bowling[bowler.id].push(parseInt(rando));
         await bowler.send(`CPU bowled ${rando}`);
         await batsman.send('Ball is coming (CPU), hit it by typing a number');
@@ -543,7 +545,8 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
 
         logs.currentBalls += 1;
         //CPU auto hit
-        let rando = ([1, 2, 3, 4, 5, 6])[Math.floor([Math.random() * ([1, 2, 3, 4, 5, 6]).length])];
+        let rando = ([1, 2, 3, 4, 6])[Math.floor([Math.random() * ([1, 2, 3, 4, 6]).length])];
+        
         let oldScore = (logs.batting[batsman.id])[(logs.batting[batsman.id]).length - 1];
         oldScore = logs.batting[batExtra ? '0000' : batsman.id].slice(-1)[0];
         logs.batting[batExtra ? '0000' : batsman.id].push(oldScore + parseInt(rando));
