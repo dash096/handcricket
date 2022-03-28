@@ -55,9 +55,7 @@ module.exports = {
       }
     }
     
-    console.log(decor, userDecors.equipped.find(x => x === decor))
-    
-    if(Object.keys(userDecors.equipped || []).find(d => d === decor)) {
+    if((userDecors.equipped||[]).find(d => d === decor)) {
       console.log("yes")
       
       userDecors.equipped.splice(equipped.indexOf(decor), 1);
