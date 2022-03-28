@@ -341,11 +341,15 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         //Push timeup and check timeups
         if (checkTimeup.length === 2) {
           return respond(`forceEnd: Both ${batsman.username} and ${bowler.username} were afk.`);
-        } else if (checkTimeup.find(player => player === bowler.id)) {
-          bowlingTime = 5000;
-          channel.send(`Looks like **${bowler.username}** is afk, CPU is going to instant bowl.`);
-        } else {
-          checkTimeup.push(bowler.id);
+        }
+        
+        if (bowlingTime !== 5000) {
+          if (checkTimeup.find(player => player === bowler.id)) {
+            bowlingTime = 5000;
+            channel.send(`Looks like **${bowler.username}** is afk, CPU is going to instant bowl.`);
+          } else {
+            checkTimeup.push(bowler.id);
+          }
         }
 
         if (isInnings2 === 'over') return;
@@ -516,13 +520,17 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
 
         if (checkTimeup.length === 2) {
           return respond(`forceEnd: Both ${batsman.username} and ${bowler.username} were afk.`);
-        } else if (checkTimeup.find(player => player === batsman.id)) {
-          battingTime = 5000;
-          channel.send(`Looks like **${batsman.username}** is afk, CPU is going to instant hit the balls.`);
-        } else {
-          checkTimeup.push(batsman.id);
         }
-
+        
+        if (battingTime !== 5000) {
+          if (checkTimeup.find(player => player === batsman.id)) {
+            battingTime = 5000;
+            channel.send(`Looks like **${batsman.username}** is afk, CPU is going to instant hit the balls.`);
+          } else {
+            checkTimeup.push(batsman.id);
+          }
+        }
+        
         let bowled = (logs.bowling[bowler.id])[(logs.bowling[bowler.id]).length - 1];
 
         if (isInnings2 && !oldLogs) return;
@@ -639,29 +647,15 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           : bowlExtra
           ? (
             isInnings2
-            ? results.STRs["0000"] || [0, 0, 0]
-            : [0, 0, 0]
+            ? results.STRs["0000"] || [0, 0, [0]]
+            : [0, 0, [0]]
           )
           : results.STRs[id] || (
             id === current.id && type === "batting"
             ?
             [log[log.length - 1], logs.currentBalls, log]
-            : [0, 0, 0]
+            : [0, 0, [0]]
           )
-        
-        /*let playerHistory = typeof(player) === 'string'
-                            ? (
-                              batExtra
-                              ? [0, logs.currentBalls, 0]
-                              : (isInnings2 ? results.STRs['0000'] || [0, 0, 0] : [0, 0, 0])
-                            )
-                            : player.id === current.id && !batExtra && type === 'batting'
-                            ? [0, logs.currentBalls, 0]
-                            : results.STRs[
-                              player.id || '0000'
-                            ]*/
-         
-        console.log(username, playerHistory);
         
         let balls = playerHistory?.[1] || 0
         
