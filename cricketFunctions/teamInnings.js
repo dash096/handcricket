@@ -297,8 +297,6 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         if (isInnings2 === 'over') return;
         if (!oldLogs && isInnings2) return;
         
-        console.log("p1")
-        
         //Clear Timeup logs
         if (checkTimeup.find(player => player === bowler.id)) {
           bowlingTime = 45000;
