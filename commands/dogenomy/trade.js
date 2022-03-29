@@ -40,6 +40,8 @@ module.exports = {
         return message.reply(getErrors({error: 'syntax', filePath: 'dogenomy/trade.js'}));
       } else if (args.length === 3) {
         //send @ping item_name 1
+        if (amount < 0) return message.reply("Cant't trade negative coins.")
+        
         await trade('coins', amount, user, target, message);
       }
     } else {
