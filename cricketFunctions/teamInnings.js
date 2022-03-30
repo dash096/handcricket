@@ -727,34 +727,40 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
     
     //PurpleCaps
     let orangeCapHolder = await getOrangeCapHolder();
-    if (orangeCapHolder != '0000') {
-      let orangeCapHolderData = await db.findOne({ _id: orangeCapHolder });
-      if (orangeCapHolderData && orangeCapHolderData._id) {
-        let oldCaps = orangeCapHolderData.orangeCaps || 0;
-        await db.findOneAndUpdate({ _id: orangeCapHolder }, {
-          $set: {
-            orangeCaps: oldCaps + 1
-          }
-        });
-      }
-
-      let rewardsEmbed = new Discord.MessageEmbed()
-        .setTitle('Rewards')
-        .addField(
-          'Coins',
-          `${coinEmoji} ${randoCoins} for ${wonTeam.slice(-1)[0].username}'s team\n` +
-          `${coinEmoji} ${parseInt(randoCoins/3)} for ${lostTeam.slice(-1)[0].username}'s team`
-        )
-        .addField('OrangeCap Holder', (await client.users.fetch(orangeCapHolder)).username)
-        .setFooter('Legends say that they have noticed many other rewards!')
-        .setColor(embedColor);
-
-      channel.send('Aight Guys, here are the rewards', rewardsEmbed);
+    let orangeCapHolderData = await db.findOne({ _id: orangeCapHolder });
+    if (orangeCapHolderData && orangeCapHolderData._id) {
+      let oldCaps = orangeCapHolderData.orangeCaps || 0;
+      await db.findOneAndUpdate({ _id: orangeCapHolder }, {
+        $set: {
+          orangeCaps: oldCaps + 1
+        }
+      });
     }
 
+    let rewardsEmbed = new Discord.MessageEmbed()
+      .setTitle('Rewards')
+      .addField(
+        'Coins',
+        `${coinEmoji} ${randoCoins} for ${wonTeam.slice(-1)[0].username}'s team\n` +
+        `${coinEmoji} ${parseInt(randoCoins/3)} for ${lostTeam.slice(-1)[0].username}'s team`
+      )
+      .addField('OrangeCap Holder', (await client.users.fetch(orangeCapHolder)).username)
+      .setFooter('Legends say that they have noticed many other rewards!')
+      .setColor(embedColor);
+
+    channel.send('Aight Guys, here are the rewards', rewardsEmbed);
+  
     async function getOrangeCapHolder() {
-      let inningsOne = await getInningsHighestScore(i1Logs.batting);
-      let inningsTwo = await getInningsHighestScore(i2Logs.batting);
+      let inningsOne = await getInningsHighestScore(
+        Object.fromEntries(
+          Object.entries(i1Logs.batting).filter(x => x[0] !== "0000")
+        )
+      );
+      let inningsTwo = await getInningsHighestScore(
+        Object.fromEntries(
+          Object.entries(i2Logs.batting).filter(x => x[0] !== "0000")
+        )
+      );
 
       if (inningsOne[1] > inningsTwo[1]) {
         return inningsOne[0];
