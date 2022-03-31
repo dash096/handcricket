@@ -741,8 +741,8 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
       .setTitle('Rewards')
       .addField(
         'Coins',
-        `${coinEmoji} ${randoCoins} for ${wonTeam.slice(-1)[0].username}'s team\n` +
-        `${coinEmoji} ${parseInt(randoCoins/3)} for ${lostTeam.slice(-1)[0].username}'s team`
+        `${coinEmoji} ${randoCoins} for ${wonTeam.slice(-1)[0].username || wonTeam.slice(-2)[0]}'s team\n` +
+        `${coinEmoji} ${parseInt(randoCoins/3)} for ${lostTeam.slice(-1)[0].username || lostTeam.slice(-2)[0]}'s team`
       )
       .addField('OrangeCap Holder', (await client.users.fetch(orangeCapHolder)).username)
       .setFooter('Legends say that they have noticed many other rewards!')
