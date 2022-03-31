@@ -822,7 +822,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         return;
       } else {
         const STR = (data.strikeRate + STRs[player.id][0] / STRs[player.id][1]) / 2;
-        const pattern = changePattern(data, STRs[player.id][2]);
+        const pattern = await changePattern(data, STRs[player.id][2]);
 
         const winnerSet = {
           cc: bal,
@@ -861,7 +861,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         return;
       } else {
         const STR = (data.strikeRate + STRs[player.id][0] / STRs[player.id][1]) / 2;
-        const pattern = changePattern(data, STRs[player.id][2]);
+        const pattern = await changePattern(data, STRs[player.id][2]);
 
         const loserSet = {
           cc: bal,
@@ -927,7 +927,7 @@ async function changeStatus(a, boolean) {
 }
 
 
-function changePattern(data, scores) {
+async function changePattern(data, scores) {
   let pattern = data.pattern || {}
 
   let logs = []
@@ -940,6 +940,5 @@ function changePattern(data, scores) {
     pattern[num] = (pattern[num] || 0) + 1
   }
 
-  console.log("here", scores, pattern)
   return pattern
 }
