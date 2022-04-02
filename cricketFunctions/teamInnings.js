@@ -842,7 +842,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           $set: winnerSet
         });
       }
-      await gainExp(data, 7, message);
+      await gainExp(data, 10, message, player);
     });
 
     await lostTeam.forEach(async player => {
@@ -880,7 +880,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           $set: loserSet
         });
       }
-      await gainExp(data, 7, message);
+      await gainExp(data, 10, message, player);
     });
   }
 }

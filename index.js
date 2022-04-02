@@ -11,6 +11,7 @@ const client = new Discord.Client({
   partials: ['USER', 'CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 'REACTION']
 });
 
+const isBeta = process.env.BETA || false;
 const prefix = process.env.PREFIX || 'e.';
 const { commands, cooldowns } = client;
 client.commands = new Discord.Collection();
@@ -35,9 +36,11 @@ client.on("ready", async () => {
     await loadFiles();
     
     let loadFunctions = fs.readdirSync('./functions').filter(file => file.startsWith('broke'));
-    for (const loadFunction of loadFunctions) {
-      const execute = require(`./functions/${loadFunction}`);
-      execute({client, prefix});
+    if (!isBeta) {
+      for (const loadFunction of loadFunctions) {
+        const execute = require(`./functions/${loadFunction}`);
+        execute({client, prefix});
+      }
     }
   } catch (e) {
     console.error(e);
@@ -46,7 +49,10 @@ client.on("ready", async () => {
 });
 
 function loadFiles() {
-  const listeners = fs.readdirSync('./features');
+  const listeners = fs.readdirSync('./features').filter(x => 
+    (!isBeta || x === "commandBase.js" || x === "handleError.js" )
+  );
+  
   for(const listener of listeners) {
     try {
       const feature = require(`./features/${listener}`);
