@@ -6,9 +6,8 @@ module.exports = async (data, amt, msg, user) => {
   if(!data) {
     if(user?.id) data = await db.findOne({_id: user.id});
     else data = await db.findOne({_id: msg.author.id});
-  } else {
-    data = await db.findOne({_id: msg.author.id});
   }
+  
   const levels = getLevels();
   const amount = parseInt(amt);
   const oldxp = data.xp;
@@ -24,10 +23,9 @@ module.exports = async (data, amt, msg, user) => {
   const sXP = sXPArray[sXPArray.length - 1];
   const sLevel = Object.keys(levels).find(key => levels[key] === sXP);
   
-  if(pLevel != sLevel) {
-    let text = '';
-    if(user) text += `${user}, CONGRATS!!! You leveled up to **${sLevel}**! You also got a lootbox!!!`;
-    else text += `CONGRATS!!! You leveled up to **${sLevel}**! You also got a lootbox!!!`;
+  if(pLevel !== sLevel) {
+    let text = `${user?.id ? "<@" + user.id + ">, " : ""}CONGRATS!!! You levelled up to **${sLevel}**! You also got a lootbox!!!`;
+    
     await updateBag('lootbox', -1, data, msg);
     if(!user) await msg.reply(text);
     else msg.channel.send(text);

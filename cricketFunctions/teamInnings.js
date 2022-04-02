@@ -741,8 +741,8 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
       .setTitle('Rewards')
       .addField(
         'Coins',
-        `${coinEmoji} ${randoCoins} for ${wonTeam.slice(-1)[0].username}'s team\n` +
-        `${coinEmoji} ${parseInt(randoCoins/3)} for ${lostTeam.slice(-1)[0].username}'s team`
+        `${coinEmoji} ${randoCoins} for ${wonTeam.slice(-1)[0].username || wonTeam.slice(-2)[0]}'s team\n` +
+        `${coinEmoji} ${parseInt(randoCoins/3)} for ${lostTeam.slice(-1)[0].username || lostTeam.slice(-2)[0]}'s team`
       )
       .addField('OrangeCap Holder', (await client.users.fetch(orangeCapHolder)).username)
       .setFooter('Legends say that they have noticed many other rewards!')
@@ -822,7 +822,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         return;
       } else {
         const STR = (data.strikeRate + STRs[player.id][0] / STRs[player.id][1]) / 2;
-        const pattern = changePattern(data, STRs[player.id][2]);
+        const pattern = await changePattern(data, STRs[player.id][2]);
 
         const winnerSet = {
           cc: bal,
@@ -842,7 +842,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           $set: winnerSet
         });
       }
-      await gainExp(data, 7, message);
+      await gainExp(data, 10, message, player);
     });
 
     await lostTeam.forEach(async player => {
@@ -861,7 +861,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
         return;
       } else {
         const STR = (data.strikeRate + STRs[player.id][0] / STRs[player.id][1]) / 2;
-        const pattern = changePattern(data, STRs[player.id][2]);
+        const pattern = await changePattern(data, STRs[player.id][2]);
 
         const loserSet = {
           cc: bal,
@@ -880,7 +880,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
           $set: loserSet
         });
       }
-      await gainExp(data, 7, message);
+      await gainExp(data, 10, message, player);
     });
   }
 }
@@ -927,7 +927,7 @@ async function changeStatus(a, boolean) {
 }
 
 
-function changePattern(data, scores) {
+async function changePattern(data, scores) {
   let pattern = data.pattern || {}
 
   let logs = []
@@ -940,6 +940,5 @@ function changePattern(data, scores) {
     pattern[num] = (pattern[num] || 0) + 1
   }
 
-  console.log("here", scores, pattern)
   return pattern
 }
