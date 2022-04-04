@@ -3,7 +3,7 @@ const Discord = require("discord.js");
 const getErrors = require("../../functions/getErrors.js");
 const getTarget = require("../../functions/getTarget.js");
 const executeDuoMatch = require("../../baseballFunctions/duoStart.js");
-const ServerID = process.env.SERVERID;
+const ServerID = process.env.SERVER;
 const gain = require('../../functions/gainExp.js')
 
 module.exports = {

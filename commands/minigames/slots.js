@@ -20,7 +20,7 @@ module.exports = {
     const { content, channel, mentions, author } = message;
     
     try {
-      const args = content.slice(prefix.length).trim(/ +/).split(' ').slice(1);
+      const args = content.slice(prefix.length).trim().split(/ +/).slice(1);
     
       let win = [false];
       
@@ -73,20 +73,15 @@ module.exports = {
       const slots = await message.reply(slotsEmbed);
       setTimeout(() => slots.edit(resultEmbed), 3000);
       
-      await calc(bet, author);
+      await updateCoins(-bet, data);
       await gainExp(data, 1, message);
     
       async function getText() {
         const random = Math.random();
-        const decideWin = () => {
-          if(bet/500 > 0.35) {
-            return 0.4;
-          } else {
-            return bet/500;
-          }
-        };
-        const decider = decideWin();
-        if(random < decider/5) {
+        
+        const decider = 0.075 + (((bet-100)*0.02)/100);
+        
+        if(random < decider/3) {
           win = [true, 'decor'];
         } else if (random < decider) {
           win = [true, 'item'];
@@ -157,11 +152,4 @@ async function getRandomEmoji() {
   } else {
     return getEmoji(item);
   }
-}
-
-async function calc(bet, user) {
-  const data = await db.findOne({_id: user.id});
-  const oldBal = data.cc;
-  let newBal = parseInt(oldBal) - parseInt(bet);
-  await db.findOneAndUpdate( { _id: user.id }, { $set: { cc: newBal } } );
 }
