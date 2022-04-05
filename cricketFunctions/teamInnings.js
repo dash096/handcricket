@@ -171,16 +171,16 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
       else {
         if (response === 'end') {
           isInnings2 = 'over';
-          const randoCoins = parseInt((Math.random() * 696) / 1.5);
+          const randoCoins = parseInt(Math.random() * 696);
           await changeStatus(players, false)
           //rewards for bowlingTeam
-          return rewards(channel, bowlingTeam, battingTeam, oldLogs, logs, randoCoins, results);
+          return rewards(channel, [bowlingTeam, bowlingCap], [battingTeam, battingCap], oldLogs, logs, randoCoins, results);
         } else if (response === 'win') {
           isInnings2 = 'over';
-          const randoCoins = parseInt((Math.random() * 696) / 1.5);
+          const randoCoins = parseInt(Math.random() * 696);
           await changeStatus(players, false)
           //rewards for battingTeam
-          return rewards(channel, battingTeam, bowlingTeam, oldLogs, logs, randoCoins, results);
+          return rewards(channel, [battingTeam, battingCap], [bowlingTeam, bowlingCap], oldLogs, logs, randoCoins, results);
         } else {
           if (type === 'bat') {
             const embed = new Discord.MessageEmbed()
@@ -721,7 +721,7 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
     }
   }
 
-  async function rewards(channel, wonTeam, lostTeam, i1Logs, i2Logs, randoCoins, results) {
+  async function rewards(channel, [wonTeam, wonCap], [lostTeam, lostCap], i1Logs, i2Logs, randoCoins, results) {
     let coinEmoji = await getEmoji('coin');
     let { ducks, STRs, wickets } = results;
     
@@ -741,8 +741,8 @@ module.exports = async function innings(client, players, battingTeam, bowlingTea
       .setTitle('Rewards')
       .addField(
         'Coins',
-        `${coinEmoji} ${randoCoins} for ${wonTeam.slice(-1)[0].username || wonTeam.slice(-2)[0]}'s team\n` +
-        `${coinEmoji} ${parseInt(randoCoins/3)} for ${lostTeam.slice(-1)[0].username || lostTeam.slice(-2)[0]}'s team`
+        `${coinEmoji} ${randoCoins} for ${wonCap}'s team\n` +
+        `${coinEmoji} ${parseInt(randoCoins/3)} for ${lostCap}'s team`
       )
       .addField('OrangeCap Holder', (await client.users.fetch(orangeCapHolder)).username)
       .setFooter('Legends say that they have noticed many other rewards!')
