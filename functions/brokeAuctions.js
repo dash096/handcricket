@@ -10,7 +10,7 @@ module.exports = async ({ client }) => {
   
   for (let i in brokeDatas) {
     const auctionData = brokeDatas[i]
-    const remainingTime = Date.now() - auctionData.end.getTime()
+    const remainingTime = auctionData.end.getTime() - Date.now()
     
     setTimeout(async function timeout() {
       const owner = await client.users.fetch(auctionData.owner)
