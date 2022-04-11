@@ -48,8 +48,11 @@ module.exports = {
     
     //Send a list of slots
     let text = []
-    targetCards.forEach(async id => {
-      let card = await cardsDB.findOne({_id: id})
+    
+    let cards = await cardsDB.find()
+    
+    targetCards.forEach(id => {
+      let card = cards.find(x => x._id === id)
       
       card.name = card.name.split('-').join(' ')
       text.push([`${card.name.charAt(0).toUpperCase() + card.name.slice(1).toLowerCase()}   |   \`${card.role.toUpperCase()}\`   |   ${card.ovr}${targetTeam.some(x => x._id === card._id) ? '    🗡️' : ''}`, card.ovr])

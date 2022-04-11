@@ -53,8 +53,8 @@ module.exports = {
       else if (isNaN(startPrice)) return message.reply(`Could not parse \`${args[2]}\` as price.`)
       else if (!time || time < 0) return message.reply(`Could not parse \`${args[3]}\` as time`)
       else if (time < 60 * 1000) return message.reply('Time must atleast be greater than 1 minute')
-      else if (!data.cards.some(c => c._id === card._id)) return message.reply(`You do not own \`${card.name}\`.`)
-      else if (data.cards?.[0]?.team?.some(c => c._id === card._id)) return message.reply(`Cards in your team can't be auctioned.`)
+      else if (!data.cards.some(c => c === card._id)) return message.reply(`You do not own \`${card.name}\`.`)
+      else if (data.cards?.[0]?.team?.some(c => c === card._id)) return message.reply(`Cards in your team can't be auctioned.`)
 
       let sorted = allAuctions.sort((a, b) => b._id - a._id)
       let id = sorted.length ? sorted[0]._id : 1070000
@@ -78,7 +78,7 @@ module.exports = {
         return channel.send(getError({ error: 'time' }))
       }
 
-      await updateCard(data, card, 'slots', true)
+      await updateCard(data, card._id, 'slots', true)
       await auctionData.save(e => console.log(e || auctionData._id))
       await message.reply(`Auction started for \`${card.name}\` at ${coinsEmoji} ${startPrice} for \`${args[3] || "24h"}\``)
       
@@ -92,7 +92,7 @@ module.exports = {
         const winnerData = await db.findOne({ _id: winner.id })
         const card = auctionData.card
 
-        await updateCard(winnerData, card, 'slots')
+        await updateCard(winnerData, card._id, 'slots')
         if (auctionData.currentBidder !== auctionData.owner) {
           await updateCoins(auctionData.currentBid, ownerData)
           await owner.send(`Your auction for \`${card.name.charAt(0).toUpperCase() + card.namd.split('-').join(' ').slice(1)}\` has ended, and you recieved ${coinsEmoji} \`${auctionData.currentBid}\``)
@@ -116,7 +116,7 @@ module.exports = {
         .map(
           ([k,v]) => ([k, v?.[1]?.toLowerCase()])
         )
-        )
+      )
       
       let queryCard = filters.name ? await cardSearch([filters.name]) : undefined
       

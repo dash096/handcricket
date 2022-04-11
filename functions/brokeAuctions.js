@@ -19,7 +19,7 @@ module.exports = async ({ client }) => {
       const winnerData = await db.findOne({ _id: winner.id })
       const card = auctionData.card
 
-      await updateCard(winnerData, card, 'slots')
+      await updateCard(winnerData, card._id, 'slots')
       if (auctionData.currentBidder !== auctionData.owner) {
         await updateCoins(auctionData.currentBid, ownerData)
         await owner.send(`Your auction for \`${card.name.charAt(0).toUpperCase() + card.name.split('-').join(' ').slice(1)}\` has ended, and you recieved ${coinsEmoji} \`${auctionData.currentBid}\``)
