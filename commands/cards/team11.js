@@ -67,7 +67,7 @@ module.exports = {
         //Card Existence in team and slots
         if (team.some(card => card._id === toReplace._id)) return message.reply(`\`${toReplace.name}\` already exists in your team, you \`e.team swap\` to swap positions`)
         else if (!team.some(card => card._id === toBeReplaced._id)) return message.reply(`Cannot find card \`${toBeReplaced.name}\` in your team`)
-        else if (!data.cards.some(card => card._id === toReplace._id)) return message.reply(`Cannot find card \`${toReplace.name}\` in your slots`)
+        else if (!data.cards.some(c => c === toReplace._id)) return message.reply(`Cannot find card \`${toReplace.name}\` in your slots`)
         
         // Min and Max Role Validations
         let max = {'bat': 5, 'bowl': 3, 'ar': 2, 'wk': 2}
