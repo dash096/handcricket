@@ -55,7 +55,7 @@ module.exports = {
       let card = cards.find(x => x._id === id)
       
       card.name = card.name.split('-').join(' ')
-      text.push([`${card.name.charAt(0).toUpperCase() + card.name.slice(1).toLowerCase()}   |   \`${card.role.toUpperCase()}\`   |   ${card.ovr}${targetTeam.some(x => x._id === card._id) ? '    🗡️' : ''}`, card.ovr])
+      text.push([`${card.name.charAt(0).toUpperCase() + card.name.slice(1).toLowerCase()}   |   \`${card.role.toUpperCase()}\`   |   ${card.ovr}${targetTeam.some(x => x === card._id) ? '    🗡️' : ''}`, card.ovr])
     })
     text = text.sort((a, b) => b[1] - a[1])
     text = text.map(i => i[0])
