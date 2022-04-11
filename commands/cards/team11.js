@@ -29,10 +29,12 @@ module.exports = {
     //No team, give starters
     if (!(data.cards?.[0]?.team) || data.cards[0].team.length < 11) {
       let starters = await openBox(11, data, message, 'cricket', -75)
+      
       Promise.all([
-        await updateCard(data, starters.map(x => x._id), 'team11')
+        await updateCard(data, starters.map(x => x._id), 'team11'),
+        await updateCard(data, starters.map(x => x._id), 'slots')
       ])
-      await updateCard(data, starters.map(x => x._id), 'slots')
+      
       await message.reply('You have been given 11 starter cards!')
       return
     }
@@ -81,7 +83,7 @@ module.exports = {
         
         //UpdateCards
         Promise.all([
-          updateCard(data, toBeReplaced._id, 'team11', true, [toReplace._id]),
+          await updateCard(data, toBeReplaced._id, 'team11', true, [toReplace._id]),
         ])
         await message.reply(`Replaced \`${toBeReplaced.name}\` with \`${toReplace.name}\``)
       }

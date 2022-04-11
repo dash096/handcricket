@@ -1,18 +1,24 @@
 const cardsDB = require('../schemas/card.js')
 
-module.exports = async (args) => {
+module.exports = async (args, multiple) => {
   let query = args.join('').toLowerCase()
   
   let cards = await cardsDB.find({
     fullname: { $regex: `(^${query[0]}|_${query[0]}|${query})` }
   })
   
-  let card = cards.find(x => {
+  let got100 = false
+  let results = cards.map(x => {
+    if (got100) return [x, 0];
+    
     if (
       query === x.name.split('-').join('') ||
       query === x.fullname.split('_').join('') ||
       x.fullname.split('_').join('').includes(query)
-    ) return true
+    ) {
+      got100 = true
+      return [x,100]
+    }
     
     let name = x.fullname.split('_')
     if(name[0][0] === query[0]) name = name[0]
@@ -23,8 +29,10 @@ module.exports = async (args) => {
       if (name.includes(query[i])) counter += 1
     }
     
-    if (counter > 5 && counter >= query.length) return true
-    else return false
+    return [x, counter]
   })
-  return card
+  
+  return results.filter(x => x[1] === Math.max(...Object.values(
+    Object.fromEntries(results)
+  )))
 }
