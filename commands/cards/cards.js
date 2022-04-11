@@ -31,7 +31,7 @@ module.exports = {
       let image = await getCardImage(card.fullname)
       let embed = new Discord.MessageEmbed()
         .setTitle(`${(card.fullname.charAt(0).toUpperCase() + card.fullname.slice(1).toLowerCase()).split('_').join(' ')}`)
-        .setFooter(targetCards.includes(card.fullname) ? `${author.displayName}'s card` : `${author.displayName} doesn\'t own this card`)
+        .setFooter(targetCards.includes(card._id) ? `${author.displayName}'s card` : `${author.displayName} doesn\'t own this card`)
         .setColor(embedColor)
       if (image == 'err') {
         embed
@@ -48,7 +48,9 @@ module.exports = {
     
     //Send a list of slots
     let text = []
-    targetCards.forEach(card => {
+    targetCards.forEach(async id => {
+      let card = await cardsDB.findOne({_id: id})
+      
       card.name = card.name.split('-').join(' ')
       text.push([`${card.name.charAt(0).toUpperCase() + card.name.slice(1).toLowerCase()}   |   \`${card.role.toUpperCase()}\`   |   ${card.ovr}${targetTeam.some(x => x._id === card._id) ? '    🗡️' : ''}`, card.ovr])
     })

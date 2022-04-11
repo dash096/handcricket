@@ -1,4 +1,5 @@
 const db = require('../schemas/player.js')
+const cardsDB = require('../schemas/card.js')
 
 module.exports = async (data, card, mode, remove, add = [], swap) => {
   let cards = mode === 'team11'
@@ -9,11 +10,11 @@ module.exports = async (data, card, mode, remove, add = [], swap) => {
   }
   
   if (remove) {
-    let exists = cards.find(c => c._id === card._id)
+    let exists = cards.find(c => c === card)
     if (!exists) return 'err'
     
     cards.splice(
-      cards.findIndex(c => c._id === card._id),
+      cards.findIndex(c => c === card),
       1,
       ...add
     )

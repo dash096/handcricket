@@ -37,8 +37,8 @@ module.exports = {
       return
     }
     
-    const team = (data.cards?.[0]?.team) || (data.cards?.slice(1))
     const cards = await cardsDB.find()
+    const team = ((data.cards?.[0]?.team) || (data.cards?.slice(1))).map(id => cards.find(c => c._id === id))
     
     let nicknameAlias = ['nick', 'nickname', 'name']
     let replaceAlias = ['replace', 'r']
@@ -50,6 +50,7 @@ module.exports = {
       
       let toReplace = await cardSearch([args[2]])
       let toBeReplaced = await cardSearch([args[1]])
+      
       // Card Existence Validation
       if (!toReplace || !toBeReplaced) return message.reply(`Cannot find card: \`${toReplace ? args[2] : args[1]}\``)
       
@@ -58,7 +59,7 @@ module.exports = {
         if (!team.some(c => c._id === toBeReplaced._id)) return message.reply(`Can\'t find ${toBeReplaced.name} in your team.`)
         else if (!team.some(c => c._id === toReplace._id)) return message.reply(`Can\'t find ${toReplace.name} in your team.`)
         
-        await updateCard(data, toBeReplaced, 'team11', true, [toReplace], team.findIndex(card => card._id === toReplace._id))
+        await updateCard(data, toBeReplaced._id, 'team11', true, [toReplace._id], team.findIndex(card => card._id === toReplace._id))
         await message.reply(`Positions swapped, \`${toBeReplaced.name}\` <--> \`${toReplace.name}\``)
       } else {
         //Card Existence in team and slots
@@ -80,7 +81,7 @@ module.exports = {
         
         //UpdateCards
         Promise.all([
-          updateCard(data, toBeReplaced, 'team11', true, [toReplace]),
+          updateCard(data, toBeReplaced._id, 'team11', true, [toReplace._id]),
         ])
         await message.reply(`Replaced \`${toBeReplaced.name}\` with \`${toReplace.name}\``)
       }

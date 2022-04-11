@@ -90,7 +90,7 @@ module.exports = {
           .setTitle(`You got, ${card.name.split('-').join(' ')}`)
       }
       let msg = await message.reply(embed)
-      let updateCard = await updateCards(playerData, card, 'slots')
+      let updateCard = await updateCards(playerData, card._id, 'slots')
       
       if (updateCard === 'err') {
         //slots full
@@ -130,7 +130,7 @@ module.exports = {
               
               if (removeCard) {
                 if (cards.includes(removeCard)) {
-                  await msg.reply('Do you even own that?? Try again.')
+                  await msg.reply('Could not find card or you dont own that. Try again.')
                   return await checkRes()
                 }
                 
