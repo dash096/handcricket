@@ -119,6 +119,7 @@ module.exports = {
         
         let i = 0;
         await team.slice(0, 11).forEach(async card => {
+          
           i += 1
           let name = card.name
           let path = `./assets/cards/${name.split('_').join('-')}.png`
