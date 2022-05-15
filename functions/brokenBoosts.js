@@ -39,7 +39,7 @@ module.exports = async function() {
   }
   
   async function getBrokenTossBoosts() {
-    const lte = await db.find({ tossBoost : { $lte : Date.now() } });
+    const lte = await db.find({ tossBoost : { $lt : Date.now() } });
     const gte = await db.find({ tossBoost : { $gte : Date.now() } });
     for(const a of lte) {
       brokeTossBoosts.push(a);
@@ -50,7 +50,7 @@ module.exports = async function() {
   }
   
   async function getBrokenCoinBoosts() {
-    const lte = await db.find({ coinBoost : { $lte : Date.now() } });
+    const lte = await db.find({ coinBoost : { $lt : Date.now() } });
     const gte = await db.find({ coinBoost : { $gte : Date.now() } });
     for(const a of lte) {
       brokeCoinBoosts.push(a);

@@ -9,8 +9,7 @@ module.exports = async function (itemName, amount, data, msg) {
   
   if(amount > 0) {
     if (!oldAmount || oldAmount < amount) {
-      let error = 'lessAssets';
-      msg.channel.send(`Error: ${getErrors({error, itemName})}`);
+      msg.channel.send(`Error: ${getErrors({error: "lessAssets", itemName})}`);
       return 'err';
     } 
   }

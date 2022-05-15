@@ -29,5 +29,5 @@ module.exports = ({error, user, itemName, filePath}) => {
   } else if( error == 'engaged') {
     return `**${user.username}** is already engaged in another game.` + tip;
   }
-  return 'cant get the error, dm and report it to `Dash#7374` or `UltraMoonEagle#3876`';
+  return `Unknown error occured, report in the community server. Do \`${prefix}server\``;
 };

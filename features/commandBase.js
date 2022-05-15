@@ -10,17 +10,17 @@ module.exports = ({client, prefix}) => {
       content, author, channel, mentions, guild
     } = message;
     
-    if (
-      !content.toLowerCase().startsWith(prefix) ||
-      author.bot ||
-      channel.type === 'dm'
-    ) {
-      if(!content.trim().startsWith(`<@${client.user.id}>`)) return;
-    }
-    
     if(content.trim().startsWith(`<@${client.user.id}>`)) {
       message.reply('Oi! My prefix is `e.` Use `e.help` if you want to know more about me :)');
       return;
+    }
+
+    if (
+      !content.trim().toLowerCase().startsWith(prefix) ||
+      author.bot ||
+      channel.type === 'dm'
+    ) {
+      return;/
     }
     
     //BlackLists
@@ -36,36 +36,26 @@ module.exports = ({client, prefix}) => {
     'READ_MESSAGE_HISTORY',
     'MANAGE_MESSAGES'
     ];
+    const permsText = "Add Reactions, Use External Emojis, Embed Links, Attach Files, Send Messages, Read Message History, Manage Messages"
     
-    for (let perm in perms) {
-      perm = perms[perm];
-      
+    for (let perm of perms) {
       let hasPerm = guild.me.permissionsIn(channel).has(perm);
-      if(hasPerm === false && perm === 'SEND_MESSAGES') {
-        try {
-          await author.send('I do not have send messages perms to execute that command in that channel.');
-        } catch(e) {
-          return;
+      
+      if(hasPerm === false) {
+        if (perm === 'SEND_MESSAGES') {
+          try {
+            await author.send('I do not have send messages perms to execute that command in that channel.');
+          } catch(e) {
+            return;
+          }
+        } else {
+          message.reply(`I dont have all of my perms in <#${channel.id}>, My required Permissions are:\n` + perms);
+          return
         }
-        return;
-      } else if(hasPerm === false) {
-        function getPerms() {
-          let text = '';
-          perms.forEach(perm => {
-            let arr = perm.split('_');
-            let word1 = arr[0].charAt(0).toUpperCase() + arr[0].slice(1).toLowerCase();
-            let word2 = arr[1].charAt(0).toUpperCase() + arr[1].slice(1).toLowerCase();
-            if(arr[2]) word2 += ` ${arr[2].charAt(0).toUpperCase() + arr[2].slice(1).toLowerCase()}`;
-            
-            text += `\`${word1} ${word2}\`${perms.indexOf(perm) === perm.length - 1 ? `,` : "" }`;
-          });
-          return text;
-        }
-        return message.reply(`I dont have all of my perms in <#${channel.id}>, My required Permissions are:\n` + getPerms());
       }
     };
     
-    const args = message.content.slice(prefix.length).trim().split(/ +/);
+    const args = content.trim().slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
     
     //Check Aliases
@@ -82,57 +72,63 @@ module.exports = ({client, prefix}) => {
     //Check engagement
     const data = await db.findOne({ _id: author.id });
     if (!data && command.name !== 'start') {
-      let user = author;
-      let error = 'data';
-      return message.reply(getErrors({error, user}));
+      message.reply(getErrors({error: "data", user: author}));
+      return
     }
     
     if(
       commandStatus === true &&
-      data.status === true &&
-      command.name != 'help'
+      data.status === true
     ) {
-      return message.reply('You are already engaged in a game');
+      message.reply('You are already engaged in a game');
+      return
     }
     
-    let targets = mentions.users;
-    targets = targets.values();
-    if (targets || targets.length !== 0) {
+    let targets = mentions.users.values();
+    if (targets.length) {
       for(const target of targets) {
         let targetData = await db.findOne({ _id: target.id });
         if(!targetData) {
-          let error = 'data';
-          let user = target;
-          return message.reply(getErrors({error, user}));
+          message.reply(getErrors({error: "data", user: target}));
+          return
         } else if(commandStatus === true && target.status === true) {
-          return message.reply(`${target.tag} is already engaged in a game`);
+          message.reply(`${target.tag} is already engaged in a game`);
+          return
         }
       }
     }
     
     //Cooldowns
-    if (!cooldowns.has(command.name)) {
-      cooldowns.set(command.name, new Discord.Collection());
-    }
-    const now = Date.now();
-    const timestamps = cooldowns.get(command.name);
-    const cooldownAmount = (command.cooldown || 3) * 1000;
-    if (timestamps.has(message.author.id)) {
-      const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
-      if (now < expirationTime) {
-        let timeLeft = parseInt((expirationTime - now) / 1000);
-        let sec;
-        let min;
-        if (timeLeft >= 60) {
-          min = (timeLeft/60).toFixed(0) + 'm';
-          sec = ` ${timeLeft % 60}s`;
-          if (sec === ' 0s') sec = '';
-        } else sec = `${timeLeft}s`;
-        if (!min) min = '';
-        return message.reply(`Wait for ${min}${sec} before using that command again.`);
+    if (command.cooldown) {
+      if (!cooldowns.has(command.name)) {
+        cooldowns.set(command.name, new Discord.Collection());
       }
-    }
-    if(command.cooldowm) {
+
+      const now = Date.now();
+      const timestamps = cooldowns.get(command.name);
+      const cooldownAmount = command.cooldown * 1000;
+      
+      if (timestamps.has(message.author.id)) {
+        const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
+       
+        if (now < expirationTime) {
+          let timeLeft = parseInt((expirationTime - now) / 1000);
+          let sec = "";
+          let min = "";
+
+          if (timeLeft >= 60) {
+            min = (timeLeft/60).toFixed(0) + 'm';
+            sec = ` ${timeLeft % 60}s`;
+            if (sec === ' 0s') sec = '';
+          } else {
+            sec = `${timeLeft}s`;
+          }
+
+          message.reply(`Wait for ${min}${sec} before using that command again.`);
+          return
+        }
+      }
+
       timestamps.set(message.author.id, now);
       setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
     }

@@ -7,7 +7,7 @@ const updateCoins = require('./updateCoins.js');
 module.exports = async function (itemName, itemAmount, user, target, msg) {
   const coinEmoji = await getEmoji('coin');
   
-  const args = msg.content.trim().split(' ');
+  const args = msg.content.trim().split(/ +/);
   
   if(itemName == 'coins') {
     const userData = await db.findOne({_id: user.id});
@@ -17,9 +17,8 @@ module.exports = async function (itemName, itemAmount, user, target, msg) {
     const oldTargetCC = targetData.cc;
     
     if(oldUserCC < itemAmount) {
-      let error = 'lessAssets';
-      msg.reply(getErrors({ error, user, itemName }));
-      return;
+      msg.reply(getErrors({ error: "lessAssets", user, itemName }));
+      return "err";
     } else {
       updateCoins(-(parseInt(itemAmount)), userData);
       updateCoins(parseInt(itemAmount), targetData);
@@ -31,8 +30,8 @@ module.exports = async function (itemName, itemAmount, user, target, msg) {
     const targetData = await db.findOne({_id: target.id});
     
     let e1 = await updateBag(itemName, parseInt(itemAmount), userData, msg);
-    updateBag(itemName, -(parseInt(itemAmount)), targetData, msg);
-    if(e1 != 'err') {
+    if(e1 !== 'err') {
+      await updateBag(itemName, -(parseInt(itemAmount)), targetData, msg);
       await msg.reply(`Successfully traded ${itemAmount} ${itemName} with **${target.username}**`);
       if(targetData.notifs) await target.send(`**${user.username}** sent you ${itemAmount} ${itemName}.`);
     }

@@ -14,7 +14,7 @@ module.exports = async (name, decor) => {
     let decorEmoji;
     for(const guild of decorEmojis) {
       const emojiGuild = await client.guilds.fetch(guild);
-      const emoji = emojiGuild.emojis.cache.find(emoji => emoji.name == name);
+      const emoji = emojiGuild.emojis.cache.find(emoji => emoji.name === name);
       
       if(emoji) {
         cache[name] = emoji;

@@ -5,44 +5,45 @@ const player = new mongoose.Schema({
     type: String, required: true
   },
   xp: {
-    type: Number, default: 0
+    type: Number, default: 0, min: 0
   },
   stamina: {
-    type: Number, default: 10
+    type: Number, default: 10, min: 0, max: 10
   },
   cc: {
-    type: Number, default: 500
+    type: Number, default: 500, min: 0
   },
   strikeRate: {
-    type: Number, default: 0
+    type: Number, default: 0, min: 0
   },
   highScore: {
-    type: Number, default: 0
+    type: Number, default: 0, min: 0
   },
   totalScore: {
-    type: Number, default: 0
+    type: Number, default: 0, min: 0
   },
   wickets: {
-    type: Number, default: 0
+    type: Number, default: 0, min: 0
   },
   ducksTaken: {
     type: Number,
-    default: 0
+    default: 0,
+    min: 0
   },
   wins: {
-    type: Number, default: 0
+    type: Number, default: 0, min: 0
   },
   loses: {
-    type: Number, default: 0
+    type: Number, default: 0, min: 0
   },
   orangeCaps: {
-    type: Number, default: 0
+    type: Number, default: 0, min: 0
   },
   coinMulti: {
-    type: Number, default: 0.2
+    type: Number, default: 0.2, min: 0.2
   },
   tossMulti: {
-    type: Number, default: 0.5
+    type: Number, default: 0.5, min: 0.49, max: 0.8
   },
   challengeProgress: String,
   pattern: {

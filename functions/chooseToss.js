@@ -10,7 +10,7 @@ module.exports = async function chooseToss(message, winner, loser, type, teamMat
   let options;
   if (type === 'cricket') options = {
     'one': [['bat', 'batting'], 'Batsman'],
-    'two': [['bowl', 'bowling'], 'bowler']
+    'two': [['bowl', 'bowling'], 'Bowler']
   }
   else if (type === 'football') options = {
     'one': [['attack', 'atk'], 'Attacker'],
@@ -31,15 +31,15 @@ module.exports = async function chooseToss(message, winner, loser, type, teamMat
     const m = msgs.first();
     const c = m.content.toLowerCase().trim();
     
-    if (c == 'end') {
+    if (c === 'end') {
       channel.send('Match aborted');
       await changeStatus(winner, false);
       await changeStatus(loser, false);
       return 'err';
-    } else if (options.one[0].find(i => i == c)) {
+    } else if (options.one[0].find(i => i === c)) {
       first = winner;
       second = loser;
-    } else if (options.two[0].find(i => i == c)) {
+    } else if (options.two[0].find(i => i === c)) {
       first = loser;
       second = winner;
     } else {

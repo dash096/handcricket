@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const db = require('./schemas/player.js');
 const Discord = require("discord.js");
 
-if (!fs.readdirSync("./").includes("config.json")) require("dotenv").config()
+if (!config) require("dotenv").config()
 
 const client = new Discord.Client({
   partials: ['USER', 'CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 'REACTION']

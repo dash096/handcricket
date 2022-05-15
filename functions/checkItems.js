@@ -23,13 +23,11 @@ module.exports = async function (message, filePath) {
   
   //Name
   let itemNameArray = args; //Message in []
-  if(itemAmount && parseInt(itemAmount)) {
-    itemNameArray.pop(); //Kill the last element
-  }
+  if(itemAmount) itemNameArray.pop(); //Kill the last element
   
   let itemName = itemNameArray.join('') || itemAmount;
   
-  if(!itemAmount || isNaN(itemAmount)) { //Validates Item
+  if(!itemAmount) { //Validates Item
     itemAmount = 1;
   }
   

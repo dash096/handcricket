@@ -26,58 +26,14 @@ module.exports = async (message, user, target, type) => {
     }
   }
   
-  //User High Toss
-  if (userData.tossMulti > targetData.tossMulti) {
-    //Users with roll.
-    if (roll < userData.tossMulti) {
-      setTimeout( () => {
-        rolling.edit(getText('user'));
-      }, 3000);
-      return user;
-    } else {//Target wins with roll.
-      setTimeout( () => {
-        rolling.edit(getText('target'));
-      }, 3000);
-      return target;
-    }
-  }
+  let userPercent = userData.tossMulti/(userData.tossMulti+targetData.tossMulti);
+  let targetPercent = 1 - userPercent
 
-  //Target High Toss
-  else if (userData.tossMulti < targetData.tossMulti) {
-    //Target wins with roll
-    if (roll < targetData.tossMulti) {
-      setTimeout( () => {
-        rolling.edit(getText('target'));
-      }, 3000);
-      return target;
-    } else {//User wins with roll
-      setTimeout( () => {
-        rolling.edit(getText('user'));
-      }, 3000);
-      return user;
-    }
-  }
+  let userWon = roll > userPercent
 
-  //Equal Multi Toss
-  else if (targetData.tossMulti === userData.tossMulti) {
-    const roll2 = Math.floor(Math.random() * 3);
-
-    if (roll2 === 1) { //User wins
-      setTimeout( () => {
-        rolling.edit(getText('user'));
-      }, 3000);
-      return user;
-    } else { //Target wins
-      setTimeout( () => {
-        rolling.edit(getText('target'));
-      }, 3000);
-      return target;
-    }
-  } //Target wins
-  else {
-    setTimeout( () => {
-      rolling.edit(getText('target'));
-    }, 3000);
-    return target;
-  }
-};
+  setTimeout(() => {
+    rolling.edit(getText(userWon ? "user" : "target"))
+  }, 3000)
+  
+  return userWon ? user : target
+}

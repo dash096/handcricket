@@ -16,8 +16,6 @@ module.exports = (message) => {
   'Voting rewards today is multiplied twice!',
   ];
   
-  let random = Math.random();
-  
-  if(random < 0.4) return `\n**Tip:** ${tips[Math.floor(Math.random() * 8)]}`;
-  else return '';
+  if(Math.random() < 0.5) return `\n**Tip:** ${tips[Math.floor(Math.random() * 8)]}`;
+  else return "";
 };
