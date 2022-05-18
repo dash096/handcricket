@@ -28,21 +28,22 @@ module.exports = {
       let card = await cardSearch(args)
       if(!card) return message.reply('Couldn\'t find one in that name.')
       
-      let image = await getCardImage(card.fullname)
       let embed = new Discord.MessageEmbed()
-        .setTitle(`${(card.fullname.charAt(0).toUpperCase() + card.fullname.slice(1).toLowerCase()).split('_').join(' ')}`)
-        .setFooter(targetCards.includes(card._id) ? `${author.displayName}'s card` : `${author.displayName} doesn\'t own this card`)
-        .setColor(embedColor)
-      if (image == 'err') {
+      .setTitle(`${(card.fullname.charAt(0).toUpperCase() + card.fullname.slice(1).toLowerCase()).split('_').join(' ')}`)
+      .setFooter(targetCards.includes(card._id) ? `${author.displayName}'s card` : `${author.displayName} doesn\'t own this card`)
+      .setColor(embedColor)
+      
+      try {
+        let image = getCardImage(card.fullname)
+        embed.setImage(image)
+      } catch (e) {
         embed
           .attachFiles(`./assets/cards/${card.name}.png`)
           .setImage(`attachment://${card.name}.png`)
-        let msg = await message.reply(embed)
-        await getCardImage(card.fullname, msg.embeds[0].image.url)
-      } else {
-        embed.setImage(image)
-        await message.reply(embed)
       }
+      
+      let msgEmbed = await message.reply(embed)
+      getCardImage(card.fullname, msgEmbed.embeds[0].image.url)
       return
     }
     

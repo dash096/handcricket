@@ -18,9 +18,13 @@ module.exports = {
     const coinEmoji = await getEmoji('coin');
     
     //Get items
-    const itemsArray = await checkItems(message, 'dogenomy/buy.js');
-    if(itemsArray == 'err') return;
-    
+    try {
+      var itemsArray = await checkItems(message, 'dogenomy/buy.js');
+    } catch (e) {
+      message.reply(e)
+      return
+    }
+
     //Item Info
     const name = itemsArray[0];
     const number = itemsArray[1];
@@ -32,8 +36,12 @@ module.exports = {
     const cost = item.price * number;
     
     if (name == 'slots') {
-      let slots = await buySlots(message, data, number)
-      if (slots == 'err') return message.reply('Insufficient Balance.')
+      try {
+        await buySlots(message, data, number)
+      } catch(e) {
+        message.reply(e)
+        return
+      }
     } else {
       if (balance < cost) return message.reply('Insufficient Balance.')
       

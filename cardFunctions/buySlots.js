@@ -11,7 +11,7 @@ module.exports = async (msg, data, amount) => {
     price += slots ** 2 * 10
   }
   
-  if(data.cc < price) return 'err'
+  if(data.cc < price) throw `Poor mate, You need ${price - data.cc} coins more.`
   
   await updateCoins(-(price), data)
   await db.findOneAndUpdate({ _id: data._id }, {
@@ -22,5 +22,6 @@ module.exports = async (msg, data, amount) => {
       }, ...cards.slice(1)]
     }
   })
+  
   return price
 }

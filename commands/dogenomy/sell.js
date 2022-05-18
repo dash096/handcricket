@@ -16,8 +16,12 @@ module.exports = {
   run: async ({message}) => {
     const { author, content, channel, mentions } = message;
     
-    const itemsArray = await checkItems(message, 'dogenomy/sell.js');
-    if(itemsArray == 'err') return;
+    try {
+      var itemsArray = await checkItems(message, 'dogenomy/sell.js');
+    } catch (e) {
+      message.reply(e)
+      return;
+    }
     
     const itemName = itemsArray[0];
     const itemAmount = itemsArray[1];

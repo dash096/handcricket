@@ -12,8 +12,8 @@ module.exports = async function (itemName, data, msg) {
      if(oldBoost) {
         const oldBoostTime = oldBoost.getTime();
         if(Date.now() < oldBoostTime) {
-          msg.reply('There\'s a boost active already!');
-          return 'err';
+          throw 'There\'s a boost active already!';
+          return
         }
       }
 
@@ -58,8 +58,8 @@ module.exports = async function (itemName, data, msg) {
     if(oldBoost) {
       const oldBoostTime = oldBoost.getTime();
       if(Date.now() < oldBoostTime) {
-        msg.reply('There\'s a boost active already!');
-        return 'err';
+        throw 'There\'s a boost active already!'
+        return
       }
     }
     

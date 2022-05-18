@@ -32,10 +32,7 @@ module.exports = async function chooseToss(message, winner, loser, type, teamMat
     const c = m.content.toLowerCase().trim();
     
     if (c === 'end') {
-      channel.send('Match aborted');
-      await changeStatus(winner, false);
-      await changeStatus(loser, false);
-      return 'err';
+      throw "Match Aborted"
     } else if (options.one[0].find(i => i === c)) {
       first = winner;
       second = loser;
@@ -56,17 +53,9 @@ module.exports = async function chooseToss(message, winner, loser, type, teamMat
     await channel.send(`${options.one[1]} is ${first}, ${options.two[1]} is ${second}`);
     return [first, second];
   } catch (e) {
-    await changeStatus(winner, false);
-    await changeStatus(loser, false);
-    channel.send(getErrors({error: 'time'}));
-    console.log(e);
-    return 'err'
+    throw getErrors({error: 'time'})
+    return
   }
-}
-
-async function changeStatus(a, boolean) {
-  if(boolean !== true && boolean !== false) return;
-  await db.findOneAndUpdate({_id: a.id}, { $set: {status: boolean}});
 }
 
 async function executeUpdateStamina(arr) {

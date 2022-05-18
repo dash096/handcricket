@@ -6,12 +6,12 @@ module.exports = async (data, card, mode, remove, add = [], swap) => {
               ? data.cards?.[0]?.team || []
               : data.cards?.slice(1) || []
   if (!remove && mode !== 'team11' && (cards?.[0]?.slots || 21) <= cards?.slice(1).length - 1) {
-    return 'err'
+    throw "Not enough slots."
   }
   
   if (remove) {
     let exists = cards.find(c => c === card)
-    if (!exists) return 'err'
+    if (!exists) throw `Can't find the card in your ${mode === "team11" ? "team" : "slots"}.`
     
     cards.splice(
       cards.findIndex(c => c === card),

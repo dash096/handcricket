@@ -63,23 +63,31 @@ module.exports = async (message, user, target) => {
   if(will === true) {
     try {
       let tossWinner = await rollToss(message, user, target, 'cricket');
-      if(tossWinner.id === user.id) {
-        let chosen = await chooseToss(message, user, target, 'cricket');
-        if(chosen == 'err') return;
-        let batsman = chosen[0];
-        let bowler = chosen[1];
-        start(message, batsman, bowler, flags);
-      } else {
-        let chosen = await chooseToss(message, target, user, 'cricket');
-        if(chosen == 'err') return;
-        let batsman = chosen[0];
-        let bowler = chosen[1];
-        start(message, batsman, bowler, flags);
+      let userIsBat = tossWinner.id === user.id
+
+      try {
+        var chosen = await chooseToss(
+          message,
+          userIsBat ? user : target,
+          userIsBat ? target : user,
+          'cricket'
+        );
+      } catch (e) {
+        await changeStatus(user, false);
+        await changeStatus(target, false);
+        await message.reply(e)
+        return;
       }
+
+      let batsman = chosen[0];
+      let bowler = chosen[1];
+
+      start(message, batsman, bowler, flags);
     } catch(e) {
       await changeStatus(user, false);
       await changeStatus(target, false);
-      return console.log(e);
+      await message.reply(e)
+      return
     }
   } else {
     await changeStatus(user, false);
@@ -87,6 +95,7 @@ module.exports = async (message, user, target) => {
     return;
   }
 };
+
 async function start(message, batsman, bowler, flags) {
   const { content, author, channel, mentions } = message;
   await channel.send(`${batsman} and ${bowler}, get to your dms to play!`);

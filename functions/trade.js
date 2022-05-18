@@ -17,8 +17,8 @@ module.exports = async function (itemName, itemAmount, user, target, msg) {
     const oldTargetCC = targetData.cc;
     
     if(oldUserCC < itemAmount) {
-      msg.reply(getErrors({ error: "lessAssets", user, itemName }));
-      return "err";
+      throw getErrors({ error: "lessAssets", user, itemName });
+      return
     } else {
       updateCoins(-(parseInt(itemAmount)), userData);
       updateCoins(parseInt(itemAmount), targetData);
@@ -29,11 +29,14 @@ module.exports = async function (itemName, itemAmount, user, target, msg) {
     const userData = await db.findOne({_id: user.id});
     const targetData = await db.findOne({_id: target.id});
     
-    let e1 = await updateBag(itemName, parseInt(itemAmount), userData, msg);
-    if(e1 !== 'err') {
+    try {
+      await updateBag(itemName, parseInt(itemAmount), userData, msg);
       await updateBag(itemName, -(parseInt(itemAmount)), targetData, msg);
       await msg.reply(`Successfully traded ${itemAmount} ${itemName} with **${target.username}**`);
       if(targetData.notifs) await target.send(`**${user.username}** sent you ${itemAmount} ${itemName}.`);
+    } catch (e) {
+      msg.reply(e)
+      return
     }
   }
 };

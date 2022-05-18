@@ -221,15 +221,20 @@ module.exports = {
         .setFooter('To bid use, "e.bid <id> <dogecoins>')
         .setColor(embedColor)
       
-      let cardImage = getCardImage(card.fullname)
-      if (cardImage !== 'err') embed.setImage(cardImage)
-      else {
+      try {
+        var cardImage = getCardImage(card.fullname)
+        embed.setImage(cardImage)
+      } catch (e) {
         embed
           .attachFiles(`./assets/cards/${card.name}.png`)
           .setImage(`attachment://${card.name}.png`)
       }
-      let infoMessage = await message.reply(embed)
-      if (cardImage === 'err') getCardImage(card.fullname, infoMessage.embeds[0].image.url)
+      
+      let msgEmbed = await message.reply(embed)
+
+      if (!cardImage) {
+        getCardImage(card.fullname, msgEmbed.embeds[0].image.url)
+      }
     }
   }
 }

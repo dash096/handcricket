@@ -7,14 +7,14 @@ module.exports = async function (message, filePath) {
   const args = message.content.toLowerCase().trim().split(' ').slice(1);
   
   if(args.length === 0 && filePath) {
-    message.reply(getErrors({error: 'syntax', filePath}));
-    return 'err';
+    throw getErrors({error: 'syntax', filePath})
+    return
   }
   
   //Check args count
   if(filePath && args.length <= 1 && parseInt(args[0])) {
-    message.reply(getErrors({error: 'syntax', filePath}));
-    return 'err';
+    throw getErrors({error: 'syntax', filePath})
+    return
   }
   
   //Amount (last word)
@@ -62,11 +62,11 @@ module.exports = async function (message, filePath) {
   
   if(!itemData) {
     if(parseInt(args[0])) {
-      message.reply(getErrors({error: 'syntax', filePath}));
-      return 'err';
+      throw getErrors({error: 'syntax', filePath})
+      return
     } else {
-      message.reply(getErrors({error: 'item', itemName}));
-      return 'err';
+      throw getErrors({error: 'item', itemName})
+      return
     }
   }
   

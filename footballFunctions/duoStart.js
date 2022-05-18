@@ -23,23 +23,24 @@ module.exports = async (client, message, user, target) => {
   
   if(will === true) {
     const tossWinner = await rollToss(message, user, target, 'football');
-    if(tossWinner.id === user.id) {
-      const chosen = await chooseToss(message, user, target, 'football');
-      if(chosen == 'err') return;
-      const attacker = chosen[0];
-      const defender = chosen[1];
+    try {
+      let userIsAtk = tossWinner.id === user.id
+      var chosen = await chooseToss(
+        message,
+        userIsAtk ? user : target,
+        userIsAtk ? target : user,
+        'football'
+      );
+      var attacker = chosen[0];
+      var defender = chosen[1];
       let check = await checkDms();
-      if (check == 'err') return;
-      startMatch(client, message, attacker, defender, post)
-    } else {
-      const chosen = await chooseToss(message, target, user, 'football');
-      if(chosen == 'err') return;
-      const attacker = chosen[0];
-      const defender = chosen[1];
-      let check = await checkDms();
-      if (check == 'err') return;
-      startMatch(client, message, attacker, defender, post)
+    } catch (e) {
+      await changeStatus(user, false);
+      await changeStatus(target, false);
+      await message.reply(e)
+      return
     }
+    startMatch(client, message, attacker, defender, post)
   } else {
     changeStatus(user, false);
     changeStatus(target, false);
@@ -55,24 +56,18 @@ module.exports = async (client, message, user, target) => {
     try {
       await user.send(embed);
     } catch (e) {
-      channel.send(`Cant send dms to ${user}`);
-      changeStatus(user, false);
-      changeStatus(target, false);
-      return 'err';
+      throw `Cant send dms to ${user}`
     }
     try {
       await target.send(embed);
     } catch (e) {
-      channel.send(`Cant send dms to ${target}`);
-      changeStatus(user, false);
-      changeStatus(target, false);
-      return 'err';
+      throw`Cant send dms to ${target}`
     }
-    return 'ok';
+    return
   } 
 }
 
-async function changeStatus(a, boolean) {
-  if(boolean !== true && boolean !== false) return;
+async function changeStatus(a, boolean = false) {
+  if(typeof boolean !== "boolean") return;
   await db.findOneAndUpdate({_id: a.id}, { $set: {status: boolean}});
 }

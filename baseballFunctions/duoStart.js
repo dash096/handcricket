@@ -23,23 +23,19 @@ module.exports = async (client, message, user, target) => {
   
   if (will === true) {
     const tossWinner = await rollToss(message, user, target, 'baseball');
+    const userWon = tossWinner.id === user.id
     
-    if(tossWinner.id === user.id) {
-      const chosen = await chooseToss(message, user, target, 'baseball');
-      if(chosen == 'err') return;
+    try {
+      const chosen = await chooseToss(message, userWon ? user : target, userWon ? target : user,  'baseball');
       const striker = chosen[0];
       const pitcher = chosen[1];
       let check = await checkDms();
-      if (check == 'err') return;
       startMatch(client, message, striker, pitcher, post);
-    } else {
-      const chosen = await chooseToss(message, target, user, 'baseball');
-      if(chosen == 'err') return;
-      const striker = chosen[0];
-      const pitcher = chosen[1];
-      let check = await checkDms();
-      if (check == 'err') return;
-      startMatch(client, message, striker, pitcher, post);
+    } catch (e) {
+      await changeStatus(user, false);
+      await changeStatus(target, false);
+      await message.reply(e)
+      return
     }
   } else {
     changeStatus(user, false);
@@ -56,24 +52,21 @@ module.exports = async (client, message, user, target) => {
     try {
       await user.send(embed);
     } catch (e) {
-      channel.send(`Cant send dms to ${user}`);
       changeStatus(user, false);
       changeStatus(target, false);
-      return 'err';
+      throw `Can't send messages to ${user}`
     }
     try {
       await target.send(embed);
     } catch (e) {
-      channel.send(`Cant send dms to ${target}`);
       changeStatus(user, false);
       changeStatus(target, false);
-      return 'err';
+      throw `Can't send messages to ${target}`;
     }
-    return 'ok';
   }
 }
 
-async function changeStatus(user, boolean) {
+async function changeStatus(user, boolean = false) {
   if(typeof boolean !== 'boolean') return;
   
   await db.findOneAndUpdate({ _id: user.id }, {

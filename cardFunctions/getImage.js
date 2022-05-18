@@ -7,6 +7,6 @@ module.exports = (fullname, uploadToCache) => {
   if(cache[fullname]) {
     return cache[fullname]
   } else {
-    return 'err'
+    throw "Image Link Not in Cache"
   }
 }

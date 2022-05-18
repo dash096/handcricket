@@ -241,11 +241,11 @@ module.exports = async function(batsman, bowler, message, flags, challenge) {
             return loopBatCollect();
           }
           
-          const bal = await updateBag('dots', 1, await db.findOne({_id: batsman.id}), { channel: batsman });
-          if (bal == 'err') {
-            return loopBatCollect();
-          } else {
+          try {
+            await updateBag('dots', 1, await db.findOne({_id: batsman.id}), { channel: batsman });
             noOfUsedDots += 1;
+          } catch (e) {
+            return loopBatCollect();
           }
         } //Wicket
         if (bowled === parseInt(c)) {

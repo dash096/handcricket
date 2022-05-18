@@ -46,14 +46,17 @@ module.exports = {
       }
     } else {
       message.content = content.split(' ').slice(1).join(' ');
-      const itemArray = await checkItems(message, 'dogenomy/trade.js');
       
-      if(itemArray != 'err') {
-        trade(itemArray[0], itemArray[1], user, target, message);
-      } else {
-        return;
+      try {
+        var itemArray = await checkItems(message, 'dogenomy/trade.js')
+      } catch (e) {
+        message.reply(e)
+        return 
       }
+      
+      trade(itemArray[0], itemArray[1], user, target, message);
     }
+    
     await gain(userData, 2, message);
     //Set cooldown
     const timestamps = client.cooldowns.get('send');
