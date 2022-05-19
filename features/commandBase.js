@@ -20,7 +20,7 @@ module.exports = ({client, prefix}) => {
       author.bot ||
       channel.type === 'dm'
     ) {
-      return;/
+      return;
     }
     
     //BlackLists
