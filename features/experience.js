@@ -8,11 +8,15 @@ module.exports = ({client, prefix}) => {
     ) return;
     
     if(Math.random() > 0.5) {
-      await db.findOneAndUpdate(
-        {_id: msg.author.id},
-        { $inc: { xp: 0.1 } },
-        {new: true, upsert: true}
-      );
+      try {
+        await db.findOneAndUpdate(
+          {_id: msg.author.id},
+          { $inc: { xp: 0.1 } },
+          {new: true, upsert: true}
+        );
+      } catch (e) {
+        return
+      }
     }
   });
 };

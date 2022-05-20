@@ -113,17 +113,12 @@ module.exports = ({client, prefix}) => {
        
         if (now < expirationTime) {
           let timeLeft = parseInt((expirationTime - now) / 1000);
-          let sec = "";
-          let min = "";
+          let sec = Math.floor(timeLeft%60);
+          let min = Math.floor(timeLeft/60);
 
-          if (timeLeft >= 60) {
-            min = (timeLeft/60).toFixed(0) + 'm';
-            sec = ` ${timeLeft % 60}s`;
-            if (sec === ' 0s') sec = '';
-          } else {
-            sec = `${timeLeft}s`;
-          }
-
+          sec = `${sec || 1}s`
+          min = min ? `${min}m` : ""
+          
           message.reply(`Wait for ${min}${sec} before using that command again.`);
           return
         }
