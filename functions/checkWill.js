@@ -44,7 +44,7 @@ module.exports = async function checkWill(channel, target, post, max, wickets, o
     }
     
   } catch(e) {
-    await msg.reply(getErrors({ error: 'time' }));
+    await channel.send(getErrors({ error: 'time' }));
     return [false, post, max, wickets, overs];
   }
 }
