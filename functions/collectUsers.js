@@ -78,7 +78,7 @@ module.exports = async (message, gameName, min) => {
     
     reactions.forEach(r => {
       if (r.emoji.name === "enter") {
-        players = Array.from(r.users.cache.values()).filter(u => !user.bot)
+        players = Array.from(r.users.cache.values()).filter(u => !u.bot)
       }
     })
     
