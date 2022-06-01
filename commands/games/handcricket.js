@@ -27,12 +27,6 @@ module.exports = {
       _id: user.id,
     });
 
-    //Check Status
-    if (userData.status === true) {
-      message.reply(getErrors({ error: 'engaged', user }));
-      return;
-    }
-
     let soloAliases = ['solo', 'cpu', 'single', 1]
     if (!message.author.dmChannel) message.author.dmChannel = await message.author.createDM()
     

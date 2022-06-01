@@ -24,15 +24,7 @@ module.exports = {
     
     //Check Status of the user.
     const user = author;
-    const userData = await db.findOne({
-      _id: user.id,
-    });
-
-    if (userData.status === true) {
-      message.reply(getErrors({ error: 'engaged', user }));
-      return;
-    }
-
+    
     try {
       //Target Validation
       const target = await getTarget(message, args, client);
@@ -42,19 +34,10 @@ module.exports = {
           getErrors({ error: "syntax", filePath: "games/handbaseball.js" })
         );
       }
-      //Status Validation
-      const targetData = await db.findOne({ _id: target.id });
-      if (targetData.status === true) {
-        message.reply(getErrors({ error: "engaged", user: target }));
-        return;
-      }
-
+      
       //Change status
       await changeStatus(user, true);
       await changeStatus(target, true);
-      
-      await gain(userData, 0.3, message);
-      await gain(targetData, 0.3, message);
       
       executeDuoMatch(client, message, user, target)
     } catch (e) {

@@ -22,7 +22,6 @@ module.exports = async (message, gameName, min) => {
   
   let players = []
   let error = null
-  let cancelled = false
   
   const collectEmbed = new Discord.MessageEmbed()
     .setTitle(`Join ${gameName} Match`)
@@ -32,6 +31,9 @@ module.exports = async (message, gameName, min) => {
   
   const collectMessage = await channel.send(collectEmbed)
   
+  await collectMessage.react(enterEmoji);
+  await collectMessage.react('❌');
+
   const collector = collectMessage.createReactionCollector((
       { emoji },
       { bot }
@@ -44,10 +46,11 @@ module.exports = async (message, gameName, min) => {
   })
   
   collector.on("collect", async ({emoji}, user)=>{
-    if (emoji.name === "❌" && user.id === author.id) {
-      cancelled = true
-      error = "Match Aborted"
-      collector.stop()
+    if (emoji.name === "❌" ) {
+      if (user.id === author.id) {
+        error = "Match Aborted"
+        await collector.stop()
+      }
       return
     }
     
@@ -71,7 +74,7 @@ module.exports = async (message, gameName, min) => {
   })
   
   collector.on("end", async (reactions) => {
-    if (cancelled) return
+    if (error) return
     
     reactions.forEach(r => {
       if (r.emoji.name === "enter") {
