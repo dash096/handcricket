@@ -100,23 +100,19 @@ module.exports = async ({ message, client, args, prefix }) => {
           ps,
           exception: [cp.id]
         })
-        return
-      }
-      
-      if (["e.uno x", "end", "exit", "cancel"].includes(txt.toLowerCase())) {
-        throw "Ended by **" + cp.username + "**"
-      }
-      
-      try {
-        let choice = determineCard(content)
-        let cpc = pCards[cpi % pCount]
-        
-        await cp.send(choice + " working")
-        cpi += 1
-        return
-      } catch (e) {
-        await cp.send(`Invalid Card Choice. Include \`:\` (colon) as prefix if it was to convey the message to other ps.`)
-        return
+      } else if (["e.uno x", "end", "exit", "cancel"].includes(txt.toLowerCase())) {
+        throw `Match Ended by **${cp.username}**`
+      } else {
+        try {
+          let choice = determineCard(content)
+          let cpc = pCards[cpi % pCount]
+          if (typeof choice === "number") choice = cpc[choice-1]
+          
+          cpi += 1
+          await cp.send(choice + " working")
+        } catch (e) {
+          await cp.send(`Invalid Card Choice. Include \`:\` (colon) as prefix if it was to convey the message to other ps.`)
+        }
       }
     } catch (e) {
       ended = true
@@ -124,7 +120,7 @@ module.exports = async ({ message, client, args, prefix }) => {
       await channel.send(
         typeof e === "string"
         ? e
-        : `${cp.username} went afk. Match Ended`
+        : `**${cp.username}** went afk. Match Ended`
       )
       await changeStatus(ps, false)
       return
