@@ -6,6 +6,7 @@ const embedColor = require('../functions/getEmbedColor.js');
 const executeTeamMatch = require('./teamInnings.js');
 const chooseToss = require('../functions/chooseToss.js');
 const rollToss = require('../functions/rollToss.js');
+const collectUsers = require("../functions/collectUsers.js")
 
 module.exports = async (message, client) => {
   const { channel, content, author, mentions } = message;
@@ -27,110 +28,14 @@ module.exports = async (message, client) => {
     }
   }
 
-  await getReactors();
-
-  //Collect reactions from sent Embed and next Choose Caps.
-  async function getReactors() {
-    const { channel, content, author, mentions } = message;
-    const enterEmoji = await getEmoji('enter');
-
-    let players = [];
-    let playerTags = [];
-
-    //Send and React the Embed
-    const embed = new Discord.MessageEmbed()
-      .setTitle(`Join ${author.username} team match`)
-      .setDescription(`React ${enterEmoji} to join`)
-      .setColor(embedColor);
-    const collectorMessage = await message.reply(embed);
-
-    //Create Collector
-    const reactionCollector = collectorMessage.createReactionCollector(
-      reaction => reaction.emoji.name === 'enter' || reaction.emoji.name === '❌',
-      {
-        time: 40 * 1000,
-        dispose: true,
-      }
-    );
-
-    await collectorMessage.react(enterEmoji);
-    await collectorMessage.react('❌');
-
-    let collectedUsers = [];
-    let ended;
-
-    //On Collect, changeStatus
-    reactionCollector.on('collect', async (reaction, user) => {
-      if (reaction.emoji.name === '❌') {
-        if (user.id === author.id) {
-          ended = true;
-          await message.reply('TeamMatch ended');
-          await changeStatus(collectedUsers, false);
-          await reactionCollector.stop();
-          await collectorMessage.delete();
-        }
-        return;
-      }
-
-      const data = await db.findOne({ _id: user.id });
-
-      if (!data) {
-        await channel.send(getErrors({ error: 'data', user }));
-        await collectorMessage.reactions.cache.find(
-          r => r.emoji.name == enterEmoji.name
-        ).users.remove(user.id);
-        return;
-      } else if (data.status === true) {
-        await channel.send(getErrors({ error: 'engaged', user }));
-        await collectorMessage.reactions.cache.find(
-          r => r.emoji.name == enterEmoji.name
-        ).users.remove(user.id);
-        return;
-      }
-
-      await collectedUsers.push(user);
-      await channel.send(`${enterEmoji} **${user.username}** joined the teamMatch!`);
-      await changeStatus(user, true);
-    });
-
-    //On end, check players.
-    reactionCollector.on('end', async (collectedReactions) => {
-      if (ended) {
-        return;
-      }
-
-      let reactors = [];
-
-      await collectedReactions.forEach(reaction => {
-        if (reaction.emoji.name === 'enter') {
-          reactors = (Array.from(reaction.users.cache.values())).filter(user => user.bot === false);
-        }
-      });
-
-      await reactors.forEach(reactor => {
-        players.push(reactor);
-      });
-
-      await players.forEach(player => {
-        playerTags.push(player.tag);
-      });
-
-      if (players.length <= 2) {
-        await changeStatus(collectedUsers, false);
-        message.reply('TeamMatch aborted due to insufficient members, the members required are minimum 3');
-        return;
-      } else {
-        await changeStatus(collectedUsers, true);
-        await message.reply('TeamMatch started, Players are\n' + playerTags.join('\n'));
-        await chooseCaptains(players, playerTags);
-      }
-    });
-
-    //On remove, chnageStatus
-    reactionCollector.on('remove', async (reaction, user) => {
-      await channel.send(`**${user.username}** left the teamMatch`);
-      await changeStatus(user, false);
-    });
+  try {
+    let players = await collectUsers(message, "Cricket", 3)
+    let playerTags = players.map(p => p.tag)
+    
+    await chooseCaptains(players, playerTags)
+  } catch (e) {
+    await message.reply(e)
+    return
   }
 
   async function chooseCaptains(players, playerTags) {

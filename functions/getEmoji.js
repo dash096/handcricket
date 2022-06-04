@@ -2,38 +2,31 @@ const client = require('../index.js');
 
 let cache = {};
 
-module.exports = async (name, decor) => {
+module.exports = async (name, decor, uno) => {
   let generalEmojis = ['920880917566861332']
   let decorEmojis = ['953616925009784882']
+  let unoEmojis = ['980684246605758514', '981395381625704468']
   
-  if(cache[name]) {
-    return cache[name];
-  }
+  if(cache[name]) return cache[name]
   
-  if (decor) {
-    let decorEmoji;
-    for(const guild of decorEmojis) {
-      const emojiGuild = await client.guilds.fetch(guild);
-      const emoji = emojiGuild.emojis.cache.find(emoji => emoji.name === name);
-      
-      if(emoji) {
-        cache[name] = emoji;
-        decorEmoji = emoji;
-      } else {
-        decorEmoji = '';
-      }
-    }
-    return decorEmoji;
-  } else {
-    const emojiGuild = await client.guilds.fetch(generalEmojis[0]);
-    const emoji = emojiGuild.emojis.cache.find(emoji => emoji.name == name) ||
-      emojiGuild.emojis.cache.find(emoji => emoji.name == "anything");
+  let guilds = decor
+    ? decorEmojis
+    : uno
+    ? unoEmojis
+    : generalEmojis
+  
+  let emoji
+  
+  for (let id of guilds) {
+    let guild = await client.guilds.fetch(id)
     
-    if(emoji) {
-      cache[name] = emoji;
-      return emoji;
-    } else {
-      return '';
+    emoji = guild.emojis.cache.find(e => e.name === name)
+    
+    if (emoji) {
+      cache[name] = emoji
+      break
     }
   }
+  
+  return emoji || ""
 }

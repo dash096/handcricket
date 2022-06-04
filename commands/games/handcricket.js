@@ -2,6 +2,7 @@ const db = require("../../schemas/player.js");
 const Discord = require("discord.js");
 const getErrors = require("../../functions/getErrors.js");
 const getTarget = require("../../functions/getTarget.js");
+const updateStamina = require("../../functions/updateStamina.js");
 const executeTeamMatch = require("../../cricketFunctions/teamMatch.js");
 const executeDuoMatch = require("../../cricketFunctions/duoMatch.js");
 const duoInnings = require('../../cricketFunctions/duoInnings.js')
@@ -26,12 +27,6 @@ module.exports = {
     const userData = await db.findOne({
       _id: user.id,
     });
-
-    //Check Status
-    if (userData.status === true) {
-      message.reply(getErrors({ error: 'engaged', user }));
-      return;
-    }
 
     let soloAliases = ['solo', 'cpu', 'single', 1]
     if (!message.author.dmChannel) message.author.dmChannel = await message.author.createDM()
@@ -106,7 +101,8 @@ module.exports = {
           await channel.send(`Solo Match started, get to DMs.`)
           
           // Change Status
-          await changeStatus(user, true, -2);
+          await changeStatus(user, true);
+          await updateStamina(user, -2);
           
           await duoInnings(challenge.player, challenge.CPU, message, { max: 6, post: false }, challenge)
         } catch(e) {
@@ -144,19 +140,13 @@ module.exports = {
   },
 };
 
-async function changeStatus(a, boolean, changeStamina) {
+async function changeStatus(a, boolean) {
   if (boolean !== true && boolean !== false) return;
   
   let update = {
     '$set': {
       'status': boolean,
     },
-  }
-  
-  if (changeStamina) {
-    update['$inc'] = {
-      'stamina': changeStamina 
-    }
   }
   
   await db.findOneAndUpdate({ _id: a.id }, update);
