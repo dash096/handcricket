@@ -26,7 +26,7 @@ module.exports = async (message, gameName, min) => {
   const collectEmbed = new Discord.MessageEmbed()
     .setTitle(`Join ${gameName} Match`)
     .setDescription(`React ${enterEmoji} to join.`)
-    .setFooter(`By ${author}`)
+    .setFooter(`By ${author.username}`)
     .setColor(embedColor)
   
   const collectMessage = await channel.send(collectEmbed)
@@ -49,6 +49,7 @@ module.exports = async (message, gameName, min) => {
     if (emoji.name === "❌" ) {
       if (user.id === author.id) {
         error = "Match Aborted"
+        await changeStatus(players, false)
         await collector.stop()
       }
       return
