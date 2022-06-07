@@ -36,14 +36,14 @@ module.exports = async ({ message, client, args, prefix }) => {
     .map(({ value }) => value)
   
   let disB = []
-  let InB = []
+  let inB = []
   let pCards = {}
   
   ps.forEach((p, i) => {
     pCards[p.id] = shuffled.slice(7*i, 7*(i+1))
   })
   
-  InB = shuffled.slice((ps.length)*7)
+  inB = shuffled.slice((ps.length)*7)
   
   delete cards, shuffled
   
@@ -57,9 +57,10 @@ module.exports = async ({ message, client, args, prefix }) => {
   let ended = false
   let disTotal = 0
   let cpi = 0
+  let cpip = true //true for ++ false for --
   
   await (async function firstMove() {
-    let disCard = InB.shift()
+    let disCard = inB.shift()
     disB.unshift(disCard)
     
     disTotal += 1
@@ -82,6 +83,33 @@ module.exports = async ({ message, client, args, prefix }) => {
     }
   })()
   
+  communicate()
+  function communicate() {
+    ps.forEach(async p => {
+      async function listen(p) {
+        try {
+          let msgs = await p.dmChannel.awaitMessages(m => m.author.id === p.id && m.content[0] === ":", {
+            max: 1,
+            time: 60*1000,
+            errors: ["time"]
+          })
+          
+          let { content, author } = msgs.first()
+          
+          await send({
+            content: `\`${author.username}\`${content}`,
+            ps,
+            exception: [author.id]
+          })
+        } catch (e) {
+          if (!ended) return await listen(p)
+        }
+      }
+      
+      await listen(p)
+    })
+  }
+  
   while (!ended) {
     let cp = ps[cpi % pCount]
     
@@ -94,24 +122,51 @@ module.exports = async ({ message, client, args, prefix }) => {
       var msg = msgs.first()
       let txt = msg.content.trim().split(/ +/).join(" ")
       
-      if (txt[0] === ":") {
-        await send({
-          content: `\`${cp.username}\`${txt}`,
-          ps,
-          exception: [cp.id]
-        })
-      } else if (["e.uno x", "end", "exit", "cancel"].includes(txt.toLowerCase())) {
+      if (["e.uno x", "end", "exit", "cancel"].includes(txt.toLowerCase())) {
         throw `Match Ended by **${cp.username}**`
+      } else if (txt === "+" || /intake|take/.test(txt)) {
+        let card = inB.shift()
+        
+        let disCard = disB[0]
+        let cmt
+        
+        await cp.send(`You took ${deabbreviate(card)}`)
+        
+        if (
+          (card[0] !== disCard[0] && card.slice(1) !== disCard.slice(1)) &&
+          (card[0] !== "w" && disCard[0] !== "w")
+        ) {
+          cpi += cpip ? 1 : -1
+          pCards[cp.id].push(card)
+          cmt = `**${cp.username}** took one card and it mismatched. Next is **${ps[cpi % pCount].username}**`
+        } else {
+          disB.unshift(card)
+          cmt = "By taking a card," + play(card)
+        }
       } else {
         try {
-          let choice = determineCard(content)
-          let cpc = pCards[cpi % pCount]
+          let choice = determineCard(txt)
+          let cpc = pCards[cp.id]
           if (typeof choice === "number") choice = cpc[choice-1]
           
-          cpi += 1
-          await cp.send(choice + " working")
+          let cIdx = cpc.findIndex(c => c === choice)
+          let card = cpc[cIdx]
+          let disCard = disB[0]
+          
+          //Validations
+          if (cIdx === -1) throw "You don't have the card."
+          if (
+            (card[0] !== disCard[0] && card.slice(1) !== disCard.slice(1)) &&
+            (card[0] !== "w" && disCard[0] !== "w")
+          ) throw "Color Mismatch, try again."
+          
+          disB.unshift(card)
+          cpc.splice(cIdx, 1)
+          pCards[cp.id] = cpc
+          
+          let cmt = play(card)
         } catch (e) {
-          await cp.send(`Invalid Card Choice. Include \`:\` (colon) as prefix if it was to convey the message to other ps.`)
+          await cp.send(e + ` Include \`:\` (colon) as prefix if it was to convey the message to other players.`)
         }
       }
     } catch (e) {
@@ -124,6 +179,46 @@ module.exports = async ({ message, client, args, prefix }) => {
       )
       await changeStatus(ps, false)
       return
+    }
+    
+    function play(card) {
+      let cmt
+      
+      if (card.endsWith("Skp")) {
+        cpi += cpip ? 2 : -2
+        cmt = `**${cp.username}** used skip, Next is **${ps[cpi % pCount].username}**`
+      } else if (card.endsWith("Rev")) {
+        cpip = !cpip
+        cpi += cpip ? 1 : -1
+        cmt = `**${cp.username}** used reverse, Next is **${ps[cpi % pCount].username}**`
+      } else if (card.endsWith("2p")) {
+        cpi += cpip ? 1 : -1
+        
+        let p2 = inB.slice(0,2)
+        inB = inB.slice(2)
+        
+        pCards[ps[cpi % pCount].id].push(...p2)
+        
+        cmt = `**${cp.username}** used +2 card, Next is **${ps[cpi % pCount].username}** who got 2 more cards.`
+      } else if (card.startsWith("wd")) {
+        cpi = cpip ? 1 : -1
+        
+        if (card.endsWith("4p")) {
+          let p4 = inB.slice(0,4)
+          inB = inB.slice(4)
+          
+          pCards[ps[cpi % pCount].id].push(...p4)
+          
+          cmt = `**${cp.username}** used +4 wild card, Next is **${ps[cpi % pCount].username}** who got 4 more cards.`
+        } else {
+          cmt = `**${cp.username}** used a wild card, Next is **${ps[cpi % pCount].username}**`
+        }
+      } else {
+        cpi = cpip ? 1 : -1
+        cmt = `**${cp.username}** played his turn, Next is **${ps[cpi % pCount].username}**`
+      }
+      
+      return cmt
     }
   }
   
@@ -209,4 +304,32 @@ async function changeStatus(users, boolean) {
       {$set:{status:boolean}}
     )
   })
+}
+
+function deabbreviate(name) {
+  let color = name[0]
+  color = color === "r"
+    ? "red"
+    : color === "g"
+    ? "green"
+    : color === "b"
+    ? "blue"
+    : color === "y"
+    ? "yellow"
+    : "wildcard"
+  
+  let type = color === "wildcard"
+    ? name.slice(2)
+    : name.slice(1)
+  type = (type === "Skp"
+    ? "Skip"
+    : type === "Rev"
+    ? "Reverse"
+    : type === "2p"
+    ? "Plus Two"
+    : type === "4p"
+    ? "Plus Four"
+    : type) || ""
+  
+  return color + " " + type
 }
