@@ -1,4 +1,4 @@
-//absolute: ./unoFunctions/match.js
+const db = require("../schemas/player.js")
 const Discord = require("discord.js")
 const collectUsers = require("../functions/collectUsers.js")
 const getEmoji = require("../functions/getEmoji.js")
@@ -85,7 +85,9 @@ module.exports = async ({ message, client, args, prefix }) => {
   
   communicate()
   function communicate() {
-    ps.forEach(async p => {
+    ps.forEach(p => {
+      console.log("laoding com for "+p.username)
+      
       async function listen(p) {
         try {
           let msgs = await p.dmChannel.awaitMessages(m => m.author.id === p.id && m.content[0] === ":", {
@@ -96,8 +98,10 @@ module.exports = async ({ message, client, args, prefix }) => {
           
           let { content, author } = msgs.first()
           
+          console.log("sending "+ content)
+          
           await send({
-            content: `\`${author.username}\`${content}`,
+            content: `\`${author.username}:\` ${content.slice(1)}`,
             ps,
             exception: [author.id]
           })
@@ -106,7 +110,7 @@ module.exports = async ({ message, client, args, prefix }) => {
         }
       }
       
-      await listen(p)
+      listen(p)
     })
   }
   
@@ -122,7 +126,9 @@ module.exports = async ({ message, client, args, prefix }) => {
       var msg = msgs.first()
       let txt = msg.content.trim().split(/ +/).join(" ")
       
-      if (["e.uno x", "end", "exit", "cancel"].includes(txt.toLowerCase())) {
+      if (txt[0] === ":") {
+        continue
+      } else if (["e.uno x", "end", "exit", "cancel"].includes(txt.toLowerCase())) {
         throw `Match Ended by **${cp.username}**`
       } else if (txt === "+" || /intake|take/.test(txt)) {
         let card = inB.shift()
