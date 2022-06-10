@@ -86,8 +86,6 @@ module.exports = async ({ message, client, args, prefix }) => {
   communicate()
   function communicate() {
     ps.forEach(p => {
-      console.log("laoding com for "+p.username)
-      
       async function listen(p) {
         try {
           let msgs = await p.dmChannel.awaitMessages(m => m.author.id === p.id && m.content[0] === ":", {
@@ -98,13 +96,13 @@ module.exports = async ({ message, client, args, prefix }) => {
           
           let { content, author } = msgs.first()
           
-          console.log("sending "+ content)
-          
           await send({
             content: `\`${author.username}:\` ${content.slice(1)}`,
             ps,
             exception: [author.id]
           })
+          
+          if (!ended) return await listen(p)
         } catch (e) {
           if (!ended) return await listen(p)
         }
@@ -147,8 +145,17 @@ module.exports = async ({ message, client, args, prefix }) => {
           cmt = `**${cp.username}** took one card and it mismatched. Next is **${ps[cpi % pCount].username}**`
         } else {
           disB.unshift(card)
+          disTotal += 1
           cmt = "By taking a card," + play(card)
         }
+        
+        await send({
+          content: createEmbed({
+            desc: cmt,
+            cField: [[`Discard Block (${disTotal})`, disB[0]]],
+            pField: ps.map(p => [p.id, p.username, `:${pCards[p.id].join(": :")}:`])
+          })
+        })
       } else {
         try {
           let choice = determineCard(txt)
@@ -167,10 +174,19 @@ module.exports = async ({ message, client, args, prefix }) => {
           ) throw "Color Mismatch, try again."
           
           disB.unshift(card)
+          disTotal += 1
           cpc.splice(cIdx, 1)
           pCards[cp.id] = cpc
           
           let cmt = play(card)
+          
+          await send({
+            content: createEmbed({
+              desc: cmt,
+              cField: [[`Discard Block (${disTotal})`, disB[0]]],
+              pField: ps.map(p => [p.id, p.username, `:${pCards[p.id].join(": :")}:`])
+            })
+          })
         } catch (e) {
           await cp.send(e + ` Include \`:\` (colon) as prefix if it was to convey the message to other players.`)
         }
