@@ -25,7 +25,7 @@ module.exports = async (message, gameName, min) => {
   
   const collectEmbed = new Discord.MessageEmbed()
     .setTitle(`Join ${gameName} Match`)
-    .setDescription(`React ${enterEmoji} to join.`)'
+    .setDescription(`React ${enterEmoji} to join.`)
     .setFooter(`By ${author.username}`)
     .setColor(embedColor)
   
