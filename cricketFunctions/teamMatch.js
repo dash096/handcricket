@@ -307,7 +307,7 @@ module.exports = async (message, client) => {
         if (batTeam.length === 2 && typeof batTeam[1] === 'string') { }
         else await channel.send(`${batTeam[0]} ping your batsmen list in order you desire like \`@user1 @user2 @user3\``)
 
-        let batOrder = await pick(batTeam[0], batTeam, 'batsman');
+        var batOrder = await pick(batTeam[0], batTeam, 'batsman');
 
         if (bowlTeam.length === 2 && typeof bowlTeam[1] === 'string') { }
         else await channel.send(`${bowlTeam[0]} ping your bowlers list in order you desire like \`@user1 @user2 @user3\``);
